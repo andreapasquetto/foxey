@@ -2,7 +2,7 @@
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import { Car, Contact, Home, Landmark, Settings } from "lucide-react";
+import { Car, Contact, Home, Landmark, Map, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -27,6 +27,11 @@ const navigationItems = [
     href: "/accounting",
     icon: <Landmark className="h-5 w-5" />,
     title: "Accounting",
+  },
+  {
+    href: "/places",
+    icon: <Map className="h-5 w-5" />,
+    title: "Places",
   },
 ];
 
