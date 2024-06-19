@@ -2,7 +2,7 @@
 
 import { ThemeToggle } from "@/components/theme-toggle";
 import { cn } from "@/lib/utils";
-import { Car, Contact, Home, Landmark, Map, Settings } from "lucide-react";
+import { Calendar, Car, Contact, Home, Landmark, Map, Settings } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
@@ -14,9 +14,9 @@ const navigationItems = [
     title: "Home",
   },
   {
-    href: "/contacts",
-    icon: <Contact className="h-5 w-5" />,
-    title: "Contacts",
+    href: "/accounting",
+    icon: <Landmark className="h-5 w-5" />,
+    title: "Accounting",
   },
   {
     href: "/cars",
@@ -24,9 +24,14 @@ const navigationItems = [
     title: "Cars",
   },
   {
-    href: "/accounting",
-    icon: <Landmark className="h-5 w-5" />,
-    title: "Accounting",
+    href: "/contacts",
+    icon: <Contact className="h-5 w-5" />,
+    title: "Contacts",
+  },
+  {
+    href: "/events",
+    icon: <Calendar className="h-5 w-5" />,
+    title: "Events",
   },
   {
     href: "/places",

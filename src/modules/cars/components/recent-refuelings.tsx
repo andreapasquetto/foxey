@@ -6,8 +6,24 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { mockedRefuelings } from "@/mocks/cars";
+import { Refueling, mockedRefuelings } from "@/mocks/cars";
 import { CheckIcon, XIcon } from "lucide-react";
+
+function _renderIsFullIcon(refueling: Refueling) {
+  return refueling.isFull ? (
+    <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+  ) : (
+    <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+  );
+}
+
+function _renderIsNecessaryIcon(refueling: Refueling) {
+  return refueling.isNecessary ? (
+    <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+  ) : (
+    <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+  );
+}
 
 interface RecentRefuelingsProps {
   carId: string;
@@ -64,20 +80,8 @@ export function RecentRefuelings(props: RecentRefuelingsProps) {
             <TableCell>
               <code>{refueling.price}</code>
             </TableCell>
-            <TableCell>
-              {refueling.isFull ? (
-                <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
-              ) : (
-                <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
-              )}
-            </TableCell>
-            <TableCell>
-              {refueling.isNecessary ? (
-                <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
-              ) : (
-                <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
-              )}
-            </TableCell>
+            <TableCell>{_renderIsFullIcon(refueling)}</TableCell>
+            <TableCell>{_renderIsNecessaryIcon(refueling)}</TableCell>
             <TableCell>
               <code>{refueling.trip}</code>
             </TableCell>

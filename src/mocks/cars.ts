@@ -29,6 +29,8 @@ export const mockedRefuelings = [
   },
 ];
 
+export type Refueling = (typeof mockedRefuelings)[number]["refuelings"][number];
+
 export const mockedRefuelingStats = [
   {
     carId: "1bb94e0a-534c-43cd-920d-a118b849c156",
