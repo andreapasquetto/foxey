@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Car, mockedCars } from "@/mocks/cars";
 import { AddRefueling } from "@/modules/cars/components/add-refueling";
 import { CarSwitcher } from "@/modules/cars/components/car-switcher";
+import { HighwayTrips } from "@/modules/cars/components/highway-trips";
 import { RecentRefuelings } from "@/modules/cars/components/recent-refuelings";
 import RefuelingStats from "@/modules/cars/components/refueling-stats";
 import { useState } from "react";
@@ -29,6 +30,15 @@ export default function CarsPage() {
           </CardHeader>
           <CardContent>
             <RecentRefuelings carId={selectedCar.id} />
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Highway trips</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <HighwayTrips carId={selectedCar.id} />
           </CardContent>
         </Card>
       </div>

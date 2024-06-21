@@ -49,3 +49,22 @@ export const mockedRefuelingStats = [
     },
   },
 ];
+
+export const mockedHighwayTrips = [
+  {
+    carId: "1bb94e0a-534c-43cd-920d-a118b849c156",
+    trips: [
+      {
+        id: "630c02c1-da79-4b3f-b0b8-2ae26e9268c1",
+        datetime: "2024-01-01",
+        start: "A4 Milano",
+        end: "A4 Padova",
+        distance: 250,
+        cost: 10,
+        avgSpeed: 100,
+      },
+    ],
+  },
+];
+
+export type HighwayTrip = (typeof mockedHighwayTrips)[number]["trips"][number];
