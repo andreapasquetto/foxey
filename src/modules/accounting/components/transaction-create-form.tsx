@@ -19,10 +19,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { mockedWallets } from "@/mocks/accounting";
+import {
+  TransactionCreateForm,
+  transactionCreateFormSchema,
+} from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightLeft, Minus, Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 interface TransactionCreateFormProps {
   walletId: string;
@@ -32,21 +35,8 @@ interface TransactionCreateFormProps {
 export function TransactionCreateForm(props: TransactionCreateFormProps) {
   const availableWallets = mockedWallets.filter((w) => w.id !== props.walletId && w.balance);
 
-  const formSchema = z.object({
-    wallet: z.string().min(1).max(255),
-    datetime: z.date(),
-    type: z.string(),
-    to: z.string().optional(),
-    primaryCategory: z.string().min(1).max(255),
-    secondaryCategory: z.string().optional(),
-    amount: z.number(),
-    description: z.string(),
-  });
-
-  type Form = z.infer<typeof formSchema>;
-
-  const form = useForm<Form>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<TransactionCreateForm>({
+    resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
       wallet: props.walletId,
       datetime: new Date(),
@@ -57,7 +47,7 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
     },
   });
 
-  function onSubmit(values: Form) {
+  function onSubmit(values: TransactionCreateForm) {
     console.log(values);
     props.onSubmit();
   }

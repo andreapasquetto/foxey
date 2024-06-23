@@ -17,17 +17,15 @@ export default function AccountingPage() {
     <section>
       <Heading1>Accounting</Heading1>
       <TotalBalance />
-      <div className="mt-3 flex items-center justify-between">
-        <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
-        <div>
-          <AddTransaction selectedWallet={selectedWallet} />
-        </div>
-      </div>
+      <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
       <div className="mt-3 grid gap-3">
         <AccountingStats />
         <Card>
           <CardHeader>
-            <CardTitle>Recent transactions</CardTitle>
+            <div className="flex items-center justify-between">
+              <CardTitle>Recent transactions</CardTitle>
+              <AddTransaction selectedWallet={selectedWallet} />
+            </div>
           </CardHeader>
           <CardContent>
             <RecentTransactions walletId={selectedWallet.id} />

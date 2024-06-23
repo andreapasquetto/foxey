@@ -14,16 +14,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Wallet, mockedWallets } from "@/mocks/accounting";
+import { WalletCreateForm } from "@/modules/accounting/components/wallet-create-form";
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
 
@@ -103,24 +101,7 @@ export function WalletSwitcher(props: WalletSwitcher) {
             Add a new wallet to manage transactions and transfers.
           </DialogDescription>
         </DialogHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
-              <Input id="name" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="initialBalance">Initial balance</Label>
-              <Input id="initialBalance" type="number" />
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewWalletDialog(false)}>
-            Cancel
-          </Button>
-          <Button type="submit">Add</Button>
-        </DialogFooter>
+        <WalletCreateForm />
       </DialogContent>
     </Dialog>
   );
