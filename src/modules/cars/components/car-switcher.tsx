@@ -11,16 +11,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Car, mockedCars } from "@/mocks/cars";
+import { CarCreateForm } from "@/modules/cars/components/car-create-form";
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
 
@@ -98,28 +96,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
           <DialogTitle>Add car</DialogTitle>
           <DialogDescription>Add a new car to manage refuelings.</DialogDescription>
         </DialogHeader>
-        <div>
-          <div className="space-y-4 py-2 pb-4">
-            <div className="space-y-2">
-              <Label htmlFor="year">Year</Label>
-              <Input id="year" type="number" placeholder="2024" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="make">Make</Label>
-              <Input id="make" placeholder="Toyota" />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="model">Model</Label>
-              <Input id="model" placeholder="4Runner" />
-            </div>
-          </div>
-        </div>
-        <DialogFooter>
-          <Button variant="outline" onClick={() => setShowNewCarDialog(false)}>
-            Cancel
-          </Button>
-          <Button type="submit">Add</Button>
-        </DialogFooter>
+        <CarCreateForm />
       </DialogContent>
     </Dialog>
   );

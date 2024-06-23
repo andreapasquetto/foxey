@@ -11,9 +11,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  RefuelingCreateForm,
+  refuelingCreateFormSchema,
+} from "@/modules/cars/schemas/refueling-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 interface RefuelingCreateFormProps {
   carId: string;
@@ -21,23 +24,8 @@ interface RefuelingCreateFormProps {
 }
 
 export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
-  const formSchema = z.object({
-    car: z.string().min(1).max(255),
-    place: z.string().min(1).max(255),
-    date: z.date(),
-    price: z.number().min(0),
-    quantity: z.number().min(0),
-    cost: z.number().min(0),
-    isFull: z.boolean().default(false),
-    isNecessary: z.boolean().default(true),
-    trip: z.number(),
-    odometer: z.number(),
-  });
-
-  type Form = z.infer<typeof formSchema>;
-
-  const form = useForm<Form>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<RefuelingCreateForm>({
+    resolver: zodResolver(refuelingCreateFormSchema),
     defaultValues: {
       car: props.carId,
       place: "",
@@ -49,7 +37,7 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
     },
   });
 
-  function onValidSubmit(values: Form) {
+  function onValidSubmit(values: RefuelingCreateForm) {
     console.log(values);
     props.onSubmit();
   }

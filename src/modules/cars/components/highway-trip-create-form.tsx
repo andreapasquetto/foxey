@@ -10,9 +10,12 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import {
+  HighwayTripCreateForm,
+  highwayTripCreateFormSchema,
+} from "@/modules/cars/schemas/highway-trip-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 interface HighwayTripCreateFormProps {
   carId: string;
@@ -20,19 +23,8 @@ interface HighwayTripCreateFormProps {
 }
 
 export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
-  const formSchema = z.object({
-    car: z.string().min(1).max(255),
-    start: z.string().min(1).max(255),
-    end: z.string().min(1).max(255),
-    distance: z.number(),
-    cost: z.number().min(0),
-    avgSpeed: z.number(),
-  });
-
-  type Form = z.infer<typeof formSchema>;
-
-  const form = useForm<Form>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<HighwayTripCreateForm>({
+    resolver: zodResolver(highwayTripCreateFormSchema),
     defaultValues: {
       car: props.carId,
       start: "",
@@ -43,7 +35,7 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
     },
   });
 
-  function onValidSubmit(values: Form) {
+  function onValidSubmit(values: HighwayTripCreateForm) {
     console.log(values);
     props.onSubmit();
   }

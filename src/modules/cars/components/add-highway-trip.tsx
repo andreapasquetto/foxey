@@ -7,8 +7,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Car } from "@/mocks/cars";
+import { HighwayTripCreateForm } from "@/modules/cars/components/highway-trip-create-form";
 import { useState } from "react";
-import { HighwayTripCreateForm } from "./highway-trip-create-form";
 
 interface AddHighwayTripProps {
   selectedCar: Car;
