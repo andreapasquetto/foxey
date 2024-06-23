@@ -9,10 +9,18 @@ import {
 import { mockedHighwayTrips } from "@/mocks/cars";
 
 interface HighwayTripsProps {
-  carId: string;
+  carId: string | undefined;
 }
 
 export function HighwayTrips(props: HighwayTripsProps) {
+  if (!props.carId) {
+    return (
+      <div className="my-6">
+        <p className="text-center text-sm text-muted-foreground">Select a car to see its trips.</p>
+      </div>
+    );
+  }
+
   const filteredTrips = mockedHighwayTrips.find((toll) => toll.carId === props.carId);
 
   if (!filteredTrips)

@@ -3,10 +3,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { mockedRefuelingStats } from "@/mocks/cars";
 
 interface RefuelingStatsProps {
-  carId: string;
+  carId: string | undefined;
 }
 
 export default function RefuelingStats(props: RefuelingStatsProps) {
+  if (!props.carId)
+    return (
+      <div className="my-12">
+        <p className="text-center text-sm text-muted-foreground">
+          Select a car to see its statistics.
+        </p>
+      </div>
+    );
+
   const stats = mockedRefuelingStats.find((stat) => stat.carId === props.carId);
 
   if (!stats)

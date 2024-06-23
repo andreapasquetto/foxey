@@ -69,7 +69,12 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
               <FormItem>
                 <FormLabel>Cost</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" step={0.01} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    step={0.01}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -83,7 +88,12 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
               <FormItem>
                 <FormLabel>Quantity</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" step={0.01} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    step={0.01}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -97,7 +107,12 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" step={0.001} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    step={0.001}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -143,7 +158,12 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
               <FormItem>
                 <FormLabel>Trip</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" step={0.001} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    step={0.1}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -157,7 +177,12 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
               <FormItem>
                 <FormLabel>Odometer</FormLabel>
                 <FormControl>
-                  <Input {...field} type="number" step={0.001} />
+                  <Input
+                    type="number"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                    step={1}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

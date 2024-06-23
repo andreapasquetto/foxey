@@ -18,12 +18,12 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Car, mockedCars } from "@/mocks/cars";
-import { CarCreateForm } from "@/modules/cars/components/car-create-form";
+import { CarCreateForm } from "@/modules/cars/components/forms/car-create-form";
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
 
 interface CarSwitcherProps {
-  selectedCar: Car;
+  selectedCar: Car | undefined;
   onSelectCar: (car: Car) => void;
 }
 
@@ -42,7 +42,9 @@ export function CarSwitcher(props: CarSwitcherProps) {
             aria-label="Select a team"
             className={cn("w-[250px] justify-between")}
           >
-            {props.selectedCar.make} {props.selectedCar.model}
+            {props.selectedCar
+              ? `${props.selectedCar.make} ${props.selectedCar.model}`
+              : "No car selected"}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -66,7 +68,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      props.selectedCar.id === car.id ? "opacity-100" : "opacity-0",
+                      props.selectedCar?.id === car.id ? "opacity-100" : "opacity-0",
                     )}
                   />
                 </CommandItem>
@@ -96,7 +98,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
           <DialogTitle>Add car</DialogTitle>
           <DialogDescription>Add a new car to manage refuelings.</DialogDescription>
         </DialogHeader>
-        <CarCreateForm />
+        <CarCreateForm onSubmit={() => setShowNewCarDialog(false)} />
       </DialogContent>
     </Dialog>
   );

@@ -7,7 +7,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Car } from "@/mocks/cars";
-import { RefuelingCreateForm } from "@/modules/cars/components/refueling-create-form";
+import { RefuelingCreateForm } from "@/modules/cars/components/forms/refueling-create-form";
 import { useState } from "react";
 
 interface AddRefuelingProps {

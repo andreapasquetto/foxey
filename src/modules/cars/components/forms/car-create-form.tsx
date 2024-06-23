@@ -14,7 +14,11 @@ import { CarCreateForm, carCreateFormSchema } from "@/modules/cars/schemas/car-c
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-export function CarCreateForm() {
+interface CarCreateFormProps {
+  onSubmit: () => void;
+}
+
+export function CarCreateForm(props: CarCreateFormProps) {
   const form = useForm<CarCreateForm>({
     resolver: zodResolver(carCreateFormSchema),
     defaultValues: {
@@ -26,6 +30,7 @@ export function CarCreateForm() {
 
   function onValidSubmit(values: CarCreateForm) {
     console.log(values);
+    props.onSubmit();
   }
 
   return (
@@ -38,7 +43,12 @@ export function CarCreateForm() {
             <FormItem>
               <FormLabel>Year</FormLabel>
               <FormControl>
-                <Input {...field} type="number" step={0.01} />
+                <Input
+                  type="number"
+                  {...field}
+                  onChange={(e) => field.onChange(Number(e.target.value))}
+                  step={1}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
