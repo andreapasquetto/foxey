@@ -26,19 +26,23 @@ export const mockedTransactions = [
 
 export type Transaction = (typeof mockedTransactions)[number];
 
-export const mockedStats = {
-  totalBalance: mockedWallets.reduce((p, c) => p + (c.balance ?? 0), 0),
-  income: {
-    totalMonthly: 0,
-    fromPreviousMonth: null,
+export const mockedStats = [
+  {
+    walletId: "55552886-cfdd-4340-b55b-4a9a82fa3f80",
+    stats: {
+      income: {
+        totalMonthly: 0,
+        fromPreviousMonth: null,
+      },
+      expenses: {
+        totalMonthly: 0,
+        fromPreviousMonth: null,
+      },
+      profit: {
+        totalMonthly: 0,
+        percentage: null,
+        fromPreviousMonth: null,
+      },
+    },
   },
-  expenses: {
-    totalMonthly: 0,
-    fromPreviousMonth: null,
-  },
-  profit: {
-    totalMonthly: 0,
-    percentage: null,
-    fromPreviousMonth: null,
-  },
-};
+];

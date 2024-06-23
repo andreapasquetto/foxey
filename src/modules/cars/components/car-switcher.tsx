@@ -24,7 +24,7 @@ import { useState } from "react";
 
 interface CarSwitcherProps {
   selectedCar: Car | undefined;
-  onSelectCar: (car: Car) => void;
+  onSelectCar: (car: Car | undefined) => void;
 }
 
 export function CarSwitcher(props: CarSwitcherProps) {
@@ -50,6 +50,17 @@ export function CarSwitcher(props: CarSwitcherProps) {
         </PopoverTrigger>
         <PopoverContent className="w-[250px] p-0">
           <Command>
+            <CommandList>
+              <CommandItem
+                onSelect={() => {
+                  props.onSelectCar(undefined);
+                  setOpen(false);
+                }}
+              >
+                No car selected
+              </CommandItem>
+            </CommandList>
+            <CommandSeparator />
             <CommandList>
               <CommandEmpty>No car found.</CommandEmpty>
               {mockedCars.map((car) => (
@@ -80,8 +91,8 @@ export function CarSwitcher(props: CarSwitcherProps) {
                 <DialogTrigger asChild>
                   <CommandItem
                     onSelect={() => {
-                      setOpen(false);
                       setShowNewCarDialog(true);
+                      setOpen(false);
                     }}
                   >
                     <CirclePlus className="mr-2 h-5 w-5" />

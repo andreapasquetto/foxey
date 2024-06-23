@@ -26,7 +26,7 @@ export function RecentRefuelings(props: RecentRefuelingsProps) {
 
   const filteredRefuelings = mockedRefuelings.find((refueling) => refueling.carId === props.carId);
 
-  if (!filteredRefuelings)
+  if (!filteredRefuelings) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
@@ -34,6 +34,7 @@ export function RecentRefuelings(props: RecentRefuelingsProps) {
         </p>
       </div>
     );
+  }
 
   return (
     <Table>

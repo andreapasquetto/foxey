@@ -25,12 +25,12 @@ import { WalletCreateForm } from "@/modules/accounting/components/wallet-create-
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
 
-interface WalletSwitcher {
-  selectedWallet: Wallet;
-  onSelectWallet: (wallet: Wallet) => void;
+interface WalletSwitcherProps {
+  selectedWallet: Wallet | undefined;
+  onSelectWallet: (wallet: Wallet | undefined) => void;
 }
 
-export function WalletSwitcher(props: WalletSwitcher) {
+export function WalletSwitcher(props: WalletSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [showNewWalletDialog, setShowNewWalletDialog] = useState(false);
 
@@ -45,12 +45,24 @@ export function WalletSwitcher(props: WalletSwitcher) {
             aria-label="Select a team"
             className={cn("w-[250px] justify-between")}
           >
-            {props.selectedWallet.name}
+            {props.selectedWallet ? props.selectedWallet.name : "No wallet selected"}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-[250px] p-0">
           <Command>
+            <CommandList>
+              <CommandItem
+                onSelect={() => {
+                  props.onSelectWallet(undefined);
+                  setOpen(false);
+                }}
+                className="gap-2 text-sm"
+              >
+                No wallet selected
+              </CommandItem>
+            </CommandList>
+            <CommandSeparator />
             <CommandList>
               <CommandEmpty>No wallet found.</CommandEmpty>
               {mockedWallets.map((wallet) => (
@@ -69,7 +81,7 @@ export function WalletSwitcher(props: WalletSwitcher) {
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      props.selectedWallet.id === wallet.id ? "opacity-100" : "opacity-0",
+                      props.selectedWallet?.id === wallet.id ? "opacity-100" : "opacity-0",
                     )}
                   />
                 </CommandItem>

@@ -7,7 +7,7 @@ interface RefuelingStatsProps {
 }
 
 export default function RefuelingStats(props: RefuelingStatsProps) {
-  if (!props.carId)
+  if (!props.carId) {
     return (
       <div className="my-12">
         <p className="text-center text-sm text-muted-foreground">
@@ -15,10 +15,11 @@ export default function RefuelingStats(props: RefuelingStatsProps) {
         </p>
       </div>
     );
+  }
 
   const stats = mockedRefuelingStats.find((stat) => stat.carId === props.carId);
 
-  if (!stats)
+  if (!stats) {
     return (
       <div className="my-12">
         <p className="text-center text-sm text-muted-foreground">
@@ -26,6 +27,7 @@ export default function RefuelingStats(props: RefuelingStatsProps) {
         </p>
       </div>
     );
+  }
 
   return (
     <div className="grid grid-cols-3 items-start gap-3">

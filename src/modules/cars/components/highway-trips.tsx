@@ -23,7 +23,7 @@ export function HighwayTrips(props: HighwayTripsProps) {
 
   const filteredTrips = mockedHighwayTrips.find((toll) => toll.carId === props.carId);
 
-  if (!filteredTrips)
+  if (!filteredTrips) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
@@ -31,6 +31,7 @@ export function HighwayTrips(props: HighwayTripsProps) {
         </p>
       </div>
     );
+  }
 
   return (
     <Table>
