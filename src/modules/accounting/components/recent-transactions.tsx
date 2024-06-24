@@ -16,12 +16,18 @@ interface RecentTransactionsProps {
 }
 
 function _renderType(tx: Transaction, selectedWalletId: string | undefined) {
+  function _renderDirection() {
+    if (tx.from && !tx.to) return <div>outgoing</div>;
+    if (!tx.from && tx.to) return <div>incoming</div>;
+    if (tx.from && tx.to) return <div>transfer</div>;
+  }
+
   return (
     <div>
-      <div>{tx.type}</div>
+      {_renderDirection()}
       <div className="space-x-2 text-sm text-muted-foreground">
         {tx.from && <span>{mockedWallets.find((wallet) => wallet.id === tx.from)?.name}</span>}
-        {tx.type === "transfer" && (
+        {tx.from && tx.to && (
           <ChevronsRight
             className={cn("inline-block h-5 w-5", {
               "text-red-500 dark:text-red-400": selectedWalletId === tx.from,
@@ -83,9 +89,9 @@ export function RecentTransactions(props: RecentTransactionsProps) {
               {
                 <code
                   className={cn({
-                    "text-green-500 dark:text-green-400": tx.type === "incoming",
-                    "text-red-500 dark:text-red-400": tx.type === "outgoing",
-                    "text-muted-foreground": tx.type === "transfer",
+                    "text-green-500 dark:text-green-400": tx.to && !tx.from,
+                    "text-red-500 dark:text-red-400": tx.from && !tx.to,
+                    "text-muted-foreground": tx.from && tx.to,
                   })}
                 >
                   {rawCurrencyFormatter.format(tx.amount)}

@@ -13,8 +13,8 @@ export const mockedTransactions = [
     id: "5cf5587a-77ca-4f97-917b-368555a07229",
     datetime: "2024-01-01",
     type: "incoming",
-    from: "55552886-cfdd-4340-b55b-4a9a82fa3f80",
-    to: null,
+    from: null,
+    to: "55552886-cfdd-4340-b55b-4a9a82fa3f80",
     amount: 1234,
     categories: {
       primary: "income",
