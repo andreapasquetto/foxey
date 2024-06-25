@@ -1,3 +1,6 @@
+"use client";
+
+import { CircularSpinner } from "@/components/circular-spinner";
 import {
   Table,
   TableBody,
@@ -6,10 +9,22 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { mockedContacts } from "@/mocks/contacts";
-import { Building, User } from "lucide-react";
+import { useContactsQuery } from "@/modules/contacts/contacts-queries";
+import { Building, CheckIcon, User, XIcon } from "lucide-react";
 
 export function ContactList() {
+  const { data: contacts, isFetching } = useContactsQuery();
+
+  if (!contacts || isFetching) return <CircularSpinner className="mx-auto" />;
+
+  if (!contacts.length) {
+    return (
+      <div className="my-6">
+        <p className="text-center text-sm text-muted-foreground">There are no contacts.</p>
+      </div>
+    );
+  }
+
   return (
     <Table>
       <TableHeader>
@@ -17,65 +32,32 @@ export function ContactList() {
           <TableHead></TableHead>
           <TableHead>Full name</TableHead>
           <TableHead>Date of birth</TableHead>
-          <TableHead>Emails</TableHead>
-          <TableHead>Phone numbers</TableHead>
-          <TableHead>Addresses</TableHead>
+          <TableHead>Archived</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockedContacts.map((contact) => (
+        {contacts.map((contact) => (
           <TableRow key={contact.id}>
             <TableCell>
-              {contact.isOrganization ? (
+              {contact.isBusiness ? (
                 <Building className="h-5 w-5 text-muted-foreground" />
               ) : (
                 <User className="h-5 w-5 text-muted-foreground" />
               )}
             </TableCell>
+
             <TableCell>
-              {contact.name.given} {contact.name.family}
-            </TableCell>
-            <TableCell>{contact.dateOfBirth ?? "-"}</TableCell>
-            <TableCell>
-              {contact.emails.length ? (
-                <ul>
-                  {contact.emails.map((email) => (
-                    <li key={email.value}>
-                      {email.value}
-                      <div className="text-xs text-muted-foreground">{email.type}</div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                "-"
+              {contact.fullName}
+              {contact.subtitle && (
+                <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
               )}
             </TableCell>
+            <TableCell>{contact.dob ?? "-"}</TableCell>
             <TableCell>
-              {contact.phoneNumbers.length ? (
-                <ul>
-                  {contact.phoneNumbers.map((phoneNumber) => (
-                    <li key={phoneNumber.value}>
-                      {phoneNumber.value}
-                      <div className="text-xs text-muted-foreground">{phoneNumber.type}</div>
-                    </li>
-                  ))}
-                </ul>
+              {contact.isArchived ? (
+                <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
               ) : (
-                "-"
-              )}
-            </TableCell>
-            <TableCell>
-              {contact.addresses.length ? (
-                <ul>
-                  {contact.addresses.map((address) => (
-                    <li key={address.value}>
-                      {address.value}
-                      <div className="text-xs text-muted-foreground">{address.type}</div>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                "-"
+                <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
               )}
             </TableCell>
           </TableRow>
