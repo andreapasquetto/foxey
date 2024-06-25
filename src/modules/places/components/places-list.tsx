@@ -1,3 +1,6 @@
+"use client";
+
+import { CircularSpinner } from "@/components/circular-spinner";
 import {
   Table,
   TableBody,
@@ -6,41 +9,41 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Place, mockedPlaces } from "@/mocks/places";
-
-function _renderAddress(place: Place) {
-  return (
-    <div>
-      {place.address ?? "-"}
-      {place.coordinates?.lat && place.coordinates?.lon && (
-        <div className="text-xs text-muted-foreground">
-          {place.coordinates.lat}, {place.coordinates.lon}
-        </div>
-      )}
-    </div>
-  );
-}
+import { usePlacesQuery } from "@/modules/places/places-queries";
+import { CheckIcon, XIcon } from "lucide-react";
 
 export function PlacesList() {
+  const { data: places, isFetching } = usePlacesQuery();
+
+  if (!places || isFetching) return <CircularSpinner className="mx-auto" />;
+
+  if (!places.length) {
+    return (
+      <div className="my-6">
+        <p className="text-center text-sm text-muted-foreground">There are no places.</p>
+      </div>
+    );
+  }
+
   return (
     <Table>
       <TableHeader>
         <TableRow>
-          <TableHead>Date added</TableHead>
-          <TableHead>Category</TableHead>
           <TableHead>Name</TableHead>
-          <TableHead>Address</TableHead>
-          <TableHead>Review</TableHead>
+          <TableHead>Visited</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {mockedPlaces.map((place) => (
+        {places.map((place) => (
           <TableRow key={place.id}>
-            <TableCell>{place.addedAt}</TableCell>
-            <TableCell>{place.category}</TableCell>
             <TableCell>{place.name}</TableCell>
-            <TableCell>{_renderAddress(place)}</TableCell>
-            <TableCell>{place.review}</TableCell>
+            <TableCell>
+              {place.isVisited ? (
+                <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+              ) : (
+                <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+              )}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
