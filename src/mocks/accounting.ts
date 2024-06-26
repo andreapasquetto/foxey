@@ -1,13 +1,3 @@
-export const mockedWallets = [
-  {
-    id: "55552886-cfdd-4340-b55b-4a9a82fa3f80",
-    name: "ACME Investing",
-    balance: 0,
-  },
-];
-
-export type Wallet = (typeof mockedWallets)[number];
-
 export const mockedTransactions = [
   {
     id: "5cf5587a-77ca-4f97-917b-368555a07229",
@@ -23,8 +13,6 @@ export const mockedTransactions = [
     description: "Example",
   },
 ];
-
-export type Transaction = (typeof mockedTransactions)[number];
 
 export const mockedStats = [
   {

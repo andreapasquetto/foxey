@@ -1,6 +1,6 @@
 "use client";
 
-import { currencyFormatter } from "@/common/formatters";
+import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { mockedWallets } from "@/mocks/accounting";
+import { useWalletsQuery } from "@/modules/accounting/accounting-queries";
 import {
   TransactionCreateForm,
   transactionCreateFormSchema,
@@ -33,8 +33,6 @@ interface TransactionCreateFormProps {
 }
 
 export function TransactionCreateForm(props: TransactionCreateFormProps) {
-  const availableWallets = mockedWallets.filter((w) => w.id !== props.walletId && w.balance);
-
   const form = useForm<TransactionCreateForm>({
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
@@ -46,6 +44,14 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
       secondaryCategory: "",
     },
   });
+
+  const { data: wallets, isFetching } = useWalletsQuery();
+
+  if (!wallets || isFetching) {
+    return <CircularSpinner className="mx-auto" />;
+  }
+
+  const availableWallets = wallets.filter((w) => w.id !== props.walletId);
 
   function onSubmit(values: TransactionCreateForm) {
     console.log(values);
@@ -117,9 +123,6 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
                       {availableWallets.map((w) => (
                         <SelectItem key={w.id} value={w.id} className="gap-2 text-sm">
                           {w.name}
-                          <span className="ml-2 font-mono text-xs text-muted-foreground">
-                            {w.balance ? currencyFormatter.format(w.balance) : "-"}
-                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>

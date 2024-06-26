@@ -1,6 +1,12 @@
 import { relations } from "drizzle-orm";
 import { boolean, date, integer, numeric, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
+export const wallets = pgTable("wallets", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name").notNull(),
+  initialBalance: numeric("initial_balance").default("0"),
+});
+
 export const cars = pgTable("cars", {
   id: uuid("id").defaultRandom().primaryKey(),
   year: integer("year").notNull(),

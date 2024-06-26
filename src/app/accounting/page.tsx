@@ -2,16 +2,16 @@
 
 import { Heading1 } from "@/components/typography";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Wallet } from "@/mocks/accounting";
 import AccountingStats from "@/modules/accounting/components/accounting-stats";
 import { AddTransaction } from "@/modules/accounting/components/add-transaction";
 import { RecentTransactions } from "@/modules/accounting/components/recent-transactions";
 import { TotalBalance } from "@/modules/accounting/components/total-balance";
 import { WalletSwitcher } from "@/modules/accounting/components/wallet-switcher";
+import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { useState } from "react";
 
 export default function AccountingPage() {
-  const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined);
+  const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
 
   return (
     <section>

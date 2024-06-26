@@ -6,12 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Wallet } from "@/mocks/accounting";
 import { TransactionCreateForm } from "@/modules/accounting/components/transaction-create-form";
+import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { useState } from "react";
 
 interface AddTransactionProps {
-  selectedWallet: Wallet;
+  selectedWallet: WalletRead;
 }
 
 export function AddTransaction(props: AddTransactionProps) {

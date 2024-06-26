@@ -1,4 +1,5 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
+import { CircularSpinner } from "@/components/circular-spinner";
 import {
   Table,
   TableBody,
@@ -8,40 +9,21 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { Transaction, mockedTransactions, mockedWallets } from "@/mocks/accounting";
+import { mockedTransactions } from "@/mocks/accounting";
+import { useWalletsQuery } from "@/modules/accounting/accounting-queries";
 import { ChevronsRight } from "lucide-react";
 
 interface RecentTransactionsProps {
   walletId: string | undefined;
 }
 
-function _renderType(tx: Transaction, selectedWalletId: string | undefined) {
-  function _renderDirection() {
-    if (tx.from && !tx.to) return <div>outgoing</div>;
-    if (!tx.from && tx.to) return <div>incoming</div>;
-    if (tx.from && tx.to) return <div>transfer</div>;
+export function RecentTransactions(props: RecentTransactionsProps) {
+  const { data: wallets, isFetching } = useWalletsQuery();
+
+  if (!wallets || isFetching) {
+    return <CircularSpinner className="mx-auto" />;
   }
 
-  return (
-    <div>
-      {_renderDirection()}
-      <div className="space-x-2 text-sm text-muted-foreground">
-        {tx.from && <span>{mockedWallets.find((wallet) => wallet.id === tx.from)?.name}</span>}
-        {tx.from && tx.to && (
-          <ChevronsRight
-            className={cn("inline-block h-5 w-5", {
-              "text-red-500 dark:text-red-400": selectedWalletId === tx.from,
-              "text-green-500 dark:text-green-400": selectedWalletId === tx.to,
-            })}
-          />
-        )}
-        {tx.to && <span>{mockedWallets.find((wallet) => wallet.id === tx.to)?.name}</span>}
-      </div>
-    </div>
-  );
-}
-
-export function RecentTransactions(props: RecentTransactionsProps) {
   const filteredTransactions = props.walletId
     ? mockedTransactions.filter(
         (transaction) => transaction.from === props.walletId || transaction.to === props.walletId,
@@ -73,7 +55,25 @@ export function RecentTransactions(props: RecentTransactionsProps) {
         {filteredTransactions.map((tx) => (
           <TableRow key={tx.id}>
             <TableCell>{tx.datetime}</TableCell>
-            <TableCell>{_renderType(tx, props.walletId)}</TableCell>
+            <TableCell>
+              <div>
+                {tx.from && !tx.to && <div>outgoing</div>}
+                {!tx.from && tx.to && <div>incoming</div>}
+                {tx.from && tx.to && <div>transfer</div>}
+                <div className="space-x-2 text-sm text-muted-foreground">
+                  {tx.from && <span>{wallets.find((wallet) => wallet.id === tx.from)?.name}</span>}
+                  {tx.from && tx.to && (
+                    <ChevronsRight
+                      className={cn("inline-block h-5 w-5", {
+                        "text-red-500 dark:text-red-400": props.walletId === tx.from,
+                        "text-green-500 dark:text-green-400": props.walletId === tx.to,
+                      })}
+                    />
+                  )}
+                  {tx.to && <span>{wallets.find((wallet) => wallet.id === tx.to)?.name}</span>}
+                </div>
+              </div>
+            </TableCell>
             <TableCell>
               {tx.categories ? (
                 <div>

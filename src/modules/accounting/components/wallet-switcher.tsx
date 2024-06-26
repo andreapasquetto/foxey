@@ -1,6 +1,6 @@
 "use client";
 
-import { currencyFormatter } from "@/common/formatters";
+import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -20,19 +20,22 @@ import {
 } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Wallet, mockedWallets } from "@/mocks/accounting";
+import { useWalletsQuery } from "@/modules/accounting/accounting-queries";
 import { WalletCreateForm } from "@/modules/accounting/components/wallet-create-form";
+import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
 
 interface WalletSwitcherProps {
-  selectedWallet: Wallet | undefined;
-  onSelectWallet: (wallet: Wallet | undefined) => void;
+  selectedWallet: WalletRead | undefined;
+  onSelectWallet: (wallet: WalletRead | undefined) => void;
 }
 
 export function WalletSwitcher(props: WalletSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [showNewWalletDialog, setShowNewWalletDialog] = useState(false);
+
+  const { data: wallets, isFetching } = useWalletsQuery();
 
   return (
     <Dialog open={showNewWalletDialog} onOpenChange={setShowNewWalletDialog}>
@@ -45,7 +48,13 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
             aria-label="Select a team"
             className={cn("w-[250px] justify-between")}
           >
-            {props.selectedWallet ? props.selectedWallet.name : "No wallet selected"}
+            {!wallets || isFetching ? (
+              <CircularSpinner />
+            ) : props.selectedWallet ? (
+              props.selectedWallet.name
+            ) : (
+              "No wallet selected"
+            )}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -65,7 +74,7 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
             <CommandSeparator />
             <CommandList>
               <CommandEmpty>No wallet found.</CommandEmpty>
-              {mockedWallets.map((wallet) => (
+              {wallets?.map((wallet) => (
                 <CommandItem
                   key={wallet.id}
                   onSelect={() => {
@@ -74,10 +83,7 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
                   }}
                   className="gap-2 text-sm"
                 >
-                  <p>{wallet.name}</p>
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {wallet.balance ? currencyFormatter.format(wallet.balance) : "-"}
-                  </span>
+                  {wallet.name}
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
