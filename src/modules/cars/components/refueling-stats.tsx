@@ -1,6 +1,5 @@
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { mockedRefuelingStats } from "@/mocks/cars";
 
 interface RefuelingStatsProps {
   carId: string | undefined;
@@ -17,9 +16,24 @@ export default function RefuelingStats(props: RefuelingStatsProps) {
     );
   }
 
-  const stats = mockedRefuelingStats.find((stat) => stat.carId === props.carId);
+  // TODO: calculate stats from all refuelings
+  const stats = {
+    fuelCosts: {
+      thisMonth: 0,
+      fromLastMonth: null,
+    },
+    distance: {
+      average: 0,
+      lastYear: null,
+      total: null,
+    },
+    fuelEconomy: {
+      last: 0,
+      fromUsual: null,
+    },
+  };
 
-  if (!stats) {
+  if (!true) {
     return (
       <div className="my-12">
         <p className="text-center text-sm text-muted-foreground">

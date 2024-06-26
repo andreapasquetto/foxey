@@ -1,4 +1,4 @@
-import { getCars, getRefuelings } from "@/modules/cars/cars-actions";
+import { getCars, getHighwayTrips, getRefuelings } from "@/modules/cars/cars-actions";
 import { useQuery } from "@tanstack/react-query";
 
 export function useCarsQuery() {
@@ -12,5 +12,12 @@ export function useRefuelingsQuery() {
   return useQuery({
     queryKey: ["refuelings"],
     queryFn: () => getRefuelings(),
+  });
+}
+
+export function useHighwayTripsQuery() {
+  return useQuery({
+    queryKey: ["highway-trips"],
+    queryFn: () => getHighwayTrips(),
   });
 }

@@ -1,3 +1,4 @@
+import { CircularSpinner } from "@/components/circular-spinner";
 import {
   Table,
   TableBody,
@@ -6,28 +7,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { mockedHighwayTrips } from "@/mocks/cars";
+import { useHighwayTripsQuery } from "@/modules/cars/cars-queries";
 
 interface HighwayTripsProps {
   carId: string | undefined;
 }
 
 export function HighwayTrips(props: HighwayTripsProps) {
-  if (!props.carId) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">Select a car to see its trips.</p>
-      </div>
-    );
+  const { data: trips, isFetching } = useHighwayTripsQuery();
+
+  if (!trips || isFetching) {
+    return <CircularSpinner className="mx-auto" />;
   }
 
-  const filteredTrips = mockedHighwayTrips.find((toll) => toll.carId === props.carId);
+  const filteredTrips = props.carId ? trips.filter((trip) => trip.carId === props.carId) : trips;
 
-  if (!filteredTrips) {
+  if (!filteredTrips.length) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          No highway trips found for the selected car.
+          {props.carId && "No highway trips found for the selected car."}
+          {!props.carId && "There are no highway trips."}
         </p>
       </div>
     );
@@ -38,8 +38,8 @@ export function HighwayTrips(props: HighwayTripsProps) {
       <TableHeader>
         <TableRow>
           <TableHead>Date</TableHead>
-          <TableHead>Start</TableHead>
-          <TableHead>End</TableHead>
+          <TableHead>Startig toll</TableHead>
+          <TableHead>Ending toll</TableHead>
           <TableHead>
             Distance (<code>km</code>)
           </TableHead>
@@ -52,11 +52,11 @@ export function HighwayTrips(props: HighwayTripsProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {filteredTrips.trips.map((trip) => (
+        {filteredTrips.map((trip) => (
           <TableRow key={trip.id}>
-            <TableCell>{trip.datetime}</TableCell>
-            <TableCell>{trip.start}</TableCell>
-            <TableCell>{trip.end}</TableCell>
+            <TableCell>{trip.date}</TableCell>
+            <TableCell>{trip.startingToll}</TableCell>
+            <TableCell>{trip.endingToll}</TableCell>
             <TableCell>
               <code>{trip.distance}</code>
             </TableCell>

@@ -23,13 +23,32 @@ export const refuelings = pgTable("refuelings", {
   odometer: numeric("odometer").notNull(),
 });
 
+export const highwayTrips = pgTable("highway_trips", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  carId: uuid("car_id").references(() => cars.id),
+  date: date("date").notNull(),
+  startingToll: varchar("starting_toll").notNull(),
+  endingToll: varchar("ending_toll").notNull(),
+  distance: numeric("distance").notNull(),
+  cost: numeric("cost").notNull(),
+  avgSpeed: numeric("avg_speed"),
+});
+
 export const carRelations = relations(cars, ({ many }) => ({
   refuelings: many(refuelings),
+  highwayTrips: many(highwayTrips),
 }));
 
 export const refuelingRelations = relations(refuelings, ({ one }) => ({
   cars: one(cars, {
     fields: [refuelings.carId],
+    references: [cars.id],
+  }),
+}));
+
+export const highwayTripRelations = relations(highwayTrips, ({ one }) => ({
+  cars: one(cars, {
+    fields: [highwayTrips.carId],
     references: [cars.id],
   }),
 }));
