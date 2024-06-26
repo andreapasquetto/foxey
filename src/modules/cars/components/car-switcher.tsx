@@ -18,15 +18,15 @@ import {
 } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Car } from "@/mocks/cars";
 import { useCarsQuery } from "@/modules/cars/cars-queries";
 import { CarCreateForm } from "@/modules/cars/components/forms/car-create-form";
+import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
 
 interface CarSwitcherProps {
-  selectedCar: Car | undefined;
-  onSelectCar: (car: Car | undefined) => void;
+  selectedCar: CarRead | undefined;
+  onSelectCar: (car: CarRead | undefined) => void;
 }
 
 export function CarSwitcher(props: CarSwitcherProps) {

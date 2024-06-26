@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, date, integer, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, date, integer, numeric, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const cars = pgTable("cars", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -7,6 +7,32 @@ export const cars = pgTable("cars", {
   make: varchar("make").notNull(),
   model: varchar("model").notNull(),
 });
+
+export const refuelings = pgTable("refuelings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  carId: uuid("car_id").references(() => cars.id),
+  ron: integer("ron").default(95),
+  date: date("date").notNull(),
+  place: varchar("place").notNull(),
+  cost: numeric("cost").notNull(),
+  quantity: numeric("quantity").notNull(),
+  price: numeric("price").notNull(),
+  isFull: boolean("is_full").default(false),
+  isNecessary: boolean("is_necessary").default(true),
+  trip: numeric("trip"),
+  odometer: numeric("odometer").notNull(),
+});
+
+export const carRelations = relations(cars, ({ many }) => ({
+  refuelings: many(refuelings),
+}));
+
+export const refuelingRelations = relations(refuelings, ({ one }) => ({
+  cars: one(cars, {
+    fields: [refuelings.carId],
+    references: [cars.id],
+  }),
+}));
 
 export const contacts = pgTable("contacts", {
   id: uuid("id").defaultRandom().primaryKey(),

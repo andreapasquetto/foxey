@@ -1,18 +1,18 @@
 "use client";
 
 import { Heading1 } from "@/components/typography";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Car } from "@/mocks/cars";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddHighwayTrip } from "@/modules/cars/components/add-highway-trip";
 import { AddRefueling } from "@/modules/cars/components/add-refueling";
 import { CarSwitcher } from "@/modules/cars/components/car-switcher";
 import { HighwayTrips } from "@/modules/cars/components/highway-trips";
 import { RecentRefuelings } from "@/modules/cars/components/recent-refuelings";
 import RefuelingStats from "@/modules/cars/components/refueling-stats";
+import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 import { useState } from "react";
 
 export default function CarsPage() {
-  const [selectedCar, setSelectedCar] = useState<Car | undefined>(undefined);
+  const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);
 
   return (
     <section>
@@ -23,7 +23,15 @@ export default function CarsPage() {
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>Recent refuelings</CardTitle>
+              <div>
+                <CardTitle>Recent refuelings</CardTitle>
+                {selectedCar && (
+                  <CardDescription>
+                    {selectedCar.make} {selectedCar.model}
+                  </CardDescription>
+                )}
+              </div>
+
               {selectedCar && <AddRefueling selectedCar={selectedCar} />}
             </div>
           </CardHeader>

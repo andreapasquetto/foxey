@@ -6,12 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Car } from "@/mocks/cars";
 import { RefuelingCreateForm } from "@/modules/cars/components/forms/refueling-create-form";
+import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 import { useState } from "react";
 
 interface AddRefuelingProps {
-  selectedCar: Car;
+  selectedCar: CarRead;
 }
 
 export function AddRefueling(props: AddRefuelingProps) {

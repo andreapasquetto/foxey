@@ -6,12 +6,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Car } from "@/mocks/cars";
 import { HighwayTripCreateForm } from "@/modules/cars/components/highway-trip-create-form";
+import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 import { useState } from "react";
 
 interface AddHighwayTripProps {
-  selectedCar: Car;
+  selectedCar: CarRead;
 }
 
 export function AddHighwayTrip(props: AddHighwayTripProps) {

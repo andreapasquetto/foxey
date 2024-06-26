@@ -1,3 +1,4 @@
+import { CircularSpinner } from "@/components/circular-spinner";
 import {
   Table,
   TableBody,
@@ -6,7 +7,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { mockedRefuelings } from "@/mocks/cars";
+import { useRefuelingsQuery } from "@/modules/cars/cars-queries";
 import { CheckIcon, XIcon } from "lucide-react";
 
 interface RecentRefuelingsProps {
@@ -14,23 +15,23 @@ interface RecentRefuelingsProps {
 }
 
 export function RecentRefuelings(props: RecentRefuelingsProps) {
-  if (!props.carId) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">
-          Select a car to see its refuelings.
-        </p>
-      </div>
-    );
+  const { data: refuelings, isFetching } = useRefuelingsQuery();
+
+  if (!refuelings || isFetching) {
+    return <CircularSpinner className="mx-auto" />;
   }
 
-  const filteredRefuelings = mockedRefuelings.find((refueling) => refueling.carId === props.carId);
+  // TODO: pass carId to query as a filter
+  const filteredRefuelings = props.carId
+    ? refuelings.filter((refueling) => refueling.carId === props.carId)
+    : refuelings;
 
-  if (!filteredRefuelings) {
+  if (!filteredRefuelings.length) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          No refueling found for the selected car.
+          {props.carId && "No refueling found for the selected car."}
+          {!props.carId && "There are no refuelings."}
         </p>
       </div>
     );
@@ -62,9 +63,9 @@ export function RecentRefuelings(props: RecentRefuelingsProps) {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {filteredRefuelings.refuelings.map((refueling) => (
+        {filteredRefuelings.map((refueling) => (
           <TableRow key={refueling.id}>
-            <TableCell>{refueling.datetime}</TableCell>
+            <TableCell>{refueling.date}</TableCell>
             <TableCell>{refueling.place}</TableCell>
             <TableCell>
               <code>{refueling.cost}</code>
