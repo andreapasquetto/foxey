@@ -1,3 +1,4 @@
+import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -17,7 +18,8 @@ import {
 } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { Car, mockedCars } from "@/mocks/cars";
+import { Car } from "@/mocks/cars";
+import { useCarsQuery } from "@/modules/cars/cars-queries";
 import { CarCreateForm } from "@/modules/cars/components/forms/car-create-form";
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
 import { useState } from "react";
@@ -31,6 +33,8 @@ export function CarSwitcher(props: CarSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [showNewCarDialog, setShowNewCarDialog] = useState(false);
 
+  const { data: cars, isFetching } = useCarsQuery();
+
   return (
     <Dialog open={showNewCarDialog} onOpenChange={setShowNewCarDialog}>
       <Popover open={open} onOpenChange={setOpen}>
@@ -42,9 +46,13 @@ export function CarSwitcher(props: CarSwitcherProps) {
             aria-label="Select a team"
             className={cn("w-[250px] justify-between")}
           >
-            {props.selectedCar
-              ? `${props.selectedCar.make} ${props.selectedCar.model}`
-              : "No car selected"}
+            {!cars || isFetching ? (
+              <CircularSpinner />
+            ) : props.selectedCar ? (
+              `${props.selectedCar.make} ${props.selectedCar.model}`
+            ) : (
+              "No car selected"
+            )}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
@@ -63,7 +71,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
             <CommandSeparator />
             <CommandList>
               <CommandEmpty>No car found.</CommandEmpty>
-              {mockedCars.map((car) => (
+              {cars?.map((car) => (
                 <CommandItem
                   key={car.id}
                   onSelect={() => {

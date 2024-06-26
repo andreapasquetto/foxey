@@ -1,5 +1,12 @@
 import { relations } from "drizzle-orm";
-import { boolean, date, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, date, integer, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+
+export const cars = pgTable("cars", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  year: integer("year").notNull(),
+  make: varchar("make").notNull(),
+  model: varchar("model").notNull(),
+});
 
 export const contacts = pgTable("contacts", {
   id: uuid("id").defaultRandom().primaryKey(),

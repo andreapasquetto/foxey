@@ -1,14 +1,3 @@
-export const mockedCars = [
-  {
-    id: "1bb94e0a-534c-43cd-920d-a118b849c156",
-    year: 2024,
-    make: "ACME",
-    model: "Sedan",
-  },
-];
-
-export type Car = (typeof mockedCars)[number];
-
 export const mockedRefuelings = [
   {
     carId: "1bb94e0a-534c-43cd-920d-a118b849c156",
