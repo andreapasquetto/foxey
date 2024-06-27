@@ -7,6 +7,16 @@ export const wallets = pgTable("wallets", {
   initialBalance: numeric("initial_balance").default("0"),
 });
 
+export const transactions = pgTable("transactions", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  datetime: date("datetime").notNull(),
+  from: uuid("from").references(() => wallets.id),
+  to: uuid("to").references(() => wallets.id),
+  category: varchar("category"),
+  amount: numeric("amount").notNull(),
+  description: varchar("description"),
+});
+
 export const cars = pgTable("cars", {
   id: uuid("id").defaultRandom().primaryKey(),
   year: integer("year").notNull(),
@@ -16,7 +26,7 @@ export const cars = pgTable("cars", {
 
 export const refuelings = pgTable("refuelings", {
   id: uuid("id").defaultRandom().primaryKey(),
-  carId: uuid("car_id").references(() => cars.id),
+  carId: uuid("car_id").references(() => cars.id, { onDelete: "cascade" }),
   ron: integer("ron").default(95),
   date: date("date").notNull(),
   place: varchar("place").notNull(),

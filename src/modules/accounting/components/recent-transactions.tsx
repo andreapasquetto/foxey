@@ -9,8 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { mockedTransactions } from "@/mocks/accounting";
-import { useWalletsQuery } from "@/modules/accounting/accounting-queries";
+import { useTransactionsQuery, useWalletsQuery } from "@/modules/accounting/accounting-queries";
 import { ChevronsRight } from "lucide-react";
 
 interface RecentTransactionsProps {
@@ -18,23 +17,25 @@ interface RecentTransactionsProps {
 }
 
 export function RecentTransactions(props: RecentTransactionsProps) {
-  const { data: wallets, isFetching } = useWalletsQuery();
+  const { data: wallets, isFetching: isFetchingWallets } = useWalletsQuery();
+  const { data: transactions, isFetching: isFetchinTransactions } = useTransactionsQuery();
 
-  if (!wallets || isFetching) {
+  if (!wallets || isFetchingWallets || !transactions || isFetchinTransactions) {
     return <CircularSpinner className="mx-auto" />;
   }
 
   const filteredTransactions = props.walletId
-    ? mockedTransactions.filter(
+    ? transactions.filter(
         (transaction) => transaction.from === props.walletId || transaction.to === props.walletId,
       )
-    : mockedTransactions;
+    : transactions;
 
-  if (!filteredTransactions.length && props.walletId) {
+  if (!filteredTransactions.length) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          No transactions found for the selected wallet.
+          {props.walletId && "No transactions found for the selected wallet."}
+          {!props.walletId && "There are no transactions."}
         </p>
       </div>
     );
@@ -74,16 +75,7 @@ export function RecentTransactions(props: RecentTransactionsProps) {
                 </div>
               </div>
             </TableCell>
-            <TableCell>
-              {tx.categories ? (
-                <div>
-                  {tx.categories.primary}
-                  <div className="text-xs text-muted-foreground">{tx.categories.secondary}</div>
-                </div>
-              ) : (
-                "-"
-              )}
-            </TableCell>
+            <TableCell>{tx.category}</TableCell>
             <TableCell>{tx.description ?? "-"}</TableCell>
             <TableCell className="text-right">
               {
@@ -94,7 +86,7 @@ export function RecentTransactions(props: RecentTransactionsProps) {
                     "text-muted-foreground": tx.from && tx.to,
                   })}
                 >
-                  {rawCurrencyFormatter.format(tx.amount)}
+                  {rawCurrencyFormatter.format(parseFloat(tx.amount))}
                 </code>
               }
             </TableCell>
