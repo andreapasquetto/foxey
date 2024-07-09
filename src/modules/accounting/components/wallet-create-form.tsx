@@ -20,7 +20,7 @@ export function WalletCreateForm() {
     resolver: zodResolver(walletCreateFormSchema),
     defaultValues: {
       name: "",
-      initialBalance: 0,
+      initialAmount: 0,
     },
   });
 
@@ -47,10 +47,10 @@ export function WalletCreateForm() {
 
         <FormField
           control={form.control}
-          name="initialBalance"
+          name="initialAmount"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Initial balance</FormLabel>
+              <FormLabel>Initial amount</FormLabel>
               <FormControl>
                 <Input {...field} type="number" step={0.01} />
               </FormControl>

@@ -3,7 +3,9 @@ import { timestamp, numeric, pgTable, uuid, varchar } from "drizzle-orm/pg-core"
 export const wallets = pgTable("wallets", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
-  initialBalance: numeric("initial_balance").default("0"),
+  initialAmount: numeric("initial_amount").default("0"),
+  amount: numeric("amount").default("0"),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
 });
 
 export const transactions = pgTable("transactions", {
