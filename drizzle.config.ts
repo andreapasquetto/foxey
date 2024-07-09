@@ -29,7 +29,7 @@ const config = defineConfig({
     database: process.env.POSTGRES_DBNAME,
   },
   dialect: "postgresql",
-  schema: "./src/db/schema.ts",
+  schema: "./src/db/schema",
   verbose: true,
 });
 

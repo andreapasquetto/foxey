@@ -1,0 +1,54 @@
+import { relations } from "drizzle-orm";
+import { boolean, date, integer, numeric, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+
+export const cars = pgTable("cars", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  year: integer("year").notNull(),
+  make: varchar("make").notNull(),
+  model: varchar("model").notNull(),
+});
+
+export const refuelings = pgTable("refuelings", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  carId: uuid("car_id").references(() => cars.id, { onDelete: "cascade" }),
+  ron: integer("ron").default(95),
+  date: date("date").notNull(),
+  place: varchar("place").notNull(),
+  cost: numeric("cost").notNull(),
+  quantity: numeric("quantity").notNull(),
+  price: numeric("price").notNull(),
+  isFull: boolean("is_full").default(false),
+  isNecessary: boolean("is_necessary").default(true),
+  trip: numeric("trip"),
+  odometer: numeric("odometer").notNull(),
+});
+
+export const highwayTrips = pgTable("highway_trips", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  carId: uuid("car_id").references(() => cars.id),
+  date: date("date").notNull(),
+  startingToll: varchar("starting_toll").notNull(),
+  endingToll: varchar("ending_toll").notNull(),
+  distance: numeric("distance").notNull(),
+  cost: numeric("cost").notNull(),
+  avgSpeed: numeric("avg_speed"),
+});
+
+export const carRelations = relations(cars, ({ many }) => ({
+  refuelings: many(refuelings),
+  highwayTrips: many(highwayTrips),
+}));
+
+export const refuelingRelations = relations(refuelings, ({ one }) => ({
+  cars: one(cars, {
+    fields: [refuelings.carId],
+    references: [cars.id],
+  }),
+}));
+
+export const highwayTripRelations = relations(highwayTrips, ({ one }) => ({
+  cars: one(cars, {
+    fields: [highwayTrips.carId],
+    references: [cars.id],
+  }),
+}));

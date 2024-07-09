@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/db";
-import { events } from "@/db/schema";
+import { events } from "@/db/schema/events";
 import { desc } from "drizzle-orm";
 
 export async function getEvents() {

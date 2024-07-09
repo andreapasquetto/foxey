@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/db";
-import { cars, highwayTrips, refuelings } from "@/db/schema";
+import { cars, highwayTrips, refuelings } from "@/db/schema/cars";
 
 export async function getCars() {
   return await db.select().from(cars);

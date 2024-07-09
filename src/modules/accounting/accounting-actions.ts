@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/db/db";
-import { transactions, wallets } from "@/db/schema";
+import { transactions, wallets } from "@/db/schema/accounting";
 
 export async function getWallets() {
   return await db.select().from(wallets);
