@@ -8,7 +8,7 @@ export const eventCategories = pgTable("event_categories", {
 
 export const events = pgTable("events", {
   id: uuid("id").defaultRandom().primaryKey(),
-  categoryId: uuid("category_id").references(() => eventCategories.id, { onDelete: "cascade" }),
+  categoryId: uuid("category_id").references(() => eventCategories.id),
   isCanceled: boolean("is_canceled").default(false),
   isAllDay: boolean("is_all_day").notNull(),
   startDatetime: timestamp("start_datetime").notNull(),

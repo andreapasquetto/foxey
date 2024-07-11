@@ -8,7 +8,7 @@ export const placeCategories = pgTable("place_categories", {
 
 export const places = pgTable("places", {
   id: uuid("id").defaultRandom().primaryKey(),
-  categoryId: uuid("category_id").references(() => placeCategories.id, { onDelete: "cascade" }),
+  categoryId: uuid("category_id").references(() => placeCategories.id),
   name: varchar("name").notNull(),
   address: varchar("address").notNull(),
   isVisited: boolean("is_visited").default(false),

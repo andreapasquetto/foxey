@@ -12,21 +12,21 @@ export const contacts = pgTable("contacts", {
 
 export const contactPhoneNumbers = pgTable("contact_phone_numbers", {
   id: uuid("id").defaultRandom().primaryKey(),
-  contactId: uuid("contact_id").references(() => contacts.id, { onDelete: "cascade" }),
+  contactId: uuid("contact_id").references(() => contacts.id),
   value: varchar("value").notNull(),
   type: varchar("type"),
 });
 
 export const contactEmails = pgTable("contact_emails", {
   id: uuid("id").defaultRandom().primaryKey(),
-  contactId: uuid("contact_id").references(() => contacts.id, { onDelete: "cascade" }),
+  contactId: uuid("contact_id").references(() => contacts.id),
   value: varchar("value").notNull(),
   type: varchar("type"),
 });
 
 export const contactAddresses = pgTable("contact_addresses", {
   id: uuid("id").defaultRandom().primaryKey(),
-  contactId: uuid("contact_id").references(() => contacts.id, { onDelete: "cascade" }),
+  contactId: uuid("contact_id").references(() => contacts.id),
   value: varchar("value").notNull(),
   type: varchar("type"),
 });

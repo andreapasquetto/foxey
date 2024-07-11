@@ -10,7 +10,7 @@ export const cars = pgTable("cars", {
 
 export const refuelings = pgTable("refuelings", {
   id: uuid("id").defaultRandom().primaryKey(),
-  carId: uuid("car_id").references(() => cars.id, { onDelete: "cascade" }),
+  carId: uuid("car_id").references(() => cars.id),
   ron: integer("ron").default(95),
   date: date("date").notNull(),
   place: varchar("place").notNull(),
