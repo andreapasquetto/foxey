@@ -1,5 +1,6 @@
 "use client";
 
+import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -11,6 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useCreateRefuelingMutation } from "@/modules/cars/cars-mutations";
 import {
   RefuelingCreateForm,
   refuelingCreateFormSchema,
@@ -27,7 +29,7 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
   const form = useForm<RefuelingCreateForm>({
     resolver: zodResolver(refuelingCreateFormSchema),
     defaultValues: {
-      car: props.carId,
+      carId: props.carId,
       place: "",
       cost: 0,
       quantity: 0,
@@ -37,9 +39,12 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
     },
   });
 
+  const mutation = useCreateRefuelingMutation();
+
   function onValidSubmit(values: RefuelingCreateForm) {
-    console.log(values);
-    props.onSubmit();
+    mutation.mutate(values, {
+      onSuccess: () => props.onSubmit(),
+    });
   }
 
   return (
@@ -190,7 +195,12 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
           />
         </div>
 
-        <Button type="submit">Submit</Button>
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={mutation.isPending}>
+            Submit
+          </Button>
+          {mutation.isPending && <CircularSpinner />}
+        </div>
       </form>
     </Form>
   );

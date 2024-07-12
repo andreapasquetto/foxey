@@ -10,9 +10,11 @@ export const cars = pgTable("cars", {
 
 export const refuelings = pgTable("refuelings", {
   id: uuid("id").defaultRandom().primaryKey(),
-  carId: uuid("car_id").references(() => cars.id),
+  carId: uuid("car_id")
+    .notNull()
+    .references(() => cars.id),
   ron: integer("ron").default(95),
-  date: date("date").notNull(),
+  date: date("date").notNull().defaultNow(),
   place: varchar("place").notNull(),
   cost: numeric("cost").notNull(),
   quantity: numeric("quantity").notNull(),
