@@ -119,7 +119,7 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
             Add a new wallet to manage transactions and transfers.
           </DialogDescription>
         </DialogHeader>
-        <WalletCreateForm />
+        <WalletCreateForm onSubmit={() => setShowNewWalletDialog(false)} />
       </DialogContent>
     </Dialog>
   );

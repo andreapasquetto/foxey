@@ -1,3 +1,4 @@
+import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -8,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useWalletCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   WalletCreateForm,
   walletCreateFormSchema,
@@ -15,7 +17,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-export function WalletCreateForm() {
+interface WalletCreateFormProps {
+  onSubmit: () => void;
+}
+
+export function WalletCreateForm(props: WalletCreateFormProps) {
   const form = useForm<WalletCreateForm>({
     resolver: zodResolver(walletCreateFormSchema),
     defaultValues: {
@@ -24,8 +30,12 @@ export function WalletCreateForm() {
     },
   });
 
+  const mutation = useWalletCreateMutation();
+
   function onValidSubmit(values: WalletCreateForm) {
-    console.log(values);
+    mutation.mutate(values, {
+      onSuccess: () => props.onSubmit(),
+    });
   }
 
   return (
@@ -59,7 +69,12 @@ export function WalletCreateForm() {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={mutation.isPending}>
+            Submit
+          </Button>
+          {mutation.isPending && <CircularSpinner />}
+        </div>
       </form>
     </Form>
   );
