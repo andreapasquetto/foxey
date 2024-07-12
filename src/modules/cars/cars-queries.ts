@@ -1,9 +1,10 @@
+import { carsQueryKey } from "@/common/query-keys";
 import { getCars, getHighwayTrips, getRefuelings } from "@/modules/cars/cars-actions";
 import { useQuery } from "@tanstack/react-query";
 
 export function useCarsQuery() {
   return useQuery({
-    queryKey: ["cars"],
+    queryKey: carsQueryKey(),
     queryFn: () => getCars(),
   });
 }

@@ -1,5 +1,6 @@
 "use client";
 
+import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useCreateCarMutation } from "@/modules/cars/cars-mutations";
 import { CarCreateForm, carCreateFormSchema } from "@/modules/cars/schemas/car-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -28,9 +30,12 @@ export function CarCreateForm(props: CarCreateFormProps) {
     },
   });
 
+  const mutation = useCreateCarMutation();
+
   function onValidSubmit(values: CarCreateForm) {
-    console.log(values);
-    props.onSubmit();
+    mutation.mutate(values, {
+      onSuccess: () => props.onSubmit(),
+    });
   }
 
   return (
@@ -83,7 +88,12 @@ export function CarCreateForm(props: CarCreateFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={mutation.isPending}>
+            Submit
+          </Button>
+          {mutation.isPending && <CircularSpinner />}
+        </div>
       </form>
     </Form>
   );

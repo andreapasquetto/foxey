@@ -38,7 +38,7 @@ export function HighwayTrips(props: HighwayTripsProps) {
       <TableHeader>
         <TableRow>
           <TableHead>Date</TableHead>
-          <TableHead>Startig toll</TableHead>
+          <TableHead>Starting toll</TableHead>
           <TableHead>Ending toll</TableHead>
           <TableHead>
             Distance (<code>km</code>)

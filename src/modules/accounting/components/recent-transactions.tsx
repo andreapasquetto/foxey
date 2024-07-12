@@ -55,7 +55,7 @@ export function RecentTransactions(props: RecentTransactionsProps) {
       <TableBody>
         {filteredTransactions.map((tx) => (
           <TableRow key={tx.id}>
-            <TableCell>{tx.datetime}</TableCell>
+            <TableCell></TableCell>
             <TableCell>
               <div>
                 {tx.from && !tx.to && <div>outgoing</div>}
@@ -75,7 +75,7 @@ export function RecentTransactions(props: RecentTransactionsProps) {
                 </div>
               </div>
             </TableCell>
-            <TableCell>{tx.category}</TableCell>
+            <TableCell></TableCell>
             <TableCell>{tx.description ?? "-"}</TableCell>
             <TableCell className="text-right">
               {
