@@ -27,8 +27,10 @@ export const refuelings = pgTable("refuelings", {
 
 export const highwayTrips = pgTable("highway_trips", {
   id: uuid("id").defaultRandom().primaryKey(),
-  carId: uuid("car_id").references(() => cars.id),
-  date: date("date").notNull(),
+  carId: uuid("car_id")
+    .notNull()
+    .references(() => cars.id),
+  date: date("date").notNull().defaultNow(),
   startingToll: varchar("starting_toll").notNull(),
   endingToll: varchar("ending_toll").notNull(),
   distance: numeric("distance").notNull(),

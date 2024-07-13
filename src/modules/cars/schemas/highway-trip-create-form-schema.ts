@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const highwayTripCreateFormSchema = z.object({
-  car: z.string().min(1).max(255),
-  start: z.string().min(1).max(255),
-  end: z.string().min(1).max(255),
+  carId: z.string().min(1).max(255),
+  startingToll: z.string().min(1).max(255),
+  endingToll: z.string().min(1).max(255),
   distance: z.number(),
   cost: z.number().min(0),
   avgSpeed: z.number(),

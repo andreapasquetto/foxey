@@ -1,5 +1,6 @@
 "use client";
 
+import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,6 +11,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { useCreateHighwayTripMutation } from "@/modules/cars/cars-mutations";
 import {
   HighwayTripCreateForm,
   highwayTripCreateFormSchema,
@@ -26,18 +28,19 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
   const form = useForm<HighwayTripCreateForm>({
     resolver: zodResolver(highwayTripCreateFormSchema),
     defaultValues: {
-      car: props.carId,
-      start: "",
-      end: "",
+      carId: props.carId,
+      startingToll: "",
+      endingToll: "",
       distance: 0,
       cost: 0,
       avgSpeed: 0,
     },
   });
 
+  const mutation = useCreateHighwayTripMutation();
+
   function onValidSubmit(values: HighwayTripCreateForm) {
-    console.log(values);
-    props.onSubmit();
+    mutation.mutate(values, { onSuccess: () => props.onSubmit() });
   }
 
   return (
@@ -45,7 +48,7 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
         <FormField
           control={form.control}
-          name="start"
+          name="startingToll"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Start</FormLabel>
@@ -58,7 +61,7 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
         />
         <FormField
           control={form.control}
-          name="end"
+          name="endingToll"
           render={({ field }) => (
             <FormItem>
               <FormLabel>End</FormLabel>
@@ -112,7 +115,12 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={mutation.isPending}>
+            Submit
+          </Button>
+          {mutation.isPending && <CircularSpinner />}
+        </div>
       </form>
     </Form>
   );
