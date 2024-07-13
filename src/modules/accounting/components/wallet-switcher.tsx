@@ -1,5 +1,6 @@
 "use client";
 
+import { currencyFormatter } from "@/common/formatters";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
@@ -83,7 +84,10 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
                   }}
                   className="gap-2 text-sm"
                 >
-                  {wallet.name}
+                  <span>
+                    {wallet.name}
+                  </span>
+                  <span className="font-mono text-xs text-muted-foreground">{currencyFormatter.format(Number(wallet.amount))}</span>
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
