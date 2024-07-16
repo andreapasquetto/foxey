@@ -84,10 +84,10 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
                   }}
                   className="gap-2 text-sm"
                 >
-                  <span>
-                    {wallet.name}
+                  <span>{wallet.name}</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {currencyFormatter.format(Number(wallet.amount))}
                   </span>
-                  <span className="font-mono text-xs text-muted-foreground">{currencyFormatter.format(Number(wallet.amount))}</span>
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",

@@ -15,20 +15,21 @@ export const contactPhoneNumbers = pgTable("contact_phone_numbers", {
   contactId: uuid("contact_id").references(() => contacts.id),
   value: varchar("value").notNull(),
   type: varchar("type"),
+  isArchived: boolean("is_archived").default(false),
 });
 
 export const contactEmails = pgTable("contact_emails", {
   id: uuid("id").defaultRandom().primaryKey(),
   contactId: uuid("contact_id").references(() => contacts.id),
   value: varchar("value").notNull(),
-  type: varchar("type"),
+  isArchived: boolean("is_archived").default(false),
 });
 
 export const contactAddresses = pgTable("contact_addresses", {
   id: uuid("id").defaultRandom().primaryKey(),
   contactId: uuid("contact_id").references(() => contacts.id),
+  isArchived: boolean("is_archived").default(false),
   value: varchar("value").notNull(),
-  type: varchar("type"),
 });
 
 export const contactRelations = relations(contacts, ({ many }) => ({
