@@ -5,7 +5,7 @@
   "scripts": {
     "db:push": "drizzle-kit push",
     "db:view": "drizzle-kit studio",
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "format": "prettier --ignore-path .gitignore --write .",
     "build": "next build",
     "start": "next start",
