@@ -25,11 +25,6 @@ export default function CarsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Recent refuelings</CardTitle>
-                {selectedCar && (
-                  <CardDescription>
-                    {selectedCar.make} {selectedCar.model}
-                  </CardDescription>
-                )}
               </div>
               {selectedCar && <AddRefueling selectedCar={selectedCar} />}
             </div>
@@ -43,11 +38,6 @@ export default function CarsPage() {
             <div className="flex items-center justify-between">
               <div>
                 <CardTitle>Highway trips</CardTitle>
-                {selectedCar && (
-                  <CardDescription>
-                    {selectedCar.make} {selectedCar.model}
-                  </CardDescription>
-                )}
               </div>
               {selectedCar && <AddHighwayTrip selectedCar={selectedCar} />}
             </div>
