@@ -11,7 +11,7 @@ import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { useState } from "react";
 
 interface AddTransactionProps {
-  selectedWallet: WalletRead;
+  selectedWallet?: WalletRead;
 }
 
 export function AddTransaction(props: AddTransactionProps) {
@@ -25,10 +25,12 @@ export function AddTransaction(props: AddTransactionProps) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add transaction</DialogTitle>
-          <DialogDescription>{props.selectedWallet.name}</DialogDescription>
+          {props.selectedWallet && (
+            <DialogDescription>{props.selectedWallet.name}</DialogDescription>
+          )}
         </DialogHeader>
         <TransactionCreateForm
-          walletId={props.selectedWallet.id}
+          walletId={props.selectedWallet?.id}
           onSubmit={() => setShowDialog(false)}
         />
       </DialogContent>

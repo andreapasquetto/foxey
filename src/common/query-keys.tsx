@@ -12,3 +12,7 @@ export function highwayTripsQueryKey() {
 export function walletsQueryKey() {
   return ["wallets"];
 }
+
+export function transactionsQueryKey() {
+  return ["transactions"];
+}

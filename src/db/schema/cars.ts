@@ -8,6 +8,7 @@ export const cars = pgTable("cars", {
   model: varchar("model").notNull(),
 });
 
+// TODO: add transactionId for tracking the payment of a refueling
 export const refuelings = pgTable("refuelings", {
   id: uuid("id").defaultRandom().primaryKey(),
   carId: uuid("car_id")
@@ -25,6 +26,7 @@ export const refuelings = pgTable("refuelings", {
   odometer: numeric("odometer").notNull(),
 });
 
+// TODO: add a transactionId for tracking the payment of a trip
 export const highwayTrips = pgTable("highway_trips", {
   id: uuid("id").defaultRandom().primaryKey(),
   carId: uuid("car_id")

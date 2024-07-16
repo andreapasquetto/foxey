@@ -24,11 +24,12 @@ import {
   transactionCreateFormSchema,
 } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRightLeft, Minus, Plus } from "lucide-react";
+import { format } from "date-fns";
 import { useForm } from "react-hook-form";
+import { useTransactionCreateMutation } from "../accounting-mutations";
 
 interface TransactionCreateFormProps {
-  walletId: string;
+  walletId?: string;
   onSubmit: () => void;
 }
 
@@ -36,16 +37,16 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
   const form = useForm<TransactionCreateForm>({
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
-      wallet: props.walletId,
+      from: props.walletId,
       datetime: new Date(),
-      description: "",
-      primaryCategory: "",
       amount: 0,
-      secondaryCategory: "",
+      description: "",
     },
   });
 
   const { data: wallets, isFetching } = useWalletsQuery();
+
+  const mutation = useTransactionCreateMutation();
 
   if (!wallets || isFetching) {
     return <CircularSpinner className="mx-auto" />;
@@ -54,8 +55,11 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
   const availableWallets = wallets.filter((w) => w.id !== props.walletId);
 
   function onSubmit(values: TransactionCreateForm) {
-    console.log(values);
-    props.onSubmit();
+    mutation.mutate(values, {
+      onSuccess: () => {
+        props.onSubmit();
+      },
+    });
   }
 
   return (
@@ -68,43 +72,40 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Date</FormLabel>
-                <FormControl></FormControl>
+                <FormControl>
+                  <Input placeholder={format(field.value, "EEE yyyy-MM-dd HH:mm")} disabled />
+                </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="type"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Type</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="incoming">
-                      <Plus className="mr-1 inline-block h-4 w-4 text-green-500 dark:text-green-400" />{" "}
-                      Incoming
-                    </SelectItem>
-                    <SelectItem value="outgoing">
-                      <Minus className="mr-1 inline-block h-4 w-4 text-red-500 dark:text-red-400" />{" "}
-                      Outgoing
-                    </SelectItem>
-                    <SelectItem value="transfer">
-                      <ArrowRightLeft className="mr-1 inline-block h-4 w-4 text-muted-foreground" />{" "}
-                      Transfer
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          {!props.walletId && (
+            <FormField
+              control={form.control}
+              name="from"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>From</FormLabel>
+                  <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {availableWallets.map((w) => (
+                        <SelectItem key={w.id} value={w.id} className="gap-2 text-sm">
+                          {w.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          )}
 
           {
             <FormField
@@ -137,52 +138,6 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
         <div className="space-y-2">
           <FormField
             control={form.control}
-            name="primaryCategory"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Primary category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="something">Something</SelectItem>
-                    <SelectItem value="somethingElse">Something Else</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="secondaryCategory"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Secondary category</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    <SelectItem value="something">Something</SelectItem>
-                    <SelectItem value="somethingElse">Something Else</SelectItem>
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
             name="amount"
             render={({ field }) => (
               <FormItem>
@@ -210,7 +165,12 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
           />
         </div>
 
-        <Button type="submit">Submit</Button>
+        <div className="flex items-center gap-3">
+          <Button type="submit" disabled={mutation.isPending}>
+            Submit
+          </Button>
+          {mutation.isPending && <CircularSpinner />}
+        </div>
       </form>
     </Form>
   );

@@ -24,7 +24,7 @@ export default function AccountingPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Recent transactions</CardTitle>
-              {selectedWallet && <AddTransaction selectedWallet={selectedWallet} />}
+              <AddTransaction selectedWallet={selectedWallet} />
             </div>
           </CardHeader>
           <CardContent>
