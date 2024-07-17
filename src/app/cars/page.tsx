@@ -1,13 +1,13 @@
 "use client";
 
 import { Heading1 } from "@/components/typography";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddHighwayTrip } from "@/modules/cars/components/add-highway-trip";
 import { AddRefueling } from "@/modules/cars/components/add-refueling";
+import CarStats from "@/modules/cars/components/car-stats";
 import { CarSwitcher } from "@/modules/cars/components/car-switcher";
 import { HighwayTrips } from "@/modules/cars/components/highway-trips";
 import { RecentRefuelings } from "@/modules/cars/components/recent-refuelings";
-import RefuelingStats from "@/modules/cars/components/refueling-stats";
 import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 import { useState } from "react";
 
@@ -16,10 +16,12 @@ export default function CarsPage() {
 
   return (
     <section>
-      <Heading1>Cars</Heading1>
-      <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+      <div className="flex items-center justify-between">
+        <Heading1>Cars</Heading1>
+        <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+      </div>
       <div className="mt-3 grid gap-3">
-        <RefuelingStats carId={selectedCar?.id} />
+        <CarStats carId={selectedCar?.id} />
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">

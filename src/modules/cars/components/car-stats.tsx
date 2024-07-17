@@ -5,14 +5,19 @@ interface RefuelingStatsProps {
   carId: string | undefined;
 }
 
-export default function RefuelingStats(props: RefuelingStatsProps) {
+export default function CarStats(props: RefuelingStatsProps) {
   if (!props.carId) {
     return (
-      <div className="my-12">
-        <p className="text-center text-sm text-muted-foreground">
-          Select a car to see its statistics.
-        </p>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Stats</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-center text-sm text-muted-foreground">
+            Select a car to see its statistics.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
@@ -35,11 +40,16 @@ export default function RefuelingStats(props: RefuelingStatsProps) {
 
   if (!true) {
     return (
-      <div className="my-12">
-        <p className="text-center text-sm text-muted-foreground">
-          Statistics are not available for the selected car.
-        </p>
-      </div>
+      <Card>
+        <CardHeader>
+          <CardTitle>Stats</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-center text-sm text-muted-foreground">
+            Statistics are not available for the selected car.
+          </p>
+        </CardContent>
+      </Card>
     );
   }
 
