@@ -130,7 +130,7 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
             control={form.control}
             name="isFull"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-3">
+              <FormItem className="flex items-end gap-3">
                 <FormControl>
                   <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>
@@ -144,7 +144,7 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
             control={form.control}
             name="isNecessary"
             render={({ field }) => (
-              <FormItem className="flex items-center gap-3">
+              <FormItem className="flex items-end gap-3">
                 <FormControl>
                   <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                 </FormControl>

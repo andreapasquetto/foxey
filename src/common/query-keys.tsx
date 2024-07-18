@@ -9,6 +9,10 @@ export function highwayTripsQueryKey() {
   return ["highway-trips"];
 }
 
+export function contactsQueryKey() {
+  return ["contact"];
+}
+
 export function walletsQueryKey() {
   return ["wallets"];
 }

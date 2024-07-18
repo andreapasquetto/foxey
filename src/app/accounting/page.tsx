@@ -15,9 +15,11 @@ export default function AccountingPage() {
 
   return (
     <section>
-      <Heading1>Accounting</Heading1>
+      <div className="flex items-center justify-between">
+        <Heading1>Accounting</Heading1>
+        <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
+      </div>
       <TotalBalance />
-      <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
       <div className="mt-3 grid gap-3">
         <AccountingStats walletId={selectedWallet?.id} />
         <Card>

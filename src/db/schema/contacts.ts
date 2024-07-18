@@ -14,7 +14,6 @@ export const contactPhoneNumbers = pgTable("contact_phone_numbers", {
   id: uuid("id").defaultRandom().primaryKey(),
   contactId: uuid("contact_id").references(() => contacts.id),
   value: varchar("value").notNull(),
-  type: varchar("type"),
   isArchived: boolean("is_archived").default(false),
 });
 

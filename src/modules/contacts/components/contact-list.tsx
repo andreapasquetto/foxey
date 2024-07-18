@@ -9,8 +9,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { cn } from "@/lib/utils";
 import { useContactsQuery } from "@/modules/contacts/contacts-queries";
-import { Building, CheckIcon, User, XIcon } from "lucide-react";
+import { Building, User } from "lucide-react";
 
 export function ContactList() {
   const { data: contacts, isFetching } = useContactsQuery();
@@ -32,12 +33,11 @@ export function ContactList() {
           <TableHead></TableHead>
           <TableHead>Full name</TableHead>
           <TableHead>Date of birth</TableHead>
-          <TableHead>Archived</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
         {contacts.map((contact) => (
-          <TableRow key={contact.id}>
+          <TableRow key={contact.id} className={cn({ "opacity-50": contact.isArchived })}>
             <TableCell>
               {contact.isBusiness ? (
                 <Building className="h-5 w-5 text-muted-foreground" />
@@ -53,13 +53,6 @@ export function ContactList() {
               )}
             </TableCell>
             <TableCell>{contact.dob ?? "-"}</TableCell>
-            <TableCell>
-              {contact.isArchived ? (
-                <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
-              ) : (
-                <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
-              )}
-            </TableCell>
           </TableRow>
         ))}
       </TableBody>

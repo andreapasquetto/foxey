@@ -47,7 +47,6 @@ export function RecentTransactions(props: RecentTransactionsProps) {
         <TableRow>
           <TableHead>Date</TableHead>
           <TableHead>Type</TableHead>
-          <TableHead>Category</TableHead>
           <TableHead>Description</TableHead>
           <TableHead className="text-right">Amount</TableHead>
         </TableRow>
@@ -75,7 +74,6 @@ export function RecentTransactions(props: RecentTransactionsProps) {
                 </div>
               </div>
             </TableCell>
-            <TableCell></TableCell>
             <TableCell>{tx.description ?? "-"}</TableCell>
             <TableCell className="text-right">
               {
