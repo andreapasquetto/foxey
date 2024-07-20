@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { DeletePlace } from "@/modules/places/components/delete-place";
 import { usePlacesQuery } from "@/modules/places/places-queries";
 import { CheckIcon, XIcon } from "lucide-react";
 
@@ -31,6 +32,7 @@ export function PlacesList() {
         <TableRow>
           <TableHead>Name</TableHead>
           <TableHead>Visited</TableHead>
+          <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -43,6 +45,11 @@ export function PlacesList() {
               ) : (
                 <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
               )}
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center justify-end">
+                <DeletePlace place={place} />
+              </div>
             </TableCell>
           </TableRow>
         ))}

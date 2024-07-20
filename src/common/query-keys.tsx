@@ -28,3 +28,7 @@ export function placeCategoriesQueryKey() {
 export function placesQueryKey() {
   return ["places"];
 }
+
+export function placeDeleteQueryKey(id: string) {
+  return ["places", id, "delete"];
+}

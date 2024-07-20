@@ -3,6 +3,7 @@
 import { db } from "@/db/db";
 import { placeCategories, places } from "@/db/schema/places";
 import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-schema";
+import { eq } from "drizzle-orm";
 
 export async function getPlaceCategories() {
   return await db.select().from(placeCategories);
@@ -19,4 +20,8 @@ export async function createPlace(place: PlaceCreateForm) {
     address: place.address,
     isVisited: place.isVisited,
   });
+}
+
+export async function deletePlace(id: string) {
+  await db.delete(places).where(eq(places.id, id));
 }

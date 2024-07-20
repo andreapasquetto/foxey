@@ -11,7 +11,7 @@ export const places = pgTable("places", {
   categoryId: uuid("category_id").references(() => placeCategories.id),
   name: varchar("name").notNull(),
   address: varchar("address").notNull(),
-  isVisited: boolean("is_visited").default(false),
+  isVisited: boolean("is_visited").notNull().default(false),
 });
 
 export const placeCategoryRelations = relations(placeCategories, ({ many }) => ({
