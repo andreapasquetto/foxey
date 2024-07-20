@@ -20,3 +20,11 @@ export function walletsQueryKey() {
 export function transactionsQueryKey() {
   return ["transactions"];
 }
+
+export function placeCategoriesQueryKey() {
+  return ["place-categories"];
+}
+
+export function placesQueryKey() {
+  return ["places"];
+}
