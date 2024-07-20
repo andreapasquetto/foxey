@@ -10,6 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { DeleteContact } from "@/modules/contacts/components/delete-contact";
 import { useContactsQuery } from "@/modules/contacts/contacts-queries";
 import { Building, User } from "lucide-react";
 
@@ -33,6 +34,7 @@ export function ContactList() {
           <TableHead></TableHead>
           <TableHead>Full name</TableHead>
           <TableHead>Date of birth</TableHead>
+          <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -53,6 +55,11 @@ export function ContactList() {
               )}
             </TableCell>
             <TableCell>{contact.dob ?? "-"}</TableCell>
+            <TableCell>
+              <div className="flex items-center justify-end">
+                <DeleteContact contact={contact} />
+              </div>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>

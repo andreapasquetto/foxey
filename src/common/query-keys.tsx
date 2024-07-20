@@ -10,7 +10,11 @@ export function highwayTripsQueryKey() {
 }
 
 export function contactsQueryKey() {
-  return ["contact"];
+  return ["contacts"];
+}
+
+export function contactDeleteQueryKey(id: string) {
+  return ["contacts", id, "delete"];
 }
 
 export function walletsQueryKey() {

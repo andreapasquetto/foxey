@@ -3,8 +3,8 @@ import { boolean, date, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const contacts = pgTable("contacts", {
   id: uuid("id").defaultRandom().primaryKey(),
-  isArchived: boolean("is_archived").default(false),
-  isBusiness: boolean("is_business").default(false),
+  isArchived: boolean("is_archived").notNull().default(false),
+  isBusiness: boolean("is_business").notNull().default(false),
   fullName: varchar("full_name").notNull(),
   subtitle: varchar("subtitle"),
   dob: date("dob"),
