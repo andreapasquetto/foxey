@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCreateContactMutation } from "@/modules/contacts/contacts-mutations";
 import {
-  ContactCreateForm,
+  type ContactCreateForm,
   contactCreateFormSchema,
 } from "@/modules/contacts/schemas/contact-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -41,7 +41,6 @@ export function ContactCreateForm(props: ContactCreateFormProps) {
   const mutation = useCreateContactMutation();
 
   function onValidSubmit(values: ContactCreateForm) {
-    console.log(values);
     mutation.mutate(values, {
       onSuccess: () => props.onSubmit(),
     });

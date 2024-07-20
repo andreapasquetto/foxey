@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCreateHighwayTripMutation } from "@/modules/cars/cars-mutations";
 import {
-  HighwayTripCreateForm,
+  type HighwayTripCreateForm,
   highwayTripCreateFormSchema,
 } from "@/modules/cars/schemas/highway-trip-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";

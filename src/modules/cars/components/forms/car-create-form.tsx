@@ -12,7 +12,10 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCreateCarMutation } from "@/modules/cars/cars-mutations";
-import { CarCreateForm, carCreateFormSchema } from "@/modules/cars/schemas/car-create-form-schema";
+import {
+  type CarCreateForm,
+  carCreateFormSchema,
+} from "@/modules/cars/schemas/car-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 

@@ -21,7 +21,7 @@ import {
 import { useTransactionCreateMutation } from "@/modules/accounting/accounting-mutations";
 import { useWalletsQuery } from "@/modules/accounting/accounting-queries";
 import {
-  TransactionCreateForm,
+  type TransactionCreateForm,
   transactionCreateFormSchema,
 } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";

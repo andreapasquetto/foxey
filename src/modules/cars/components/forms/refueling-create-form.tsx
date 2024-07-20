@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useCreateRefuelingMutation } from "@/modules/cars/cars-mutations";
 import {
-  RefuelingCreateForm,
+  type RefuelingCreateForm,
   refuelingCreateFormSchema,
 } from "@/modules/cars/schemas/refueling-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";

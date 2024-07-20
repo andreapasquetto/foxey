@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { useWalletCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
-  WalletCreateForm,
+  type WalletCreateForm,
   walletCreateFormSchema,
 } from "@/modules/accounting/schemas/wallet-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
