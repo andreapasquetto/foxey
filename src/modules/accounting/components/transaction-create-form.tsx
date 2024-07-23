@@ -37,8 +37,8 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
   const form = useForm<TransactionCreateForm>({
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
-      from: props.walletId,
-      datetime: new Date(),
+      fromWalletId: props.walletId,
+      date: new Date(),
       amount: 0,
       description: "",
     },
@@ -68,7 +68,7 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
         <div className="space-y-2">
           <FormField
             control={form.control}
-            name="datetime"
+            name="date"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Date</FormLabel>
@@ -83,7 +83,7 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
           {!props.walletId && (
             <FormField
               control={form.control}
-              name="from"
+              name="fromWalletId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>From</FormLabel>
@@ -110,7 +110,7 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
           {
             <FormField
               control={form.control}
-              name="to"
+              name="toWalletId"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>To</FormLabel>

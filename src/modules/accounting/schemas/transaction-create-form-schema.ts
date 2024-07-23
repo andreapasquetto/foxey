@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 export const transactionCreateFormSchema = z.object({
-  datetime: z.date(),
-  from: z.string().optional(),
-  to: z.string().optional(),
+  date: z.string().pipe(z.coerce.date()),
+  fromWalletId: z.string().optional(),
+  toWalletId: z.string().optional(),
   amount: z.number(),
   description: z.string(),
 });

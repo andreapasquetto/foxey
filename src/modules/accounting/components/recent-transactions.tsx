@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useTransactionsQuery, useWalletsQuery } from "@/modules/accounting/accounting-queries";
+import { formatISO } from "date-fns";
 import { ChevronsRight } from "lucide-react";
 
 interface RecentTransactionsProps {
@@ -26,7 +27,8 @@ export function RecentTransactions(props: RecentTransactionsProps) {
 
   const filteredTransactions = props.walletId
     ? transactions.filter(
-        (transaction) => transaction.from === props.walletId || transaction.to === props.walletId,
+        (transaction) =>
+          transaction.fromWalletId === props.walletId || transaction.toWalletId === props.walletId,
       )
     : transactions;
 
@@ -54,23 +56,27 @@ export function RecentTransactions(props: RecentTransactionsProps) {
       <TableBody>
         {filteredTransactions.map((tx) => (
           <TableRow key={tx.id}>
-            <TableCell></TableCell>
+            <TableCell>{formatISO(tx.date, { representation: "date" })}</TableCell>
             <TableCell>
               <div>
-                {tx.from && !tx.to && <div>outgoing</div>}
-                {!tx.from && tx.to && <div>incoming</div>}
-                {tx.from && tx.to && <div>transfer</div>}
+                {tx.fromWalletId && !tx.toWalletId && <div>outgoing</div>}
+                {!tx.fromWalletId && tx.toWalletId && <div>incoming</div>}
+                {tx.fromWalletId && tx.toWalletId && <div>transfer</div>}
                 <div className="space-x-2 text-sm text-muted-foreground">
-                  {tx.from && <span>{wallets.find((wallet) => wallet.id === tx.from)?.name}</span>}
-                  {tx.from && tx.to && (
+                  {tx.fromWalletId && (
+                    <span>{wallets.find((wallet) => wallet.id === tx.fromWalletId)?.name}</span>
+                  )}
+                  {tx.fromWalletId && tx.toWalletId && (
                     <ChevronsRight
                       className={cn("inline-block h-5 w-5", {
-                        "text-red-500 dark:text-red-400": props.walletId === tx.from,
-                        "text-green-500 dark:text-green-400": props.walletId === tx.to,
+                        "text-red-500 dark:text-red-400": props.walletId === tx.fromWalletId,
+                        "text-green-500 dark:text-green-400": props.walletId === tx.toWalletId,
                       })}
                     />
                   )}
-                  {tx.to && <span>{wallets.find((wallet) => wallet.id === tx.to)?.name}</span>}
+                  {tx.toWalletId && (
+                    <span>{wallets.find((wallet) => wallet.id === tx.toWalletId)?.name}</span>
+                  )}
                 </div>
               </div>
             </TableCell>
@@ -79,9 +85,9 @@ export function RecentTransactions(props: RecentTransactionsProps) {
               {
                 <code
                   className={cn({
-                    "text-green-500 dark:text-green-400": tx.to && !tx.from,
-                    "text-red-500 dark:text-red-400": tx.from && !tx.to,
-                    "text-muted-foreground": tx.from && tx.to,
+                    "text-green-500 dark:text-green-400": tx.toWalletId && !tx.fromWalletId,
+                    "text-red-500 dark:text-red-400": tx.fromWalletId && !tx.toWalletId,
+                    "text-muted-foreground": tx.fromWalletId && tx.toWalletId,
                   })}
                 >
                   {rawCurrencyFormatter.format(parseFloat(tx.amount))}
