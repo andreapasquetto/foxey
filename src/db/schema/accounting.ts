@@ -10,7 +10,7 @@ export const wallets = pgTable("wallets", {
 
 export const transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  date: date("date", { mode: "date" }).notNull(),
+  date: date("date", { mode: "date" }).notNull().defaultNow(),
   fromWalletId: uuid("from_wallet_id").references(() => wallets.id),
   toWalletId: uuid("to_wallet_id").references(() => wallets.id),
   amount: numeric("amount").notNull(),

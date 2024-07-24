@@ -25,6 +25,10 @@ export function transactionsQueryKey() {
   return ["transactions"];
 }
 
+export function transactionDeleteQueryKey(id: string) {
+  return ["transactions", id, "delete"];
+}
+
 export function placeCategoriesQueryKey() {
   return ["place-categories"];
 }

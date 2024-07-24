@@ -4,7 +4,7 @@ import { db } from "@/db/db";
 import { transactions, wallets } from "@/db/schema/accounting";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export async function getWallets() {
   return await db.select().from(wallets);
@@ -31,4 +31,9 @@ export async function createTransaction(transaction: TransactionCreateForm) {
     amount: transaction.amount.toString(),
     description: transaction.description,
   });
+}
+
+// TODO: update wallet amount
+export async function deleteTransaction(id: string) {
+  await db.delete(transactions).where(eq(transactions.id, id));
 }

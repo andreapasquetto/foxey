@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useTransactionsQuery, useWalletsQuery } from "@/modules/accounting/accounting-queries";
+import { DeleteTransaction } from "@/modules/accounting/components/delete-transaction";
 import { formatISO } from "date-fns";
 import { ChevronsRight } from "lucide-react";
 
@@ -51,6 +52,7 @@ export function RecentTransactions(props: RecentTransactionsProps) {
           <TableHead>Type</TableHead>
           <TableHead>Description</TableHead>
           <TableHead className="text-right">Amount</TableHead>
+          <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -93,6 +95,11 @@ export function RecentTransactions(props: RecentTransactionsProps) {
                   {rawCurrencyFormatter.format(parseFloat(tx.amount))}
                 </code>
               }
+            </TableCell>
+            <TableCell>
+              <div className="flex items-center justify-end">
+                <DeleteTransaction transaction={tx} />
+              </div>
             </TableCell>
           </TableRow>
         ))}
