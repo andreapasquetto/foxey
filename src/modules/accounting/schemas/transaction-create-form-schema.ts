@@ -4,6 +4,7 @@ export const transactionCreateFormSchema = z.object({
   date: z.string().pipe(z.coerce.date()),
   fromWalletId: z.string().optional(),
   toWalletId: z.string().optional(),
+  categoryId: z.string().optional(),
   amount: z.number(),
   description: z.string(),
 });

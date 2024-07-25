@@ -21,6 +21,10 @@ export function walletsQueryKey() {
   return ["wallets"];
 }
 
+export function transactionCategoriesQueryKey() {
+  return ["transaction-categories"];
+}
+
 export function transactionsQueryKey() {
   return ["transactions"];
 }
