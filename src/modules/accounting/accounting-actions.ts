@@ -1,10 +1,12 @@
 "use server";
 
+import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { countTotalRecords } from "@/common/server-actions";
 import { db } from "@/db/db";
 import { transactionCategories, transactions, wallets } from "@/db/schema/accounting";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 export async function getWallets() {
@@ -35,8 +37,28 @@ export async function getTransactionCategories() {
     .orderBy(parent.name, transactionCategories.name);
 }
 
-export async function getTransactions() {
-  return await db.select().from(transactions).orderBy(desc(transactions.date));
+export async function transactionsGetPaginated(options: {
+  paginate: Paginate;
+  walletId: string | undefined;
+}) {
+  // TODO: total is not correct with a walletId
+  const total = await countTotalRecords(transactions);
+  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+  const records = await db
+    .select()
+    .from(transactions)
+    .where(
+      options.walletId
+        ? or(
+            eq(transactions.fromWalletId, options.walletId),
+            eq(transactions.toWalletId, options.walletId),
+          )
+        : undefined,
+    )
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(transactions.date));
+  return toPaginated(records, total);
 }
 
 // TODO: update wallet amount

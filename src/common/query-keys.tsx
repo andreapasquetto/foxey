@@ -25,7 +25,8 @@ export function transactionCategoriesQueryKey() {
   return ["transaction-categories"];
 }
 
-export function transactionsQueryKey() {
+export function transactionsQueryKey(walletId: string | undefined) {
+  if (walletId) return ["transactions", walletId];
   return ["transactions"];
 }
 

@@ -1,3 +1,4 @@
+import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   transactionCategoriesQueryKey,
   transactionsQueryKey,
@@ -5,8 +6,8 @@ import {
 } from "@/common/query-keys";
 import {
   getTransactionCategories,
-  getTransactions,
   getWallets,
+  transactionsGetPaginated,
 } from "@/modules/accounting/accounting-actions";
 import { useQuery } from "@tanstack/react-query";
 
@@ -24,9 +25,9 @@ export function useTransactionCategoriesQuery() {
   });
 }
 
-export function useTransactionsQuery() {
-  return useQuery({
-    queryKey: transactionsQueryKey(),
-    queryFn: () => getTransactions(),
+export function useTransactionsPaginatedQuery(walletId: string | undefined) {
+  return usePaginatedQuery({
+    queryKey: transactionsQueryKey(walletId),
+    queryFn: (paginate) => transactionsGetPaginated({ paginate, walletId }),
   });
 }
