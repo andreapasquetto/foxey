@@ -1,6 +1,7 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
+import { QueryPagination } from "@/components/pagination";
 import {
   Table,
   TableBody,
@@ -11,13 +12,14 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { DeleteContact } from "@/modules/contacts/components/delete-contact";
-import { useContactsQuery } from "@/modules/contacts/contacts-queries";
+import { useContactsPaginatedQuery } from "@/modules/contacts/contacts-queries";
 import { Building, User } from "lucide-react";
 
 export function ContactList() {
-  const { data: contacts, isFetching } = useContactsQuery();
+  const query = useContactsPaginatedQuery();
 
-  if (!contacts || isFetching) return <CircularSpinner className="mx-auto" />;
+  if (!query.data || query.isFetching) return <CircularSpinner className="mx-auto" />;
+  const contacts = query.data.records;
 
   if (!contacts.length) {
     return (
@@ -28,41 +30,43 @@ export function ContactList() {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead></TableHead>
-          <TableHead>Full name</TableHead>
-          <TableHead>Date of birth</TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {contacts.map((contact) => (
-          <TableRow key={contact.id} className={cn({ "opacity-50": contact.isArchived })}>
-            <TableCell>
-              {contact.isBusiness ? (
-                <Building className="h-5 w-5 text-muted-foreground" />
-              ) : (
-                <User className="h-5 w-5 text-muted-foreground" />
-              )}
-            </TableCell>
-
-            <TableCell>
-              {contact.fullName}
-              {contact.subtitle && (
-                <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
-              )}
-            </TableCell>
-            <TableCell>{contact.dob ?? "-"}</TableCell>
-            <TableCell>
-              <div className="flex items-center justify-end">
-                <DeleteContact contact={contact} />
-              </div>
-            </TableCell>
+    <div>
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead></TableHead>
+            <TableHead>Full name</TableHead>
+            <TableHead>Date of birth</TableHead>
+            <TableHead></TableHead>
           </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+        </TableHeader>
+        <TableBody>
+          {contacts.map((contact) => (
+            <TableRow key={contact.id} className={cn({ "opacity-50": contact.isArchived })}>
+              <TableCell>
+                {contact.isBusiness ? (
+                  <Building className="h-5 w-5 text-muted-foreground" />
+                ) : (
+                  <User className="h-5 w-5 text-muted-foreground" />
+                )}
+              </TableCell>
+              <TableCell>
+                {contact.fullName}
+                {contact.subtitle && (
+                  <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
+                )}
+              </TableCell>
+              <TableCell>{contact.dob ?? "-"}</TableCell>
+              <TableCell>
+                <div className="flex items-center justify-end">
+                  <DeleteContact contact={contact} />
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <QueryPagination query={query} />
+    </div>
   );
 }

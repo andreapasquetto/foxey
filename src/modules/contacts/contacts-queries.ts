@@ -1,9 +1,10 @@
-import { getContacts } from "@/modules/contacts/contacts-actions";
-import { useQuery } from "@tanstack/react-query";
+import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
+import { contactsQueryKey } from "@/common/query-keys";
+import { contactsGetPaginated } from "@/modules/contacts/contacts-actions";
 
-export function useContactsQuery() {
-  return useQuery({
-    queryKey: ["contacts"],
-    queryFn: () => getContacts(),
+export function useContactsPaginatedQuery() {
+  return usePaginatedQuery({
+    queryKey: contactsQueryKey(),
+    queryFn: (paginate) => contactsGetPaginated(paginate),
   });
 }
