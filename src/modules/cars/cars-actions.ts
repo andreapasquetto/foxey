@@ -1,10 +1,13 @@
 "use server";
 
+import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { countTotalRecords } from "@/common/server-actions";
 import { db } from "@/db/db";
 import { cars, highwayTrips, refuelings } from "@/db/schema/cars";
 import { CarCreateForm } from "@/modules/cars/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/cars/schemas/highway-trip-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/cars/schemas/refueling-create-form-schema";
+import { desc, eq } from "drizzle-orm";
 
 export async function getCars() {
   return await db.select().from(cars);
@@ -14,8 +17,21 @@ export async function createCar(car: CarCreateForm) {
   await db.insert(cars).values(car);
 }
 
-export async function getRefuelings() {
-  return await db.select().from(refuelings).orderBy(refuelings.date);
+export async function refuelingsGetPaginated(options: {
+  paginate: Paginate;
+  carId: string | undefined;
+}) {
+  // TODO: total is not correct with a carId
+  const total = await countTotalRecords(refuelings);
+  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+  const records = await db
+    .select()
+    .from(refuelings)
+    .where(options.carId ? eq(refuelings.carId, options.carId) : undefined)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(refuelings.date));
+  return toPaginated(records, total);
 }
 
 export async function createRefueling(refueling: RefuelingCreateForm) {

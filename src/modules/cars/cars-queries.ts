@@ -1,5 +1,6 @@
-import { carsQueryKey } from "@/common/query-keys";
-import { getCars, getHighwayTrips, getRefuelings } from "@/modules/cars/cars-actions";
+import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
+import { carsQueryKey, refuelingsQueryKey } from "@/common/query-keys";
+import { getCars, getHighwayTrips, refuelingsGetPaginated } from "@/modules/cars/cars-actions";
 import { useQuery } from "@tanstack/react-query";
 
 export function useCarsQuery() {
@@ -9,10 +10,10 @@ export function useCarsQuery() {
   });
 }
 
-export function useRefuelingsQuery() {
-  return useQuery({
-    queryKey: ["refuelings"],
-    queryFn: () => getRefuelings(),
+export function useRefuelingsPaginatedQuery(carId: string | undefined) {
+  return usePaginatedQuery({
+    queryKey: refuelingsQueryKey(carId),
+    queryFn: (paginate) => refuelingsGetPaginated({ paginate, carId }),
   });
 }
 

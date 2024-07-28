@@ -1,7 +1,8 @@
 export function carsQueryKey() {
   return ["cars"];
 }
-export function refuelingsQueryKey() {
+export function refuelingsQueryKey(carId: string | undefined) {
+  if (carId) return ["refuelings", carId];
   return ["refuelings"];
 }
 
