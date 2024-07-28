@@ -1,7 +1,7 @@
 import { Heading1 } from "@/components/typography";
 import { Card, CardContent } from "@/components/ui/card";
 import { AddPlace } from "@/modules/places/components/add-place";
-import { PlacesList } from "@/modules/places/components/places-list";
+import { PlaceList } from "@/modules/places/components/place-list";
 
 export default function PlacesPage() {
   return (
@@ -13,7 +13,7 @@ export default function PlacesPage() {
       <div className="mt-3">
         <Card className="pt-6">
           <CardContent>
-            <PlacesList />
+            <PlaceList />
           </CardContent>
         </Card>
       </div>

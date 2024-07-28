@@ -1,5 +1,6 @@
+import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import { placeCategoriesQueryKey, placesQueryKey } from "@/common/query-keys";
-import { getPlaceCategories, getPlaces } from "@/modules/places/places-actions";
+import { getPlaceCategories, placesGetPaginated } from "@/modules/places/places-actions";
 import { useQuery } from "@tanstack/react-query";
 
 export function usePlaceCategoriesQuery() {
@@ -9,9 +10,9 @@ export function usePlaceCategoriesQuery() {
   });
 }
 
-export function usePlacesQuery() {
-  return useQuery({
+export function usePlacesPaginatedQuery() {
+  return usePaginatedQuery({
     queryKey: placesQueryKey(),
-    queryFn: () => getPlaces(),
+    queryFn: (paginate) => placesGetPaginated(paginate),
   });
 }
