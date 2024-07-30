@@ -6,7 +6,8 @@ import { db } from "@/db/db";
 import { transactionCategories, transactions, wallets } from "@/db/schema/accounting";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
-import { desc, eq, or } from "drizzle-orm";
+import { endOfDay, endOfMonth, startOfMonth, startOfToday, sub } from "date-fns";
+import { between, desc, eq, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 
 export async function getWallets() {
@@ -21,7 +22,7 @@ export async function createWallet(wallet: WalletCreateForm) {
   });
 }
 
-export async function getTransactionCategories() {
+export async function transactionCategoriesGetAll() {
   const parent = alias(transactionCategories, "parent");
   return await db
     .select({
@@ -35,6 +36,27 @@ export async function getTransactionCategories() {
     .from(transactionCategories)
     .leftJoin(parent, eq(parent.id, transactionCategories.parentId))
     .orderBy(parent.name, transactionCategories.name);
+}
+
+export async function transactionsGetMonthToDate() {
+  const today = startOfToday();
+
+  return await db
+    .select()
+    .from(transactions)
+    .where(between(transactions.date, startOfMonth(today), endOfDay(today)))
+    .orderBy(transactions.date);
+}
+
+export async function transactionsGetLastMonth() {
+  const startOfLastMonth = startOfMonth(sub(startOfToday(), { months: 1 }));
+  const endOfLastMonth = endOfDay(endOfMonth(startOfLastMonth));
+
+  return await db
+    .select()
+    .from(transactions)
+    .where(between(transactions.date, startOfLastMonth, endOfLastMonth))
+    .orderBy(transactions.date);
 }
 
 export async function transactionsGetPaginated(options: {

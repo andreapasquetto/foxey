@@ -19,13 +19,18 @@ export default function AccountingPage() {
         <Heading1>Accounting</Heading1>
       </div>
       <TotalBalance />
-      <div className="mt-3 grid gap-3">
-        <AccountingStats walletId={selectedWallet?.id} />
+      <div className="mt-3 space-y-3">
+        <AccountingStats />
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Transactions</CardTitle>
-              <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
+              <div className="hidden md:block">
+                <WalletSwitcher
+                  selectedWallet={selectedWallet}
+                  onSelectWallet={setSelectedWallet}
+                />
+              </div>
               <AddTransaction selectedWallet={selectedWallet} />
             </div>
           </CardHeader>

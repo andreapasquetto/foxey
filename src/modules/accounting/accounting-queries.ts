@@ -1,12 +1,16 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   transactionCategoriesQueryKey,
+  transactionsLastMonthQueryKey,
+  transactionsMonthToDateQueryKey,
   transactionsQueryKey,
   walletsQueryKey,
 } from "@/common/query-keys";
 import {
-  getTransactionCategories,
   getWallets,
+  transactionCategoriesGetAll,
+  transactionsGetLastMonth,
+  transactionsGetMonthToDate,
   transactionsGetPaginated,
 } from "@/modules/accounting/accounting-actions";
 import { useQuery } from "@tanstack/react-query";
@@ -21,7 +25,21 @@ export function useWalletsQuery() {
 export function useTransactionCategoriesQuery() {
   return useQuery({
     queryKey: transactionCategoriesQueryKey(),
-    queryFn: () => getTransactionCategories(),
+    queryFn: () => transactionCategoriesGetAll(),
+  });
+}
+
+export function useTransactionsGetMonthToDateQuery() {
+  return useQuery({
+    queryKey: transactionsMonthToDateQueryKey(),
+    queryFn: () => transactionsGetMonthToDate(),
+  });
+}
+
+export function useTransactionsGetLastMonthQuery() {
+  return useQuery({
+    queryKey: transactionsLastMonthQueryKey(),
+    queryFn: () => transactionsGetLastMonth(),
   });
 }
 
