@@ -16,10 +16,10 @@ export default function CarsPage() {
 
   return (
     <section>
-      <div className="flex items-center justify-between">
+      <div className="mb-6">
         <Heading1>Cars</Heading1>
       </div>
-      <div className="mt-3 grid gap-3">
+      <div className="mt-3 space-y-3">
         <CarStats carId={selectedCar?.id} />
         <Card>
           <CardHeader>

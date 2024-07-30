@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/dialog";
 import { TransactionCreateForm } from "@/modules/accounting/components/transaction-create-form";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
+import { Plus } from "lucide-react";
 import { useState } from "react";
 
 interface AddTransactionProps {
@@ -19,8 +20,11 @@ export function AddTransaction(props: AddTransactionProps) {
 
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
-      <Button size="sm" onClick={() => setShowDialog(true)}>
+      <Button className="hidden sm:inline-flex" size="sm" onClick={() => setShowDialog(true)}>
         Add transaction
+      </Button>
+      <Button className="sm:hidden" size="icon" onClick={() => setShowDialog(true)}>
+        <Plus className="h-5 w-5" />
       </Button>
       <DialogContent>
         <DialogHeader>

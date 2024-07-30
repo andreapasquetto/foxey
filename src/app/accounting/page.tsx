@@ -15,7 +15,7 @@ export default function AccountingPage() {
 
   return (
     <section>
-      <div className="flex items-center justify-between">
+      <div className="mb-6">
         <Heading1>Accounting</Heading1>
       </div>
       <TotalBalance />

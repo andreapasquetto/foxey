@@ -6,7 +6,7 @@ import { CreateContact } from "@/modules/contacts/components/create-contact";
 export default function ContactsPage() {
   return (
     <section>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mb-6">
         <Heading1>Contacts</Heading1>
         <CreateContact />
       </div>

@@ -6,7 +6,7 @@ import { PlaceList } from "@/modules/places/components/place-list";
 export default function PlacesPage() {
   return (
     <section>
-      <div className="flex items-center justify-between">
+      <div className="mb-6 flex items-center justify-between">
         <Heading1>Places</Heading1>
         <AddPlace />
       </div>

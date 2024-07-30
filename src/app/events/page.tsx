@@ -5,7 +5,9 @@ import { EventList } from "@/modules/events/components/event-list";
 export default function EventsPage() {
   return (
     <section>
-      <Heading1>Events</Heading1>
+      <div className="mb-6">
+        <Heading1>Events</Heading1>
+      </div>
 
       <div className="mt-3">
         <Card className="pt-6">
