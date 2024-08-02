@@ -1,6 +1,6 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
-import { CircularSpinner } from "@/components/circular-spinner";
 import { QueryPagination } from "@/components/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -23,12 +23,22 @@ interface RecentTransactionsProps {
 }
 
 export function TransactionList(props: RecentTransactionsProps) {
-  const { data: wallets, isFetching: isFetchingWallets } = useWalletsQuery();
+  const walletsQuery = useWalletsQuery();
   const transactionsQuery = useTransactionsPaginatedQuery(props.walletId);
 
-  // TODO: show a skeleton to avoid scroll shifts
-  if (!wallets || isFetchingWallets || !transactionsQuery.data || transactionsQuery.isFetching) {
-    return <CircularSpinner className="mx-auto" />;
+  const hasData = walletsQuery.data && transactionsQuery.data;
+
+  if (!hasData) {
+    return (
+      <Table>
+        <TableHeader>
+          <TableHeaderRow />
+        </TableHeader>
+        <TableBody>
+          <TableRowsSkeleton />
+        </TableBody>
+      </Table>
+    );
   }
 
   const transactions = transactionsQuery.data.records;
@@ -48,65 +58,106 @@ export function TransactionList(props: RecentTransactionsProps) {
     <div>
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead>Date</TableHead>
-            <TableHead>Type</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead className="text-right">Amount</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
-          {transactions.map((tx) => (
-            <TableRow key={tx.id}>
-              <TableCell>{formatISO(tx.date, { representation: "date" })}</TableCell>
-              <TableCell>
-                <div>
-                  {tx.fromWalletId && !tx.toWalletId && <div>outgoing</div>}
-                  {!tx.fromWalletId && tx.toWalletId && <div>incoming</div>}
-                  {tx.fromWalletId && tx.toWalletId && <div>transfer</div>}
-                  <div className="space-x-2 text-sm text-muted-foreground">
-                    {tx.fromWalletId && (
-                      <span>{wallets.find((wallet) => wallet.id === tx.fromWalletId)?.name}</span>
-                    )}
-                    {tx.fromWalletId && tx.toWalletId && (
-                      <ChevronsRight
-                        className={cn("inline-block h-5 w-5", {
-                          "text-red-500 dark:text-red-400": props.walletId === tx.fromWalletId,
-                          "text-green-500 dark:text-green-400": props.walletId === tx.toWalletId,
-                        })}
-                      />
-                    )}
-                    {tx.toWalletId && (
-                      <span>{wallets.find((wallet) => wallet.id === tx.toWalletId)?.name}</span>
-                    )}
+          {!hasData && <TableRowsSkeleton />}
+          {hasData &&
+            transactionsQuery.data.records.map((tx) => (
+              <TableRow key={tx.id}>
+                <TableCell>{formatISO(tx.date, { representation: "date" })}</TableCell>
+                <TableCell>
+                  <div>
+                    {tx.fromWalletId && !tx.toWalletId && <div>outgoing</div>}
+                    {!tx.fromWalletId && tx.toWalletId && <div>incoming</div>}
+                    {tx.fromWalletId && tx.toWalletId && <div>transfer</div>}
+                    <div className="space-x-2 text-sm text-muted-foreground">
+                      {tx.fromWalletId && (
+                        <span>
+                          {walletsQuery.data.find((wallet) => wallet.id === tx.fromWalletId)?.name}
+                        </span>
+                      )}
+                      {tx.fromWalletId && tx.toWalletId && (
+                        <ChevronsRight
+                          className={cn("inline-block h-5 w-5", {
+                            "text-red-500 dark:text-red-400": props.walletId === tx.fromWalletId,
+                            "text-green-500 dark:text-green-400": props.walletId === tx.toWalletId,
+                          })}
+                        />
+                      )}
+                      {tx.toWalletId && (
+                        <span>
+                          {walletsQuery.data.find((wallet) => wallet.id === tx.toWalletId)?.name}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-              </TableCell>
-              <TableCell>{tx.description ?? "-"}</TableCell>
-              <TableCell className="text-right">
-                {
-                  <code
-                    className={cn({
-                      "text-green-500 dark:text-green-400": tx.toWalletId && !tx.fromWalletId,
-                      "text-red-500 dark:text-red-400": tx.fromWalletId && !tx.toWalletId,
-                      "text-muted-foreground": tx.fromWalletId && tx.toWalletId,
-                    })}
-                  >
-                    {rawCurrencyFormatter.format(parseFloat(tx.amount))}
-                  </code>
-                }
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-end">
-                  <DeleteTransaction transaction={tx} />
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
+                </TableCell>
+                <TableCell>{tx.description ?? "-"}</TableCell>
+                <TableCell className="text-right">
+                  {
+                    <code
+                      className={cn({
+                        "text-green-500 dark:text-green-400": tx.toWalletId && !tx.fromWalletId,
+                        "text-red-500 dark:text-red-400": tx.fromWalletId && !tx.toWalletId,
+                        "text-muted-foreground": tx.fromWalletId && tx.toWalletId,
+                      })}
+                    >
+                      {rawCurrencyFormatter.format(parseFloat(tx.amount))}
+                    </code>
+                  }
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center justify-end">
+                    <DeleteTransaction transaction={tx} />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
       <QueryPagination query={transactionsQuery} />
     </div>
   );
+}
+
+function TableHeaderRow() {
+  return (
+    <TableRow>
+      <TableHead>Date</TableHead>
+      <TableHead>Type</TableHead>
+      <TableHead>Description</TableHead>
+      <TableHead className="text-right">Amount</TableHead>
+      <TableHead></TableHead>
+    </TableRow>
+  );
+}
+
+function TableRowsSkeleton() {
+  return Array.from({ length: 3 }).map((_) => (
+    <>
+      <TableRow>
+        <TableCell>
+          <Skeleton className="h-4 w-20" />
+        </TableCell>
+        <TableCell>
+          <div className="space-y-1">
+            <Skeleton className="h-4 w-20"></Skeleton>
+            <Skeleton className="h-4 w-16"></Skeleton>
+          </div>
+        </TableCell>
+        <TableCell>
+          <Skeleton className="h-4 w-60" />
+        </TableCell>
+        <TableCell>
+          <Skeleton className="ml-auto h-4 w-20" />
+        </TableCell>
+        <TableCell>
+          <div className="flex items-center justify-end">
+            <Skeleton className="aspect-square h-10" />
+          </div>
+        </TableCell>
+      </TableRow>
+    </>
+  ));
 }

@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useWalletsQuery } from "@/modules/accounting/accounting-queries";
 import { WalletCreateForm } from "@/modules/accounting/components/wallet-create-form";
@@ -36,29 +37,26 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [showNewWalletDialog, setShowNewWalletDialog] = useState(false);
 
-  const { data: wallets, isFetching } = useWalletsQuery();
+  const query = useWalletsQuery();
 
   return (
     <Dialog open={showNewWalletDialog} onOpenChange={setShowNewWalletDialog}>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={!!open}
-            aria-label="Select a team"
-            className={cn("w-[250px] justify-between")}
-          >
-            {!wallets || isFetching ? (
-              <CircularSpinner />
-            ) : props.selectedWallet ? (
-              props.selectedWallet.name
-            ) : (
-              "No wallet selected"
-            )}
-            <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
+        {query.isFetching && <Skeleton className="h-10 w-60" />}
+        {!query.isFetching && (
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={!!open}
+              aria-label="Select a team"
+              className={cn("w-[250px] justify-between")}
+            >
+              {props.selectedWallet?.name ?? "No wallet selected"}
+              <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+        )}
         <PopoverContent className="w-[250px] p-0">
           <Command>
             <CommandList>
@@ -75,7 +73,7 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
             <CommandSeparator />
             <CommandList>
               <CommandEmpty>No wallet found.</CommandEmpty>
-              {wallets?.map((wallet) => (
+              {query.data?.map((wallet) => (
                 <CommandItem
                   key={wallet.id}
                   onSelect={() => {

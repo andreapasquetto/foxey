@@ -13,7 +13,7 @@ import {
   transactionsGetMonthToDate,
   transactionsGetPaginated,
 } from "@/modules/accounting/accounting-actions";
-import { useQuery } from "@tanstack/react-query";
+import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export function useWalletsQuery() {
   return useQuery({
@@ -47,5 +47,6 @@ export function useTransactionsPaginatedQuery(walletId: string | undefined) {
   return usePaginatedQuery({
     queryKey: transactionsQueryKey(walletId),
     queryFn: (paginate) => transactionsGetPaginated({ paginate, walletId }),
+    placeholderData: keepPreviousData,
   });
 }
