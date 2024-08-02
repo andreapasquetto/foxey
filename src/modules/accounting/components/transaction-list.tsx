@@ -134,30 +134,28 @@ function TableHeaderRow() {
 }
 
 function TableRowsSkeleton() {
-  return Array.from({ length: 3 }).map((_) => (
-    <>
-      <TableRow>
-        <TableCell>
+  return Array.from({ length: 3 }).map((_, i) => (
+    <TableRow key={i}>
+      <TableCell>
+        <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <div className="space-y-1">
           <Skeleton className="h-4 w-20" />
-        </TableCell>
-        <TableCell>
-          <div className="space-y-1">
-            <Skeleton className="h-4 w-20"></Skeleton>
-            <Skeleton className="h-4 w-16"></Skeleton>
-          </div>
-        </TableCell>
-        <TableCell>
-          <Skeleton className="h-4 w-60" />
-        </TableCell>
-        <TableCell>
-          <Skeleton className="ml-auto h-4 w-20" />
-        </TableCell>
-        <TableCell>
-          <div className="flex items-center justify-end">
-            <Skeleton className="aspect-square h-10" />
-          </div>
-        </TableCell>
-      </TableRow>
-    </>
+          <Skeleton className="h-4 w-16" />
+        </div>
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-60" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="ml-auto h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center justify-end">
+          <Skeleton className="aspect-square h-10" />
+        </div>
+      </TableCell>
+    </TableRow>
   ));
 }

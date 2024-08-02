@@ -15,7 +15,7 @@ export const refuelings = pgTable("refuelings", {
     .notNull()
     .references(() => cars.id),
   ron: integer("ron").default(95),
-  date: date("date").notNull().defaultNow(),
+  date: date("date", { mode: "date" }).notNull().defaultNow(),
   place: varchar("place").notNull(),
   cost: numeric("cost").notNull(),
   quantity: numeric("quantity").notNull(),

@@ -1,4 +1,3 @@
-import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -17,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useCarsQuery } from "@/modules/cars/cars-queries";
 import { CarCreateForm } from "@/modules/cars/components/forms/car-create-form";
@@ -33,29 +33,28 @@ export function CarSwitcher(props: CarSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [showNewCarDialog, setShowNewCarDialog] = useState(false);
 
-  const { data: cars, isFetching } = useCarsQuery();
+  const query = useCarsQuery();
 
   return (
     <Dialog open={showNewCarDialog} onOpenChange={setShowNewCarDialog}>
       <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button
-            variant="outline"
-            role="combobox"
-            aria-expanded={!!open}
-            aria-label="Select a team"
-            className={cn("w-[250px] justify-between")}
-          >
-            {!cars || isFetching ? (
-              <CircularSpinner />
-            ) : props.selectedCar ? (
-              `${props.selectedCar.make} ${props.selectedCar.model}`
-            ) : (
-              "No car selected"
-            )}
-            <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
-          </Button>
-        </PopoverTrigger>
+        {query.isFetching && <Skeleton className="h-10 w-60" />}
+        {!query.isFetching && (
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              role="combobox"
+              aria-expanded={!!open}
+              aria-label="Select a team"
+              className={cn("w-[250px] justify-between")}
+            >
+              {props.selectedCar
+                ? `${props.selectedCar.make} ${props.selectedCar.model}`
+                : "No car selected"}
+              <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
+            </Button>
+          </PopoverTrigger>
+        )}
         <PopoverContent className="w-[250px] p-0">
           <Command>
             <CommandList>
@@ -71,7 +70,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
             <CommandSeparator />
             <CommandList>
               <CommandEmpty>No car found.</CommandEmpty>
-              {cars?.map((car) => (
+              {query.data?.map((car) => (
                 <CommandItem
                   key={car.id}
                   onSelect={() => {

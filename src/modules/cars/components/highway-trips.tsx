@@ -1,4 +1,4 @@
-import { CircularSpinner } from "@/components/circular-spinner";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -14,13 +14,24 @@ interface HighwayTripsProps {
 }
 
 export function HighwayTrips(props: HighwayTripsProps) {
-  const { data: trips, isFetching } = useHighwayTripsQuery();
+  const query = useHighwayTripsQuery();
 
-  if (!trips || isFetching) {
-    return <CircularSpinner className="mx-auto" />;
+  if (!query.data) {
+    return (
+      <Table>
+        <TableHeader>
+          <TableHeaderRow />
+        </TableHeader>
+        <TableBody>
+          <TableRowsSkeleton />
+        </TableBody>
+      </Table>
+    );
   }
 
-  const filteredTrips = props.carId ? trips.filter((trip) => trip.carId === props.carId) : trips;
+  const filteredTrips = props.carId
+    ? query.data.filter((trip) => trip.carId === props.carId)
+    : query.data;
 
   if (!filteredTrips.length) {
     return (
@@ -36,20 +47,7 @@ export function HighwayTrips(props: HighwayTripsProps) {
   return (
     <Table>
       <TableHeader>
-        <TableRow>
-          <TableHead>Date</TableHead>
-          <TableHead>Starting toll</TableHead>
-          <TableHead>Ending toll</TableHead>
-          <TableHead>
-            Distance (<code>km</code>)
-          </TableHead>
-          <TableHead>
-            Cost (<code>€</code>)
-          </TableHead>
-          <TableHead>
-            Average speed (<code>km/h</code>)
-          </TableHead>
-        </TableRow>
+        <TableHeaderRow />
       </TableHeader>
       <TableBody>
         {filteredTrips.map((trip) => (
@@ -71,4 +69,48 @@ export function HighwayTrips(props: HighwayTripsProps) {
       </TableBody>
     </Table>
   );
+}
+
+function TableHeaderRow() {
+  return (
+    <TableRow>
+      <TableHead>Date</TableHead>
+      <TableHead>Starting toll</TableHead>
+      <TableHead>Ending toll</TableHead>
+      <TableHead>
+        Distance (<code>km</code>)
+      </TableHead>
+      <TableHead>
+        Cost (<code>€</code>)
+      </TableHead>
+      <TableHead>
+        Average speed (<code>km/h</code>)
+      </TableHead>
+    </TableRow>
+  );
+}
+
+function TableRowsSkeleton() {
+  return Array.from({ length: 3 }).map((_, i) => (
+    <TableRow key={i}>
+      <TableCell>
+        <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-32" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-32" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-14" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-14" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-14" />
+      </TableCell>
+    </TableRow>
+  ));
 }

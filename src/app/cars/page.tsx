@@ -16,8 +16,9 @@ export default function CarsPage() {
 
   return (
     <section>
-      <div className="mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <Heading1>Cars</Heading1>
+        <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
       </div>
       <div className="mt-3 space-y-3">
         <CarStats carId={selectedCar?.id} />
@@ -25,7 +26,6 @@ export default function CarsPage() {
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>Refuelings</CardTitle>
-              <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
               {selectedCar && <AddRefueling selectedCar={selectedCar} />}
             </div>
           </CardHeader>

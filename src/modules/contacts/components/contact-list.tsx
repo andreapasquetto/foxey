@@ -1,7 +1,7 @@
 "use client";
 
-import { CircularSpinner } from "@/components/circular-spinner";
 import { QueryPagination } from "@/components/pagination";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -18,7 +18,19 @@ import { Building, User } from "lucide-react";
 export function ContactList() {
   const query = useContactsPaginatedQuery();
 
-  if (!query.data || query.isFetching) return <CircularSpinner className="mx-auto" />;
+  if (!query.data) {
+    return (
+      <Table>
+        <TableHeader>
+          <TableHeaderRow />
+        </TableHeader>
+        <TableBody>
+          <TableRowsSkeleton />
+        </TableBody>
+      </Table>
+    );
+  }
+
   const contacts = query.data.records;
 
   if (!contacts.length) {
@@ -33,12 +45,7 @@ export function ContactList() {
     <div>
       <Table>
         <TableHeader>
-          <TableRow>
-            <TableHead></TableHead>
-            <TableHead>Full name</TableHead>
-            <TableHead>Date of birth</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
           {contacts.map((contact) => (
@@ -69,4 +76,38 @@ export function ContactList() {
       <QueryPagination query={query} />
     </div>
   );
+}
+
+function TableHeaderRow() {
+  return (
+    <TableRow>
+      <TableHead></TableHead>
+      <TableHead>Full name</TableHead>
+      <TableHead>Date of birth</TableHead>
+      <TableHead>Actions</TableHead>
+    </TableRow>
+  );
+}
+
+function TableRowsSkeleton() {
+  return Array.from({ length: 3 }).map((_, i) => (
+    <TableRow key={i}>
+      <TableCell>
+        <div className="flex items-center">
+          <Skeleton className="aspect-square h-5" />
+        </div>
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-60" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center justify-end">
+          <Skeleton className="aspect-square h-10" />
+        </div>
+      </TableCell>
+    </TableRow>
+  ));
 }
