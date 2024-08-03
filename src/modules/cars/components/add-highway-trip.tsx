@@ -26,7 +26,7 @@ export function AddHighwayTrip(props: AddHighwayTripProps) {
       <Button className="sm:hidden" size="icon" onClick={() => setShowDialog(true)}>
         <Plus className="h-5 w-5" />
       </Button>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Add highway trip</DialogTitle>
           <DialogDescription>

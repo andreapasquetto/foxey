@@ -114,7 +114,7 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
           </Command>
         </PopoverContent>
       </Popover>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Add wallet</DialogTitle>
           <DialogDescription>

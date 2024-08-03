@@ -111,7 +111,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
           </Command>
         </PopoverContent>
       </Popover>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Add car</DialogTitle>
           <DialogDescription>Add a new car to manage refuelings.</DialogDescription>

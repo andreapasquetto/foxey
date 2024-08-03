@@ -26,7 +26,7 @@ export function DeleteContact(props: DeleteContactProps) {
       <Button size="icon" variant="destructive" onClick={() => setShowDialog(true)}>
         <Trash className="h-5 w-5" />
       </Button>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Delete &quot;{props.contact.fullName}&quot;</DialogTitle>
         </DialogHeader>

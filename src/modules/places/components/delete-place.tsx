@@ -26,7 +26,7 @@ export function DeletePlace(props: DeletePlaceProps) {
       <Button size="icon" variant="destructive" onClick={() => setShowDialog(true)}>
         <Trash className="h-5 w-5" />
       </Button>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Delete &quot;{props.place.name}&quot;</DialogTitle>
         </DialogHeader>

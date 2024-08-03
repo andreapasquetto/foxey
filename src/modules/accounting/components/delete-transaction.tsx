@@ -33,7 +33,7 @@ export function DeleteTransaction(props: DeleteTransactionProps) {
       <Button size="icon" variant="destructive" onClick={() => setShowDialog(true)}>
         <Trash className="h-5 w-5" />
       </Button>
-      <DialogContent>
+      <DialogContent aria-describedby={undefined}>
         <DialogHeader>
           <DialogTitle>Delete transaction</DialogTitle>
           <DialogDescription>
