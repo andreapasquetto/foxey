@@ -13,7 +13,7 @@ import {
 } from "@/modules/cars/cars-utils";
 
 interface RefuelingStatsProps {
-  carId: string | undefined;
+  carId?: string;
 }
 
 export default function CarStats(props: RefuelingStatsProps) {

@@ -1,7 +1,6 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
-import { countTotalRecords } from "@/common/server-actions";
 import { db } from "@/db/db";
 import { transactionCategories, transactions, wallets } from "@/db/schema/accounting";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
@@ -59,12 +58,9 @@ export async function transactionsGetLastMonth() {
     .orderBy(transactions.date);
 }
 
-export async function transactionsGetPaginated(options: {
-  paginate: Paginate;
-  walletId: string | undefined;
-}) {
-  // TODO: total is not correct with a walletId
-  const total = await countTotalRecords(transactions);
+export async function transactionsGetPaginated(options: { paginate: Paginate; walletId?: string }) {
+  const total = await countTotalTransactions(options.walletId);
+
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
   const records = await db
     .select()
@@ -98,4 +94,14 @@ export async function createTransaction(tx: TransactionCreateForm) {
 // TODO: update wallet amount
 export async function deleteTransaction(id: string) {
   await db.delete(transactions).where(eq(transactions.id, id));
+}
+
+async function countTotalTransactions(walletId?: string) {
+  const totalRecordsQB = db.select().from(transactions);
+  if (walletId) {
+    totalRecordsQB.where(
+      or(eq(transactions.fromWalletId, walletId), eq(transactions.toWalletId, walletId)),
+    );
+  }
+  return (await totalRecordsQB).length;
 }

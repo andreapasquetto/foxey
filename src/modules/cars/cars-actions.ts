@@ -1,7 +1,6 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
-import { countTotalRecords } from "@/common/server-actions";
 import { db } from "@/db/db";
 import { cars, highwayTrips, refuelings } from "@/db/schema/cars";
 import { CarCreateForm } from "@/modules/cars/schemas/car-create-form-schema";
@@ -25,8 +24,7 @@ export async function refuelingsGetAll(carId?: string) {
 }
 
 export async function refuelingsGetPaginated(options: { paginate: Paginate; carId?: string }) {
-  // TODO: total is not correct with a carId
-  const total = await countTotalRecords(refuelings);
+  const total = await countTotalRefuelings(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
   const records = await db
     .select()
@@ -53,8 +51,7 @@ export async function createRefueling(refueling: RefuelingCreateForm) {
 }
 
 export async function highwayTripsGetPaginated(options: { paginate: Paginate; carId?: string }) {
-  // TODO: total is not correct with a carId
-  const total = await countTotalRecords(highwayTrips);
+  const total = await countTotalHighwayTrips(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
   const records = await db
     .select()
@@ -75,4 +72,20 @@ export async function createHighwayTrip(trip: HighwayTripCreateForm) {
     distance: String(trip.distance),
     avgSpeed: String(trip.avgSpeed),
   });
+}
+
+async function countTotalRefuelings(carId?: string) {
+  const totalRecordsQB = db.select().from(refuelings);
+  if (carId) {
+    totalRecordsQB.where(eq(refuelings.carId, carId));
+  }
+  return (await totalRecordsQB).length;
+}
+
+async function countTotalHighwayTrips(carId?: string) {
+  const totalRecordsQB = db.select().from(highwayTrips);
+  if (carId) {
+    totalRecordsQB.where(eq(highwayTrips.carId, carId));
+  }
+  return (await totalRecordsQB).length;
 }

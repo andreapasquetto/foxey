@@ -19,7 +19,7 @@ import { formatISO } from "date-fns";
 import { ChevronsRight } from "lucide-react";
 
 interface RecentTransactionsProps {
-  walletId: string | undefined;
+  walletId?: string;
 }
 
 export function TransactionList(props: RecentTransactionsProps) {

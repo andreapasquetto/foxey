@@ -43,7 +43,7 @@ export function useTransactionsGetLastMonthQuery() {
   });
 }
 
-export function useTransactionsPaginatedQuery(walletId: string | undefined) {
+export function useTransactionsPaginatedQuery(walletId?: string) {
   return usePaginatedQuery({
     queryKey: transactionsQueryKey(walletId),
     queryFn: (paginate) => transactionsGetPaginated({ paginate, walletId }),
