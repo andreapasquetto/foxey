@@ -17,10 +17,14 @@ export async function createCar(car: CarCreateForm) {
   await db.insert(cars).values(car);
 }
 
-export async function refuelingsGetPaginated(options: {
-  paginate: Paginate;
-  carId: string | undefined;
-}) {
+export async function refuelingsGetAll(carId?: string) {
+  return await db
+    .select()
+    .from(refuelings)
+    .where(carId ? eq(refuelings.carId, carId) : undefined);
+}
+
+export async function refuelingsGetPaginated(options: { paginate: Paginate; carId?: string }) {
   // TODO: total is not correct with a carId
   const total = await countTotalRecords(refuelings);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);

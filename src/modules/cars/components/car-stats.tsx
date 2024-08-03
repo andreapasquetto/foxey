@@ -1,11 +1,24 @@
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
+import { calculatePercentageChange } from "@/common/math";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useRefuelingsGetAllQuery } from "@/modules/cars/cars-queries";
+import {
+  calculateAvgDistance,
+  calculateFuelEconomy,
+  calculateMonthlyCost,
+  calculateTotalDistance,
+  extractRefuelingPeriods,
+} from "@/modules/cars/cars-utils";
 
 interface RefuelingStatsProps {
   carId: string | undefined;
 }
 
 export default function CarStats(props: RefuelingStatsProps) {
+  const refuelingsQuery = useRefuelingsGetAllQuery(props.carId);
+
   if (!props.carId) {
     return (
       <Card>
@@ -21,20 +34,19 @@ export default function CarStats(props: RefuelingStatsProps) {
     );
   }
 
-  // TODO: calculate stats from all refuelings
+  const refuelings = extractRefuelingPeriods(refuelingsQuery.data ?? []);
+
   const stats = {
     fuelCosts: {
-      thisMonth: 0,
-      fromLastMonth: null,
+      thisMonth: calculateMonthlyCost(refuelings.thisMonth),
+      lastMonth: calculateMonthlyCost(refuelings.lastMonth),
     },
     distance: {
-      average: 0,
-      lastYear: null,
-      total: null,
+      average: calculateAvgDistance(refuelings.thisMonth),
+      lastYear: calculateTotalDistance(refuelings.lastYear),
     },
     fuelEconomy: {
-      last: 0,
-      fromUsual: null,
+      last: calculateFuelEconomy(refuelings.lastMonth),
     },
   };
 
@@ -54,16 +66,35 @@ export default function CarStats(props: RefuelingStatsProps) {
   }
 
   return (
-    <div className="grid grid-cols-3 items-start gap-3">
+    <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-3">
       <Card>
         <CardHeader className="pb-2">
           <CardDescription>Monthly fuel costs</CardDescription>
-          <CardTitle>{currencyFormatter.format(stats.fuelCosts.thisMonth)}</CardTitle>
+          {refuelingsQuery.isFetching && (
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-6 w-10" />
+            </div>
+          )}
+          {!refuelingsQuery.isFetching && (
+            <CardTitle className="flex items-center gap-2">
+              {currencyFormatter.format(stats.fuelCosts.thisMonth)}
+              <Badge variant="outline">
+                {percentageFormatter.format(
+                  calculatePercentageChange(
+                    stats.fuelCosts.lastMonth,
+                    stats.fuelCosts.thisMonth,
+                  ).toNumber(),
+                )}
+              </Badge>
+            </CardTitle>
+          )}
         </CardHeader>
         <CardContent>
-          {stats.fuelCosts.fromLastMonth && (
+          {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
+          {!refuelingsQuery.isFetching && (
             <p className="text-xs text-muted-foreground">
-              {percentageFormatter.format(stats.fuelCosts.fromLastMonth)} from last month
+              {currencyFormatter.format(stats.fuelCosts.lastMonth)} last month
             </p>
           )}
         </CardContent>
@@ -71,29 +102,40 @@ export default function CarStats(props: RefuelingStatsProps) {
       <Card>
         <CardHeader className="pb-2">
           <CardDescription>Avg. distance before refueling</CardDescription>
-          <CardTitle>{numberFormatter.format(stats.distance.average)} km</CardTitle>
+          {refuelingsQuery.isFetching && (
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-6 w-10" />
+            </div>
+          )}
+          {!refuelingsQuery.isFetching && (
+            <CardTitle>{numberFormatter.format(stats.distance.average)} km</CardTitle>
+          )}
         </CardHeader>
         <CardContent>
-          {stats.distance.lastYear && stats.distance.total && (
-            <div className="text-xs text-muted-foreground">
-              {numberFormatter.format(stats.distance.lastYear)} km in the last year,{" "}
-              {numberFormatter.format(stats.distance.total)} km in total
-            </div>
+          {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
+          {!refuelingsQuery.isFetching && (
+            <p className="text-xs text-muted-foreground">
+              {numberFormatter.format(stats.distance.lastYear)} km in the last year
+            </p>
           )}
         </CardContent>
       </Card>
-      <Card>
+      <Card className="pb-6 lg:pb-0">
         <CardHeader className="pb-2">
           <CardDescription>Last fuel economy</CardDescription>
-          <CardTitle>{numberFormatter.format(stats.fuelEconomy.last)} km/l</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {stats.fuelEconomy.fromUsual && (
-            <div className="text-xs text-muted-foreground">
-              {percentageFormatter.format(stats.fuelEconomy.fromUsual)} from usual
+          {refuelingsQuery.isFetching && (
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-6 w-10" />
             </div>
           )}
-        </CardContent>
+          {!refuelingsQuery.isFetching && (
+            <CardTitle>
+              {stats.fuelEconomy.last ? numberFormatter.format(stats.fuelEconomy.last) : "-"} km/l
+            </CardTitle>
+          )}
+        </CardHeader>
       </Card>
     </div>
   );
