@@ -16,4 +16,8 @@ docker run -d \
 postgres
 ```
 
+Then, create a `.env` file following the structure of `.env.example` file. \
+Then, update the DB schema by running `npm run db:push`. \
+To browse the DB and execute basic CRUD operations onto it, start Drizzle Studio by running `npm run db:explore`.
+
 See [.env.example](.env.example) for environment variables.
