@@ -2,7 +2,7 @@ import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import { carsQueryKey, highwayTripsQueryKey, refuelingsQueryKey } from "@/common/query-keys";
 import {
   getCars,
-  getHighwayTrips,
+  highwayTripsGetPaginated,
   refuelingsGetAll,
   refuelingsGetPaginated,
 } from "@/modules/cars/cars-actions";
@@ -30,10 +30,10 @@ export function useRefuelingsPaginatedQuery(carId?: string) {
   });
 }
 
-export function useHighwayTripsQuery() {
-  return useQuery({
-    queryKey: highwayTripsQueryKey(),
-    queryFn: () => getHighwayTrips(),
+export function useHighwayTripsPaginatedQuery(carId?: string) {
+  return usePaginatedQuery({
+    queryKey: highwayTripsQueryKey(carId),
+    queryFn: (paginate) => highwayTripsGetPaginated({ paginate, carId }),
     placeholderData: keepPreviousData,
   });
 }

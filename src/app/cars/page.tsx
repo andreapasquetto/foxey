@@ -6,7 +6,7 @@ import { AddHighwayTrip } from "@/modules/cars/components/add-highway-trip";
 import { AddRefueling } from "@/modules/cars/components/add-refueling";
 import CarStats from "@/modules/cars/components/car-stats";
 import { CarSwitcher } from "@/modules/cars/components/car-switcher";
-import { HighwayTrips } from "@/modules/cars/components/highway-trips";
+import { HighwayTripList } from "@/modules/cars/components/highway-trip-list";
 import { RefuelingList } from "@/modules/cars/components/refueling-list";
 import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 import { useState } from "react";
@@ -43,7 +43,7 @@ export default function CarsPage() {
             </div>
           </CardHeader>
           <CardContent>
-            <HighwayTrips carId={selectedCar?.id} />
+            <HighwayTripList carId={selectedCar?.id} />
           </CardContent>
         </Card>
       </div>

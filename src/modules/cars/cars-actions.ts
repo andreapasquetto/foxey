@@ -52,8 +52,18 @@ export async function createRefueling(refueling: RefuelingCreateForm) {
   });
 }
 
-export async function getHighwayTrips() {
-  return await db.select().from(highwayTrips).orderBy(highwayTrips.date);
+export async function highwayTripsGetPaginated(options: { paginate: Paginate; carId?: string }) {
+  // TODO: total is not correct with a carId
+  const total = await countTotalRecords(highwayTrips);
+  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+  const records = await db
+    .select()
+    .from(highwayTrips)
+    .where(options.carId ? eq(highwayTrips.carId, options.carId) : undefined)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(highwayTrips.date);
+  return toPaginated(records, total);
 }
 
 export async function createHighwayTrip(trip: HighwayTripCreateForm) {

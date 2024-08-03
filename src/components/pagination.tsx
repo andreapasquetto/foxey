@@ -30,7 +30,7 @@ export function Pagination(props: PaginationProps) {
   return (
     <nav className="flex items-center justify-end bg-background px-4 py-3 text-muted-foreground sm:px-6">
       <div className="flex h-full items-center justify-end space-x-4">
-        <div className="text-sm font-medium">
+        <div className="hidden text-sm font-medium sm:block">
           <span>Results per page</span>
         </div>
         <Select
@@ -53,7 +53,7 @@ export function Pagination(props: PaginationProps) {
         <div className="hidden sm:block">
           <p className="text-sm">
             <span className="font-medium">
-              {`From ${Math.min(props.total, props.pageStartIndex + 1)} to ${props.pageEndIndex} of ${props.total} records`}
+              {`${Math.min(props.total, props.pageStartIndex + 1)} / ${props.pageEndIndex} of ${props.total}`}
             </span>
           </p>
         </div>

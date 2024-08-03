@@ -1,3 +1,4 @@
+import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -7,14 +8,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useHighwayTripsQuery } from "@/modules/cars/cars-queries";
+import { useHighwayTripsPaginatedQuery } from "@/modules/cars/cars-queries";
 
 interface HighwayTripsProps {
   carId: string | undefined;
 }
 
-export function HighwayTrips(props: HighwayTripsProps) {
-  const query = useHighwayTripsQuery();
+export function HighwayTripList(props: HighwayTripsProps) {
+  const query = useHighwayTripsPaginatedQuery(props.carId);
 
   if (!query.data) {
     return (
@@ -29,11 +30,9 @@ export function HighwayTrips(props: HighwayTripsProps) {
     );
   }
 
-  const filteredTrips = props.carId
-    ? query.data.filter((trip) => trip.carId === props.carId)
-    : query.data;
+  const trips = query.data.records;
 
-  if (!filteredTrips.length) {
+  if (!trips.length) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
@@ -45,29 +44,32 @@ export function HighwayTrips(props: HighwayTripsProps) {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableHeaderRow />
-      </TableHeader>
-      <TableBody>
-        {filteredTrips.map((trip) => (
-          <TableRow key={trip.id}>
-            <TableCell>{trip.date}</TableCell>
-            <TableCell>{trip.startingToll}</TableCell>
-            <TableCell>{trip.endingToll}</TableCell>
-            <TableCell>
-              <code>{trip.distance}</code>
-            </TableCell>
-            <TableCell>
-              <code>{trip.cost}</code>
-            </TableCell>
-            <TableCell>
-              <code>{trip.avgSpeed}</code>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div>
+      <Table>
+        <TableHeader>
+          <TableHeaderRow />
+        </TableHeader>
+        <TableBody>
+          {trips.map((trip) => (
+            <TableRow key={trip.id}>
+              <TableCell>{trip.date}</TableCell>
+              <TableCell>{trip.startingToll}</TableCell>
+              <TableCell>{trip.endingToll}</TableCell>
+              <TableCell>
+                <code>{trip.distance}</code>
+              </TableCell>
+              <TableCell>
+                <code>{trip.cost}</code>
+              </TableCell>
+              <TableCell>
+                <code>{trip.avgSpeed}</code>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      <QueryPagination query={query} />
+    </div>
   );
 }
 

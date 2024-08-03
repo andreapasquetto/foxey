@@ -7,7 +7,8 @@ export function refuelingsQueryKey(carId?: string) {
   return ["refuelings"];
 }
 
-export function highwayTripsQueryKey() {
+export function highwayTripsQueryKey(carId?: string) {
+  if (carId) return ["highway-trips", carId];
   return ["highway-trips"];
 }
 
