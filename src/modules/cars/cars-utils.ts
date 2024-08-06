@@ -4,13 +4,13 @@ import { Decimal } from "decimal.js";
 
 export function extractRefuelingPeriods(refuelings: RefuelingRead[]) {
   const today = startOfToday();
-  const startOfThisMonth = startOfMonth(today);
   const startOfLastMonth = startOfMonth(sub(today, { months: 1 }));
   const startOfLastYear = startOfYear(sub(today, { years: 1 }));
 
   return {
-    thisMonth: refuelings.filter((refueling) => isSameMonth(refueling.date, startOfThisMonth)),
+    thisMonth: refuelings.filter((refueling) => isSameMonth(refueling.date, today)),
     lastMonth: refuelings.filter((refueling) => isSameMonth(refueling.date, startOfLastMonth)),
+    thisYear: refuelings.filter((refueling) => isSameYear(refueling.date, today)),
     lastYear: refuelings?.filter((refueling) => isSameYear(refueling.date, startOfLastYear)),
   };
 }

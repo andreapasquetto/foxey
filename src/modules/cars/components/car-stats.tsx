@@ -45,7 +45,9 @@ export default function CarStats(props: RefuelingStatsProps) {
     },
     distance: {
       average: calculateAvgDistance(allRefuelings),
+      thisYear: calculateTotalDistance(refuelingPeriods.thisYear),
       lastYear: calculateTotalDistance(refuelingPeriods.lastYear),
+      total: calculateTotalDistance(allRefuelings),
     },
     fuelEconomy: {
       last: calculateLastFuelEconomy(allRefuelings.at(-1), allRefuelings.at(-2)),
@@ -115,11 +117,16 @@ export default function CarStats(props: RefuelingStatsProps) {
             <CardTitle>{numberFormatter.format(stats.distance.average)} km</CardTitle>
           )}
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-1">
           {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
-          {!refuelingsQuery.isFetching && (
+          {!refuelingsQuery.isFetching && stats.distance.thisYear && stats.distance.lastYear && (
             <p className="text-xs text-muted-foreground">
-              {numberFormatter.format(stats.distance.lastYear)} km in the last year
+              {`${numberFormatter.format(stats.distance.thisYear)} km this year, ${numberFormatter.format(stats.distance.lastYear)} km last year`}
+            </p>
+          )}
+          {!refuelingsQuery.isFetching && stats.distance.total && (
+            <p className="text-xs text-muted-foreground">
+              {numberFormatter.format(stats.distance.total)} km in total
             </p>
           )}
         </CardContent>
