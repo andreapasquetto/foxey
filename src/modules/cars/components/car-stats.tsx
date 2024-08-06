@@ -6,7 +6,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useRefuelingsGetAllQuery } from "@/modules/cars/cars-queries";
 import {
   calculateAvgDistance,
-  calculateFuelEconomy,
+  calculateAvgFuelEconomy,
+  calculateLastFuelEconomy,
   calculateMonthlyCost,
   calculateTotalDistance,
   extractRefuelingPeriods,
@@ -34,19 +35,21 @@ export default function CarStats(props: RefuelingStatsProps) {
     );
   }
 
-  const refuelings = extractRefuelingPeriods(refuelingsQuery.data ?? []);
+  const allRefuelings = refuelingsQuery.data ?? [];
+  const refuelingPeriods = extractRefuelingPeriods(allRefuelings);
 
   const stats = {
     fuelCosts: {
-      thisMonth: calculateMonthlyCost(refuelings.thisMonth),
-      lastMonth: calculateMonthlyCost(refuelings.lastMonth),
+      thisMonth: calculateMonthlyCost(refuelingPeriods.thisMonth),
+      lastMonth: calculateMonthlyCost(refuelingPeriods.lastMonth),
     },
     distance: {
-      average: calculateAvgDistance(refuelings.thisMonth),
-      lastYear: calculateTotalDistance(refuelings.lastYear),
+      average: calculateAvgDistance(allRefuelings),
+      lastYear: calculateTotalDistance(refuelingPeriods.lastYear),
     },
     fuelEconomy: {
-      last: calculateFuelEconomy(refuelings.lastMonth),
+      last: calculateLastFuelEconomy(allRefuelings.at(-1), allRefuelings.at(-2)),
+      avg: calculateAvgFuelEconomy(allRefuelings),
     },
   };
 
@@ -136,6 +139,14 @@ export default function CarStats(props: RefuelingStatsProps) {
             </CardTitle>
           )}
         </CardHeader>
+        <CardContent>
+          {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
+          {!refuelingsQuery.isFetching && stats.fuelEconomy.avg && (
+            <p className="text-xs text-muted-foreground">
+              All-time average is {numberFormatter.format(stats.fuelEconomy.avg)} km/l
+            </p>
+          )}
+        </CardContent>
       </Card>
     </div>
   );

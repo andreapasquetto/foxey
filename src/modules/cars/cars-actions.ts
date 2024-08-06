@@ -20,7 +20,8 @@ export async function refuelingsGetAll(carId?: string) {
   return await db
     .select()
     .from(refuelings)
-    .where(carId ? eq(refuelings.carId, carId) : undefined);
+    .where(carId ? eq(refuelings.carId, carId) : undefined)
+    .orderBy(refuelings.date);
 }
 
 export async function refuelingsGetPaginated(options: { paginate: Paginate; carId?: string }) {

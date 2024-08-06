@@ -53,7 +53,7 @@ export function Pagination(props: PaginationProps) {
         <div className="hidden sm:block">
           <p className="text-sm">
             <span className="font-medium">
-              {`${Math.min(props.total, props.pageStartIndex + 1)} / ${props.pageEndIndex} of ${props.total}`}
+              {`${Math.min(props.total, props.pageStartIndex + 1)}-${props.pageEndIndex} of ${props.total}`}
             </span>
           </p>
         </div>

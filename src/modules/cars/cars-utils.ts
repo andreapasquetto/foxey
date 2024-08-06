@@ -19,7 +19,7 @@ export function calculateMonthlyCost(refuelings: RefuelingRead[]) {
   return refuelings.reduce((prev, curr) => prev.add(curr.cost), new Decimal(0)).toNumber();
 }
 
-export function getEligibleTrips(refuelings: RefuelingRead[]) {
+export function getEligibleRefuelings(refuelings: RefuelingRead[]) {
   return refuelings.filter((refueling) => refueling.trip !== null);
 }
 
@@ -28,7 +28,7 @@ export function calculateTotalDistance(refuelings: RefuelingRead[]) {
 }
 
 export function calculateAvgDistance(refuelings: RefuelingRead[]) {
-  const numberOfTrips = getEligibleTrips(refuelings).length;
+  const numberOfTrips = getEligibleRefuelings(refuelings).length;
 
   return refuelings
     .reduce((prev, curr) => prev.add(curr.trip ?? 0), new Decimal(0))
@@ -37,10 +37,10 @@ export function calculateAvgDistance(refuelings: RefuelingRead[]) {
     .toNumber();
 }
 
-export function calculateFuelEconomy(refuelings: RefuelingRead[]) {
-  const lastRefueling = refuelings.at(-1);
-  const secondLastRefueling = refuelings.at(-2);
-
+export function calculateLastFuelEconomy(
+  lastRefueling: RefuelingRead | undefined,
+  secondLastRefueling: RefuelingRead | undefined,
+) {
   if (!lastRefueling || !secondLastRefueling || lastRefueling?.trip === null) {
     return null;
   }
@@ -49,4 +49,25 @@ export function calculateFuelEconomy(refuelings: RefuelingRead[]) {
     .div(secondLastRefueling.quantity)
     .toDecimalPlaces(2)
     .toNumber();
+}
+
+// TODO: result is not reliable because calculations does NOT handle non-necessary refuelings differently
+export function calculateAvgFuelEconomy(refuelings: RefuelingRead[]) {
+  if (refuelings.length < 2) return null;
+
+  const { totalQuantity, totalDistance } = refuelings.reduce(
+    (acc, refueling) => {
+      if (refueling.trip !== null) {
+        acc.totalDistance = acc.totalDistance.add(refueling.trip);
+      }
+      acc.totalQuantity = acc.totalQuantity.add(refueling.quantity);
+      return acc;
+    },
+    {
+      totalDistance: new Decimal(0),
+      totalQuantity: new Decimal(0),
+    },
+  );
+
+  return totalDistance.div(totalQuantity).toDecimalPlaces(2).toNumber();
 }
