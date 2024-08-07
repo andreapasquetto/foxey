@@ -12,6 +12,8 @@ import {
   calculateTotalDistance,
   extractRefuelingPeriods,
 } from "@/modules/cars/cars-utils";
+import { FuelPriceChart } from "@/modules/cars/components/fuel-price-chart";
+import { OdometerChart } from "@/modules/cars/components/odometer-chart";
 
 interface RefuelingStatsProps {
   carId?: string;
@@ -55,106 +57,132 @@ export default function CarStats(props: RefuelingStatsProps) {
     },
   };
 
-  if (!true) {
-    return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Stats</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-center text-sm text-muted-foreground">
-            Statistics are not available for the selected car.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
   return (
-    <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-3">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Monthly fuel costs</CardDescription>
-          {refuelingsQuery.isFetching && (
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-6 w-10" />
-            </div>
-          )}
-          {!refuelingsQuery.isFetching && (
-            <CardTitle className="flex items-center gap-2">
-              {currencyFormatter.format(stats.fuelCosts.thisMonth)}
-              <Badge variant="outline">
-                {percentageFormatter.format(
-                  calculatePercentageChange(
-                    stats.fuelCosts.lastMonth,
-                    stats.fuelCosts.thisMonth,
-                  ).toNumber(),
+    <Card>
+      <CardHeader>
+        <CardTitle>Stats</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-3">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Monthly fuel costs</CardDescription>
+                {refuelingsQuery.isFetching && (
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-6 w-10" />
+                  </div>
                 )}
-              </Badge>
-            </CardTitle>
-          )}
-        </CardHeader>
-        <CardContent>
-          {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
-          {!refuelingsQuery.isFetching && (
-            <p className="text-xs text-muted-foreground">
-              {currencyFormatter.format(stats.fuelCosts.lastMonth)} last month
-            </p>
-          )}
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="pb-2">
-          <CardDescription>Avg. distance before refueling</CardDescription>
-          {refuelingsQuery.isFetching && (
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-6 w-10" />
-            </div>
-          )}
-          {!refuelingsQuery.isFetching && (
-            <CardTitle>{numberFormatter.format(stats.distance.average)} km</CardTitle>
-          )}
-        </CardHeader>
-        <CardContent className="space-y-1">
-          {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
-          {!refuelingsQuery.isFetching && stats.distance.thisYear && stats.distance.lastYear && (
-            <p className="text-xs text-muted-foreground">
-              {`${numberFormatter.format(stats.distance.thisYear)} km this year, ${numberFormatter.format(stats.distance.lastYear)} km last year`}
-            </p>
-          )}
-          {!refuelingsQuery.isFetching && stats.distance.total && (
-            <p className="text-xs text-muted-foreground">
-              {numberFormatter.format(stats.distance.total)} km in total
-            </p>
-          )}
-        </CardContent>
-      </Card>
-      <Card className="pb-6 lg:pb-0">
-        <CardHeader className="pb-2">
-          <CardDescription>Last fuel economy</CardDescription>
-          {refuelingsQuery.isFetching && (
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-6 w-10" />
-            </div>
-          )}
-          {!refuelingsQuery.isFetching && (
-            <CardTitle>
-              {stats.fuelEconomy.last ? numberFormatter.format(stats.fuelEconomy.last) : "-"} km/l
-            </CardTitle>
-          )}
-        </CardHeader>
-        <CardContent>
-          {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
-          {!refuelingsQuery.isFetching && stats.fuelEconomy.avg && (
-            <p className="text-xs text-muted-foreground">
-              All-time average is {numberFormatter.format(stats.fuelEconomy.avg)} km/l
-            </p>
-          )}
-        </CardContent>
-      </Card>
-    </div>
+                {!refuelingsQuery.isFetching && (
+                  <CardTitle className="flex items-center gap-2">
+                    {currencyFormatter.format(stats.fuelCosts.thisMonth)}
+                    <Badge variant="outline">
+                      {percentageFormatter.format(
+                        calculatePercentageChange(
+                          stats.fuelCosts.lastMonth,
+                          stats.fuelCosts.thisMonth,
+                        ).toNumber(),
+                      )}
+                    </Badge>
+                  </CardTitle>
+                )}
+              </CardHeader>
+              <CardContent>
+                {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
+                {!refuelingsQuery.isFetching && (
+                  <p className="text-xs text-muted-foreground">
+                    {currencyFormatter.format(stats.fuelCosts.lastMonth)} last month
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Avg. distance before refueling</CardDescription>
+                {refuelingsQuery.isFetching && (
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-6 w-10" />
+                  </div>
+                )}
+                {!refuelingsQuery.isFetching && (
+                  <CardTitle>{numberFormatter.format(stats.distance.average)} km</CardTitle>
+                )}
+              </CardHeader>
+              <CardContent className="space-y-1">
+                {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
+                {!refuelingsQuery.isFetching &&
+                  stats.distance.thisYear &&
+                  stats.distance.lastYear && (
+                    <p className="text-xs text-muted-foreground">
+                      {`${numberFormatter.format(stats.distance.thisYear)} km so far this year, ${numberFormatter.format(stats.distance.lastYear)} km last year`}
+                    </p>
+                  )}
+                {!refuelingsQuery.isFetching && stats.distance.total && (
+                  <p className="text-xs text-muted-foreground">
+                    {numberFormatter.format(stats.distance.total)} km in total
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+            <Card className="pb-6 lg:pb-0">
+              <CardHeader className="pb-2">
+                <CardDescription>Last fuel economy</CardDescription>
+                {refuelingsQuery.isFetching && (
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-6 w-10" />
+                  </div>
+                )}
+                {!refuelingsQuery.isFetching && (
+                  <CardTitle>
+                    {stats.fuelEconomy.last ? numberFormatter.format(stats.fuelEconomy.last) : "-"}{" "}
+                    km/l
+                  </CardTitle>
+                )}
+              </CardHeader>
+              <CardContent>
+                {refuelingsQuery.isFetching && <Skeleton className="h-4 w-28" />}
+                {!refuelingsQuery.isFetching && stats.fuelEconomy.avg && (
+                  <p className="text-xs text-muted-foreground">
+                    All-time average is {numberFormatter.format(stats.fuelEconomy.avg)} km/l
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-2">
+            {refuelingsQuery.isFetching && (
+              <>
+                <Card>
+                  <CardHeader>
+                    <Skeleton className="h-6 w-24" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-[300px] w-full" />
+                  </CardContent>
+                </Card>
+                <Card>
+                  <CardHeader>
+                    <Skeleton className="h-6 w-24" />
+                  </CardHeader>
+                  <CardContent>
+                    <Skeleton className="h-[300px] w-full" />
+                  </CardContent>
+                </Card>
+              </>
+            )}
+
+            {!refuelingsQuery.isFetching && (
+              <>
+                <FuelPriceChart refuelings={allRefuelings} />
+                <OdometerChart refuelings={allRefuelings} />
+              </>
+            )}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
