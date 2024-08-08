@@ -6,7 +6,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { HighwayTripCreateForm } from "@/modules/cars/components/highway-trip-create-form";
+import { HighwayTripCreateForm } from "@/modules/cars/components/forms/highway-trip-create-form";
 import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 import { Plus } from "lucide-react";
 import { useState } from "react";

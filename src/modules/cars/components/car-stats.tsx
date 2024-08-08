@@ -1,3 +1,5 @@
+"use client";
+
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";
@@ -12,21 +14,25 @@ import {
   calculateTotalDistance,
   extractRefuelingPeriods,
 } from "@/modules/cars/cars-utils";
-import { FuelPriceChart } from "@/modules/cars/components/fuel-price-chart";
-import { OdometerChart } from "@/modules/cars/components/odometer-chart";
+import { CarSwitcher } from "@/modules/cars/components/car-switcher";
+import { FuelPriceChart } from "@/modules/cars/components/charts/fuel-price-chart";
+import { OdometerChart } from "@/modules/cars/components/charts/odometer-chart";
+import { CarRead } from "@/modules/cars/schemas/car-read-schema";
+import { useState } from "react";
 
-interface RefuelingStatsProps {
-  carId?: string;
-}
+export default function CarStats() {
+  const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);
 
-export default function CarStats(props: RefuelingStatsProps) {
-  const refuelingsQuery = useRefuelingsGetAllQuery(props.carId);
+  const refuelingsQuery = useRefuelingsGetAllQuery(selectedCar?.id);
 
-  if (!props.carId) {
+  if (!selectedCar) {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Stats</CardTitle>
+          <div className="flex flex-col justify-center gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle>Stats</CardTitle>
+            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+          </div>
         </CardHeader>
         <CardContent>
           <p className="text-center text-sm text-muted-foreground">
@@ -60,7 +66,10 @@ export default function CarStats(props: RefuelingStatsProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Stats</CardTitle>
+        <div className="flex flex-col justify-center gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle>Stats</CardTitle>
+          <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+        </div>
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
