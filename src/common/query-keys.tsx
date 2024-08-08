@@ -36,7 +36,7 @@ export function transactionsLastMonthQueryKey() {
   return ["transactions", "last-month"];
 }
 
-export function transactionsQueryKey(walletId: string | undefined) {
+export function transactionsQueryKey(walletId?: string) {
   if (walletId) return ["transactions", walletId];
   return ["transactions"];
 }

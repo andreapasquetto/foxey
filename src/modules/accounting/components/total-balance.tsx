@@ -1,3 +1,5 @@
+"use client";
+
 import { currencyFormatter } from "@/common/formatters";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";

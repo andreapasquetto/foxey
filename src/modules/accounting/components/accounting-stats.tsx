@@ -1,3 +1,5 @@
+"use client";
+
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";

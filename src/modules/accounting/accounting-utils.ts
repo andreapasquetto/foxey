@@ -3,7 +3,7 @@ import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { Decimal } from "decimal.js";
 
 export function calculateTotalBalance(wallets: WalletRead[]) {
-  return wallets.reduce((prev, curr) => prev.add(curr.amount), new Decimal(0));
+  return wallets.reduce((acc, curr) => acc.add(curr.amount), new Decimal(0));
 }
 
 export function getTransactionsWithoutTransfers(transactions: TransactionRead[]) {
@@ -19,5 +19,5 @@ export function getOutgoingTransactions(transactions: TransactionRead[]) {
 }
 
 export function calculateTransactionsAmount(transactions: TransactionRead[]) {
-  return transactions.reduce((prev, curr) => prev.add(new Decimal(curr.amount)), new Decimal(0));
+  return transactions.reduce((acc, curr) => acc.add(new Decimal(curr.amount)), new Decimal(0));
 }
