@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import {
+  useTransactionCategoriesQuery,
   useTransactionsPaginatedQuery,
   useWalletsQuery,
 } from "@/modules/accounting/accounting-queries";
@@ -24,9 +25,10 @@ interface RecentTransactionsProps {
 
 export function TransactionList(props: RecentTransactionsProps) {
   const walletsQuery = useWalletsQuery();
+  const categoriesQuery = useTransactionCategoriesQuery();
   const transactionsQuery = useTransactionsPaginatedQuery(props.walletId);
 
-  const hasData = walletsQuery.data && transactionsQuery.data;
+  const hasData = walletsQuery.data && categoriesQuery.data && transactionsQuery.data;
 
   if (!hasData) {
     return (
@@ -93,6 +95,22 @@ export function TransactionList(props: RecentTransactionsProps) {
                     </div>
                   </div>
                 </TableCell>
+                <TableCell>
+                  <div>
+                    <div>
+                      {categoriesQuery.data.find((category) => category.id === tx.categoryId)
+                        ?.name ?? "-"}
+                    </div>
+                    <div className="space-x-2 text-sm text-muted-foreground">
+                      <span>
+                        {
+                          categoriesQuery.data.find((category) => category.id === tx.categoryId)
+                            ?.parent?.name
+                        }
+                      </span>
+                    </div>
+                  </div>
+                </TableCell>
                 <TableCell>{tx.description ?? "-"}</TableCell>
                 <TableCell className="text-right">
                   {
@@ -126,6 +144,7 @@ function TableHeaderRow() {
     <TableRow>
       <TableHead>Date</TableHead>
       <TableHead>Type</TableHead>
+      <TableHead>Category</TableHead>
       <TableHead>Description</TableHead>
       <TableHead className="text-right">Amount</TableHead>
       <TableHead></TableHead>
@@ -143,6 +162,12 @@ function TableRowsSkeleton() {
         <div className="space-y-1">
           <Skeleton className="h-4 w-20" />
           <Skeleton className="h-4 w-16" />
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="space-y-1">
+          <Skeleton className="h-4 w-24" />
+          <Skeleton className="h-4 w-20" />
         </div>
       </TableCell>
       <TableCell>
