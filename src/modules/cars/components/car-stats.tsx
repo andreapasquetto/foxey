@@ -2,6 +2,12 @@
 
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/math";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -161,35 +167,42 @@ export default function CarStats() {
               </CardContent>
             </Card>
           </div>
-          <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-2">
-            {refuelingsQuery.isFetching && (
-              <>
-                <Card>
-                  <CardHeader>
-                    <Skeleton className="h-6 w-24" />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-[300px] w-full" />
-                  </CardContent>
-                </Card>
-                <Card>
-                  <CardHeader>
-                    <Skeleton className="h-6 w-24" />
-                  </CardHeader>
-                  <CardContent>
-                    <Skeleton className="h-[300px] w-full" />
-                  </CardContent>
-                </Card>
-              </>
-            )}
+          <Accordion type="single" collapsible>
+            <AccordionItem value="charts">
+              <AccordionTrigger>Charts</AccordionTrigger>
+              <AccordionContent>
+                <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-2">
+                  {refuelingsQuery.isFetching && (
+                    <>
+                      <Card>
+                        <CardHeader>
+                          <Skeleton className="h-6 w-24" />
+                        </CardHeader>
+                        <CardContent>
+                          <Skeleton className="h-[300px] w-full" />
+                        </CardContent>
+                      </Card>
+                      <Card>
+                        <CardHeader>
+                          <Skeleton className="h-6 w-24" />
+                        </CardHeader>
+                        <CardContent>
+                          <Skeleton className="h-[300px] w-full" />
+                        </CardContent>
+                      </Card>
+                    </>
+                  )}
 
-            {!refuelingsQuery.isFetching && (
-              <>
-                <FuelPriceChart refuelings={allRefuelings} />
-                <OdometerChart refuelings={allRefuelings} />
-              </>
-            )}
-          </div>
+                  {!refuelingsQuery.isFetching && (
+                    <>
+                      <FuelPriceChart refuelings={allRefuelings} />
+                      <OdometerChart refuelings={allRefuelings} />
+                    </>
+                  )}
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
         </div>
       </CardContent>
     </Card>
