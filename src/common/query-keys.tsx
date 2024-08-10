@@ -29,7 +29,7 @@ export function transactionCategoriesQueryKey() {
 }
 
 export function transactionsMonthToDateQueryKey() {
-  return ["transactions", "mtd"];
+  return ["transactions", "month-to-date"];
 }
 
 export function transactionsLastMonthQueryKey() {
