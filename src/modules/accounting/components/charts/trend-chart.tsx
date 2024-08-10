@@ -1,3 +1,4 @@
+import { RangeDatePicker } from "@/components/range-date-picker";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -9,12 +10,18 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { WalletSwitcher } from "@/modules/accounting/components/wallet-switcher";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
-import { format } from "date-fns";
+import { endOfDay, format, isWithinInterval, startOfMonth, startOfToday } from "date-fns";
 import { Decimal } from "decimal.js";
 import { useState } from "react";
+import { DateRange } from "react-day-picker";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 export function TrendChart() {
+  const [dateRange, setDateRange] = useState<DateRange | undefined>({
+    from: startOfMonth(startOfToday()),
+    to: endOfDay(startOfToday()),
+  });
+
   const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
   const query = useTransactionsGetAllQuery(selectedWallet?.id);
 
@@ -45,6 +52,11 @@ export function TrendChart() {
 
       return acc;
     }, [])
+    .filter((tx) =>
+      dateRange
+        ? isWithinInterval(tx.date, { start: dateRange?.from!, end: dateRange?.to! })
+        : true,
+    )
     .map((item) => ({ date: item.date, amount: item.amount.toNumber() }));
 
   const chartConfig = {
@@ -58,7 +70,10 @@ export function TrendChart() {
       <CardHeader>
         <div className="flex flex-col justify-center gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle>Trend</CardTitle>
-          <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
+          <div className="flex items-center gap-3">
+            <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} />
+            <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
+          </div>
         </div>
       </CardHeader>
       <CardContent>
