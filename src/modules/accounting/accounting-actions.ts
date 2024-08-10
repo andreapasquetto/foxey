@@ -6,8 +6,9 @@ import { transactionCategories, transactions, wallets } from "@/db/schema/accoun
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
 import { endOfDay, endOfMonth, startOfMonth, startOfToday, sub } from "date-fns";
-import { between, desc, eq, or } from "drizzle-orm";
+import { and, between, desc, eq, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
+import { DateRange } from "react-day-picker";
 
 export async function getWallets() {
   return await db.select().from(wallets);
@@ -58,20 +59,29 @@ export async function transactionsGetLastMonth() {
     .orderBy(transactions.date);
 }
 
-export async function transactionsGetPaginated(options: { paginate: Paginate; walletId?: string }) {
-  const total = await countTotalTransactions(options.walletId);
+export async function transactionsGetPaginated(params: {
+  paginate: Paginate;
+  walletId?: string;
+  dateRange?: DateRange;
+}) {
+  const total = await countTotalTransactions(params);
 
-  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
   const records = await db
     .select()
     .from(transactions)
     .where(
-      options.walletId
-        ? or(
-            eq(transactions.fromWalletId, options.walletId),
-            eq(transactions.toWalletId, options.walletId),
-          )
-        : undefined,
+      and(
+        params.walletId
+          ? or(
+              eq(transactions.fromWalletId, params.walletId),
+              eq(transactions.toWalletId, params.walletId),
+            )
+          : undefined,
+        params.dateRange
+          ? between(transactions.date, params.dateRange.from!, params.dateRange.to!)
+          : undefined,
+      ),
     )
     .limit(limit)
     .offset(offset)
@@ -108,12 +118,27 @@ export async function deleteTransaction(id: string) {
   await db.delete(transactions).where(eq(transactions.id, id));
 }
 
-async function countTotalTransactions(walletId?: string) {
-  const totalRecordsQB = db.select().from(transactions);
-  if (walletId) {
-    totalRecordsQB.where(
-      or(eq(transactions.fromWalletId, walletId), eq(transactions.toWalletId, walletId)),
+async function countTotalTransactions(params: {
+  paginate: Paginate;
+  walletId?: string;
+  dateRange?: DateRange;
+}) {
+  const records = await db
+    .select()
+    .from(transactions)
+    .where(
+      and(
+        params.walletId
+          ? or(
+              eq(transactions.fromWalletId, params.walletId),
+              eq(transactions.toWalletId, params.walletId),
+            )
+          : undefined,
+        params.dateRange
+          ? between(transactions.date, params.dateRange.from!, params.dateRange.to!)
+          : undefined,
+      ),
     );
-  }
-  return (await totalRecordsQB).length;
+
+  return records.length;
 }

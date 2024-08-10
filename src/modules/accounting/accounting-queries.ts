@@ -15,6 +15,7 @@ import {
   transactionsGetPaginated,
 } from "@/modules/accounting/accounting-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+import { DateRange } from "react-day-picker";
 
 export function useWalletsQuery() {
   return useQuery({
@@ -30,6 +31,7 @@ export function useTransactionCategoriesQuery() {
   });
 }
 
+// TODO: remove in favour of useTransactionsGetAllQuery with dateRage param
 export function useTransactionsGetMonthToDateQuery() {
   return useQuery({
     queryKey: transactionsMonthToDateQueryKey(),
@@ -37,6 +39,7 @@ export function useTransactionsGetMonthToDateQuery() {
   });
 }
 
+// TODO: remove in favour of useTransactionsGetAllQuery with dateRage param
 export function useTransactionsGetLastMonthQuery() {
   return useQuery({
     queryKey: transactionsLastMonthQueryKey(),
@@ -44,17 +47,28 @@ export function useTransactionsGetLastMonthQuery() {
   });
 }
 
-export function useTransactionsPaginatedQuery(walletId?: string) {
+export function useTransactionsPaginatedQuery(options: {
+  walletId?: string;
+  dateRange?: DateRange;
+}) {
   return usePaginatedQuery({
-    queryKey: transactionsQueryKey(walletId),
-    queryFn: (paginate) => transactionsGetPaginated({ paginate, walletId }),
+    queryKey: transactionsQueryKey(options),
+    queryFn: (paginate) =>
+      transactionsGetPaginated({
+        paginate,
+        walletId: options.walletId,
+        dateRange: options.dateRange,
+      }),
     placeholderData: keepPreviousData,
   });
 }
 
+// TODO: add dateRange param
 export function useTransactionsGetAllQuery(walletId?: string) {
   return useQuery({
-    queryKey: transactionsQueryKey(walletId),
+    queryKey: transactionsQueryKey({
+      walletId,
+    }),
     queryFn: () => transactionsGetAll(walletId),
   });
 }

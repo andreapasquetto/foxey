@@ -1,5 +1,3 @@
-import { RangeDatePicker } from "@/components/range-date-picker";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -8,22 +6,18 @@ import {
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
-import { WalletSwitcher } from "@/modules/accounting/components/wallet-switcher";
-import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
-import { endOfDay, format, isWithinInterval, startOfMonth, startOfToday } from "date-fns";
+import { format, isWithinInterval } from "date-fns";
 import { Decimal } from "decimal.js";
-import { useState } from "react";
 import { DateRange } from "react-day-picker";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
-export function TrendChart() {
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: startOfMonth(startOfToday()),
-    to: endOfDay(startOfToday()),
-  });
+interface TrendChartProps {
+  walletId?: string;
+  dateRange?: DateRange;
+}
 
-  const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
-  const query = useTransactionsGetAllQuery(selectedWallet?.id);
+export function TrendChart(props: TrendChartProps) {
+  const query = useTransactionsGetAllQuery(props.walletId);
 
   const transactions = query.data ?? [];
 
@@ -38,8 +32,8 @@ export function TrendChart() {
 
       const isTransfer = tx.fromWalletId && tx.toWalletId;
       if (isTransfer) {
-        if (tx.fromWalletId === selectedWallet?.id) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWalletId === selectedWallet?.id) amountChange = amountChange.add(tx.amount);
+        if (tx.fromWalletId === props.walletId) amountChange = amountChange.sub(tx.amount);
+        if (tx.toWalletId === props.walletId) amountChange = amountChange.add(tx.amount);
       } else {
         if (tx.fromWalletId) amountChange = amountChange.sub(tx.amount);
         if (tx.toWalletId) amountChange = amountChange.add(tx.amount);
@@ -53,8 +47,8 @@ export function TrendChart() {
       return acc;
     }, [])
     .filter((tx) =>
-      dateRange
-        ? isWithinInterval(tx.date, { start: dateRange?.from!, end: dateRange?.to! })
+      props.dateRange
+        ? isWithinInterval(tx.date, { start: props.dateRange.from!, end: props.dateRange.to! })
         : true,
     )
     .map((item) => ({ date: item.date, amount: item.amount.toNumber() }));
@@ -66,45 +60,34 @@ export function TrendChart() {
   } satisfies ChartConfig;
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col justify-center gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <CardTitle>Trend</CardTitle>
-          <div className="flex items-center gap-3">
-            <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} />
-            <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        {query.isFetching && <Skeleton className="h-[500px] w-full" />}
-        {!query.isFetching && (
-          <ChartContainer config={chartConfig}>
-            <LineChart accessibilityLayer data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis
-                dataKey="date"
-                tickLine={false}
-                axisLine={false}
-                tickFormatter={(value) => format(value, "dd MMM yyyy")}
-              />
-              <YAxis domain={["auto", "auto"]} />
-              <ChartTooltip
-                cursor={false}
-                content={<ChartTooltipContent className="w-[175px]" hideLabel />}
-              />
-              <Line
-                dataKey="amount"
-                type="step"
-                stroke="hsl(var(--foreground))"
-                strokeWidth={2}
-                dot={false}
-                isAnimationActive={false}
-              />
-            </LineChart>
-          </ChartContainer>
-        )}
-      </CardContent>
-    </Card>
+    <div>
+      {query.isFetching && <Skeleton className="h-[300px] w-full md:h-[500px]" />}
+      {!query.isFetching && (
+        <ChartContainer config={chartConfig}>
+          <LineChart accessibilityLayer data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="date"
+              tickLine={false}
+              axisLine={false}
+              tickFormatter={(value) => format(value, "dd MMM yyyy")}
+            />
+            <YAxis domain={["auto", "auto"]} />
+            <ChartTooltip
+              cursor={false}
+              content={<ChartTooltipContent className="w-[175px]" hideLabel />}
+            />
+            <Line
+              dataKey="amount"
+              type="step"
+              stroke="hsl(var(--foreground))"
+              strokeWidth={2}
+              dot={false}
+              isAnimationActive={false}
+            />
+          </LineChart>
+        </ChartContainer>
+      )}
+    </div>
   );
 }

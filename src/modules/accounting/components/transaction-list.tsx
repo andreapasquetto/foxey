@@ -18,15 +18,20 @@ import {
 import { DeleteTransaction } from "@/modules/accounting/components/delete-transaction";
 import { formatISO } from "date-fns";
 import { ChevronsRight } from "lucide-react";
+import { DateRange } from "react-day-picker";
 
 interface RecentTransactionsProps {
   walletId?: string;
+  dateRange?: DateRange;
 }
 
 export function TransactionList(props: RecentTransactionsProps) {
   const walletsQuery = useWalletsQuery();
   const categoriesQuery = useTransactionCategoriesQuery();
-  const transactionsQuery = useTransactionsPaginatedQuery(props.walletId);
+  const transactionsQuery = useTransactionsPaginatedQuery({
+    walletId: props.walletId,
+    dateRange: props.dateRange,
+  });
 
   const hasData = walletsQuery.data && categoriesQuery.data && transactionsQuery.data;
 

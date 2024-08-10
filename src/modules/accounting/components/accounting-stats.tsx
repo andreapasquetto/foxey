@@ -16,7 +16,6 @@ import {
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/accounting/accounting-utils";
-import { TrendChart } from "@/modules/accounting/components/charts/trend-chart";
 
 export default function AccountingStats() {
   const categoriesQuery = useTransactionCategoriesQuery();
@@ -164,9 +163,6 @@ export default function AccountingStats() {
                 )}
               </CardContent>
             </Card>
-          </div>
-          <div className="grid grid-cols-1 items-start gap-3">
-            <TrendChart />
           </div>
         </div>
       </CardContent>

@@ -1,3 +1,6 @@
+import { formatISO } from "date-fns";
+import { DateRange } from "react-day-picker";
+
 export function carsQueryKey() {
   return ["cars"];
 }
@@ -36,8 +39,25 @@ export function transactionsLastMonthQueryKey() {
   return ["transactions", "last-month"];
 }
 
-export function transactionsQueryKey(walletId?: string) {
-  if (walletId) return ["transactions", walletId];
+export function transactionsQueryKey(params: { walletId?: string; dateRange?: DateRange } = {}) {
+  if (params.walletId && params.dateRange) {
+    return [
+      "transactions",
+      params.walletId,
+      `from-${formatISO(params.dateRange.from!, { representation: "date" })}`,
+      `to-${formatISO(params.dateRange.to!, { representation: "date" })}`,
+    ];
+  }
+  if (params.walletId) {
+    return ["transactions", params.walletId];
+  }
+  if (params.dateRange) {
+    return [
+      "transactions",
+      `from-${formatISO(params.dateRange.from!, { representation: "date" })}`,
+      `to-${formatISO(params.dateRange.to!, { representation: "date" })}`,
+    ];
+  }
   return ["transactions"];
 }
 
