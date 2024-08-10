@@ -9,6 +9,7 @@ import {
 import {
   getWallets,
   transactionCategoriesGetAll,
+  transactionsGetAll,
   transactionsGetLastMonth,
   transactionsGetMonthToDate,
   transactionsGetPaginated,
@@ -48,5 +49,12 @@ export function useTransactionsPaginatedQuery(walletId?: string) {
     queryKey: transactionsQueryKey(walletId),
     queryFn: (paginate) => transactionsGetPaginated({ paginate, walletId }),
     placeholderData: keepPreviousData,
+  });
+}
+
+export function useTransactionsGetAllQuery(walletId?: string) {
+  return useQuery({
+    queryKey: transactionsQueryKey(walletId),
+    queryFn: () => transactionsGetAll(walletId),
   });
 }

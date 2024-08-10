@@ -79,6 +79,18 @@ export async function transactionsGetPaginated(options: { paginate: Paginate; wa
   return toPaginated(records, total);
 }
 
+export async function transactionsGetAll(walletId?: string) {
+  return await db
+    .select()
+    .from(transactions)
+    .where(
+      walletId
+        ? or(eq(transactions.fromWalletId, walletId), eq(transactions.toWalletId, walletId))
+        : undefined,
+    )
+    .orderBy(transactions.date);
+}
+
 // TODO: update wallet amount
 export async function createTransaction(tx: TransactionCreateForm) {
   await db.insert(transactions).values({

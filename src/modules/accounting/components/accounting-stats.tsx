@@ -16,6 +16,7 @@ import {
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/accounting/accounting-utils";
+import { TrendChart } from "@/modules/accounting/components/charts/trend-chart";
 
 export default function AccountingStats() {
   const categoriesQuery = useTransactionCategoriesQuery();
@@ -66,100 +67,107 @@ export default function AccountingStats() {
       </CardHeader>
 
       <CardContent>
-        <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Income this month</CardDescription>
-              {isFetching && (
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-6 w-10" />
-                </div>
-              )}
-              {!isFetching && (
-                <CardTitle className="flex items-center gap-2">
-                  {currencyFormatter.format(totalAmounts.thisMonth.incoming.toNumber())}
-                  <Badge variant="outline">
-                    {percentageFormatter.format(
-                      calculatePercentageChange(
-                        totalAmounts.lastMonth.incoming,
-                        totalAmounts.thisMonth.incoming,
-                      ).toNumber(),
-                    )}
-                  </Badge>
-                </CardTitle>
-              )}
-            </CardHeader>
-            <CardContent>
-              {isFetching && <Skeleton className="h-4 w-28" />}
-              {!isFetching && (
-                <p className="text-xs text-muted-foreground">
-                  {currencyFormatter.format(totalAmounts.lastMonth.incoming.toNumber())} last month
-                </p>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Expenses this month</CardDescription>
-              {isFetching && (
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-6 w-10" />
-                </div>
-              )}
-              {!isFetching && (
-                <CardTitle className="flex items-center gap-2">
-                  {currencyFormatter.format(totalAmounts.thisMonth.outgoing.toNumber())}
-                  <Badge variant="outline">
-                    {percentageFormatter.format(
-                      calculatePercentageChange(
-                        totalAmounts.lastMonth.outgoing,
-                        totalAmounts.thisMonth.outgoing,
-                      ).toNumber(),
-                    )}
-                  </Badge>
-                </CardTitle>
-              )}
-            </CardHeader>
-            <CardContent>
-              {isFetching && <Skeleton className="h-4 w-28" />}
-              {!isFetching && (
-                <p className="text-xs text-muted-foreground">
-                  {currencyFormatter.format(totalAmounts.lastMonth.outgoing.toNumber())} last month
-                </p>
-              )}
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription>Saved</CardDescription>
-              {isFetching && (
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-6 w-10" />
-                </div>
-              )}
-              {!isFetching && (
-                <CardTitle className="flex items-center gap-2">
-                  {currencyFormatter.format(savings.thisMonth.toNumber())}
-                  <Badge variant="outline">
-                    {percentageFormatter.format(
-                      calculatePercentageChange(savings.lastMonth, savings.thisMonth).toNumber(),
-                    )}
-                  </Badge>
-                </CardTitle>
-              )}
-            </CardHeader>
-            <CardContent>
-              {isFetching && <Skeleton className="h-4 w-28" />}
-              {!isFetching && (
-                <p className="text-xs text-muted-foreground">
-                  {currencyFormatter.format(savings.lastMonth.toNumber())} last month
-                </p>
-              )}
-            </CardContent>
-          </Card>
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Income this month</CardDescription>
+                {isFetching && (
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-6 w-10" />
+                  </div>
+                )}
+                {!isFetching && (
+                  <CardTitle className="flex items-center gap-2">
+                    {currencyFormatter.format(totalAmounts.thisMonth.incoming.toNumber())}
+                    <Badge variant="outline">
+                      {percentageFormatter.format(
+                        calculatePercentageChange(
+                          totalAmounts.lastMonth.incoming,
+                          totalAmounts.thisMonth.incoming,
+                        ).toNumber(),
+                      )}
+                    </Badge>
+                  </CardTitle>
+                )}
+              </CardHeader>
+              <CardContent>
+                {isFetching && <Skeleton className="h-4 w-28" />}
+                {!isFetching && (
+                  <p className="text-xs text-muted-foreground">
+                    {currencyFormatter.format(totalAmounts.lastMonth.incoming.toNumber())} last
+                    month
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Expenses this month</CardDescription>
+                {isFetching && (
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-6 w-10" />
+                  </div>
+                )}
+                {!isFetching && (
+                  <CardTitle className="flex items-center gap-2">
+                    {currencyFormatter.format(totalAmounts.thisMonth.outgoing.toNumber())}
+                    <Badge variant="outline">
+                      {percentageFormatter.format(
+                        calculatePercentageChange(
+                          totalAmounts.lastMonth.outgoing,
+                          totalAmounts.thisMonth.outgoing,
+                        ).toNumber(),
+                      )}
+                    </Badge>
+                  </CardTitle>
+                )}
+              </CardHeader>
+              <CardContent>
+                {isFetching && <Skeleton className="h-4 w-28" />}
+                {!isFetching && (
+                  <p className="text-xs text-muted-foreground">
+                    {currencyFormatter.format(totalAmounts.lastMonth.outgoing.toNumber())} last
+                    month
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader className="pb-2">
+                <CardDescription>Saved</CardDescription>
+                {isFetching && (
+                  <div className="flex items-center gap-2">
+                    <Skeleton className="h-6 w-24" />
+                    <Skeleton className="h-6 w-10" />
+                  </div>
+                )}
+                {!isFetching && (
+                  <CardTitle className="flex items-center gap-2">
+                    {currencyFormatter.format(savings.thisMonth.toNumber())}
+                    <Badge variant="outline">
+                      {percentageFormatter.format(
+                        calculatePercentageChange(savings.lastMonth, savings.thisMonth).toNumber(),
+                      )}
+                    </Badge>
+                  </CardTitle>
+                )}
+              </CardHeader>
+              <CardContent>
+                {isFetching && <Skeleton className="h-4 w-28" />}
+                {!isFetching && (
+                  <p className="text-xs text-muted-foreground">
+                    {currencyFormatter.format(savings.lastMonth.toNumber())} last month
+                  </p>
+                )}
+              </CardContent>
+            </Card>
+          </div>
+          <div className="grid grid-cols-1 items-start gap-3">
+            <TrendChart />
+          </div>
         </div>
       </CardContent>
     </Card>
