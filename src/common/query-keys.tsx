@@ -31,14 +31,6 @@ export function transactionCategoriesQueryKey() {
   return ["transaction-categories"];
 }
 
-export function transactionsMonthToDateQueryKey() {
-  return ["transactions", "month-to-date"];
-}
-
-export function transactionsLastMonthQueryKey() {
-  return ["transactions", "last-month"];
-}
-
 export function transactionsQueryKey(params: { walletId?: string; dateRange?: DateRange } = {}) {
   if (params.walletId && params.dateRange) {
     return [

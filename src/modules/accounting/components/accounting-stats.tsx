@@ -1,5 +1,6 @@
 "use client";
 
+import { lastMonthRange, monthToDateRange } from "@/common/dates";
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";
@@ -7,8 +8,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   useTransactionCategoriesQuery,
-  useTransactionsGetLastMonthQuery,
-  useTransactionsGetMonthToDateQuery,
+  useTransactionsGetAllQuery,
 } from "@/modules/accounting/accounting-queries";
 import {
   calculateTransactionsAmount,
@@ -19,8 +19,10 @@ import {
 
 export default function AccountingStats() {
   const categoriesQuery = useTransactionCategoriesQuery();
-  const transactionsMonthToDateQuery = useTransactionsGetMonthToDateQuery();
-  const transactionsLastMonthQuery = useTransactionsGetLastMonthQuery();
+  const transactionsMonthToDateQuery = useTransactionsGetAllQuery({
+    dateRange: monthToDateRange(),
+  });
+  const transactionsLastMonthQuery = useTransactionsGetAllQuery({ dateRange: lastMonthRange() });
 
   const isFetching =
     categoriesQuery.isFetching ||

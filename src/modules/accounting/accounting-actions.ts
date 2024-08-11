@@ -65,7 +65,6 @@ export async function transactionsGetPaginated(params: {
   dateRange?: DateRange;
 }) {
   const total = await countTotalTransactions(params);
-
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
   const records = await db
     .select()
@@ -89,14 +88,24 @@ export async function transactionsGetPaginated(params: {
   return toPaginated(records, total);
 }
 
-export async function transactionsGetAll(walletId?: string) {
+export async function transactionsGetAll(
+  params: { walletId?: string; dateRange?: DateRange } = {},
+) {
   return await db
     .select()
     .from(transactions)
     .where(
-      walletId
-        ? or(eq(transactions.fromWalletId, walletId), eq(transactions.toWalletId, walletId))
-        : undefined,
+      and(
+        params.walletId
+          ? or(
+              eq(transactions.fromWalletId, params.walletId),
+              eq(transactions.toWalletId, params.walletId),
+            )
+          : undefined,
+        params.dateRange
+          ? between(transactions.date, params.dateRange.from!, params.dateRange.to!)
+          : undefined,
+      ),
     )
     .orderBy(transactions.date);
 }

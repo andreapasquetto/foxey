@@ -6,8 +6,8 @@ import {
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
-import { format, isWithinInterval } from "date-fns";
-import { Decimal } from "decimal.js";
+import { generateTrendChartData } from "@/modules/accounting/accounting-utils";
+import { format } from "date-fns";
 import { DateRange } from "react-day-picker";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
@@ -17,42 +17,10 @@ interface TrendChartProps {
 }
 
 export function TrendChart(props: TrendChartProps) {
-  const query = useTransactionsGetAllQuery(props.walletId);
-
+  const query = useTransactionsGetAllQuery({ walletId: props.walletId });
   const transactions = query.data ?? [];
 
-  const chartData = transactions
-    .reduce<
-      Array<{
-        date: Date;
-        amount: Decimal;
-      }>
-    >((acc, tx) => {
-      let amountChange = new Decimal(0);
-
-      const isTransfer = tx.fromWalletId && tx.toWalletId;
-      if (isTransfer) {
-        if (tx.fromWalletId === props.walletId) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWalletId === props.walletId) amountChange = amountChange.add(tx.amount);
-      } else {
-        if (tx.fromWalletId) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWalletId) amountChange = amountChange.add(tx.amount);
-      }
-
-      acc.push({
-        date: tx.date,
-        amount: acc.length ? acc[acc.length - 1].amount.add(amountChange) : amountChange,
-      });
-
-      return acc;
-    }, [])
-    .filter((tx) =>
-      props.dateRange
-        ? isWithinInterval(tx.date, { start: props.dateRange.from!, end: props.dateRange.to! })
-        : true,
-    )
-    .map((item) => ({ date: item.date, amount: item.amount.toNumber() }));
-
+  const chartData = generateTrendChartData(transactions, { dateRange: props.dateRange });
   const chartConfig = {
     amount: {
       label: "Amount",

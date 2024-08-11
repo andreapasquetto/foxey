@@ -9,6 +9,37 @@ import {
 } from "date-fns";
 import { DateRange } from "react-day-picker";
 
+export function monthToDateRange(): DateRange {
+  return { from: startOfMonth(startOfToday()), to: endOfDay(startOfToday()) };
+}
+
+export function lastMonthRange(): DateRange {
+  const startOfLastMonth = startOfMonth(sub(startOfToday(), { months: 1 }));
+  return {
+    from: startOfLastMonth,
+    to: endOfDay(endOfMonth(startOfLastMonth)),
+  };
+}
+
+export function lastThreeMonthsRange(): DateRange {
+  return {
+    from: startOfMonth(sub(startOfToday(), { months: 3 })),
+    to: endOfDay(startOfToday()),
+  };
+}
+
+export function yearToDateRange(): DateRange {
+  return { from: startOfYear(startOfToday()), to: endOfDay(startOfToday()) };
+}
+
+export function lastYearRange(): DateRange {
+  const startOfLastYear = startOfYear(sub(startOfToday(), { years: 1 }));
+  return {
+    from: startOfLastYear,
+    to: endOfDay(endOfYear(startOfLastYear)),
+  };
+}
+
 export type DateRangePresetCode =
   | "month-to-date"
   | "last-month"
@@ -17,29 +48,16 @@ export type DateRangePresetCode =
   | "last-year";
 
 export function getDateRangeFromCode(code: DateRangePresetCode): DateRange {
-  const today = startOfToday();
-  const startOfLastMonth = startOfMonth(sub(today, { months: 1 }));
-  const startOfLastYear = startOfYear(sub(today, { years: 1 }));
-
   switch (code) {
     case "month-to-date":
-      return { from: startOfMonth(today), to: endOfDay(today) };
+      return monthToDateRange();
     case "last-month":
-      return {
-        from: startOfLastMonth,
-        to: endOfDay(endOfMonth(startOfLastMonth)),
-      };
+      return lastMonthRange();
     case "last-3-months":
-      return {
-        from: startOfMonth(sub(today, { months: 3 })),
-        to: endOfDay(today),
-      };
+      return lastThreeMonthsRange();
     case "year-to-date":
-      return { from: startOfYear(today), to: endOfDay(today) };
+      return yearToDateRange();
     case "last-year":
-      return {
-        from: startOfLastYear,
-        to: endOfDay(endOfYear(startOfLastYear)),
-      };
+      return lastYearRange();
   }
 }
