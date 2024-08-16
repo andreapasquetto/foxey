@@ -1,4 +1,3 @@
-import { formatISO } from "date-fns";
 import { DateRange } from "react-day-picker";
 
 export function carsQueryKey() {
@@ -32,25 +31,16 @@ export function transactionCategoriesQueryKey() {
 }
 
 export function transactionsQueryKey(params: { walletId?: string; dateRange?: DateRange } = {}) {
-  if (params.walletId && params.dateRange) {
-    return [
-      "transactions",
-      params.walletId,
-      `from-${formatISO(params.dateRange.from!, { representation: "date" })}`,
-      `to-${formatISO(params.dateRange.to!, { representation: "date" })}`,
-    ];
-  }
+  const key = ["transactions"];
+
   if (params.walletId) {
-    return ["transactions", params.walletId];
+    key.push(params.walletId);
   }
   if (params.dateRange) {
-    return [
-      "transactions",
-      `from-${formatISO(params.dateRange.from!, { representation: "date" })}`,
-      `to-${formatISO(params.dateRange.to!, { representation: "date" })}`,
-    ];
+    key.push(`from-${params.dateRange.from ?? "start"}`, `to-${params.dateRange.to ?? "finish"}`);
   }
-  return ["transactions"];
+
+  return key;
 }
 
 export function transactionDeleteQueryKey(id: string) {

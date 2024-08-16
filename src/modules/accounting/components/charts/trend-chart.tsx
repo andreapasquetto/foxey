@@ -1,3 +1,4 @@
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -28,34 +29,36 @@ export function TrendChart(props: TrendChartProps) {
   } satisfies ChartConfig;
 
   return (
-    <div>
-      {query.isFetching && <Skeleton className="h-[300px] w-full md:h-[500px]" />}
-      {!query.isFetching && (
-        <ChartContainer config={chartConfig}>
-          <LineChart accessibilityLayer data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="date"
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => format(value, "dd MMM yyyy")}
-            />
-            <YAxis domain={["auto", "auto"]} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent className="w-[175px]" hideLabel />}
-            />
-            <Line
-              dataKey="amount"
-              type="step"
-              stroke="hsl(var(--foreground))"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={false}
-            />
-          </LineChart>
-        </ChartContainer>
-      )}
-    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Trend</CardTitle>
+      </CardHeader>
+      <CardContent>
+        {query.isFetching && <Skeleton className="h-[300px] w-full" />}
+        {!query.isFetching && (
+          <ChartContainer config={chartConfig}>
+            <LineChart accessibilityLayer data={chartData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                axisLine={false}
+                tickFormatter={(value) => format(value, "dd MMM yyyy")}
+              />
+              <YAxis domain={["auto", "auto"]} />
+              <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideLabel />} />
+              <Line
+                dataKey="amount"
+                type="step"
+                stroke="hsl(var(--foreground))"
+                strokeWidth={2}
+                dot={false}
+                isAnimationActive={false}
+              />
+            </LineChart>
+          </ChartContainer>
+        )}
+      </CardContent>
+    </Card>
   );
 }

@@ -1,3 +1,5 @@
+import { ChartConfig } from "@/components/ui/chart";
+import { TransactionCategoryRead } from "@/modules/accounting/schemas/transaction-category-read-schema";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { isWithinInterval } from "date-fns";
@@ -22,6 +24,40 @@ export function getOutgoingTransactions(transactions: TransactionRead[]) {
 
 export function calculateTransactionsAmount(transactions: TransactionRead[]) {
   return transactions.reduce((acc, curr) => acc.add(new Decimal(curr.amount)), new Decimal(0));
+}
+
+export function groupTransactionsByCategoryId(transactions: TransactionRead[]) {
+  return Object.groupBy(transactions, (tx) => tx.categoryId ?? "NONE");
+}
+
+export function generateExpensesChartConfigAndData(
+  transactions: TransactionRead[],
+  categories: TransactionCategoryRead[],
+) {
+  const expenses = getOutgoingTransactions(getTransactionsWithoutTransfers(transactions));
+  const expensesGroupedByCategoryId = groupTransactionsByCategoryId(expenses);
+
+  return {
+    chartConfig: Object.fromEntries(
+      new Map(
+        Object.keys(expensesGroupedByCategoryId).map((category) => {
+          const categoryName = categories.find((c) => c.id === category)?.name ?? "NONE";
+          return [
+            categoryName,
+            {
+              label: categoryName,
+            },
+          ];
+        }),
+      ),
+    ) satisfies ChartConfig,
+    chartData: Object.entries(expensesGroupedByCategoryId).map(([categoryId, txs]) => {
+      return {
+        category: categories.find((category) => category.id === categoryId)?.name ?? "NONE",
+        total: txs?.reduce((prev, curr) => prev.add(curr.amount), new Decimal(0)).toNumber(),
+      };
+    }),
+  };
 }
 
 export function generateTrendChartData(
@@ -57,8 +93,8 @@ export function generateTrendChartData(
       return acc;
     }, [])
     .filter((tx) =>
-      filters.dateRange
-        ? isWithinInterval(tx.date, { start: filters.dateRange.from!, end: filters.dateRange.to! })
+      filters.dateRange?.from && filters.dateRange.to
+        ? isWithinInterval(tx.date, { start: filters.dateRange.from, end: filters.dateRange.to })
         : true,
     )
     .map((item) => ({ date: item.date, amount: item.amount.toNumber() }));

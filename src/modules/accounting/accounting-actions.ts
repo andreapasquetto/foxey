@@ -77,8 +77,8 @@ export async function transactionsGetPaginated(params: {
               eq(transactions.toWalletId, params.walletId),
             )
           : undefined,
-        params.dateRange
-          ? between(transactions.date, params.dateRange.from!, params.dateRange.to!)
+        params.dateRange?.from && params.dateRange.to
+          ? between(transactions.date, params.dateRange.from, params.dateRange.to)
           : undefined,
       ),
     )
@@ -102,8 +102,8 @@ export async function transactionsGetAll(
               eq(transactions.toWalletId, params.walletId),
             )
           : undefined,
-        params.dateRange
-          ? between(transactions.date, params.dateRange.from!, params.dateRange.to!)
+        params.dateRange?.from && params.dateRange.to
+          ? between(transactions.date, params.dateRange.from, params.dateRange.to)
           : undefined,
       ),
     )
@@ -143,8 +143,8 @@ async function countTotalTransactions(params: {
               eq(transactions.toWalletId, params.walletId),
             )
           : undefined,
-        params.dateRange
-          ? between(transactions.date, params.dateRange.from!, params.dateRange.to!)
+        params.dateRange?.from && params.dateRange.to
+          ? between(transactions.date, params.dateRange.from, params.dateRange.to)
           : undefined,
       ),
     );

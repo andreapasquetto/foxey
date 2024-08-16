@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/accordion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddTransaction } from "@/modules/accounting/components/add-transaction";
+import { ExpensesChart } from "@/modules/accounting/components/charts/expenses-chart";
 import { TrendChart } from "@/modules/accounting/components/charts/trend-chart";
 import { TransactionList } from "@/modules/accounting/components/transaction-list";
 import { WalletSwitcher } from "@/modules/accounting/components/wallet-switcher";
@@ -40,9 +41,12 @@ export function Transactions() {
         <div className="pb-12">
           <Accordion type="single" collapsible>
             <AccordionItem value="trend-chart">
-              <AccordionTrigger>Trend Chart</AccordionTrigger>
+              <AccordionTrigger>Charts</AccordionTrigger>
               <AccordionContent>
-                <TrendChart walletId={selectedWallet?.id} dateRange={dateRange} />
+                <div className="grid grid-cols-1 items-stretch gap-3 lg:grid-cols-2">
+                  <TrendChart walletId={selectedWallet?.id} dateRange={dateRange} />
+                  <ExpensesChart walletId={selectedWallet?.id} dateRange={dateRange} />
+                </div>
               </AccordionContent>
             </AccordionItem>
           </Accordion>
