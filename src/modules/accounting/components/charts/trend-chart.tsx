@@ -21,7 +21,10 @@ export function TrendChart(props: TrendChartProps) {
   const query = useTransactionsGetAllQuery({ walletId: props.walletId });
   const transactions = query.data ?? [];
 
-  const chartData = generateTrendChartData(transactions, { dateRange: props.dateRange });
+  const chartData = generateTrendChartData(transactions, {
+    walletId: props.walletId,
+    dateRange: props.dateRange,
+  });
   const chartConfig = {
     amount: {
       label: "Amount",

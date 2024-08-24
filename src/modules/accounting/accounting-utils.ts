@@ -76,7 +76,7 @@ export function generateTrendChartData(
     >((acc, tx) => {
       let amountChange = new Decimal(0);
 
-      const isTransfer = tx.fromWalletId && tx.toWalletId;
+      const isTransfer = !!tx.fromWalletId && !!tx.toWalletId;
       if (isTransfer) {
         if (tx.fromWalletId === filters.walletId) amountChange = amountChange.sub(tx.amount);
         if (tx.toWalletId === filters.walletId) amountChange = amountChange.add(tx.amount);
