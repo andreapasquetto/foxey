@@ -32,7 +32,7 @@ export const highwayTrips = pgTable("highway_trips", {
   carId: uuid("car_id")
     .notNull()
     .references(() => cars.id),
-  date: date("date").notNull().defaultNow(),
+  date: date("date", { mode: "date" }).notNull().defaultNow(),
   startingToll: varchar("starting_toll").notNull(),
   endingToll: varchar("ending_toll").notNull(),
   distance: numeric("distance").notNull(),

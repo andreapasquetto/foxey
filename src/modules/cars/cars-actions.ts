@@ -28,8 +28,24 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
   const total = await countTotalRefuelings(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
   const records = await db
-    .select()
+    .select({
+      id: refuelings.id,
+      date: refuelings.date,
+      place: refuelings.place,
+      cost: refuelings.cost,
+      quantity: refuelings.quantity,
+      price: refuelings.price,
+      isFull: refuelings.isFull,
+      isNecessary: refuelings.isNecessary,
+      trip: refuelings.trip,
+      odometer: refuelings.odometer,
+      car: {
+        make: cars.make,
+        model: cars.model,
+      },
+    })
     .from(refuelings)
+    .innerJoin(cars, eq(cars.id, refuelings.carId))
     .where(options.carId ? eq(refuelings.carId, options.carId) : undefined)
     .limit(limit)
     .offset(offset)
@@ -55,8 +71,21 @@ export async function highwayTripsGetPaginated(options: { paginate: Paginate; ca
   const total = await countTotalHighwayTrips(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
   const records = await db
-    .select()
+    .select({
+      id: highwayTrips.id,
+      date: highwayTrips.date,
+      startingToll: highwayTrips.startingToll,
+      endingToll: highwayTrips.endingToll,
+      distance: highwayTrips.distance,
+      cost: highwayTrips.cost,
+      avgSpeed: highwayTrips.avgSpeed,
+      car: {
+        make: cars.make,
+        model: cars.model,
+      },
+    })
     .from(highwayTrips)
+    .innerJoin(cars, eq(cars.id, highwayTrips.carId))
     .where(options.carId ? eq(highwayTrips.carId, options.carId) : undefined)
     .limit(limit)
     .offset(offset)

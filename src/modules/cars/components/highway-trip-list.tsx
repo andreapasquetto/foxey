@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useHighwayTripsPaginatedQuery } from "@/modules/cars/cars-queries";
+import { format } from "date-fns";
 
 interface HighwayTripsProps {
   carId: string | undefined;
@@ -47,12 +48,13 @@ export function HighwayTripList(props: HighwayTripsProps) {
     <div>
       <Table>
         <TableHeader>
-          <TableHeaderRow />
+          <TableHeaderRow carId={props.carId} />
         </TableHeader>
         <TableBody>
           {trips.map((trip) => (
             <TableRow key={trip.id}>
-              <TableCell>{trip.date}</TableCell>
+              <TableCell>{format(trip.date, "ccc, dd MMM yyyy")}</TableCell>
+              {!props.carId && <TableCell>{`${trip.car.make} ${trip.car.model}`}</TableCell>}
               <TableCell>{trip.startingToll}</TableCell>
               <TableCell>{trip.endingToll}</TableCell>
               <TableCell>
@@ -73,10 +75,11 @@ export function HighwayTripList(props: HighwayTripsProps) {
   );
 }
 
-function TableHeaderRow() {
+function TableHeaderRow(props: { carId?: string }) {
   return (
     <TableRow>
       <TableHead>Date</TableHead>
+      {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>Starting toll</TableHead>
       <TableHead>Ending toll</TableHead>
       <TableHead>
@@ -97,6 +100,9 @@ function TableRowsSkeleton() {
     <TableRow key={i}>
       <TableCell>
         <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-24" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-32" />

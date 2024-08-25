@@ -9,7 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useRefuelingsPaginatedQuery } from "@/modules/cars/cars-queries";
-import { formatISO } from "date-fns";
+import { format } from "date-fns";
 import { CheckIcon, XIcon } from "lucide-react";
 
 interface RecentRefuelingsProps {
@@ -23,7 +23,7 @@ export function RefuelingList(props: RecentRefuelingsProps) {
     return (
       <Table>
         <TableHeader>
-          <TableHeaderRow />
+          <TableHeaderRow carId={props.carId} />
         </TableHeader>
         <TableBody>
           <TableRowsSkeleton />
@@ -49,14 +49,17 @@ export function RefuelingList(props: RecentRefuelingsProps) {
     <div>
       <Table>
         <TableHeader>
-          <TableHeaderRow />
+          <TableHeaderRow carId={props.carId} />
         </TableHeader>
         <TableBody>
           {!query.data && <TableRowsSkeleton />}
           {query.data &&
             query.data.records.map((refueling) => (
               <TableRow key={refueling.id}>
-                <TableCell>{formatISO(refueling.date, { representation: "date" })}</TableCell>
+                <TableCell>{format(refueling.date, "ccc, dd MMM yyyy")}</TableCell>
+                {!props.carId && (
+                  <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
+                )}
                 <TableCell>{refueling.place}</TableCell>
                 <TableCell>
                   <code>{refueling.cost}</code>
@@ -96,10 +99,11 @@ export function RefuelingList(props: RecentRefuelingsProps) {
   );
 }
 
-function TableHeaderRow() {
+function TableHeaderRow(props: { carId?: string }) {
   return (
     <TableRow>
       <TableHead>Date</TableHead>
+      {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>Place</TableHead>
       <TableHead>
         Cost (<code>€</code>)
@@ -127,6 +131,9 @@ function TableRowsSkeleton() {
     <TableRow key={i}>
       <TableCell>
         <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-24" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-36" />

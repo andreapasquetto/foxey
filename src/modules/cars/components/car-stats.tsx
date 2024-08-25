@@ -114,7 +114,7 @@ export default function CarStats() {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Avg. distance before refueling</CardDescription>
+                <CardDescription>Average distance before refueling</CardDescription>
                 {refuelingsQuery.isFetching && (
                   <div className="flex items-center gap-2">
                     <Skeleton className="h-6 w-24" />
@@ -130,13 +130,18 @@ export default function CarStats() {
                 {!refuelingsQuery.isFetching &&
                   stats.distance.thisYear &&
                   stats.distance.lastYear && (
-                    <p className="text-xs text-muted-foreground">
-                      {`${numberFormatter.format(stats.distance.thisYear)} km so far this year, ${numberFormatter.format(stats.distance.lastYear)} km last year`}
-                    </p>
+                    <>
+                      <p className="text-xs text-muted-foreground">
+                        {`${numberFormatter.format(stats.distance.thisYear)} km driven so far this year`}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {`${numberFormatter.format(stats.distance.lastYear)} km last year`}
+                      </p>
+                    </>
                   )}
                 {!refuelingsQuery.isFetching && stats.distance.total && (
                   <p className="text-xs text-muted-foreground">
-                    {numberFormatter.format(stats.distance.total)} km in total
+                    {`${numberFormatter.format(stats.distance.total)} km in total`}
                   </p>
                 )}
               </CardContent>
