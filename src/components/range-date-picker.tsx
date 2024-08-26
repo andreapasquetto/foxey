@@ -20,9 +20,15 @@ import { DateRange, SelectRangeEventHandler } from "react-day-picker";
 interface RangeDatePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   dateRange: DateRange | undefined;
   setDateRange: SelectRangeEventHandler;
+  showPresets?: boolean;
 }
 
-export function RangeDatePicker({ className, dateRange, setDateRange }: RangeDatePickerProps) {
+export function RangeDatePicker({
+  className,
+  dateRange,
+  setDateRange,
+  showPresets,
+}: RangeDatePickerProps) {
   function onSelectDateRangePreset(code: DateRangePresetCode) {
     // @ts-expect-error
     setDateRange(getDateRangeFromCode(code));
@@ -55,18 +61,20 @@ export function RangeDatePicker({ className, dateRange, setDateRange }: RangeDat
           </Button>
         </PopoverTrigger>
         <PopoverContent className="flex w-auto flex-col space-y-2 p-2" align="start">
-          <Select onValueChange={onSelectDateRangePreset}>
-            <SelectTrigger>
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent position="popper">
-              <SelectItem value="month-to-date">Month to date</SelectItem>
-              <SelectItem value="last-month">Last month</SelectItem>
-              <SelectItem value="last-3-months">Last 3 months</SelectItem>
-              <SelectItem value="year-to-date">Year to date</SelectItem>
-              <SelectItem value="last-year">Last year</SelectItem>
-            </SelectContent>
-          </Select>
+          {showPresets && (
+            <Select onValueChange={onSelectDateRangePreset}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent position="popper">
+                <SelectItem value="month-to-date">Month to date</SelectItem>
+                <SelectItem value="last-month">Last month</SelectItem>
+                <SelectItem value="last-3-months">Last 3 months</SelectItem>
+                <SelectItem value="year-to-date">Year to date</SelectItem>
+                <SelectItem value="last-year">Last year</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
           <Calendar
             initialFocus
             mode="range"

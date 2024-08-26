@@ -31,7 +31,7 @@ export function Transactions() {
         <div className="flex items-center justify-between">
           <CardTitle>Transactions</CardTitle>
           <div className="flex items-center gap-3">
-            <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} />
+            <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} showPresets />
             <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
             <AddTransaction selectedWallet={selectedWallet} />
           </div>
