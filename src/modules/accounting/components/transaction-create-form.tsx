@@ -1,6 +1,7 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
+import { DatePicker } from "@/components/date-picker";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,7 +11,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -18,6 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { XInput } from "@/components/x-input";
 import { useTransactionCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   useTransactionCategoriesQuery,
@@ -28,7 +29,7 @@ import {
   transactionCreateFormSchema,
 } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { startOfToday } from "date-fns";
 import { useForm } from "react-hook-form";
 
 interface TransactionCreateFormProps {
@@ -41,7 +42,7 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
       fromWalletId: props.walletId,
-      date: new Date(),
+      date: startOfToday(),
       amount: 0,
       description: "",
     },
@@ -73,10 +74,10 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
           control={form.control}
           name="date"
           render={({ field }) => (
-            <FormItem>
+            <FormItem className="flex flex-col">
               <FormLabel>Date</FormLabel>
               <FormControl>
-                <Input placeholder={format(field.value, "EEE yyyy-MM-dd HH:mm")} disabled />
+                <DatePicker value={field.value} setValue={field.onChange} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -167,33 +168,9 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="amount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Amount</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" step={0.01} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput control={form.control} name="amount" type="number" label="Amount" />
 
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Description</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput control={form.control} name="description" label="Description" />
 
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={mutation.isPending}>
