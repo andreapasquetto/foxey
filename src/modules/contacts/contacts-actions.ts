@@ -25,7 +25,7 @@ export async function createContact(contact: ContactCreateForm) {
   // TODO: add addresses, emails and phoneNumbers
   await db.insert(contacts).values({
     fullName: contact.fullName,
-    dob: formatISO(contact.dob),
+    dob: formatISO(contact.dob, { representation: "date" }),
     isArchived: contact.isArchived,
     isBusiness: contact.isBusiness,
     subtitle: contact.subtitle,

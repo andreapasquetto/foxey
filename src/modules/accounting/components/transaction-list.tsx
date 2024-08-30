@@ -16,7 +16,7 @@ import {
   useWalletsQuery,
 } from "@/modules/accounting/accounting-queries";
 import { DeleteTransaction } from "@/modules/accounting/components/delete-transaction";
-import { formatISO } from "date-fns";
+import { format } from "date-fns";
 import { ChevronsRight } from "lucide-react";
 import { DateRange } from "react-day-picker";
 
@@ -72,7 +72,7 @@ export function TransactionList(props: RecentTransactionsProps) {
           {hasData &&
             transactionsQuery.data.records.map((tx) => (
               <TableRow key={tx.id}>
-                <TableCell>{formatISO(tx.date, { representation: "date" })}</TableCell>
+                <TableCell>{format(tx.date, "ccc dd MMM y")}</TableCell>
                 <TableCell>
                   <div>
                     {tx.fromWalletId && !tx.toWalletId && <div>outgoing</div>}

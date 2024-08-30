@@ -59,10 +59,10 @@ export function EventList() {
               )}
             </TableCell>
             <TableCell className="font-mono">
-              {event.endDatetime ? format(event.endDatetime, "ccc yyyy-MM-dd, HH:mm") : "-"}
+              {event.startDatetime ? format(event.startDatetime, "ccc dd MMM y, HH:mm") : "-"}
             </TableCell>
             <TableCell className="font-mono">
-              {event.startDatetime ? format(event.startDatetime, "ccc yyyy-MM-dd, HH:mm") : "-"}
+              {event.endDatetime ? format(event.endDatetime, "ccc dd MMM y, HH:mm") : "-"}
             </TableCell>
           </TableRow>
         ))}

@@ -9,7 +9,7 @@ import {
 } from "@/components/ui/dialog";
 import { useTransactionDeleteMutation } from "@/modules/accounting/accounting-mutations";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
-import { formatISO } from "date-fns";
+import { format } from "date-fns";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 
@@ -37,7 +37,7 @@ export function DeleteTransaction(props: DeleteTransactionProps) {
         <DialogHeader>
           <DialogTitle>Delete transaction</DialogTitle>
           <DialogDescription>
-            {`${formatISO(props.transaction.date, { representation: "date" })}, ${props.transaction.description}`}
+            {`${format(props.transaction.date, "ccc dd MMM y")} • ${props.transaction.description}`}
           </DialogDescription>
         </DialogHeader>
         <p>Are you sure you want to delete this transaction?</p>

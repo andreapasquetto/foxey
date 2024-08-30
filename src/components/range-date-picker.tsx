@@ -50,10 +50,10 @@ export function RangeDatePicker({
             {dateRange?.from ? (
               dateRange.to ? (
                 <>
-                  {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+                  {format(dateRange.from, "dd MMM y")} - {format(dateRange.to, "dd MMM y")}
                 </>
               ) : (
-                format(dateRange.from, "LLL dd, y")
+                format(dateRange.from, "dd MMM y")
               )
             ) : (
               <span>Pick a date</span>

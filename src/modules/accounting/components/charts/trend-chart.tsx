@@ -46,7 +46,7 @@ export function TrendChart(props: TrendChartProps) {
                 dataKey="date"
                 tickLine={false}
                 axisLine={false}
-                tickFormatter={(value) => format(value, "dd MMM yyyy")}
+                tickFormatter={(value) => format(value, "MMM dd")}
               />
               <YAxis domain={["auto", "auto"]} />
               <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideLabel />} />

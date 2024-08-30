@@ -38,7 +38,7 @@ export function FuelPriceChart(props: FuelPriceChartProps) {
               dataKey="date"
               tickLine={false}
               axisLine={false}
-              tickFormatter={(value) => format(value, "MMM yyyy")}
+              tickFormatter={(value) => format(value, "MMM y")}
             />
             <YAxis domain={["auto", "auto"]} />
             <ChartTooltip

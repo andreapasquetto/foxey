@@ -25,7 +25,7 @@ export function DatePicker(props: DatePickerProps) {
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
-          {props.value ? format(props.value, "PPP") : <span>Pick a date</span>}
+          {props.value ? format(props.value, "dd MMM y") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
