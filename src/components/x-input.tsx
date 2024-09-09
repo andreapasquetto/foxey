@@ -1,19 +1,14 @@
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useId } from "react";
+import { ComponentProps, useId } from "react";
 import { Control, FieldValue, FieldValues, Path, useController } from "react-hook-form";
 
-export type XInputProps<T extends FieldValue<K>, K extends FieldValues> = {
+interface XInputProps<T extends FieldValue<K>, K extends FieldValues>
+  extends ComponentProps<"input"> {
   control: Control<T>;
   name: Path<T>;
-  id?: string;
-  type?: "text" | "number";
-  disabled?: boolean;
-  readOnly?: boolean;
-  placeholder?: string;
-  step?: "any" | number;
   label?: string;
-};
+}
 
 // TODO: find a better name
 export function XInput<T extends FieldValue<K>, K extends FieldValues>({
