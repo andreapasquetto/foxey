@@ -1,16 +1,7 @@
-"use client";
-
 import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { XInput } from "@/components/x-input";
 import { useCreateHighwayTripMutation } from "@/modules/cars/cars-mutations";
 import {
   type HighwayTripCreateForm,
@@ -46,73 +37,20 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <FormField
-          control={form.control}
-          name="startingToll"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Start</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="endingToll"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>End</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput control={form.control} name="startingToll" label="Start" />
 
-        <FormField
-          control={form.control}
-          name="distance"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Distance</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" step={0.01} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput control={form.control} name="endingToll" label="End" />
 
-        <FormField
-          control={form.control}
-          name="cost"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Cost</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" step={0.01} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput type="number" step={0.01} control={form.control} name="distance" label="Distance" />
 
-        <FormField
+        <XInput type="number" step={0.01} control={form.control} name="cost" label="Cost" />
+
+        <XInput
+          type="number"
+          step={0.01}
           control={form.control}
           name="avgSpeed"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Avg. speed</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" step={0.01} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
+          label="Average speed"
         />
 
         <div className="flex items-center gap-3">

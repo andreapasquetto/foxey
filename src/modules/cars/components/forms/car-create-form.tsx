@@ -1,16 +1,7 @@
-"use client";
-
 import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { XInput } from "@/components/x-input";
 import { useCreateCarMutation } from "@/modules/cars/cars-mutations";
 import {
   type CarCreateForm,
@@ -44,52 +35,11 @@ export function CarCreateForm(props: CarCreateFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <FormField
-          control={form.control}
-          name="year"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Year</FormLabel>
-              <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  onChange={(e) => field.onChange(Number(e.target.value))}
-                  step={1}
-                />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput type="number" control={form.control} name="year" label="Year" />
 
-        <FormField
-          control={form.control}
-          name="make"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Make</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput control={form.control} name="make" label="Make" />
 
-        <FormField
-          control={form.control}
-          name="model"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Model</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput control={form.control} name="model" label="Model" />
 
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={mutation.isPending}>

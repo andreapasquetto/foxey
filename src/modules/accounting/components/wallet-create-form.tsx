@@ -1,14 +1,7 @@
 import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { Form } from "@/components/ui/form";
+import { XInput } from "@/components/x-input";
 import { useWalletCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   type WalletCreateForm,
@@ -41,33 +34,9 @@ export function WalletCreateForm(props: WalletCreateFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput control={form.control} name="name" label="Name" />
 
-        <FormField
-          control={form.control}
-          name="initialAmount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Initial amount</FormLabel>
-              <FormControl>
-                <Input {...field} type="number" step={0.01} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XInput type="number" control={form.control} name="initialAmount" label="Initial amount" />
 
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={mutation.isPending}>

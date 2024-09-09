@@ -1,5 +1,3 @@
-"use client";
-
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/date-picker";
 import { Button } from "@/components/ui/button";
@@ -11,14 +9,8 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { XInput } from "@/components/x-input";
+import { XSelect, XSelectOption } from "@/components/x-select";
 import { useTransactionCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   useTransactionCategoriesQuery,
@@ -85,88 +77,37 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
         />
 
         {!props.walletId && (
-          <FormField
-            control={form.control}
-            name="fromWalletId"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>From</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {availableWallets.map((w) => (
-                      <SelectItem key={w.id} value={w.id} className="gap-2 text-sm">
-                        {w.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+          <XSelect control={form.control} name="fromWalletId" label="From">
+            {availableWallets.map((w) => (
+              <XSelectOption key={w.id} value={w.id}>
+                {w.name}
+              </XSelectOption>
+            ))}
+          </XSelect>
         )}
 
-        <FormField
-          control={form.control}
-          name="toWalletId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>To</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {availableWallets.map((w) => (
-                    <SelectItem key={w.id} value={w.id} className="gap-2 text-sm">
-                      {w.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XSelect control={form.control} name="toWalletId" label="To">
+          {availableWallets.map((w) => (
+            <XSelectOption key={w.id} value={w.id}>
+              {w.name}
+            </XSelectOption>
+          ))}
+        </XSelect>
 
-        <FormField
-          control={form.control}
-          name="categoryId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem key={category.id} value={category.id} className="gap-2 text-sm">
-                      {!category.parent && <div>{category.name}</div>}
-                      {category.parent && (
-                        <div>
-                          <span>{category.parent.name}</span>
-                          <span className="mx-1">•</span>
-                          <span className="text-muted-foreground">{category.name}</span>
-                        </div>
-                      )}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <XSelect control={form.control} name="categoryId" label="Category">
+          {categories.map((category) => (
+            <XSelectOption key={category.id} value={category.id}>
+              {!category.parent && <div>{category.name}</div>}
+              {category.parent && (
+                <div>
+                  <span>{category.parent.name}</span>
+                  <span className="mx-1">•</span>
+                  <span className="text-muted-foreground">{category.name}</span>
+                </div>
+              )}
+            </XSelectOption>
+          ))}
+        </XSelect>
 
         <XInput control={form.control} name="amount" type="number" label="Amount" />
 

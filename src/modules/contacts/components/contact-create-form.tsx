@@ -1,6 +1,7 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
+import { DatePicker } from "@/components/date-picker";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -10,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { XInput } from "@/components/x-input";
 import { useCreateContactMutation } from "@/modules/contacts/contacts-mutations";
 import {
   type ContactCreateForm,
@@ -49,21 +50,21 @@ export function ContactCreateForm(props: ContactCreateFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="fullName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Full name</FormLabel>
-                <FormControl>
-                  <Input {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <XInput control={form.control} name="fullName" label="Full Name" />
+
+        <FormField
+          control={form.control}
+          name="dob"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Date of Birth</FormLabel>
+              <FormControl>
+                <DatePicker value={field.value} setValue={field.onChange} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={mutation.isPending}>
