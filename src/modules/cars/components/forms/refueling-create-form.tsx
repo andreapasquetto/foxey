@@ -1,14 +1,7 @@
 import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { useCreateRefuelingMutation } from "@/modules/cars/cars-mutations";
 import {
@@ -32,6 +25,8 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
       cost: 0,
       quantity: 0,
       price: 0,
+      isFull: false,
+      isNecessary: true,
       trip: 0,
       odometer: 0,
     },
@@ -56,35 +51,9 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
 
         <XInput type="number" step={0.001} control={form.control} name="price" label="Price" />
 
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="isFull"
-            render={({ field }) => (
-              <FormItem className="flex items-end gap-3">
-                <FormControl>
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-                <FormLabel>Full Tank</FormLabel>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <XCheckbox control={form.control} name="isFull" label="Full Tank" />
 
-          <FormField
-            control={form.control}
-            name="isNecessary"
-            render={({ field }) => (
-              <FormItem className="flex items-end gap-3">
-                <FormControl>
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-                <FormLabel>Necessary</FormLabel>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <XCheckbox control={form.control} name="isNecessary" label="Necessary" />
 
         <XInput type="number" step={0.01} control={form.control} name="trip" label="Trip" />
 

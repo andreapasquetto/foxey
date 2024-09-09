@@ -1,14 +1,7 @@
 import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
+import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
 import { useCreatePlaceMutation } from "@/modules/places/places-mutations";
@@ -61,21 +54,7 @@ export function PlaceCreateForm(props: PlaceCreateFormProps) {
 
         <XInput control={form.control} name="address" label="Address" />
 
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="isVisited"
-            render={({ field }) => (
-              <FormItem className="flex items-end gap-3">
-                <FormControl>
-                  <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-                </FormControl>
-                <FormLabel>Visited</FormLabel>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+        <XCheckbox control={form.control} name="isVisited" label="Visited" />
 
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={mutation.isPending}>
