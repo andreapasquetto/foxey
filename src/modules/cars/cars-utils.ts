@@ -29,6 +29,7 @@ export function calculateTotalDistance(refuelings: RefuelingRead[]) {
 
 export function calculateAvgDistance(refuelings: RefuelingRead[]) {
   const numberOfTrips = getEligibleRefuelings(refuelings).length;
+  if (!numberOfTrips) return null;
 
   return refuelings
     .reduce((prev, curr) => prev.add(curr.trip ?? 0), new Decimal(0))

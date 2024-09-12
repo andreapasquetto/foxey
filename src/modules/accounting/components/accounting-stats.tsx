@@ -6,10 +6,7 @@ import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  useTransactionCategoriesQuery,
-  useTransactionsGetAllQuery,
-} from "@/modules/accounting/accounting-queries";
+import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import {
   calculateTransactionsAmount,
   getIncomingTransactions,
@@ -18,16 +15,13 @@ import {
 } from "@/modules/accounting/accounting-utils";
 
 export default function AccountingStats() {
-  const categoriesQuery = useTransactionCategoriesQuery();
   const transactionsMonthToDateQuery = useTransactionsGetAllQuery({
     dateRange: monthToDateRange(),
   });
   const transactionsLastMonthQuery = useTransactionsGetAllQuery({ dateRange: lastMonthRange() });
 
   const isFetching =
-    categoriesQuery.isFetching ||
-    transactionsMonthToDateQuery.isFetching ||
-    transactionsLastMonthQuery.isFetching;
+    transactionsMonthToDateQuery.isFetching || transactionsLastMonthQuery.isFetching;
 
   const transactionsWithoutTransfers = {
     thisMonth: getTransactionsWithoutTransfers(transactionsMonthToDateQuery.data ?? []),

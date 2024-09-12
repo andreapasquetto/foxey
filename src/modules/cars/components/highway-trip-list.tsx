@@ -53,7 +53,9 @@ export function HighwayTripList(props: HighwayTripsProps) {
         <TableBody>
           {trips.map((trip) => (
             <TableRow key={trip.id}>
-              <TableCell>{format(trip.date, "ccc dd MMM y")}</TableCell>
+              <TableCell>
+                <code>{format(trip.date, "ccc dd MMM y")}</code>
+              </TableCell>
               {!props.carId && <TableCell>{`${trip.car.make} ${trip.car.model}`}</TableCell>}
               <TableCell>{trip.startingToll}</TableCell>
               <TableCell>{trip.endingToll}</TableCell>
@@ -78,7 +80,7 @@ export function HighwayTripList(props: HighwayTripsProps) {
 function TableHeaderRow(props: { carId?: string }) {
   return (
     <TableRow>
-      <TableHead>Date</TableHead>
+      <TableHead className="min-w-36">Date</TableHead>
       {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>Starting toll</TableHead>
       <TableHead>Ending toll</TableHead>

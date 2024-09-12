@@ -1,7 +1,4 @@
-"use client";
-
 import { currencyFormatter } from "@/common/formatters";
-import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import {
   Command,

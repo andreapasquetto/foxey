@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -20,7 +18,7 @@ export function DatePicker(props: DatePickerProps) {
         <Button
           variant={"outline"}
           className={cn(
-            "w-[280px] justify-start text-left font-normal",
+            "justify-start text-left font-normal",
             !props.value && "text-muted-foreground",
           )}
         >
@@ -29,7 +27,13 @@ export function DatePicker(props: DatePickerProps) {
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
-        <Calendar mode="single" selected={props.value} onSelect={props.setValue} initialFocus />
+        <Calendar
+          mode="single"
+          selected={props.value}
+          onSelect={props.setValue}
+          initialFocus
+          weekStartsOn={1}
+        />
       </PopoverContent>
     </Popover>
   );

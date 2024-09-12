@@ -1,5 +1,3 @@
-"use client";
-
 import { DateRangePresetCode, getDateRangeFromCode } from "@/common/dates";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -42,7 +40,7 @@ export function RangeDatePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "w-[300px] justify-start text-left font-normal",
+              "justify-start text-left font-normal",
               !dateRange && "text-muted-foreground",
             )}
           >
@@ -82,6 +80,7 @@ export function RangeDatePicker({
             selected={dateRange}
             onSelect={setDateRange}
             numberOfMonths={2}
+            weekStartsOn={1}
           />
         </PopoverContent>
       </Popover>

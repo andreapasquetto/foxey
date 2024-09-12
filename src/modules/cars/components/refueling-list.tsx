@@ -56,7 +56,9 @@ export function RefuelingList(props: RecentRefuelingsProps) {
           {query.data &&
             query.data.records.map((refueling) => (
               <TableRow key={refueling.id}>
-                <TableCell>{format(refueling.date, "ccc dd MMM y")}</TableCell>
+                <TableCell>
+                  <code>{format(refueling.date, "ccc dd MMM y")}</code>
+                </TableCell>
                 {!props.carId && (
                   <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
                 )}
@@ -102,7 +104,7 @@ export function RefuelingList(props: RecentRefuelingsProps) {
 function TableHeaderRow(props: { carId?: string }) {
   return (
     <TableRow>
-      <TableHead>Date</TableHead>
+      <TableHead className="min-w-36">Date</TableHead>
       {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>Place</TableHead>
       <TableHead>
