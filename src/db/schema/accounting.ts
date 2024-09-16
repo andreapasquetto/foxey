@@ -1,5 +1,14 @@
 import { relations } from "drizzle-orm";
-import { AnyPgColumn, date, numeric, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  AnyPgColumn,
+  date,
+  numeric,
+  pgTable,
+  primaryKey,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const wallets = pgTable("wallets", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -24,6 +33,26 @@ export const transactions = pgTable("transactions", {
   amount: numeric("amount").notNull(),
   description: varchar("description"),
 });
+
+export const tags = pgTable("tags", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  name: varchar("name").notNull(),
+});
+
+export const transactionTags = pgTable(
+  "transaction_tags",
+  {
+    transactionId: uuid("transaction_id")
+      .notNull()
+      .references(() => transactions.id),
+    tagId: uuid("tag_id")
+      .notNull()
+      .references(() => tags.id),
+  },
+  (table) => ({
+    pk: primaryKey({ columns: [table.transactionId, table.tagId] }),
+  }),
+);
 
 export const transactionCategoriesRelations = relations(transactionCategories, ({ many }) => ({
   transactions: many(transactions),

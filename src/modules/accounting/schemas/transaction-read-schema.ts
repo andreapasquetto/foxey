@@ -15,4 +15,5 @@ export interface TransactionRead {
   toWallet: BasicRecord | null;
   category: TransactionCategory | null;
   description: string | null;
+  tags: BasicRecord[];
 }

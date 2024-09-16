@@ -1,5 +1,6 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { QueryPagination } from "@/components/pagination";
+import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -92,6 +93,13 @@ export function TransactionList(props: RecentTransactionsProps) {
                   )}
                 </div>
               </TableCell>
+              <TableCell>
+                <div className="flex items-center gap-1">
+                  {tx.tags.map((tag) => (
+                    <Badge key={tag.id}>{tag.name}</Badge>
+                  ))}
+                </div>
+              </TableCell>
               <TableCell>{tx.description ?? "-"}</TableCell>
               <TableCell className="text-right">
                 {
@@ -126,6 +134,7 @@ function TableHeaderRow() {
       <TableHead>Date</TableHead>
       <TableHead>Type</TableHead>
       <TableHead>Category</TableHead>
+      <TableHead>Tags</TableHead>
       <TableHead>Description</TableHead>
       <TableHead className="text-right">Amount</TableHead>
       <TableHead></TableHead>
@@ -149,6 +158,12 @@ function TableRowsSkeleton() {
         <div className="space-y-1">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-20" />
+        </div>
+      </TableCell>
+      <TableCell>
+        <div className="flex items-center gap-1">
+          <Skeleton className="h-5 w-16" />
+          <Skeleton className="h-5 w-16" />
         </div>
       </TableCell>
       <TableCell>

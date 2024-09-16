@@ -2,7 +2,13 @@
 
 import { Paginate, Paginated, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { db } from "@/db/db";
-import { transactionCategories, transactions, wallets } from "@/db/schema/accounting";
+import {
+  tags,
+  transactionCategories,
+  transactions,
+  transactionTags,
+  wallets,
+} from "@/db/schema/accounting";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
@@ -73,7 +79,17 @@ export async function transactionsGetPaginated(params: {
     const fromWallet = wallets.find((w) => w.id === transaction.fromWalletId) ?? null;
     const toWallet = wallets.find((w) => w.id === transaction.toWalletId) ?? null;
     const category = categories.find((c) => c.id === transaction.categoryId) ?? null;
-    result.push({ ...transaction, fromWallet, toWallet, category });
+
+    const txTags = await db
+      .select({
+        id: tags.id,
+        name: tags.name,
+      })
+      .from(transactionTags)
+      .innerJoin(tags, eq(transactionTags.tagId, tags.id))
+      .where(eq(transactionTags.transactionId, transaction.id));
+
+    result.push({ ...transaction, fromWallet, toWallet, category, tags: txTags });
   }
 
   return toPaginated(result, total);
@@ -108,7 +124,17 @@ export async function transactionsGetAll(
     const fromWallet = wallets.find((w) => w.id === transaction.fromWalletId) ?? null;
     const toWallet = wallets.find((w) => w.id === transaction.toWalletId) ?? null;
     const category = categories.find((c) => c.id === transaction.categoryId) ?? null;
-    result.push({ ...transaction, fromWallet, toWallet, category });
+
+    const txTags = await db
+      .select({
+        id: tags.id,
+        name: tags.name,
+      })
+      .from(transactionTags)
+      .innerJoin(tags, eq(transactionTags.tagId, tags.id))
+      .where(eq(transactionTags.transactionId, transaction.id));
+
+    result.push({ ...transaction, fromWallet, toWallet, category, tags: txTags });
   }
 
   return result;
