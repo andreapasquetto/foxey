@@ -11,15 +11,15 @@ export function calculateTotalBalance(wallets: WalletRead[]) {
 }
 
 export function getTransactionsWithoutTransfers(transactions: TransactionRead[]) {
-  return transactions.filter((tx) => !(tx.fromWalletId && tx.toWalletId));
+  return transactions.filter((tx) => !(tx.fromWallet && tx.toWallet));
 }
 
 export function getIncomingTransactions(transactions: TransactionRead[]) {
-  return transactions.filter((tx) => tx.toWalletId);
+  return transactions.filter((tx) => tx.toWallet);
 }
 
 export function getOutgoingTransactions(transactions: TransactionRead[]) {
-  return transactions.filter((tx) => tx.fromWalletId);
+  return transactions.filter((tx) => tx.fromWallet);
 }
 
 export function calculateTransactionsAmount(transactions: TransactionRead[]) {
@@ -27,7 +27,7 @@ export function calculateTransactionsAmount(transactions: TransactionRead[]) {
 }
 
 export function groupTransactionsByCategoryId(transactions: TransactionRead[]) {
-  return Object.groupBy(transactions, (tx) => tx.categoryId ?? "NONE");
+  return Object.groupBy(transactions, (tx) => tx.category?.name ?? "NONE");
 }
 
 export function generateExpensesChartConfigAndData(
@@ -76,13 +76,13 @@ export function generateTrendChartData(
     >((acc, tx) => {
       let amountChange = new Decimal(0);
 
-      const isTransfer = !!tx.fromWalletId && !!tx.toWalletId;
+      const isTransfer = !!tx.fromWallet && !!tx.toWallet;
       if (isTransfer) {
-        if (tx.fromWalletId === filters.walletId) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWalletId === filters.walletId) amountChange = amountChange.add(tx.amount);
+        if (tx.fromWallet?.id === filters.walletId) amountChange = amountChange.sub(tx.amount);
+        if (tx.toWallet?.id === filters.walletId) amountChange = amountChange.add(tx.amount);
       } else {
-        if (tx.fromWalletId) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWalletId) amountChange = amountChange.add(tx.amount);
+        if (tx.fromWallet?.id) amountChange = amountChange.sub(tx.amount);
+        if (tx.toWallet?.id) amountChange = amountChange.add(tx.amount);
       }
 
       acc.push({

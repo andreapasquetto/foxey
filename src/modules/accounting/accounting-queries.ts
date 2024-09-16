@@ -5,10 +5,10 @@ import {
   walletsQueryKey,
 } from "@/common/query-keys";
 import {
-  getWallets,
   transactionCategoriesGetAll,
   transactionsGetAll,
   transactionsGetPaginated,
+  walletsGetAll,
 } from "@/modules/accounting/accounting-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
@@ -16,7 +16,7 @@ import { DateRange } from "react-day-picker";
 export function useWalletsQuery() {
   return useQuery({
     queryKey: walletsQueryKey(),
-    queryFn: () => getWallets(),
+    queryFn: () => walletsGetAll(),
   });
 }
 

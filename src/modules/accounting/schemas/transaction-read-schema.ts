@@ -1,9 +1,18 @@
-export interface TransactionRead {
+interface BasicRecord {
   id: string;
+  name: string;
+}
+
+interface TransactionCategory extends BasicRecord {
+  parent: BasicRecord | null;
+}
+
+export interface TransactionRead {
   date: Date;
-  fromWalletId: string | null;
-  toWalletId: string | null;
-  categoryId: string | null;
+  id: string;
   amount: string;
+  fromWallet: BasicRecord | null;
+  toWallet: BasicRecord | null;
+  category: TransactionCategory | null;
   description: string | null;
 }

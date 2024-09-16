@@ -26,7 +26,11 @@ export function useTransactionCreateMutation() {
   return useMutation({
     mutationKey: transactionsQueryKey(),
     mutationFn: (transaction: TransactionCreateForm) => createTransaction(transaction),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: transactionsQueryKey() }),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: transactionsQueryKey() }),
+        queryClient.invalidateQueries({ queryKey: walletsQueryKey() }),
+      ]),
   });
 }
 
@@ -35,6 +39,10 @@ export function useTransactionDeleteMutation(id: string) {
   return useMutation({
     mutationKey: transactionDeleteQueryKey(id),
     mutationFn: (id: string) => deleteTransaction(id),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: transactionsQueryKey() }),
+    onSuccess: () =>
+      Promise.all([
+        queryClient.invalidateQueries({ queryKey: transactionsQueryKey() }),
+        queryClient.invalidateQueries({ queryKey: walletsQueryKey() }),
+      ]),
   });
 }
