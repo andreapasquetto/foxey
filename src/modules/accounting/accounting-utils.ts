@@ -1,14 +1,8 @@
 import { ChartConfig } from "@/components/ui/chart";
-import { TransactionCategoryRead } from "@/modules/accounting/schemas/transaction-category-read-schema";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
-import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { isWithinInterval } from "date-fns";
 import { Decimal } from "decimal.js";
 import { DateRange } from "react-day-picker";
-
-export function calculateTotalBalance(wallets: WalletRead[]) {
-  return wallets.reduce((acc, curr) => acc.add(curr.amount), new Decimal(0));
-}
 
 export function getTransactionsWithoutTransfers(transactions: TransactionRead[]) {
   return transactions.filter((tx) => !(tx.fromWallet && tx.toWallet));
@@ -26,34 +20,30 @@ export function calculateTransactionsAmount(transactions: TransactionRead[]) {
   return transactions.reduce((acc, curr) => acc.add(new Decimal(curr.amount)), new Decimal(0));
 }
 
-export function groupTransactionsByCategoryId(transactions: TransactionRead[]) {
+export function groupTransactionsByCategoryName(transactions: TransactionRead[]) {
   return Object.groupBy(transactions, (tx) => tx.category?.name ?? "NONE");
 }
 
-export function generateExpensesChartConfigAndData(
-  transactions: TransactionRead[],
-  categories: TransactionCategoryRead[],
-) {
+export function generateExpensesChartConfigAndData(transactions: TransactionRead[]) {
   const expenses = getOutgoingTransactions(getTransactionsWithoutTransfers(transactions));
-  const expensesGroupedByCategoryId = groupTransactionsByCategoryId(expenses);
+  const expensesGroupedByCategoryName = groupTransactionsByCategoryName(expenses);
 
   return {
     chartConfig: Object.fromEntries(
       new Map(
-        Object.keys(expensesGroupedByCategoryId).map((category) => {
-          const categoryName = categories.find((c) => c.id === category)?.name ?? "NONE";
+        Object.keys(expensesGroupedByCategoryName).map((category) => {
           return [
-            categoryName,
+            category,
             {
-              label: categoryName,
+              label: category,
             },
           ];
         }),
       ),
     ) satisfies ChartConfig,
-    chartData: Object.entries(expensesGroupedByCategoryId).map(([categoryId, txs]) => {
+    chartData: Object.entries(expensesGroupedByCategoryName).map(([categoryName, txs]) => {
       return {
-        category: categories.find((category) => category.id === categoryId)?.name ?? "NONE",
+        category: categoryName,
         total: txs?.reduce((prev, curr) => prev.add(curr.amount), new Decimal(0)).toNumber(),
       };
     }),
@@ -70,7 +60,7 @@ export function generateTrendChartData(
   return transactions
     .reduce<
       Array<{
-        date: Date;
+        datetime: Date;
         amount: Decimal;
       }>
     >((acc, tx) => {
@@ -86,7 +76,7 @@ export function generateTrendChartData(
       }
 
       acc.push({
-        date: tx.date,
+        datetime: tx.datetime,
         amount: acc.length ? acc[acc.length - 1].amount.add(amountChange) : amountChange,
       });
 
@@ -94,8 +84,11 @@ export function generateTrendChartData(
     }, [])
     .filter((tx) =>
       filters.dateRange?.from && filters.dateRange.to
-        ? isWithinInterval(tx.date, { start: filters.dateRange.from, end: filters.dateRange.to })
+        ? isWithinInterval(tx.datetime, {
+            start: filters.dateRange.from,
+            end: filters.dateRange.to,
+          })
         : true,
     )
-    .map((item) => ({ date: item.date, amount: item.amount.toNumber() }));
+    .map((item) => ({ datetime: item.datetime, amount: item.amount.toNumber() }));
 }

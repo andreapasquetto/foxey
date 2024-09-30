@@ -20,7 +20,7 @@ export async function walletsGetAll() {
   return await db.select().from(wallets);
 }
 
-export async function createWallet(wallet: WalletCreateForm) {
+export async function walletCreate(wallet: WalletCreateForm) {
   await db.insert(wallets).values({
     name: wallet.name,
     initialAmount: wallet.initialAmount.toString(),
@@ -52,7 +52,7 @@ export async function transactionsGetPaginated(params: {
   const wallets = await walletsGetAll();
   const categories = await transactionCategoriesGetAll();
 
-  const total = await countTotalTransactions(params);
+  const total = await transactionsCountTotal(params);
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
   const records = await db
     .select()
@@ -66,13 +66,13 @@ export async function transactionsGetPaginated(params: {
             )
           : undefined,
         params.dateRange?.from && params.dateRange.to
-          ? between(transactions.date, params.dateRange.from, params.dateRange.to)
+          ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
           : undefined,
       ),
     )
     .limit(limit)
     .offset(offset)
-    .orderBy(desc(transactions.date));
+    .orderBy(desc(transactions.datetime));
 
   const result: TransactionRead[] = [];
   for (const transaction of records) {
@@ -113,11 +113,11 @@ export async function transactionsGetAll(
             )
           : undefined,
         params.dateRange?.from && params.dateRange.to
-          ? between(transactions.date, params.dateRange.from, params.dateRange.to)
+          ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
           : undefined,
       ),
     )
-    .orderBy(transactions.date);
+    .orderBy(transactions.datetime);
 
   const result: TransactionRead[] = [];
   for (const transaction of records) {
@@ -140,9 +140,9 @@ export async function transactionsGetAll(
   return result;
 }
 
-export async function createTransaction(tx: TransactionCreateForm) {
+export async function transactionCreate(tx: TransactionCreateForm) {
   await db.insert(transactions).values({
-    date: tx.date,
+    datetime: tx.datetime,
     fromWalletId: tx.fromWalletId,
     toWalletId: tx.toWalletId,
     categoryId: tx.categoryId,
@@ -152,11 +152,11 @@ export async function createTransaction(tx: TransactionCreateForm) {
 }
 
 // TODO: update wallet amount
-export async function deleteTransaction(id: string) {
+export async function transactionDelete(id: string) {
   await db.delete(transactions).where(eq(transactions.id, id));
 }
 
-async function countTotalTransactions(params: {
+async function transactionsCountTotal(params: {
   paginate: Paginate;
   walletId?: string;
   dateRange?: DateRange;
@@ -173,7 +173,7 @@ async function countTotalTransactions(params: {
             )
           : undefined,
         params.dateRange?.from && params.dateRange.to
-          ? between(transactions.date, params.dateRange.from, params.dateRange.to)
+          ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
           : undefined,
       ),
     );

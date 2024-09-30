@@ -1,5 +1,6 @@
 "use client";
 
+import { monthToDateRange } from "@/common/dates";
 import { RangeDatePicker } from "@/components/range-date-picker";
 import {
   Accordion,
@@ -14,16 +15,12 @@ import { TrendChart } from "@/modules/accounting/components/charts/trend-chart";
 import { TransactionList } from "@/modules/accounting/components/transaction-list";
 import { WalletSwitcher } from "@/modules/accounting/components/wallet-switcher";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
-import { endOfDay, startOfMonth, startOfToday } from "date-fns";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 
 export function Transactions() {
   const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
-  const [dateRange, setDateRange] = useState<DateRange | undefined>({
-    from: startOfMonth(startOfToday()),
-    to: endOfDay(startOfToday()),
-  });
+  const [dateRange, setDateRange] = useState<DateRange | undefined>(monthToDateRange());
 
   return (
     <Card>

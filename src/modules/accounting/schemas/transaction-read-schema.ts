@@ -8,7 +8,7 @@ interface TransactionCategory extends BasicRecord {
 }
 
 export interface TransactionRead {
-  date: Date;
+  datetime: Date;
   id: string;
   amount: string;
   fromWallet: BasicRecord | null;

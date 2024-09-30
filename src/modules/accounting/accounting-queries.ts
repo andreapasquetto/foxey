@@ -13,21 +13,21 @@ import {
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
 
-export function useWalletsQuery() {
+export function useWalletsGetAllQuery() {
   return useQuery({
     queryKey: walletsQueryKey(),
     queryFn: () => walletsGetAll(),
   });
 }
 
-export function useTransactionCategoriesQuery() {
+export function useTransactionCategoriesGetAllQuery() {
   return useQuery({
     queryKey: transactionCategoriesQueryKey(),
     queryFn: () => transactionCategoriesGetAll(),
   });
 }
 
-export function useTransactionsPaginatedQuery(
+export function useTransactionsGetPaginatedQuery(
   params: {
     walletId?: string;
     dateRange?: DateRange;

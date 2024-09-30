@@ -20,6 +20,7 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
     resolver: zodResolver(highwayTripCreateFormSchema),
     defaultValues: {
       carId: props.carId,
+      datetime: new Date(),
       startingToll: "",
       endingToll: "",
       distance: 0,

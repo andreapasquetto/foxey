@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { boolean, date, integer, numeric, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
+import { boolean, integer, numeric, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const cars = pgTable("cars", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -15,7 +15,7 @@ export const refuelings = pgTable("refuelings", {
     .notNull()
     .references(() => cars.id),
   ron: integer("ron").default(95),
-  date: date("date", { mode: "date" }).notNull().defaultNow(),
+  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
   place: varchar("place").notNull(),
   cost: numeric("cost").notNull(),
   quantity: numeric("quantity").notNull(),
@@ -32,7 +32,7 @@ export const highwayTrips = pgTable("highway_trips", {
   carId: uuid("car_id")
     .notNull()
     .references(() => cars.id),
-  date: date("date", { mode: "date" }).notNull().defaultNow(),
+  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
   startingToll: varchar("starting_toll").notNull(),
   endingToll: varchar("ending_toll").notNull(),
   distance: numeric("distance").notNull(),

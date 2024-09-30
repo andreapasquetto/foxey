@@ -8,10 +8,10 @@ export function extractRefuelingPeriods(refuelings: RefuelingRead[]) {
   const startOfLastYear = startOfYear(sub(today, { years: 1 }));
 
   return {
-    thisMonth: refuelings.filter((refueling) => isSameMonth(refueling.date, today)),
-    lastMonth: refuelings.filter((refueling) => isSameMonth(refueling.date, startOfLastMonth)),
-    thisYear: refuelings.filter((refueling) => isSameYear(refueling.date, today)),
-    lastYear: refuelings?.filter((refueling) => isSameYear(refueling.date, startOfLastYear)),
+    thisMonth: refuelings.filter((refueling) => isSameMonth(refueling.datetime, today)),
+    lastMonth: refuelings.filter((refueling) => isSameMonth(refueling.datetime, startOfLastMonth)),
+    thisYear: refuelings.filter((refueling) => isSameYear(refueling.datetime, today)),
+    lastYear: refuelings?.filter((refueling) => isSameYear(refueling.datetime, startOfLastYear)),
   };
 }
 

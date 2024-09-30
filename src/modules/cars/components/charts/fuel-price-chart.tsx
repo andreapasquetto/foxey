@@ -21,7 +21,7 @@ export function FuelPriceChart(props: FuelPriceChartProps) {
   } satisfies ChartConfig;
 
   const chartData = props.refuelings.map((refueling) => ({
-    date: refueling.date,
+    datetime: refueling.datetime,
     price: refueling.price,
   }));
 
@@ -35,7 +35,7 @@ export function FuelPriceChart(props: FuelPriceChartProps) {
           <LineChart accessibilityLayer data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
-              dataKey="date"
+              dataKey="datetime"
               tickLine={false}
               axisLine={false}
               tickFormatter={(value) => format(value, "MMM y")}

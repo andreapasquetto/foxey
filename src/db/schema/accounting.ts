@@ -1,7 +1,6 @@
 import { relations } from "drizzle-orm";
 import {
   AnyPgColumn,
-  date,
   numeric,
   pgTable,
   primaryKey,
@@ -26,7 +25,7 @@ export const transactionCategories = pgTable("transaction_categories", {
 
 export const transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
-  date: date("date", { mode: "date" }).notNull().defaultNow(),
+  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
   fromWalletId: uuid("from_wallet_id").references(() => wallets.id),
   toWalletId: uuid("to_wallet_id").references(() => wallets.id),
   categoryId: uuid("category_id").references(() => transactionCategories.id),

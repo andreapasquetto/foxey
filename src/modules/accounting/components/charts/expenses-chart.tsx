@@ -1,10 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  useTransactionCategoriesQuery,
-  useTransactionsGetAllQuery,
-} from "@/modules/accounting/accounting-queries";
+import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { generateExpensesChartConfigAndData } from "@/modules/accounting/accounting-utils";
 import { DateRange } from "react-day-picker";
 import { PolarAngleAxis, PolarGrid, Radar, RadarChart } from "recharts";
@@ -15,17 +12,14 @@ interface ExpensesChartProps {
 }
 
 export function ExpensesChart(props: ExpensesChartProps) {
-  const categoriesQuery = useTransactionCategoriesQuery();
   const transactionsQuery = useTransactionsGetAllQuery({
     walletId: props.walletId,
     dateRange: props.dateRange,
   });
 
-  const isFetching = categoriesQuery.isFetching || transactionsQuery.isFetching;
-  const categories = categoriesQuery.data ?? [];
   const transactions = transactionsQuery.data ?? [];
 
-  const { chartConfig, chartData } = generateExpensesChartConfigAndData(transactions, categories);
+  const { chartConfig, chartData } = generateExpensesChartConfigAndData(transactions);
 
   return (
     <Card>
@@ -33,8 +27,8 @@ export function ExpensesChart(props: ExpensesChartProps) {
         <CardTitle>Expenses</CardTitle>
       </CardHeader>
       <CardContent>
-        {isFetching && <Skeleton className="h-[300px] w-full" />}
-        {!isFetching && (
+        {transactionsQuery.isFetching && <Skeleton className="h-[300px] w-full" />}
+        {!transactionsQuery.isFetching && (
           <ChartContainer config={chartConfig}>
             <RadarChart data={chartData}>
               <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideIndicator />} />

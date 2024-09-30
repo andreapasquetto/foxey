@@ -57,7 +57,7 @@ export function RefuelingList(props: RecentRefuelingsProps) {
             query.data.records.map((refueling) => (
               <TableRow key={refueling.id}>
                 <TableCell>
-                  <code>{format(refueling.date, "ccc dd MMM y")}</code>
+                  <code>{format(refueling.datetime, "ccc y-MM-dd HH:mm")}</code>
                 </TableCell>
                 {!props.carId && (
                   <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>

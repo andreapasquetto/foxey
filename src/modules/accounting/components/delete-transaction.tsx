@@ -37,7 +37,7 @@ export function DeleteTransaction(props: DeleteTransactionProps) {
         <DialogHeader>
           <DialogTitle>Delete transaction</DialogTitle>
           <DialogDescription>
-            {`${format(props.transaction.date, "ccc dd MMM y")} • ${props.transaction.description}`}
+            {`${format(props.transaction.datetime, "ccc y-MM-dd HH:mm")} • ${props.transaction.description}`}
           </DialogDescription>
         </DialogHeader>
         <p>Are you sure you want to delete this transaction?</p>

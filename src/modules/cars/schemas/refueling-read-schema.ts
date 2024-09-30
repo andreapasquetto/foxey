@@ -1,7 +1,7 @@
 export interface RefuelingRead {
   id: string;
   carId: string;
-  date: Date;
+  datetime: Date;
   ron: number | null;
   place: string;
   cost: string;

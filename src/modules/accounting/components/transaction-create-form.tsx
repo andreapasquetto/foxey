@@ -13,15 +13,14 @@ import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
 import { useTransactionCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
-  useTransactionCategoriesQuery,
-  useWalletsQuery,
+  useTransactionCategoriesGetAllQuery,
+  useWalletsGetAllQuery,
 } from "@/modules/accounting/accounting-queries";
 import {
   type TransactionCreateForm,
   transactionCreateFormSchema,
 } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfToday } from "date-fns";
 import { useForm } from "react-hook-form";
 
 interface TransactionCreateFormProps {
@@ -34,14 +33,15 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
       fromWalletId: props.walletId,
-      date: startOfToday(),
+      datetime: new Date(),
       amount: 0,
       description: "",
     },
   });
 
-  const { data: wallets, isFetching: isFetchingWallets } = useWalletsQuery();
-  const { data: categories, isFetching: isFetchingCategories } = useTransactionCategoriesQuery();
+  const { data: wallets, isFetching: isFetchingWallets } = useWalletsGetAllQuery();
+  const { data: categories, isFetching: isFetchingCategories } =
+    useTransactionCategoriesGetAllQuery();
 
   const mutation = useTransactionCreateMutation();
 
@@ -64,7 +64,7 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2 pb-4">
         <FormField
           control={form.control}
-          name="date"
+          name="datetime"
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Date</FormLabel>

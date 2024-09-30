@@ -11,7 +11,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { useTransactionsPaginatedQuery } from "@/modules/accounting/accounting-queries";
+import { useTransactionsGetPaginatedQuery } from "@/modules/accounting/accounting-queries";
 import { DeleteTransaction } from "@/modules/accounting/components/delete-transaction";
 import { format } from "date-fns";
 import { ChevronsRight } from "lucide-react";
@@ -23,7 +23,7 @@ interface RecentTransactionsProps {
 }
 
 export function TransactionList(props: RecentTransactionsProps) {
-  const transactionsQuery = useTransactionsPaginatedQuery({
+  const transactionsQuery = useTransactionsGetPaginatedQuery({
     walletId: props.walletId,
     dateRange: props.dateRange,
   });
@@ -63,12 +63,11 @@ export function TransactionList(props: RecentTransactionsProps) {
         <TableBody>
           {transactions.map((tx) => (
             <TableRow key={tx.id}>
-              <TableCell>{format(tx.date, "ccc dd MMM y")}</TableCell>
+              <TableCell>
+                <code>{format(tx.datetime, "ccc y-MM-dd HH:mm")}</code>
+              </TableCell>
               <TableCell>
                 <div>
-                  {tx.fromWallet && !tx.toWallet && <div>outgoing</div>}
-                  {!tx.fromWallet && tx.toWallet && <div>incoming</div>}
-                  {tx.fromWallet && tx.toWallet && <div>transfer</div>}
                   <div className="space-x-2 text-sm text-muted-foreground">
                     {tx.fromWallet && <span>{tx.fromWallet.name}</span>}
                     {tx.fromWallet && tx.toWallet && (
@@ -132,7 +131,7 @@ function TableHeaderRow() {
   return (
     <TableRow>
       <TableHead>Date</TableHead>
-      <TableHead>Type</TableHead>
+      <TableHead>Wallet</TableHead>
       <TableHead>Category</TableHead>
       <TableHead>Tags</TableHead>
       <TableHead>Description</TableHead>
@@ -149,10 +148,7 @@ function TableRowsSkeleton() {
         <Skeleton className="h-4 w-32" />
       </TableCell>
       <TableCell>
-        <div className="space-y-1">
-          <Skeleton className="h-4 w-20" />
-          <Skeleton className="h-4 w-16" />
-        </div>
+        <Skeleton className="h-4 w-20" />
       </TableCell>
       <TableCell>
         <div className="space-y-1">

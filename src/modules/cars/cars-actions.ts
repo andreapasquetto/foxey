@@ -21,7 +21,7 @@ export async function refuelingsGetAll(carId?: string) {
     .select()
     .from(refuelings)
     .where(carId ? eq(refuelings.carId, carId) : undefined)
-    .orderBy(refuelings.date);
+    .orderBy(refuelings.datetime);
 }
 
 export async function refuelingsGetPaginated(options: { paginate: Paginate; carId?: string }) {
@@ -30,7 +30,7 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
   const records = await db
     .select({
       id: refuelings.id,
-      date: refuelings.date,
+      datetime: refuelings.datetime,
       place: refuelings.place,
       cost: refuelings.cost,
       quantity: refuelings.quantity,
@@ -49,13 +49,14 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
     .where(options.carId ? eq(refuelings.carId, options.carId) : undefined)
     .limit(limit)
     .offset(offset)
-    .orderBy(desc(refuelings.date));
+    .orderBy(desc(refuelings.datetime));
   return toPaginated(records, total);
 }
 
-export async function createRefueling(refueling: RefuelingCreateForm) {
+export async function refuelingCreate(refueling: RefuelingCreateForm) {
   await db.insert(refuelings).values({
     carId: refueling.carId,
+    datetime: refueling.datetime,
     place: refueling.place,
     price: String(refueling.price),
     quantity: String(refueling.quantity),
@@ -73,7 +74,7 @@ export async function highwayTripsGetPaginated(options: { paginate: Paginate; ca
   const records = await db
     .select({
       id: highwayTrips.id,
-      date: highwayTrips.date,
+      datetime: highwayTrips.datetime,
       startingToll: highwayTrips.startingToll,
       endingToll: highwayTrips.endingToll,
       distance: highwayTrips.distance,
@@ -89,13 +90,14 @@ export async function highwayTripsGetPaginated(options: { paginate: Paginate; ca
     .where(options.carId ? eq(highwayTrips.carId, options.carId) : undefined)
     .limit(limit)
     .offset(offset)
-    .orderBy(highwayTrips.date);
+    .orderBy(desc(highwayTrips.datetime));
   return toPaginated(records, total);
 }
 
-export async function createHighwayTrip(trip: HighwayTripCreateForm) {
+export async function highwayTripCreate(trip: HighwayTripCreateForm) {
   await db.insert(highwayTrips).values({
     carId: trip.carId,
+    datetime: trip.datetime,
     startingToll: trip.startingToll,
     endingToll: trip.endingToll,
     cost: String(trip.cost),

@@ -58,7 +58,7 @@ export default function AccountingStats() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Stats</CardTitle>
+        <CardTitle>This Month</CardTitle>
       </CardHeader>
 
       <CardContent>
@@ -66,7 +66,7 @@ export default function AccountingStats() {
           <div className="grid grid-cols-1 items-start gap-3 lg:grid-cols-3">
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Income this month</CardDescription>
+                <CardDescription>Income</CardDescription>
                 {isFetching && (
                   <div className="flex items-center gap-2">
                     <Skeleton className="h-6 w-24" />
@@ -76,7 +76,7 @@ export default function AccountingStats() {
                 {!isFetching && (
                   <CardTitle className="flex items-center gap-2">
                     {currencyFormatter.format(totalAmounts.thisMonth.incoming.toNumber())}
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="hidden sm:inline-block">
                       {percentageFormatter.format(
                         calculatePercentageChange(
                           totalAmounts.lastMonth.incoming,
@@ -99,7 +99,7 @@ export default function AccountingStats() {
             </Card>
             <Card>
               <CardHeader className="pb-2">
-                <CardDescription>Expenses this month</CardDescription>
+                <CardDescription>Expenses</CardDescription>
                 {isFetching && (
                   <div className="flex items-center gap-2">
                     <Skeleton className="h-6 w-24" />
@@ -109,7 +109,7 @@ export default function AccountingStats() {
                 {!isFetching && (
                   <CardTitle className="flex items-center gap-2">
                     {currencyFormatter.format(totalAmounts.thisMonth.outgoing.toNumber())}
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="hidden sm:inline-block">
                       {percentageFormatter.format(
                         calculatePercentageChange(
                           totalAmounts.lastMonth.outgoing,
@@ -142,7 +142,7 @@ export default function AccountingStats() {
                 {!isFetching && (
                   <CardTitle className="flex items-center gap-2">
                     {currencyFormatter.format(savings.thisMonth.toNumber())}
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="hidden sm:inline-block">
                       {percentageFormatter.format(
                         calculatePercentageChange(savings.lastMonth, savings.thisMonth).toNumber(),
                       )}

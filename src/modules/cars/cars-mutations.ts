@@ -1,5 +1,5 @@
 import { carsQueryKey, highwayTripsQueryKey, refuelingsQueryKey } from "@/common/query-keys";
-import { createCar, createHighwayTrip, createRefueling } from "@/modules/cars/cars-actions";
+import { createCar, highwayTripCreate, refuelingCreate } from "@/modules/cars/cars-actions";
 import { CarCreateForm } from "@/modules/cars/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/cars/schemas/highway-trip-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/cars/schemas/refueling-create-form-schema";
@@ -18,7 +18,7 @@ export function useCreateRefuelingMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: refuelingsQueryKey(),
-    mutationFn: (refueling: RefuelingCreateForm) => createRefueling(refueling),
+    mutationFn: (refueling: RefuelingCreateForm) => refuelingCreate(refueling),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: refuelingsQueryKey() }),
   });
 }
@@ -27,7 +27,7 @@ export function useCreateHighwayTripMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: highwayTripsQueryKey(),
-    mutationFn: (trip: HighwayTripCreateForm) => createHighwayTrip(trip),
+    mutationFn: (trip: HighwayTripCreateForm) => highwayTripCreate(trip),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: highwayTripsQueryKey() }),
   });
 }

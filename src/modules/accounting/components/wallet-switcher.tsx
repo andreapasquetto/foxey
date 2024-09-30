@@ -19,7 +19,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { useWalletsQuery } from "@/modules/accounting/accounting-queries";
+import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { WalletCreateForm } from "@/modules/accounting/components/wallet-create-form";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { CheckIcon, ChevronsUpDown, CirclePlus } from "lucide-react";
@@ -34,7 +34,7 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
   const [open, setOpen] = useState(false);
   const [showNewWalletDialog, setShowNewWalletDialog] = useState(false);
 
-  const query = useWalletsQuery();
+  const query = useWalletsGetAllQuery();
 
   return (
     <Dialog open={showNewWalletDialog} onOpenChange={setShowNewWalletDialog}>

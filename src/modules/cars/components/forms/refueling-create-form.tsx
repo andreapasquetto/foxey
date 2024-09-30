@@ -29,6 +29,7 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
       isNecessary: true,
       trip: 0,
       odometer: 0,
+      datetime: new Date(),
     },
   });
 

@@ -43,7 +43,7 @@ export function TrendChart(props: TrendChartProps) {
             <LineChart accessibilityLayer data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
-                dataKey="date"
+                dataKey="datetime"
                 tickLine={false}
                 axisLine={false}
                 tickFormatter={(value) => format(value, "MMM dd")}
