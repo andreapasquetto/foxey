@@ -49,7 +49,18 @@ export function PlaceList() {
         <TableBody>
           {places.map((place) => (
             <TableRow key={place.id}>
-              <TableCell>{place.name}</TableCell>
+              <TableCell>
+                <div>
+                  <div>{place.name}</div>
+                  {place.category && (
+                    <div className="space-x-2 text-sm text-muted-foreground">
+                      <span>{place.category.name}</span>
+                    </div>
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>{place.coordinates?.join(", ") ?? "-"}</TableCell>
+              <TableCell>{place.address ?? "-"}</TableCell>
               <TableCell>
                 {place.isVisited ? (
                   <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
@@ -75,6 +86,8 @@ function TableHeaderRow() {
   return (
     <TableRow>
       <TableHead>Name</TableHead>
+      <TableHead>Coordinates</TableHead>
+      <TableHead>Address</TableHead>
       <TableHead>Visited</TableHead>
       <TableHead></TableHead>
     </TableRow>
@@ -85,7 +98,13 @@ function TableRowsSkeleton() {
   return Array.from({ length: 3 }).map((_, i) => (
     <TableRow key={i}>
       <TableCell>
-        <Skeleton className="h-4 w-60" />
+        <div className="space-y-1">
+          <Skeleton className="h-4 w-40" />
+          <Skeleton className="h-4 w-20" />
+        </div>
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-52" />
       </TableCell>
       <TableCell>
         <Skeleton className="aspect-square h-5" />

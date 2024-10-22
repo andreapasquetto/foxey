@@ -1,3 +1,4 @@
+import { places } from "@/db/schema/places";
 import { relations } from "drizzle-orm";
 import { boolean, integer, numeric, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
@@ -16,7 +17,7 @@ export const refuelings = pgTable("refuelings", {
     .references(() => cars.id),
   ron: integer("ron").default(95),
   datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
-  place: varchar("place").notNull(),
+  placeId: uuid("place_id").references(() => places.id),
   cost: numeric("cost").notNull(),
   quantity: numeric("quantity").notNull(),
   price: numeric("price").notNull(),

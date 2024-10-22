@@ -5,6 +5,7 @@ export const transactionCreateFormSchema = z.object({
   fromWalletId: z.string().optional(),
   toWalletId: z.string().optional(),
   categoryId: z.string().optional(),
+  placeId: z.string().optional(),
   amount: z.number().min(0.01),
   description: z.string(),
 });

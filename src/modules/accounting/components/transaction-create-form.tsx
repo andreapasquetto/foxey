@@ -20,6 +20,7 @@ import {
   type TransactionCreateForm,
   transactionCreateFormSchema,
 } from "@/modules/accounting/schemas/transaction-create-form-schema";
+import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -42,10 +43,18 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
   const { data: wallets, isFetching: isFetchingWallets } = useWalletsGetAllQuery();
   const { data: categories, isFetching: isFetchingCategories } =
     useTransactionCategoriesGetAllQuery();
+  const { data: places, isFetching: isFetchingPlaces } = usePlacesGetAllQuery();
 
   const mutation = useTransactionCreateMutation();
 
-  if (!wallets || isFetchingWallets || !categories || isFetchingCategories) {
+  if (
+    !wallets ||
+    isFetchingWallets ||
+    !categories ||
+    isFetchingCategories ||
+    !places ||
+    isFetchingPlaces
+  ) {
     return <CircularSpinner className="mx-auto" />;
   }
 
@@ -103,6 +112,21 @@ export function TransactionCreateForm(props: TransactionCreateFormProps) {
                   <span>{category.parent.name}</span>
                   <span className="mx-1">•</span>
                   <span className="text-muted-foreground">{category.name}</span>
+                </div>
+              )}
+            </XSelectOption>
+          ))}
+        </XSelect>
+
+        <XSelect control={form.control} name="placeId" label="Place">
+          {places.map((place) => (
+            <XSelectOption key={place.id} value={place.id}>
+              {!place.category && <div>{place.name}</div>}
+              {place.category && (
+                <div>
+                  <span>{place.category.name}</span>
+                  <span className="mx-1">•</span>
+                  <span className="text-muted-foreground">{place.name}</span>
                 </div>
               )}
             </XSelectOption>

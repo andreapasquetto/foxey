@@ -1,9 +1,12 @@
+import { CarRead } from "@/modules/cars/schemas/car-read-schema";
+import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
+
 export interface RefuelingRead {
   id: string;
-  carId: string;
   datetime: Date;
+  car: CarRead;
+  place: PlaceRead | null;
   ron: number | null;
-  place: string;
   cost: string;
   quantity: string;
   price: string;

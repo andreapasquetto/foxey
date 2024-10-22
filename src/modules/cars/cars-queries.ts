@@ -1,7 +1,7 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import { carsQueryKey, highwayTripsQueryKey, refuelingsQueryKey } from "@/common/query-keys";
 import {
-  getCars,
+  carsGetAll,
   highwayTripsGetPaginated,
   refuelingsGetAll,
   refuelingsGetPaginated,
@@ -11,7 +11,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 export function useCarsQuery() {
   return useQuery({
     queryKey: carsQueryKey(),
-    queryFn: () => getCars(),
+    queryFn: () => carsGetAll(),
   });
 }
 

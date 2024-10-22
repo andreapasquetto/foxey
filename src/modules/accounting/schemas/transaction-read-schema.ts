@@ -1,19 +1,18 @@
-interface BasicRecord {
-  id: string;
-  name: string;
-}
+import { IdAndName } from "@/common/schemas/id-and-name-schema";
+import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 
-interface TransactionCategory extends BasicRecord {
-  parent: BasicRecord | null;
+interface TransactionCategory extends IdAndName {
+  parent: IdAndName | null;
 }
 
 export interface TransactionRead {
   datetime: Date;
   id: string;
   amount: string;
-  fromWallet: BasicRecord | null;
-  toWallet: BasicRecord | null;
+  fromWallet: IdAndName | null;
+  toWallet: IdAndName | null;
   category: TransactionCategory | null;
+  place: PlaceRead | null;
   description: string | null;
-  tags: BasicRecord[];
+  tags: IdAndName[];
 }

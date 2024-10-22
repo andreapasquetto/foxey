@@ -1,3 +1,4 @@
+import { places } from "@/db/schema/places";
 import { relations } from "drizzle-orm";
 import {
   AnyPgColumn,
@@ -29,6 +30,7 @@ export const transactions = pgTable("transactions", {
   fromWalletId: uuid("from_wallet_id").references(() => wallets.id),
   toWalletId: uuid("to_wallet_id").references(() => wallets.id),
   categoryId: uuid("category_id").references(() => transactionCategories.id),
+  placeId: uuid("place_id").references(() => places.id),
   amount: numeric("amount").notNull(),
   description: varchar("description"),
 });

@@ -12,6 +12,7 @@ import {
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
+import { placesGetAll } from "@/modules/places/places-actions";
 import { and, between, desc, eq, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { DateRange } from "react-day-picker";
@@ -51,6 +52,7 @@ export async function transactionsGetPaginated(params: {
 }): Promise<Paginated<TransactionRead>> {
   const wallets = await walletsGetAll();
   const categories = await transactionCategoriesGetAll();
+  const places = await placesGetAll();
 
   const total = await transactionsCountTotal(params);
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
@@ -79,6 +81,7 @@ export async function transactionsGetPaginated(params: {
     const fromWallet = wallets.find((w) => w.id === transaction.fromWalletId) ?? null;
     const toWallet = wallets.find((w) => w.id === transaction.toWalletId) ?? null;
     const category = categories.find((c) => c.id === transaction.categoryId) ?? null;
+    const place = places.find((p) => p.id === transaction.placeId) ?? null;
 
     const txTags = await db
       .select({
@@ -89,7 +92,17 @@ export async function transactionsGetPaginated(params: {
       .innerJoin(tags, eq(transactionTags.tagId, tags.id))
       .where(eq(transactionTags.transactionId, transaction.id));
 
-    result.push({ ...transaction, fromWallet, toWallet, category, tags: txTags });
+    result.push({
+      id: transaction.id,
+      datetime: transaction.datetime,
+      amount: transaction.amount,
+      description: transaction.description,
+      fromWallet,
+      toWallet,
+      category,
+      place,
+      tags: txTags,
+    });
   }
 
   return toPaginated(result, total);
@@ -100,6 +113,7 @@ export async function transactionsGetAll(
 ): Promise<TransactionRead[]> {
   const wallets = await walletsGetAll();
   const categories = await transactionCategoriesGetAll();
+  const places = await placesGetAll();
 
   const records = await db
     .select()
@@ -124,6 +138,7 @@ export async function transactionsGetAll(
     const fromWallet = wallets.find((w) => w.id === transaction.fromWalletId) ?? null;
     const toWallet = wallets.find((w) => w.id === transaction.toWalletId) ?? null;
     const category = categories.find((c) => c.id === transaction.categoryId) ?? null;
+    const place = places.find((p) => p.id === transaction.placeId) ?? null;
 
     const txTags = await db
       .select({
@@ -134,7 +149,7 @@ export async function transactionsGetAll(
       .innerJoin(tags, eq(transactionTags.tagId, tags.id))
       .where(eq(transactionTags.transactionId, transaction.id));
 
-    result.push({ ...transaction, fromWallet, toWallet, category, tags: txTags });
+    result.push({ ...transaction, fromWallet, toWallet, category, place, tags: txTags });
   }
 
   return result;
@@ -146,6 +161,7 @@ export async function transactionCreate(tx: TransactionCreateForm) {
     fromWalletId: tx.fromWalletId,
     toWalletId: tx.toWalletId,
     categoryId: tx.categoryId,
+    placeId: tx.placeId,
     amount: tx.amount.toString(),
     description: tx.description,
   });

@@ -62,7 +62,7 @@ export function RefuelingList(props: RecentRefuelingsProps) {
                 {!props.carId && (
                   <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
                 )}
-                <TableCell>{refueling.place}</TableCell>
+                <TableCell>{refueling.place?.name ?? "-"}</TableCell>
                 <TableCell>
                   <code>{refueling.cost}</code>
                 </TableCell>
@@ -111,10 +111,10 @@ function TableHeaderRow(props: { carId?: string }) {
         Cost (<code>€</code>)
       </TableHead>
       <TableHead>
-        Quantity (<code>l</code>)
+        Quantity (<code>L</code>)
       </TableHead>
       <TableHead>
-        Price (<code>€/l</code>)
+        Price (<code>€/L</code>)
       </TableHead>
       <TableHead>Full tank</TableHead>
       <TableHead>Necessary</TableHead>

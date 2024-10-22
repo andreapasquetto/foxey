@@ -6,9 +6,11 @@ import { cars, highwayTrips, refuelings } from "@/db/schema/cars";
 import { CarCreateForm } from "@/modules/cars/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/cars/schemas/highway-trip-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/cars/schemas/refueling-create-form-schema";
+import { RefuelingRead } from "@/modules/cars/schemas/refueling-read-schema";
+import { placesGetAll } from "@/modules/places/places-actions";
 import { desc, eq } from "drizzle-orm";
 
-export async function getCars() {
+export async function carsGetAll() {
   return await db.select().from(cars);
 }
 
@@ -17,47 +19,55 @@ export async function createCar(car: CarCreateForm) {
 }
 
 export async function refuelingsGetAll(carId?: string) {
-  return await db
+  const cars = await carsGetAll();
+  const places = await placesGetAll();
+
+  const records = await db
     .select()
     .from(refuelings)
     .where(carId ? eq(refuelings.carId, carId) : undefined)
     .orderBy(refuelings.datetime);
+
+  const result: RefuelingRead[] = [];
+  for (const record of records) {
+    const car = cars.find((c) => c.id === record.carId)!;
+    const place = places.find((p) => p.id === record.placeId) ?? null;
+    result.push({ ...record, car, place });
+  }
+
+  return result;
 }
 
 export async function refuelingsGetPaginated(options: { paginate: Paginate; carId?: string }) {
   const total = await countTotalRefuelings(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+
+  const cars = await carsGetAll();
+  const places = await placesGetAll();
+
   const records = await db
-    .select({
-      id: refuelings.id,
-      datetime: refuelings.datetime,
-      place: refuelings.place,
-      cost: refuelings.cost,
-      quantity: refuelings.quantity,
-      price: refuelings.price,
-      isFull: refuelings.isFull,
-      isNecessary: refuelings.isNecessary,
-      trip: refuelings.trip,
-      odometer: refuelings.odometer,
-      car: {
-        make: cars.make,
-        model: cars.model,
-      },
-    })
+    .select()
     .from(refuelings)
-    .innerJoin(cars, eq(cars.id, refuelings.carId))
     .where(options.carId ? eq(refuelings.carId, options.carId) : undefined)
     .limit(limit)
     .offset(offset)
     .orderBy(desc(refuelings.datetime));
-  return toPaginated(records, total);
+
+  const result: RefuelingRead[] = [];
+  for (const record of records) {
+    const car = cars.find((c) => c.id === record.carId)!;
+    const place = places.find((p) => p.id === record.placeId) ?? null;
+    result.push({ ...record, car, place });
+  }
+
+  return toPaginated(result, total);
 }
 
 export async function refuelingCreate(refueling: RefuelingCreateForm) {
   await db.insert(refuelings).values({
     carId: refueling.carId,
     datetime: refueling.datetime,
-    place: refueling.place,
+    placeId: refueling.placeId,
     price: String(refueling.price),
     quantity: String(refueling.quantity),
     cost: String(refueling.cost),

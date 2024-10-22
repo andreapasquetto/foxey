@@ -93,6 +93,16 @@ export function TransactionList(props: RecentTransactionsProps) {
                 </div>
               </TableCell>
               <TableCell>
+                <div>
+                  <div>{tx.place?.name ?? "-"}</div>
+                  {tx.place?.category && (
+                    <div className="space-x-2 text-sm text-muted-foreground">
+                      <span>{tx.place.category.name}</span>
+                    </div>
+                  )}
+                </div>
+              </TableCell>
+              <TableCell>
                 <div className="flex items-center gap-1">
                   {tx.tags.map((tag) => (
                     <Badge key={tag.id}>{tag.name}</Badge>
@@ -133,6 +143,7 @@ function TableHeaderRow() {
       <TableHead>Date</TableHead>
       <TableHead>Wallet</TableHead>
       <TableHead>Category</TableHead>
+      <TableHead>Place</TableHead>
       <TableHead>Tags</TableHead>
       <TableHead>Description</TableHead>
       <TableHead className="text-right">Amount</TableHead>
@@ -155,6 +166,9 @@ function TableRowsSkeleton() {
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-20" />
         </div>
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-20" />
       </TableCell>
       <TableCell>
         <div className="flex items-center gap-1">
