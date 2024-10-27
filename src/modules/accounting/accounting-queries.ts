@@ -46,10 +46,11 @@ export function useTransactionsGetPaginatedQuery(
 }
 
 export function useTransactionsGetAllQuery(
-  params: { walletId?: string; dateRange?: DateRange } = {},
+  params: { enabled?: boolean; walletId?: string; dateRange?: DateRange } = {},
 ) {
   return useQuery({
     queryKey: transactionsQueryKey(params),
     queryFn: () => transactionsGetAll(params),
+    enabled: params.enabled ?? true,
   });
 }

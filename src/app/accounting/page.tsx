@@ -1,17 +1,30 @@
-import { Heading1 } from "@/components/typography";
-import AccountingStats from "@/modules/accounting/components/accounting-stats";
+import { Heading1, Heading2 } from "@/components/typography";
+import { ThisMonthExpensesChart } from "@/modules/accounting/components/charts/this-month-expenses-chart";
+import { ThisMonthTrendChart } from "@/modules/accounting/components/charts/this-month-trend-chart";
+import { ThisYearIncomeExpensesChart } from "@/modules/accounting/components/charts/this-year-income-expenses-chart";
+import { ThisMonthStats } from "@/modules/accounting/components/this-month-stats";
 import { Transactions } from "@/modules/accounting/components/transactions";
 
 export default function AccountingPage() {
   return (
-    <section>
-      <div className="mb-6">
-        <Heading1>Accounting</Heading1>
-      </div>
-      <div className="mt-3 space-y-3">
-        <AccountingStats />
+    <div className="space-y-12">
+      <Heading1>Accounting</Heading1>
+      <section className="space-y-6">
+        <Heading2>Transactions</Heading2>
         <Transactions />
-      </div>
-    </section>
+      </section>
+      <section className="space-y-6">
+        <Heading2>This month</Heading2>
+        <ThisMonthStats />
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <ThisMonthTrendChart />
+          <ThisMonthExpensesChart />
+        </div>
+      </section>
+      <section className="space-y-6">
+        <Heading2>This year</Heading2>
+        <ThisYearIncomeExpensesChart />
+      </section>
+    </div>
   );
 }

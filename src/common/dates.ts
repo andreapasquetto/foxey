@@ -9,7 +9,7 @@ import {
 } from "date-fns";
 import { DateRange } from "react-day-picker";
 
-export function monthToDateRange(): DateRange {
+export function thisMonthToDateRange(): DateRange {
   return { from: startOfMonth(startOfToday()), to: endOfDay(startOfToday()) };
 }
 
@@ -28,8 +28,12 @@ export function lastThreeMonthsRange(): DateRange {
   };
 }
 
-export function yearToDateRange(): DateRange {
+export function thisYearToDateRange(): DateRange {
   return { from: startOfYear(startOfToday()), to: endOfDay(startOfToday()) };
+}
+
+export function thisYearRange(): DateRange {
+  return { from: startOfYear(startOfToday()), to: endOfYear(startOfToday()) };
 }
 
 export function lastYearRange(): DateRange {
@@ -41,22 +45,25 @@ export function lastYearRange(): DateRange {
 }
 
 export type DateRangePresetCode =
-  | "month-to-date"
+  | "this-month-to-date"
   | "last-month"
   | "last-3-months"
-  | "year-to-date"
+  | "this-year-to-date"
+  | "this-year"
   | "last-year";
 
 export function getDateRangeFromCode(code: DateRangePresetCode): DateRange {
   switch (code) {
-    case "month-to-date":
-      return monthToDateRange();
+    case "this-month-to-date":
+      return thisMonthToDateRange();
     case "last-month":
       return lastMonthRange();
     case "last-3-months":
       return lastThreeMonthsRange();
-    case "year-to-date":
-      return yearToDateRange();
+    case "this-year-to-date":
+      return thisYearToDateRange();
+    case "this-year":
+      return thisYearRange();
     case "last-year":
       return lastYearRange();
   }

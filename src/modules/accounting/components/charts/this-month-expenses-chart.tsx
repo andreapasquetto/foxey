@@ -1,0 +1,102 @@
+"use client";
+
+import { thisMonthToDateRange } from "@/common/dates";
+import { currencyFormatter } from "@/common/formatters";
+import { Button } from "@/components/ui/button";
+import { CardTitle } from "@/components/ui/card";
+import {
+  ChartConfig,
+  ChartContainer,
+  ChartTooltip,
+  ChartTooltipContent,
+} from "@/components/ui/chart";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
+import {
+  generateThisMonthExpensesChartData,
+  generateThisMonthExpensesChartPlaceholderData,
+} from "@/modules/accounting/accounting-utils";
+import { Bar, BarChart, Brush, CartesianGrid, XAxis, YAxis } from "recharts";
+
+const chartConfig = {
+  total: {
+    label: "Total",
+  },
+} satisfies ChartConfig;
+
+function PlaceholderWithFetchButton(props: { onGenerateChart: () => void }) {
+  const chartData = generateThisMonthExpensesChartPlaceholderData();
+
+  return (
+    <div className="space-y-3">
+      <CardTitle>Expenses</CardTitle>
+
+      <div className="relative h-[380px]">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+          <Button onClick={props.onGenerateChart}>Generate Chart</Button>
+        </div>
+        <ChartContainer config={chartConfig}>
+          <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: 25 }}>
+            <CartesianGrid horizontal={false} />
+            <XAxis
+              type="number"
+              dataKey="total"
+              tickLine={false}
+              axisLine={false}
+              domain={[0, "dataMax"]}
+              tickFormatter={(tick) => currencyFormatter.format(tick)}
+            />
+            <YAxis dataKey="category" type="category" tickLine={false} axisLine={false} />
+            <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideLabel />} />
+            <Brush dataKey="category" height={25} stroke="hsl(0 0% 3.9%)" endIndex={5} />
+            <Bar dataKey="total" layout="vertical" fill="hsl(var(--foreground))" radius={2} />
+          </BarChart>
+        </ChartContainer>
+      </div>
+    </div>
+  );
+}
+
+export function ThisMonthExpensesChart() {
+  const query = useTransactionsGetAllQuery({
+    enabled: false,
+    dateRange: thisMonthToDateRange(),
+  });
+
+  if (query.isFetching || query.isRefetching) {
+    return (
+      <div className="space-y-3">
+        <CardTitle>Expenses</CardTitle>
+        <Skeleton className="h-[380px] w-full" />
+      </div>
+    );
+  }
+
+  if (!query.data) return <PlaceholderWithFetchButton onGenerateChart={() => query.refetch()} />;
+
+  const transactions = query.data ?? [];
+  const chartData = generateThisMonthExpensesChartData(transactions);
+
+  return (
+    <div className="space-y-3">
+      <CardTitle>Expenses</CardTitle>
+      <ChartContainer config={chartConfig}>
+        <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: 25 }}>
+          <CartesianGrid horizontal={false} />
+          <XAxis
+            type="number"
+            dataKey="total"
+            tickLine={false}
+            axisLine={false}
+            domain={[0, "dataMax"]}
+            tickFormatter={(tick) => currencyFormatter.format(tick)}
+          />
+          <YAxis dataKey="category" type="category" tickLine={false} axisLine={false} />
+          <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideLabel />} />
+          <Brush dataKey="category" height={25} stroke="hsl(0 0% 3.9%)" endIndex={5} />
+          <Bar dataKey="total" layout="vertical" fill="hsl(var(--foreground))" radius={2} />
+        </BarChart>
+      </ChartContainer>
+    </div>
+  );
+}

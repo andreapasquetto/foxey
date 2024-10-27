@@ -65,10 +65,11 @@ export function RangeDatePicker({
                 <SelectValue placeholder="Select" />
               </SelectTrigger>
               <SelectContent position="popper">
-                <SelectItem value="month-to-date">Month to date</SelectItem>
+                <SelectItem value="this-month-to-date">This month to date</SelectItem>
                 <SelectItem value="last-month">Last month</SelectItem>
                 <SelectItem value="last-3-months">Last 3 months</SelectItem>
-                <SelectItem value="year-to-date">Year to date</SelectItem>
+                <SelectItem value="this-year-to-date">This year to date</SelectItem>
+                <SelectItem value="this-year">This year</SelectItem>
                 <SelectItem value="last-year">Last year</SelectItem>
               </SelectContent>
             </Select>
