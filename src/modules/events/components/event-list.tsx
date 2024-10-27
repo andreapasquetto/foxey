@@ -50,7 +50,7 @@ export function EventList() {
             })}
           >
             <TableCell>{event.title}</TableCell>
-            <TableCell>{event.description ?? "-"}</TableCell>
+            <TableCell>{event.description}</TableCell>
             <TableCell>
               {event.isAllDay ? (
                 <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />

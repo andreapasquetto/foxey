@@ -84,7 +84,7 @@ export function TransactionList(props: RecentTransactionsProps) {
               </TableCell>
               <TableCell>
                 <div>
-                  <div>{tx.category?.name ?? "-"}</div>
+                  <div>{tx.category?.name}</div>
                   {tx.category?.parent && (
                     <div className="space-x-2 text-sm text-muted-foreground">
                       <span>{tx.category.parent.name}</span>
@@ -94,7 +94,7 @@ export function TransactionList(props: RecentTransactionsProps) {
               </TableCell>
               <TableCell>
                 <div>
-                  <div>{tx.place?.name ?? "-"}</div>
+                  <div>{tx.place?.name}</div>
                   {tx.place?.category && (
                     <div className="space-x-2 text-sm text-muted-foreground">
                       <span>{tx.place.category.name}</span>
@@ -109,7 +109,7 @@ export function TransactionList(props: RecentTransactionsProps) {
                   ))}
                 </div>
               </TableCell>
-              <TableCell>{tx.description ?? "-"}</TableCell>
+              <TableCell>{tx.description}</TableCell>
               <TableCell className="text-right">
                 {
                   <code

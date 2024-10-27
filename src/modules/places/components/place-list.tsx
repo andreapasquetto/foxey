@@ -59,8 +59,8 @@ export function PlaceList() {
                   )}
                 </div>
               </TableCell>
-              <TableCell>{place.coordinates?.join(", ") ?? "-"}</TableCell>
-              <TableCell>{place.address ?? "-"}</TableCell>
+              <TableCell>{place.coordinates?.join(", ")}</TableCell>
+              <TableCell>{place.address}</TableCell>
               <TableCell>
                 {place.isVisited ? (
                   <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />

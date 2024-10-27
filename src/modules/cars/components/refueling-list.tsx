@@ -62,7 +62,7 @@ export function RefuelingList(props: RecentRefuelingsProps) {
                 {!props.carId && (
                   <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
                 )}
-                <TableCell>{refueling.place?.name ?? "-"}</TableCell>
+                <TableCell>{refueling.place?.name}</TableCell>
                 <TableCell>
                   <code>{refueling.cost}</code>
                 </TableCell>

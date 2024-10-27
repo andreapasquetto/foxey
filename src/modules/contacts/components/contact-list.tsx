@@ -63,7 +63,7 @@ export function ContactList() {
                   <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
                 )}
               </TableCell>
-              <TableCell>{contact.dob ?? "-"}</TableCell>
+              <TableCell>{contact.dob}</TableCell>
               <TableCell>
                 <div className="flex items-center justify-end">
                   <DeleteContact contact={contact} />
