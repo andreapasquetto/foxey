@@ -26,36 +26,32 @@ export function FuelPriceChart(props: FuelPriceChartProps) {
   }));
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Fuel price</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart accessibilityLayer data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="datetime"
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => format(value, "MMM y")}
-            />
-            <YAxis domain={["auto", "auto"]} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent className="w-[175px]" hideLabel />}
-            />
-            <Line
-              dataKey="price"
-              type="linear"
-              stroke="hsl(var(--foreground))"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={false}
-            />
-          </LineChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+    <div className="space-y-3">
+      <CardTitle>Fuel price</CardTitle>
+      <ChartContainer config={chartConfig}>
+        <LineChart accessibilityLayer data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="datetime"
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => format(value, "MMM y")}
+          />
+          <YAxis domain={["auto", "auto"]} />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent className="w-[175px]" hideLabel />}
+          />
+          <Line
+            dataKey="price"
+            type="linear"
+            stroke="hsl(var(--foreground))"
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+        </LineChart>
+      </ChartContainer>
+    </div>
   );
 }

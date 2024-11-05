@@ -11,19 +11,12 @@ export function Refuelings() {
   const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);
 
   return (
-    <Card>
-      <CardHeader>
-        <div className="flex flex-col justify-center gap-3 md:flex-row md:items-center md:justify-between">
-          <CardTitle>Refuelings</CardTitle>
-          <div className="flex items-center gap-3">
-            {selectedCar && <AddRefueling selectedCar={selectedCar} />}
-            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
-          </div>
-        </div>
-      </CardHeader>
-      <CardContent>
-        <RefuelingList carId={selectedCar?.id} />
-      </CardContent>
-    </Card>
+    <>
+      <div className="flex items-center justify-end gap-3">
+        {selectedCar && <AddRefueling selectedCar={selectedCar} />}
+        <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+      </div>
+      <RefuelingList carId={selectedCar?.id} />
+    </>
   );
 }

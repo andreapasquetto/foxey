@@ -26,36 +26,32 @@ export function OdometerChart(props: OdometerChartProps) {
   }));
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Odometer</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig}>
-          <LineChart accessibilityLayer data={chartData}>
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis
-              dataKey="datetime"
-              tickLine={false}
-              axisLine={false}
-              tickFormatter={(value) => format(value, "MMM y")}
-            />
-            <YAxis domain={["auto", "auto"]} />
-            <ChartTooltip
-              cursor={false}
-              content={<ChartTooltipContent className="w-[175px]" hideLabel />}
-            />
-            <Line
-              dataKey="odometer"
-              type="linear"
-              stroke="hsl(var(--foreground))"
-              strokeWidth={2}
-              dot={false}
-              isAnimationActive={false}
-            />
-          </LineChart>
-        </ChartContainer>
-      </CardContent>
-    </Card>
+    <div className="space-y-3">
+      <CardTitle>Odometer</CardTitle>
+      <ChartContainer config={chartConfig}>
+        <LineChart accessibilityLayer data={chartData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="datetime"
+            tickLine={false}
+            axisLine={false}
+            tickFormatter={(value) => format(value, "MMM y")}
+          />
+          <YAxis domain={["auto", "auto"]} />
+          <ChartTooltip
+            cursor={false}
+            content={<ChartTooltipContent className="w-[175px]" hideLabel />}
+          />
+          <Line
+            dataKey="odometer"
+            type="linear"
+            stroke="hsl(var(--foreground))"
+            strokeWidth={2}
+            dot={false}
+            isAnimationActive={false}
+          />
+        </LineChart>
+      </ChartContainer>
+    </div>
   );
 }

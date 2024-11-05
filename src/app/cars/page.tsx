@@ -1,19 +1,24 @@
-import { Heading1 } from "@/components/typography";
+import { Heading1, Heading2 } from "@/components/typography";
 import CarStats from "@/modules/cars/components/car-stats";
 import { HighwayTrips } from "@/modules/cars/components/highway-trips";
 import { Refuelings } from "@/modules/cars/components/refuelings";
 
 export default function CarsPage() {
   return (
-    <section>
-      <div className="mb-6 flex items-center justify-between">
-        <Heading1>Cars</Heading1>
-      </div>
-      <div className="mt-3 space-y-3">
-        <CarStats />
+    <div className="space-y-12">
+      <Heading1>Cars</Heading1>
+      <section className="space-y-6">
+        <Heading2>Refuelings</Heading2>
         <Refuelings />
+      </section>
+      <section className="space-y-6">
+        <Heading2>Highway trips</Heading2>
         <HighwayTrips />
-      </div>
-    </section>
+      </section>
+      <section className="space-y-6">
+        <Heading2>Stats</Heading2>
+        <CarStats />
+      </section>
+    </div>
   );
 }
