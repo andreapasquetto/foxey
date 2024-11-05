@@ -74,7 +74,7 @@ export function ThisMonthExpensesChart() {
 
   if (!query.data) return <PlaceholderWithFetchButton onGenerateChart={() => query.refetch()} />;
 
-  const transactions = query.data ?? [];
+  const transactions = query.data;
   const chartData = generateThisMonthExpensesChartData(transactions);
 
   return (

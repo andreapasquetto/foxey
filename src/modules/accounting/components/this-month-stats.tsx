@@ -25,6 +25,49 @@ export function ThisMonthStats() {
   const isFetching =
     transactionsMonthToDateQuery.isFetching || transactionsLastMonthQuery.isFetching;
 
+  if (isFetching) {
+    return (
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Income</CardDescription>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-5 w-14 rounded-full" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-4 w-28" />
+          </CardContent>
+        </div>
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Expenses</CardDescription>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-5 w-14 rounded-full" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-4 w-28" />
+          </CardContent>
+        </div>
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Saved</CardDescription>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-5 w-14 rounded-full" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-4 w-28" />
+          </CardContent>
+        </div>
+      </div>
+    );
+  }
+
   const transactionsWithoutTransfers = {
     thisMonth: getTransactionsWithoutTransfers(transactionsMonthToDateQuery.data ?? []),
     lastMonth: getTransactionsWithoutTransfers(transactionsLastMonthQuery.data ?? []),
@@ -60,17 +103,14 @@ export function ThisMonthStats() {
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
       <IncomeCard
-        isLoading={isFetching}
         thisMonth={totalAmounts.thisMonth.incoming.toNumber()}
         lastMonth={totalAmounts.lastMonth.incoming.toNumber()}
       />
       <ExpensesCard
-        isLoading={isFetching}
         thisMonth={totalAmounts.thisMonth.outgoing.toNumber()}
         lastMonth={totalAmounts.lastMonth.outgoing.toNumber()}
       />
       <SavingCard
-        isLoading={isFetching}
         thisMonth={savings.thisMonth.toNumber()}
         lastMonth={savings.lastMonth.toNumber()}
       />
@@ -78,104 +118,71 @@ export function ThisMonthStats() {
   );
 }
 
-function IncomeCard(props: { isLoading: boolean; thisMonth: number; lastMonth: number }) {
+function IncomeCard(props: { thisMonth: number; lastMonth: number }) {
   return (
-    <Card>
+    <div>
       <CardHeader className="pb-2">
         <CardDescription>Income</CardDescription>
-        {props.isLoading && (
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-6 w-10" />
-          </div>
-        )}
-        {!props.isLoading && (
-          <CardTitle className="flex items-center gap-2">
-            {currencyFormatter.format(props.thisMonth)}
-            <Badge variant="outline" className="hidden sm:inline-block">
-              {percentageFormatter.format(
-                calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
-              )}
-            </Badge>
-          </CardTitle>
-        )}
+        <CardTitle className="flex items-center gap-2">
+          {currencyFormatter.format(props.thisMonth)}
+          <Badge variant="outline" className="hidden sm:inline-block">
+            {percentageFormatter.format(
+              calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
+            )}
+          </Badge>
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        {props.isLoading && <Skeleton className="h-4 w-28" />}
-        {!props.isLoading && (
-          <p className="text-xs text-muted-foreground">
-            {currencyFormatter.format(props.lastMonth)} last month
-          </p>
-        )}
+        <p className="text-xs text-muted-foreground">
+          {currencyFormatter.format(props.lastMonth)} last month
+        </p>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 
-function ExpensesCard(props: { isLoading: boolean; thisMonth: number; lastMonth: number }) {
+function ExpensesCard(props: { thisMonth: number; lastMonth: number }) {
   return (
-    <Card>
+    <div>
       <CardHeader className="pb-2">
         <CardDescription>Expenses</CardDescription>
-        {props.isLoading && (
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-6 w-10" />
-          </div>
-        )}
-        {!props.isLoading && (
-          <CardTitle className="flex items-center gap-2">
-            {currencyFormatter.format(props.thisMonth)}
-            <Badge variant="outline" className="hidden sm:inline-block">
-              {percentageFormatter.format(
-                calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
-              )}
-            </Badge>
-          </CardTitle>
-        )}
+        <CardTitle className="flex items-center gap-2">
+          {currencyFormatter.format(props.thisMonth)}
+          <Badge variant="outline" className="hidden sm:inline-block">
+            {percentageFormatter.format(
+              calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
+            )}
+          </Badge>
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        {props.isLoading && <Skeleton className="h-4 w-28" />}
-        {!props.isLoading && (
-          <p className="text-xs text-muted-foreground">
-            {currencyFormatter.format(props.lastMonth)} last month
-          </p>
-        )}
+        <p className="text-xs text-muted-foreground">
+          {currencyFormatter.format(props.lastMonth)} last month
+        </p>
       </CardContent>
-    </Card>
+    </div>
   );
 }
 
-function SavingCard(props: { isLoading: boolean; thisMonth: number; lastMonth: number }) {
+function SavingCard(props: { thisMonth: number; lastMonth: number }) {
   return (
-    <Card>
+    <div>
       <CardHeader className="pb-2">
         <CardDescription>Saved</CardDescription>
-        {props.isLoading && (
-          <div className="flex items-center gap-2">
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-6 w-10" />
-          </div>
-        )}
-        {!props.isLoading && (
-          <CardTitle className="flex items-center gap-2">
-            {currencyFormatter.format(props.thisMonth)}
-            <Badge variant="outline" className="hidden sm:inline-block">
-              {percentageFormatter.format(
-                calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
-              )}
-            </Badge>
-          </CardTitle>
-        )}
+        <CardTitle className="flex items-center gap-2">
+          {currencyFormatter.format(props.thisMonth)}
+          <Badge variant="outline" className="hidden sm:inline-block">
+            {percentageFormatter.format(
+              calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
+            )}
+          </Badge>
+        </CardTitle>
       </CardHeader>
       <CardContent>
-        {props.isLoading && <Skeleton className="h-4 w-28" />}
-        {!props.isLoading && (
-          <p className="text-xs text-muted-foreground">
-            {currencyFormatter.format(props.lastMonth)} last month
-          </p>
-        )}
+        <p className="text-xs text-muted-foreground">
+          {currencyFormatter.format(props.lastMonth)} last month
+        </p>
       </CardContent>
-    </Card>
+    </div>
   );
 }

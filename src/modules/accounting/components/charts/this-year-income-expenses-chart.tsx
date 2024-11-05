@@ -68,7 +68,7 @@ export function ThisYearIncomeExpensesChart() {
 
   if (!query.data) return <PlaceholderWithFetchButton onGenerateChart={() => query.refetch()} />;
 
-  const transactions = query.data ?? [];
+  const transactions = query.data;
   const chartData = generateThisYearTrendChartData(transactions);
 
   return (
