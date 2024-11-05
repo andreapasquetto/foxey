@@ -1,6 +1,5 @@
 "use client";
 
-import { thisMonthToDateRange } from "@/common/dates";
 import { currencyFormatter } from "@/common/formatters";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
@@ -79,10 +78,8 @@ export function ThisMonthTrendChart() {
 
   if (!query.data) return <PlaceholderWithFetchButton onGenerateChart={() => query.refetch()} />;
 
-  const transactions = query.data ?? [];
-  const chartData = generateThisMonthTrendChartData(transactions, {
-    dateRange: thisMonthToDateRange(),
-  });
+  const transactions = query.data;
+  const chartData = generateThisMonthTrendChartData(transactions);
 
   return (
     <div className="space-y-3">

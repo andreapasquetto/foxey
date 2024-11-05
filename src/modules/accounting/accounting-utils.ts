@@ -1,8 +1,7 @@
-import { thisYearRange } from "@/common/dates";
+import { thisMonthToDateRange, thisYearRange } from "@/common/dates";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { eachMonthOfInterval, format, isSameMonth, isWithinInterval } from "date-fns";
 import { Decimal } from "decimal.js";
-import { DateRange } from "react-day-picker";
 
 export function getTransactionsWithoutTransfers(transactions: TransactionRead[]) {
   return transactions.filter((tx) => !(tx.fromWallet && tx.toWallet));
@@ -83,14 +82,9 @@ export function generateThisMonthExpensesChartPlaceholderData() {
   ];
 }
 
-// TODO: remove walletId from filters
-export function generateThisMonthTrendChartData(
-  transactions: TransactionRead[],
-  filters: {
-    walletId?: string;
-    dateRange?: DateRange;
-  } = {},
-) {
+export function generateThisMonthTrendChartData(transactions: TransactionRead[]) {
+  const monthToDate = thisMonthToDateRange();
+
   return transactions
     .reduce<
       Array<{
@@ -101,10 +95,7 @@ export function generateThisMonthTrendChartData(
       let amountChange = new Decimal(0);
 
       const isTransfer = !!tx.fromWallet && !!tx.toWallet;
-      if (isTransfer) {
-        if (tx.fromWallet?.id === filters.walletId) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWallet?.id === filters.walletId) amountChange = amountChange.add(tx.amount);
-      } else {
+      if (!isTransfer) {
         if (tx.fromWallet?.id) amountChange = amountChange.sub(tx.amount);
         if (tx.toWallet?.id) amountChange = amountChange.add(tx.amount);
       }
@@ -117,14 +108,12 @@ export function generateThisMonthTrendChartData(
       return acc;
     }, [])
     .filter((tx) =>
-      filters.dateRange?.from && filters.dateRange.to
-        ? isWithinInterval(tx.datetime, {
-            start: filters.dateRange.from,
-            end: filters.dateRange.to,
-          })
-        : true,
+      isWithinInterval(tx.datetime, {
+        start: monthToDate.from!,
+        end: monthToDate.to!,
+      }),
     )
-    .map((item) => ({ datetime: item.datetime, amount: item.amount.toNumber() }));
+    .map((item) => ({ ...item, amount: item.amount.toNumber() }));
 }
 
 export function generateThisMonthTrendChartPlaceholderData() {
@@ -172,9 +161,7 @@ export function generateThisMonthTrendChartPlaceholderData() {
   ].map((it) => ({ datetime: new Date(it.datetime), amount: it.amount }));
 }
 
-export function generateThisYearTrendChartData(
-  transactions: TransactionRead[],
-): { month: string; income: number | null; expenses: number | null }[] {
+export function generateThisYearTrendChartData(transactions: TransactionRead[]) {
   if (!transactions.length) return [];
 
   const yearToDate = thisYearRange();
