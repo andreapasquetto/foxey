@@ -1,4 +1,4 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -9,17 +9,17 @@ import { RefuelingRead } from "@/modules/cars/schemas/refueling-read-schema";
 import { format } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
+const chartConfig = {
+  price: {
+    label: "Price",
+  },
+} satisfies ChartConfig;
+
 interface FuelPriceChartProps {
   refuelings: RefuelingRead[];
 }
 
 export function FuelPriceChart(props: FuelPriceChartProps) {
-  const chartConfig = {
-    price: {
-      label: "Price",
-    },
-  } satisfies ChartConfig;
-
   const chartData = props.refuelings.map((refueling) => ({
     datetime: refueling.datetime,
     price: refueling.price,

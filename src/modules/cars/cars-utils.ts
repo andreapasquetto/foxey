@@ -38,18 +38,14 @@ export function calculateAvgDistance(refuelings: RefuelingRead[]) {
     .toNumber();
 }
 
-export function calculateLastFuelEconomy(
-  lastRefueling: RefuelingRead | undefined,
-  secondLastRefueling: RefuelingRead | undefined,
+export function calculateFuelEconomy(
+  refuelingA: RefuelingRead | undefined,
+  refuelingB: RefuelingRead | undefined,
 ) {
-  if (!lastRefueling || !secondLastRefueling || lastRefueling?.trip === null) {
+  if (!refuelingA || !refuelingB || refuelingA?.trip === null) {
     return null;
   }
-
-  return new Decimal(lastRefueling.trip)
-    .div(secondLastRefueling.quantity)
-    .toDecimalPlaces(2)
-    .toNumber();
+  return new Decimal(refuelingA.trip).div(refuelingB.quantity).toDecimalPlaces(2).toNumber();
 }
 
 // TODO: result is not reliable because calculations does NOT handle non-necessary refuelings differently

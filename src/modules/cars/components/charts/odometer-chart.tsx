@@ -9,17 +9,17 @@ import { RefuelingRead } from "@/modules/cars/schemas/refueling-read-schema";
 import { format } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
+const chartConfig = {
+  odometer: {
+    label: "Odometer",
+  },
+} satisfies ChartConfig;
+
 interface OdometerChartProps {
   refuelings: RefuelingRead[];
 }
 
 export function OdometerChart(props: OdometerChartProps) {
-  const chartConfig = {
-    odometer: {
-      label: "Odometer",
-    },
-  } satisfies ChartConfig;
-
   const chartData = props.refuelings.map((refueling) => ({
     datetime: refueling.datetime,
     odometer: Number(refueling.odometer),
