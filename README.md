@@ -6,7 +6,7 @@ A little Next.js project that speeds up the tracking process of various parts of
 
 ### Database
 
-This project is still a work in progress. At the moment I'm using a PostgreSQL container with Docker:
+This project is still a work in progress. At the moment I'm running a PostgreSQL container using Docker:
 
 ```sh
 docker run -d \
@@ -16,8 +16,7 @@ docker run -d \
 postgres
 ```
 
-Then, create a `.env` file following the structure of `.env.example` file. \
-Then, update the DB schema by running `npm run db:push`. \
-To browse the DB and execute basic CRUD operations onto it, start Drizzle Studio by running `npm run db:explore`.
+Create a `.env` file following the structure of [`.env.example`](.env.example).
 
-See [.env.example](.env.example) for environment variables.
+Run `npm run db:push` to update the DB schema.\
+Run `npm run db:explore` to browse the DB and execute basic CRUD operations onto it.
