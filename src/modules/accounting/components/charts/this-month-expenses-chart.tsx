@@ -24,7 +24,54 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-function PlaceholderWithFetchButton(props: { onGenerateChart: () => void }) {
+export function ThisMonthExpensesChart() {
+  const query = useTransactionsGetAllQuery({
+    enabled: false,
+    dateRange: thisMonthToDateRange(),
+  });
+
+  if (query.isFetching || query.isRefetching) {
+    return (
+      <div className="space-y-3">
+        <CardTitle>Expenses</CardTitle>
+        <Skeleton className="h-[380px] w-full" />
+      </div>
+    );
+  }
+
+  if (!query.data) return <GenerateChartSkeleton onGenerateChart={() => query.refetch()} />;
+
+  const transactions = query.data;
+
+  if (!transactions.length) return <NotEnoughDataSkeleton />;
+
+  const chartData = generateThisMonthExpensesChartData(transactions);
+
+  return (
+    <div className="space-y-3">
+      <CardTitle>Expenses</CardTitle>
+      <ChartContainer config={chartConfig}>
+        <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: 25 }}>
+          <CartesianGrid horizontal={false} />
+          <XAxis
+            type="number"
+            dataKey="total"
+            tickLine={false}
+            axisLine={false}
+            domain={[0, "dataMax"]}
+            tickFormatter={(tick) => currencyFormatter.format(tick)}
+          />
+          <YAxis dataKey="category" type="category" tickLine={false} axisLine={false} />
+          <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideLabel />} />
+          <Brush dataKey="category" height={25} stroke="hsl(0 0% 3.9%)" endIndex={5} />
+          <Bar dataKey="total" layout="vertical" fill="hsl(var(--foreground))" radius={2} />
+        </BarChart>
+      </ChartContainer>
+    </div>
+  );
+}
+
+function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
   const chartData = generateThisMonthExpensesChartPlaceholderData();
 
   return (
@@ -33,7 +80,9 @@ function PlaceholderWithFetchButton(props: { onGenerateChart: () => void }) {
 
       <div className="relative h-[380px]">
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
-          <Button onClick={props.onGenerateChart}>Generate Chart</Button>
+          <Button variant="outline" onClick={props.onGenerateChart}>
+            Generate Chart
+          </Button>
         </div>
         <ChartContainer config={chartConfig}>
           <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: 25 }}>
@@ -57,46 +106,15 @@ function PlaceholderWithFetchButton(props: { onGenerateChart: () => void }) {
   );
 }
 
-export function ThisMonthExpensesChart() {
-  const query = useTransactionsGetAllQuery({
-    enabled: false,
-    dateRange: thisMonthToDateRange(),
-  });
-
-  if (query.isFetching || query.isRefetching) {
-    return (
-      <div className="space-y-3">
-        <CardTitle>Expenses</CardTitle>
-        <Skeleton className="h-[380px] w-full" />
-      </div>
-    );
-  }
-
-  if (!query.data) return <PlaceholderWithFetchButton onGenerateChart={() => query.refetch()} />;
-
-  const transactions = query.data;
-  const chartData = generateThisMonthExpensesChartData(transactions);
-
+function NotEnoughDataSkeleton() {
   return (
     <div className="space-y-3">
       <CardTitle>Expenses</CardTitle>
-      <ChartContainer config={chartConfig}>
-        <BarChart accessibilityLayer data={chartData} layout="vertical" margin={{ left: 25 }}>
-          <CartesianGrid horizontal={false} />
-          <XAxis
-            type="number"
-            dataKey="total"
-            tickLine={false}
-            axisLine={false}
-            domain={[0, "dataMax"]}
-            tickFormatter={(tick) => currencyFormatter.format(tick)}
-          />
-          <YAxis dataKey="category" type="category" tickLine={false} axisLine={false} />
-          <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideLabel />} />
-          <Brush dataKey="category" height={25} stroke="hsl(0 0% 3.9%)" endIndex={5} />
-          <Bar dataKey="total" layout="vertical" fill="hsl(var(--foreground))" radius={2} />
-        </BarChart>
-      </ChartContainer>
+      <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+          <p className="text-sm text-muted-foreground">Not enough data.</p>
+        </div>
+      </div>
     </div>
   );
 }
