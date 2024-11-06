@@ -71,6 +71,7 @@ export function RangeDatePicker({
                 <SelectItem value="this-year-to-date">This year to date</SelectItem>
                 <SelectItem value="this-year">This year</SelectItem>
                 <SelectItem value="last-year">Last year</SelectItem>
+                <SelectItem value="all-time">All-time</SelectItem>
               </SelectContent>
             </Select>
           )}

@@ -50,7 +50,8 @@ export type DateRangePresetCode =
   | "last-3-months"
   | "this-year-to-date"
   | "this-year"
-  | "last-year";
+  | "last-year"
+  | "all-time";
 
 export function getDateRangeFromCode(code: DateRangePresetCode): DateRange {
   switch (code) {
@@ -66,5 +67,7 @@ export function getDateRangeFromCode(code: DateRangePresetCode): DateRange {
       return thisYearRange();
     case "last-year":
       return lastYearRange();
+    case "all-time":
+      return { from: undefined };
   }
 }
