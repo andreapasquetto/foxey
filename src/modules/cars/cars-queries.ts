@@ -1,10 +1,16 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
-import { carsQueryKey, highwayTripsQueryKey, refuelingsQueryKey } from "@/common/query-keys";
+import {
+  carsQueryKey,
+  highwayTripsQueryKey,
+  refuelingsQueryKey,
+  servicesQueryKey,
+} from "@/common/query-keys";
 import {
   carsGetAll,
   highwayTripsGetPaginated,
   refuelingsGetAll,
   refuelingsGetPaginated,
+  servicesGetAll,
 } from "@/modules/cars/cars-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
@@ -19,6 +25,13 @@ export function useRefuelingsGetAllQuery(carId?: string) {
   return useQuery({
     queryKey: refuelingsQueryKey(carId),
     queryFn: () => refuelingsGetAll(carId),
+  });
+}
+
+export function useServicesGetAllQuery(carId?: string) {
+  return useQuery({
+    queryKey: servicesQueryKey(carId),
+    queryFn: () => servicesGetAll(carId),
   });
 }
 

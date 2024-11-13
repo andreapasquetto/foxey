@@ -2,11 +2,12 @@
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { db } from "@/db/db";
-import { cars, highwayTrips, refuelings } from "@/db/schema/cars";
+import { cars, highwayTrips, refuelings, services } from "@/db/schema/cars";
 import { CarCreateForm } from "@/modules/cars/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/cars/schemas/highway-trip-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/cars/schemas/refueling-create-form-schema";
 import { RefuelingRead } from "@/modules/cars/schemas/refueling-read-schema";
+import { ServiceRead } from "@/modules/cars/schemas/service-read-schema";
 import { placesGetAll } from "@/modules/places/places-actions";
 import { desc, eq } from "drizzle-orm";
 
@@ -114,6 +115,23 @@ export async function highwayTripCreate(trip: HighwayTripCreateForm) {
     distance: String(trip.distance),
     avgSpeed: String(trip.avgSpeed),
   });
+}
+
+export async function servicesGetAll(carId?: string) {
+  const cars = await carsGetAll();
+  const records = await db
+    .select()
+    .from(services)
+    .where(carId ? eq(services.carId, carId) : undefined)
+    .orderBy(services.datetime);
+
+  const result: ServiceRead[] = [];
+  for (const record of records) {
+    const car = cars.find((c) => c.id === record.carId)!;
+    result.push({ ...record, car });
+  }
+
+  return result;
 }
 
 async function countTotalRefuelings(carId?: string) {

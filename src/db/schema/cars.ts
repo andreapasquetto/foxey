@@ -41,6 +41,15 @@ export const highwayTrips = pgTable("highway_trips", {
   avgSpeed: numeric("avg_speed"),
 });
 
+export const services = pgTable("services", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  carId: uuid("car_id")
+    .notNull()
+    .references(() => cars.id),
+  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
+  odometer: numeric("odometer").notNull(),
+});
+
 export const carRelations = relations(cars, ({ many }) => ({
   refuelings: many(refuelings),
   highwayTrips: many(highwayTrips),

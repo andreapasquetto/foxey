@@ -9,6 +9,11 @@ export function refuelingsQueryKey(carId?: string) {
   return ["refuelings"];
 }
 
+export function servicesQueryKey(carId?: string) {
+  if (carId) return ["services", carId];
+  return ["services"];
+}
+
 export function highwayTripsQueryKey(carId?: string) {
   if (carId) return ["highway-trips", carId];
   return ["highway-trips"];
