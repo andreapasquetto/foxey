@@ -40,7 +40,7 @@ export function FuelPriceChart(props: FuelPriceChartProps) {
           <YAxis domain={["auto", "auto"]} />
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent className="w-[175px]" hideLabel />}
+            content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}
           />
           <Line
             dataKey="price"
@@ -48,7 +48,6 @@ export function FuelPriceChart(props: FuelPriceChartProps) {
             stroke="hsl(var(--foreground))"
             strokeWidth={2}
             dot={false}
-            isAnimationActive={false}
           />
         </LineChart>
       </ChartContainer>

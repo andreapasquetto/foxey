@@ -1,35 +1,42 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { generateOdometerChartData } from "@/modules/cars/cars-utils";
 import { RefuelingRead } from "@/modules/cars/schemas/refueling-read-schema";
+import { ServiceRead } from "@/modules/cars/schemas/service-read-schema";
 import { format } from "date-fns";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import { CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
-  odometer: {
-    label: "Odometer",
+  refueling: {
+    label: "Refueling",
+  },
+  service: {
+    label: "Service",
   },
 } satisfies ChartConfig;
 
 interface OdometerChartProps {
   refuelings: RefuelingRead[];
+  services: ServiceRead[];
 }
 
 export function OdometerChart(props: OdometerChartProps) {
-  const chartData = props.refuelings.map((refueling) => ({
-    datetime: refueling.datetime,
-    odometer: Number(refueling.odometer),
-  }));
+  // TODO: show less data filtering by year
+  const chartData = generateOdometerChartData({
+    refuelings: props.refuelings,
+    services: props.services,
+  });
 
   return (
     <div className="space-y-3">
       <CardTitle>Odometer</CardTitle>
-      <ChartContainer config={chartConfig}>
-        <LineChart accessibilityLayer data={chartData}>
+      <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+        <ComposedChart accessibilityLayer data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
             dataKey="datetime"
@@ -40,17 +47,23 @@ export function OdometerChart(props: OdometerChartProps) {
           <YAxis domain={["auto", "auto"]} />
           <ChartTooltip
             cursor={false}
-            content={<ChartTooltipContent className="w-[175px]" hideLabel />}
+            content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}
           />
           <Line
-            dataKey="odometer"
+            dataKey="refueling"
             type="linear"
             stroke="hsl(var(--foreground))"
             strokeWidth={2}
             dot={false}
-            isAnimationActive={false}
           />
-        </LineChart>
+          <Line
+            dataKey="service"
+            type="linear"
+            stroke="none"
+            dot={{ fill: "hsl(var(--chart-accent))" }}
+            activeDot={{ fill: "hsl(var(--chart-accent))", r: 4 }}
+          />
+        </ComposedChart>
       </ChartContainer>
     </div>
   );

@@ -12,11 +12,11 @@ import { useRefuelingsPaginatedQuery } from "@/modules/cars/cars-queries";
 import { format } from "date-fns";
 import { CheckIcon, XIcon } from "lucide-react";
 
-interface RecentRefuelingsProps {
+interface RefuelingListProps {
   carId: string | undefined;
 }
 
-export function RefuelingList(props: RecentRefuelingsProps) {
+export function RefuelingList(props: RefuelingListProps) {
   const query = useRefuelingsPaginatedQuery(props.carId);
 
   if (!query.data) {

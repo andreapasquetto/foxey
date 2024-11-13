@@ -1,5 +1,14 @@
 import { RefuelingRead } from "@/modules/cars/schemas/refueling-read-schema";
-import { isSameMonth, isSameYear, startOfMonth, startOfToday, startOfYear, sub } from "date-fns";
+import { ServiceRead } from "@/modules/cars/schemas/service-read-schema";
+import {
+  isBefore,
+  isSameMonth,
+  isSameYear,
+  startOfMonth,
+  startOfToday,
+  startOfYear,
+  sub,
+} from "date-fns";
 import { Decimal } from "decimal.js";
 
 export function extractRefuelingPeriods(refuelings: RefuelingRead[]) {
@@ -67,4 +76,20 @@ export function calculateAvgFuelEconomy(refuelings: RefuelingRead[]) {
   );
 
   return totalDistance.div(totalQuantity).toDecimalPlaces(2).toNumber();
+}
+
+export function generateOdometerChartData(params: {
+  refuelings: RefuelingRead[];
+  services: ServiceRead[];
+}) {
+  return [
+    ...params.refuelings.map((refueling) => ({
+      datetime: refueling.datetime,
+      refueling: Number(refueling.odometer),
+    })),
+    ...params.services.map((service) => ({
+      datetime: service.datetime,
+      service: Number(service.odometer),
+    })),
+  ].toSorted((a, b) => (isBefore(a.datetime, b.datetime) ? -1 : 1));
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AddRefueling } from "@/modules/cars/components/add-refueling";
 import { CarSwitcher } from "@/modules/cars/components/car-switcher";
 import { RefuelingList } from "@/modules/cars/components/refueling-list";

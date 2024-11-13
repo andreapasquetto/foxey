@@ -5,7 +5,7 @@ import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRefuelingsGetAllQuery } from "@/modules/cars/cars-queries";
+import { useRefuelingsGetAllQuery, useServicesGetAllQuery } from "@/modules/cars/cars-queries";
 import {
   calculateAvgDistance,
   calculateAvgFuelEconomy,
@@ -24,6 +24,7 @@ export default function CarStats() {
   const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);
 
   const refuelingsQuery = useRefuelingsGetAllQuery(selectedCar?.id);
+  const servicesQuery = useServicesGetAllQuery(selectedCar?.id);
 
   if (!selectedCar) {
     return (
@@ -38,7 +39,8 @@ export default function CarStats() {
     );
   }
 
-  if (refuelingsQuery.isFetching) {
+  const isFetching = refuelingsQuery.isFetching || servicesQuery.isFetching;
+  if (isFetching) {
     return (
       <>
         <div className="flex items-center justify-end gap-3">
@@ -99,9 +101,10 @@ export default function CarStats() {
     );
   }
 
-  const allRefuelings = refuelingsQuery.data ?? [];
+  const refuelings = refuelingsQuery.data ?? [];
+  const services = servicesQuery.data ?? [];
 
-  if (!allRefuelings.length) {
+  if (!refuelings.length) {
     return (
       <>
         <div className="flex items-center justify-end gap-3">
@@ -158,7 +161,7 @@ export default function CarStats() {
     );
   }
 
-  const refuelingPeriods = extractRefuelingPeriods(allRefuelings);
+  const refuelingPeriods = extractRefuelingPeriods(refuelings);
 
   const stats = {
     fuelCosts: {
@@ -166,14 +169,14 @@ export default function CarStats() {
       lastMonth: calculateMonthlyCost(refuelingPeriods.lastMonth),
     },
     distance: {
-      average: calculateAvgDistance(allRefuelings),
+      average: calculateAvgDistance(refuelings),
       thisYear: calculateTotalDistance(refuelingPeriods.thisYear),
       lastYear: calculateTotalDistance(refuelingPeriods.lastYear),
-      total: calculateTotalDistance(allRefuelings),
+      total: calculateTotalDistance(refuelings),
     },
     fuelEconomy: {
-      last: calculateFuelEconomy(allRefuelings.at(-1), allRefuelings.at(-2)),
-      avg: calculateAvgFuelEconomy(allRefuelings),
+      last: calculateFuelEconomy(refuelings.at(-1), refuelings.at(-2)),
+      avg: calculateAvgFuelEconomy(refuelings),
     },
   };
 
@@ -248,8 +251,8 @@ export default function CarStats() {
         </div>
 
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <FuelPriceChart refuelings={allRefuelings} />
-          <OdometerChart refuelings={allRefuelings} />
+          <FuelPriceChart refuelings={refuelings} />
+          <OdometerChart refuelings={refuelings} services={services} />
         </div>
       </div>
     </>
