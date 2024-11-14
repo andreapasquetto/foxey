@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useHighwayTripsPaginatedQuery } from "@/modules/cars/cars-queries";
+import { useHighwayTripsGetPaginatedQuery } from "@/modules/cars/cars-queries";
 import { format } from "date-fns";
 
 interface HighwayTripsProps {
@@ -16,7 +16,7 @@ interface HighwayTripsProps {
 }
 
 export function HighwayTripList(props: HighwayTripsProps) {
-  const query = useHighwayTripsPaginatedQuery(props.carId);
+  const query = useHighwayTripsGetPaginatedQuery(props.carId);
 
   if (!query.data) {
     return (

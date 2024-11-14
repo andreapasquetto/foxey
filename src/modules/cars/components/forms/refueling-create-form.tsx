@@ -4,7 +4,7 @@ import { Form } from "@/components/ui/form";
 import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
-import { useCreateRefuelingMutation } from "@/modules/cars/cars-mutations";
+import { useRefuelingCreateMutation } from "@/modules/cars/cars-mutations";
 import {
   type RefuelingCreateForm,
   refuelingCreateFormSchema,
@@ -36,7 +36,7 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
     },
   });
 
-  const mutation = useCreateRefuelingMutation();
+  const mutation = useRefuelingCreateMutation();
 
   if (!places || isFetchingPlaces) {
     return <CircularSpinner className="mx-auto" />;

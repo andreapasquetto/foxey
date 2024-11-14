@@ -11,10 +11,11 @@ import {
   refuelingsGetAll,
   refuelingsGetPaginated,
   servicesGetAll,
+  servicesGetPaginated,
 } from "@/modules/cars/cars-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-export function useCarsQuery() {
+export function useCarsGetAllQuery() {
   return useQuery({
     queryKey: carsQueryKey(),
     queryFn: () => carsGetAll(),
@@ -28,14 +29,7 @@ export function useRefuelingsGetAllQuery(carId?: string) {
   });
 }
 
-export function useServicesGetAllQuery(carId?: string) {
-  return useQuery({
-    queryKey: servicesQueryKey(carId),
-    queryFn: () => servicesGetAll(carId),
-  });
-}
-
-export function useRefuelingsPaginatedQuery(carId?: string) {
+export function useRefuelingsGetPaginatedQuery(carId?: string) {
   return usePaginatedQuery({
     queryKey: refuelingsQueryKey(carId),
     queryFn: (paginate) => refuelingsGetPaginated({ paginate, carId }),
@@ -43,7 +37,22 @@ export function useRefuelingsPaginatedQuery(carId?: string) {
   });
 }
 
-export function useHighwayTripsPaginatedQuery(carId?: string) {
+export function useServicesGetAllQuery(carId?: string) {
+  return useQuery({
+    queryKey: servicesQueryKey(carId),
+    queryFn: () => servicesGetAll(carId),
+  });
+}
+
+export function useServicesGetPaginatedQuery(carId?: string) {
+  return usePaginatedQuery({
+    queryKey: servicesQueryKey(carId),
+    queryFn: (paginate) => servicesGetPaginated({ paginate, carId }),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useHighwayTripsGetPaginatedQuery(carId?: string) {
   return usePaginatedQuery({
     queryKey: highwayTripsQueryKey(carId),
     queryFn: (paginate) => highwayTripsGetPaginated({ paginate, carId }),

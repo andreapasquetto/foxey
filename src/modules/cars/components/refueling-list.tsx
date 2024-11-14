@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useRefuelingsPaginatedQuery } from "@/modules/cars/cars-queries";
+import { useRefuelingsGetPaginatedQuery } from "@/modules/cars/cars-queries";
 import { format } from "date-fns";
 import { CheckIcon, XIcon } from "lucide-react";
 
@@ -17,7 +17,7 @@ interface RefuelingListProps {
 }
 
 export function RefuelingList(props: RefuelingListProps) {
-  const query = useRefuelingsPaginatedQuery(props.carId);
+  const query = useRefuelingsGetPaginatedQuery(props.carId);
 
   if (!query.data) {
     return (
@@ -52,48 +52,46 @@ export function RefuelingList(props: RefuelingListProps) {
           <TableHeaderRow carId={props.carId} />
         </TableHeader>
         <TableBody>
-          {!query.data && <TableRowsSkeleton />}
-          {query.data &&
-            query.data.records.map((refueling) => (
-              <TableRow key={refueling.id}>
-                <TableCell>
-                  <code>{format(refueling.datetime, "ccc y-MM-dd HH:mm")}</code>
-                </TableCell>
-                {!props.carId && (
-                  <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
+          {refuelings.map((refueling) => (
+            <TableRow key={refueling.id}>
+              <TableCell>
+                <code>{format(refueling.datetime, "ccc y-MM-dd HH:mm")}</code>
+              </TableCell>
+              {!props.carId && (
+                <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
+              )}
+              <TableCell>{refueling.place?.name}</TableCell>
+              <TableCell>
+                <code>{refueling.cost}</code>
+              </TableCell>
+              <TableCell>
+                <code>{refueling.quantity}</code>
+              </TableCell>
+              <TableCell>
+                <code>{refueling.price}</code>
+              </TableCell>
+              <TableCell>
+                {refueling.isFull ? (
+                  <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+                ) : (
+                  <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
                 )}
-                <TableCell>{refueling.place?.name}</TableCell>
-                <TableCell>
-                  <code>{refueling.cost}</code>
-                </TableCell>
-                <TableCell>
-                  <code>{refueling.quantity}</code>
-                </TableCell>
-                <TableCell>
-                  <code>{refueling.price}</code>
-                </TableCell>
-                <TableCell>
-                  {refueling.isFull ? (
-                    <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
-                  ) : (
-                    <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
-                  )}
-                </TableCell>
-                <TableCell>
-                  {refueling.isNecessary ? (
-                    <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
-                  ) : (
-                    <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
-                  )}
-                </TableCell>
-                <TableCell>
-                  <code>{refueling.trip}</code>
-                </TableCell>
-                <TableCell>
-                  <code>{refueling.odometer}</code>
-                </TableCell>
-              </TableRow>
-            ))}
+              </TableCell>
+              <TableCell>
+                {refueling.isNecessary ? (
+                  <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+                ) : (
+                  <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+                )}
+              </TableCell>
+              <TableCell>
+                <code>{refueling.trip}</code>
+              </TableCell>
+              <TableCell>
+                <code>{refueling.odometer}</code>
+              </TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       <QueryPagination query={query} />

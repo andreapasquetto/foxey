@@ -15,7 +15,7 @@ export async function carsGetAll() {
   return await db.select().from(cars);
 }
 
-export async function createCar(car: CarCreateForm) {
+export async function carCreate(car: CarCreateForm) {
   await db.insert(cars).values(car);
 }
 
@@ -134,10 +134,41 @@ export async function servicesGetAll(carId?: string) {
   return result;
 }
 
+export async function servicesGetPaginated(options: { paginate: Paginate; carId?: string }) {
+  const total = await countTotalServices(options.carId);
+  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+
+  const cars = await carsGetAll();
+
+  const records = await db
+    .select()
+    .from(services)
+    .where(options.carId ? eq(services.carId, options.carId) : undefined)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(services.datetime));
+
+  const result: ServiceRead[] = [];
+  for (const record of records) {
+    const car = cars.find((c) => c.id === record.carId)!;
+    result.push({ ...record, car });
+  }
+
+  return toPaginated(result, total);
+}
+
 async function countTotalRefuelings(carId?: string) {
   const totalRecordsQB = db.select().from(refuelings);
   if (carId) {
     totalRecordsQB.where(eq(refuelings.carId, carId));
+  }
+  return (await totalRecordsQB).length;
+}
+
+async function countTotalServices(carId?: string) {
+  const totalRecordsQB = db.select().from(services);
+  if (carId) {
+    totalRecordsQB.where(eq(services.carId, carId));
   }
   return (await totalRecordsQB).length;
 }

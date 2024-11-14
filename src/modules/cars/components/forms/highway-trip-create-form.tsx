@@ -2,7 +2,7 @@ import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { XInput } from "@/components/x-input";
-import { useCreateHighwayTripMutation } from "@/modules/cars/cars-mutations";
+import { useHighwayTripCreateMutation } from "@/modules/cars/cars-mutations";
 import {
   type HighwayTripCreateForm,
   highwayTripCreateFormSchema,
@@ -29,7 +29,7 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
     },
   });
 
-  const mutation = useCreateHighwayTripMutation();
+  const mutation = useHighwayTripCreateMutation();
 
   function onValidSubmit(values: HighwayTripCreateForm) {
     mutation.mutate(values, { onSuccess: () => props.onSubmit() });
