@@ -1,8 +1,13 @@
+"use client";
+
 import { CircularSpinner } from "@/components/circular-spinner";
+import { InputSkeleton } from "@/components/input-skeleton";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import { XInput } from "@/components/x-input";
 import { useHighwayTripCreateMutation } from "@/modules/cars/cars-mutations";
+import { useCarsGetAllQuery } from "@/modules/cars/cars-queries";
 import {
   type HighwayTripCreateForm,
   highwayTripCreateFormSchema,
@@ -10,19 +15,11 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-interface HighwayTripCreateFormProps {
-  carId: string;
-  onSubmit: () => void;
-}
-
-export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
+export function HighwayTripCreateForm() {
   const form = useForm<HighwayTripCreateForm>({
     resolver: zodResolver(highwayTripCreateFormSchema),
     defaultValues: {
-      carId: props.carId,
       datetime: new Date(),
-      startingToll: "",
-      endingToll: "",
       distance: 0,
       cost: 0,
       avgSpeed: 0,
@@ -31,34 +28,63 @@ export function HighwayTripCreateForm(props: HighwayTripCreateFormProps) {
 
   const mutation = useHighwayTripCreateMutation();
 
+  const { data: cars } = useCarsGetAllQuery();
+
+  if (!cars) {
+    return (
+      <div className="space-y-4 py-2 pb-4">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <InputSkeleton />
+          <InputSkeleton />
+        </div>
+
+        <InputSkeleton />
+
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <InputSkeleton />
+          <InputSkeleton />
+        </div>
+
+        <div className="flex items-center justify-end gap-3">
+          <Skeleton className="h-10 w-20 text-right" />
+        </div>
+      </div>
+    );
+  }
+
   function onValidSubmit(values: HighwayTripCreateForm) {
-    mutation.mutate(values, { onSuccess: () => props.onSubmit() });
+    mutation.mutate(values, { onSuccess: () => {} });
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <XInput control={form.control} name="startingToll" label="Start" />
-
-        <XInput control={form.control} name="endingToll" label="End" />
-
-        <XInput type="number" step={0.01} control={form.control} name="distance" label="Distance" />
-
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <XInput control={form.control} name="startingToll" label="Start" />
+          <XInput control={form.control} name="endingToll" label="End" />
+        </div>
         <XInput type="number" step={0.01} control={form.control} name="cost" label="Cost" />
-
-        <XInput
-          type="number"
-          step={0.01}
-          control={form.control}
-          name="avgSpeed"
-          label="Average speed"
-        />
-
-        <div className="flex items-center gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <XInput
+            type="number"
+            step={0.01}
+            control={form.control}
+            name="distance"
+            label="Distance"
+          />
+          <XInput
+            type="number"
+            step={0.01}
+            control={form.control}
+            name="avgSpeed"
+            label="Average speed"
+          />
+        </div>
+        <div className="flex items-center justify-end gap-3">
+          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
             Submit
           </Button>
-          {mutation.isPending && <CircularSpinner />}
         </div>
       </form>
     </Form>
