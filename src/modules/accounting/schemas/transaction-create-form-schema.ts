@@ -7,7 +7,7 @@ export const transactionCreateFormSchema = z.object({
   categoryId: z.string().optional(),
   placeId: z.string().optional(),
   amount: z.number().min(0.01),
-  description: z.string(),
+  description: z.string().optional(),
 });
 
 export type TransactionCreateForm = z.infer<typeof transactionCreateFormSchema>;
