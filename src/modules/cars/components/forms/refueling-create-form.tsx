@@ -1,6 +1,19 @@
+"use client";
+
+import { CheckboxSkeleton } from "@/components/checkbox-skeleton";
 import { CircularSpinner } from "@/components/circular-spinner";
+import { DatePicker } from "@/components/date-picker";
+import { InputSkeleton } from "@/components/input-skeleton";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Skeleton } from "@/components/ui/skeleton";
 import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
@@ -11,46 +24,89 @@ import {
 } from "@/modules/cars/schemas/refueling-create-form-schema";
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { useCarsGetAllQuery } from "../../cars-queries";
 
-interface RefuelingCreateFormProps {
-  carId: string;
-  onSubmit: () => void;
-}
-
-export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
-  const { data: places, isFetching: isFetchingPlaces } = usePlacesGetAllQuery();
+export function RefuelingCreateForm() {
+  const router = useRouter();
 
   const form = useForm<RefuelingCreateForm>({
     resolver: zodResolver(refuelingCreateFormSchema),
     defaultValues: {
-      carId: props.carId,
+      datetime: new Date(),
       cost: 0,
       quantity: 0,
       price: 0,
-      isFull: false,
-      isNecessary: true,
       trip: 0,
-      odometer: 0,
-      datetime: new Date(),
     },
   });
 
   const mutation = useRefuelingCreateMutation();
 
-  if (!places || isFetchingPlaces) {
-    return <CircularSpinner className="mx-auto" />;
+  const { data: cars } = useCarsGetAllQuery();
+  const { data: places } = usePlacesGetAllQuery();
+
+  if (!cars || !places) {
+    return (
+      <div className="space-y-4 py-2 pb-4">
+        <InputSkeleton />
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <InputSkeleton />
+          <InputSkeleton />
+          <InputSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <CheckboxSkeleton />
+          <CheckboxSkeleton />
+        </div>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <InputSkeleton />
+          <InputSkeleton />
+        </div>
+        <div className="flex items-center justify-end gap-3">
+          <Skeleton className="h-10 w-20 text-right" />
+        </div>
+      </div>
+    );
   }
 
   function onValidSubmit(values: RefuelingCreateForm) {
     mutation.mutate(values, {
-      onSuccess: () => props.onSubmit(),
+      onSuccess: () => {
+        router.push("/cars");
+      },
     });
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
+        <FormField
+          control={form.control}
+          name="datetime"
+          render={({ field }) => (
+            <FormItem className="flex flex-col">
+              <FormLabel>Date</FormLabel>
+              <FormControl>
+                <DatePicker value={field.value} setValue={field.onChange} includeTime />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <XSelect control={form.control} name="carId" label="Car">
+          {cars.map((car) => (
+            <XSelectOption key={car.id} value={car.id}>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                <div>
+                  {car.make} {car.model}
+                </div>
+              </div>
+            </XSelectOption>
+          ))}
+        </XSelect>
         <XSelect control={form.control} name="placeId" label="Place">
           {places.map((place) => (
             <XSelectOption key={place.id} value={place.id}>
@@ -65,28 +121,37 @@ export function RefuelingCreateForm(props: RefuelingCreateFormProps) {
             </XSelectOption>
           ))}
         </XSelect>
-
-        <XInput control={form.control} name="placeId" label="Place" />
-
-        <XInput type="number" step={0.01} control={form.control} name="cost" label="Cost" />
-
-        <XInput type="number" step={0.01} control={form.control} name="quantity" label="Quantity" />
-
-        <XInput type="number" step={0.001} control={form.control} name="price" label="Price" />
-
-        <XCheckbox control={form.control} name="isFull" label="Full Tank" />
-
-        <XCheckbox control={form.control} name="isNecessary" label="Necessary" />
-
-        <XInput type="number" step={0.01} control={form.control} name="trip" label="Trip" />
-
-        <XInput type="number" step={1} control={form.control} name="odometer" label="Odometer" />
-
-        <div className="flex items-center gap-3">
+        <div className="grid grid-cols-3 gap-3">
+          <XInput type="number" step={0.01} control={form.control} name="cost" label="Cost" />
+          <XInput
+            type="number"
+            step={0.01}
+            control={form.control}
+            name="quantity"
+            label="Quantity"
+          />
+          <XInput type="number" step={0.001} control={form.control} name="price" label="Price" />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <XCheckbox control={form.control} name="isFull" label="Full Tank" />
+          <XCheckbox control={form.control} name="isNecessary" label="Necessary" />
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <XInput type="number" step={0.01} control={form.control} name="trip" label="Trip" />
+          <XInput
+            type="number"
+            step={1}
+            control={form.control}
+            name="odometer"
+            label="Odometer"
+            placeholder="69420"
+          />
+        </div>
+        <div className="flex items-center justify-end gap-3">
+          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
             Submit
           </Button>
-          {mutation.isPending && <CircularSpinner />}
         </div>
       </form>
     </Form>
