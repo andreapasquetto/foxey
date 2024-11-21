@@ -13,7 +13,7 @@ import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
 import { placesGetAll } from "@/modules/places/places-actions";
-import { and, between, desc, eq, or } from "drizzle-orm";
+import { and, between, desc, eq, ilike, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
 import { DateRange } from "react-day-picker";
 
@@ -49,6 +49,7 @@ export async function transactionsGetPaginated(params: {
   paginate: Paginate;
   walletId?: string;
   dateRange?: DateRange;
+  searchFilter?: string;
 }): Promise<Paginated<TransactionRead>> {
   const wallets = await walletsGetAll();
   const categories = await transactionCategoriesGetAll();
@@ -69,6 +70,9 @@ export async function transactionsGetPaginated(params: {
           : undefined,
         params.dateRange?.from && params.dateRange.to
           ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
+          : undefined,
+        params.searchFilter
+          ? ilike(transactions.description, `%${params.searchFilter}%`)
           : undefined,
       ),
     )
@@ -176,6 +180,7 @@ async function transactionsCountTotal(params: {
   paginate: Paginate;
   walletId?: string;
   dateRange?: DateRange;
+  searchFilter?: string;
 }) {
   const records = await db
     .select()
@@ -190,6 +195,9 @@ async function transactionsCountTotal(params: {
           : undefined,
         params.dateRange?.from && params.dateRange.to
           ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
+          : undefined,
+        params.searchFilter
+          ? ilike(transactions.description, `%${params.searchFilter}%`)
           : undefined,
       ),
     );

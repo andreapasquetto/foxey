@@ -35,7 +35,9 @@ export function transactionCategoriesQueryKey() {
   return ["transaction-categories"];
 }
 
-export function transactionsQueryKey(params: { walletId?: string; dateRange?: DateRange } = {}) {
+export function transactionsQueryKey(
+  params: { walletId?: string; dateRange?: DateRange; searchFilter?: string } = {},
+) {
   const key = ["transactions"];
 
   if (params.walletId) {
@@ -43,6 +45,9 @@ export function transactionsQueryKey(params: { walletId?: string; dateRange?: Da
   }
   if (params.dateRange) {
     key.push(`from-${params.dateRange.from ?? "start"}`, `to-${params.dateRange.to ?? "finish"}`);
+  }
+  if (params.searchFilter) {
+    key.push(`search-${params.searchFilter}`);
   }
 
   return key;

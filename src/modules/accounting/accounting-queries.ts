@@ -31,6 +31,7 @@ export function useTransactionsGetPaginatedQuery(
   params: {
     walletId?: string;
     dateRange?: DateRange;
+    searchFilter?: string;
   } = {},
 ) {
   return usePaginatedQuery({
@@ -40,6 +41,7 @@ export function useTransactionsGetPaginatedQuery(
         paginate,
         walletId: params.walletId,
         dateRange: params.dateRange,
+        searchFilter: params.searchFilter,
       }),
     placeholderData: keepPreviousData,
   });

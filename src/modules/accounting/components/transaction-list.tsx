@@ -20,12 +20,14 @@ import { DateRange } from "react-day-picker";
 interface RecentTransactionsProps {
   walletId?: string;
   dateRange?: DateRange;
+  searchFilter?: string;
 }
 
 export function TransactionList(props: RecentTransactionsProps) {
   const transactionsQuery = useTransactionsGetPaginatedQuery({
     walletId: props.walletId,
     dateRange: props.dateRange,
+    searchFilter: props.searchFilter,
   });
 
   if (!transactionsQuery.data) {
