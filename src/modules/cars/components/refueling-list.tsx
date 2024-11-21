@@ -61,6 +61,7 @@ export function RefuelingList(props: RefuelingListProps) {
                 <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
               )}
               <TableCell>{refueling.place?.name}</TableCell>
+              <TableCell>{refueling.ron}</TableCell>
               <TableCell>
                 <code>{refueling.cost}</code>
               </TableCell>
@@ -105,6 +106,7 @@ function TableHeaderRow(props: { carId?: string }) {
       <TableHead className="min-w-36">Date</TableHead>
       {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>Place</TableHead>
+      <TableHead>RON</TableHead>
       <TableHead>
         Cost (<code>€</code>)
       </TableHead>
@@ -130,7 +132,7 @@ function TableRowsSkeleton() {
   return Array.from({ length: 3 }).map((_, i) => (
     <TableRow key={i}>
       <TableCell>
-        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-44" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-24" />
@@ -139,22 +141,25 @@ function TableRowsSkeleton() {
         <Skeleton className="h-4 w-36" />
       </TableCell>
       <TableCell>
-        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-6" />
       </TableCell>
       <TableCell>
-        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-8" />
       </TableCell>
       <TableCell>
-        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-4 w-14" />
       </TableCell>
       <TableCell>
-        <Skeleton className="aspect-square h-5" />
+        <Skeleton className="h-4 w-14" />
       </TableCell>
       <TableCell>
-        <Skeleton className="aspect-square h-5" />
+        <Skeleton className="h-5 w-5" />
       </TableCell>
       <TableCell>
-        <Skeleton className="h-4 w-20" />
+        <Skeleton className="h-5 w-5" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-14" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-20" />

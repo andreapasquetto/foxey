@@ -10,7 +10,7 @@ export const cars = pgTable("cars", {
 });
 
 // TODO: add transactionId for tracking the payment of a refueling
-export const refuelings = pgTable("refuelings", {
+export const refuelings = pgTable("car_refuelings", {
   id: uuid("id").defaultRandom().primaryKey(),
   carId: uuid("car_id")
     .notNull()
@@ -28,7 +28,7 @@ export const refuelings = pgTable("refuelings", {
 });
 
 // TODO: add a transactionId for tracking the payment of a trip
-export const highwayTrips = pgTable("highway_trips", {
+export const highwayTrips = pgTable("car_highway_trips", {
   id: uuid("id").defaultRandom().primaryKey(),
   carId: uuid("car_id")
     .notNull()
@@ -41,7 +41,7 @@ export const highwayTrips = pgTable("highway_trips", {
   avgSpeed: numeric("avg_speed"),
 });
 
-export const services = pgTable("services", {
+export const services = pgTable("car_services", {
   id: uuid("id").defaultRandom().primaryKey(),
   carId: uuid("car_id")
     .notNull()

@@ -18,6 +18,7 @@ import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
 import { useRefuelingCreateMutation } from "@/modules/cars/cars-mutations";
+import { useCarsGetAllQuery } from "@/modules/cars/cars-queries";
 import {
   type RefuelingCreateForm,
   refuelingCreateFormSchema,
@@ -26,7 +27,6 @@ import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
-import { useCarsGetAllQuery } from "../../cars-queries";
 
 export function RefuelingCreateForm() {
   const router = useRouter();
@@ -48,27 +48,7 @@ export function RefuelingCreateForm() {
   const { data: places } = usePlacesGetAllQuery();
 
   if (!cars || !places) {
-    return (
-      <div className="space-y-4 py-2 pb-4">
-        <InputSkeleton />
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <InputSkeleton />
-          <InputSkeleton />
-          <InputSkeleton />
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <CheckboxSkeleton />
-          <CheckboxSkeleton />
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <InputSkeleton />
-          <InputSkeleton />
-        </div>
-        <div className="flex items-center justify-end gap-3">
-          <Skeleton className="h-10 w-20 text-right" />
-        </div>
-      </div>
-    );
+    return <ComponentSkeleton />;
   }
 
   function onValidSubmit(values: RefuelingCreateForm) {
@@ -82,19 +62,6 @@ export function RefuelingCreateForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <FormField
-          control={form.control}
-          name="datetime"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date</FormLabel>
-              <FormControl>
-                <DatePicker value={field.value} setValue={field.onChange} includeTime />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
         <XSelect control={form.control} name="carId" label="Car">
           {cars.map((car) => (
             <XSelectOption key={car.id} value={car.id}>
@@ -107,21 +74,36 @@ export function RefuelingCreateForm() {
             </XSelectOption>
           ))}
         </XSelect>
-        <XSelect control={form.control} name="placeId" label="Place">
-          {places.map((place) => (
-            <XSelectOption key={place.id} value={place.id}>
-              {!place.category && <div>{place.name}</div>}
-              {place.category && (
-                <div>
-                  <span>{place.category.name}</span>
-                  <span className="mx-1">•</span>
-                  <span className="text-muted-foreground">{place.name}</span>
-                </div>
-              )}
-            </XSelectOption>
-          ))}
-        </XSelect>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <FormField
+            control={form.control}
+            name="datetime"
+            render={({ field }) => (
+              <FormItem className="flex flex-col justify-end">
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <XSelect control={form.control} name="placeId" label="Place">
+            {places.map((place) => (
+              <XSelectOption key={place.id} value={place.id}>
+                {!place.category && <div>{place.name}</div>}
+                {place.category && (
+                  <div>
+                    <span>{place.category.name}</span>
+                    <span className="mx-1">•</span>
+                    <span className="text-muted-foreground">{place.name}</span>
+                  </div>
+                )}
+              </XSelectOption>
+            ))}
+          </XSelect>
+        </div>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <XInput type="number" step={0.01} control={form.control} name="cost" label="Cost" />
           <XInput
             type="number"
@@ -132,11 +114,11 @@ export function RefuelingCreateForm() {
           />
           <XInput type="number" step={0.001} control={form.control} name="price" label="Price" />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XCheckbox control={form.control} name="isFull" label="Full Tank" />
           <XCheckbox control={form.control} name="isNecessary" label="Necessary" />
         </div>
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XInput type="number" step={0.01} control={form.control} name="trip" label="Trip" />
           <XInput
             type="number"
@@ -155,5 +137,33 @@ export function RefuelingCreateForm() {
         </div>
       </form>
     </Form>
+  );
+}
+
+function ComponentSkeleton() {
+  return (
+    <div className="space-y-4 py-2 pb-4">
+      <InputSkeleton />
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <InputSkeleton />
+        <InputSkeleton />
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <InputSkeleton />
+        <InputSkeleton />
+        <InputSkeleton />
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <CheckboxSkeleton />
+        <CheckboxSkeleton />
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <InputSkeleton />
+        <InputSkeleton />
+      </div>
+      <div className="flex items-center justify-end gap-3">
+        <Skeleton className="h-10 w-20 text-right" />
+      </div>
+    </div>
   );
 }

@@ -31,25 +31,7 @@ export function HighwayTripCreateForm() {
   const { data: cars } = useCarsGetAllQuery();
 
   if (!cars) {
-    return (
-      <div className="space-y-4 py-2 pb-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <InputSkeleton />
-          <InputSkeleton />
-        </div>
-
-        <InputSkeleton />
-
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <InputSkeleton />
-          <InputSkeleton />
-        </div>
-
-        <div className="flex items-center justify-end gap-3">
-          <Skeleton className="h-10 w-20 text-right" />
-        </div>
-      </div>
-    );
+    return <ComponentSkeleton />;
   }
 
   function onValidSubmit(values: HighwayTripCreateForm) {
@@ -88,5 +70,27 @@ export function HighwayTripCreateForm() {
         </div>
       </form>
     </Form>
+  );
+}
+
+function ComponentSkeleton() {
+  return (
+    <div className="space-y-4 py-2 pb-4">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <InputSkeleton />
+        <InputSkeleton />
+      </div>
+
+      <InputSkeleton />
+
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <InputSkeleton />
+        <InputSkeleton />
+      </div>
+
+      <div className="flex items-center justify-end gap-3">
+        <Skeleton className="h-10 w-20 text-right" />
+      </div>
+    </div>
   );
 }
