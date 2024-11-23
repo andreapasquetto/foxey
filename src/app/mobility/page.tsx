@@ -5,7 +5,7 @@ import CarStats from "@/modules/mobility/components/car-stats";
 import { HighwayTrips } from "@/modules/mobility/components/highway-trips";
 import { Refuelings } from "@/modules/mobility/components/refuelings";
 import { Services } from "@/modules/mobility/components/services";
-import { Fuel, Gauge } from "lucide-react";
+import { CarFront, Fuel, Gauge } from "lucide-react";
 import Link from "next/link";
 
 export default function MobilityPage() {
@@ -13,6 +13,11 @@ export default function MobilityPage() {
     <div className="space-y-12">
       <Heading1>Mobility</Heading1>
       <div className="mx-auto max-w-[250px] space-y-1 md:flex md:max-w-xl md:gap-1 md:space-y-0">
+        <Button size="lg" asChild className="w-full">
+          <Link href="/mobility/cars/new" className="gap-1">
+            Add car <CarFront className="h-5 w-5" />
+          </Link>
+        </Button>
         <Button size="lg" asChild className="w-full">
           <Link href="/mobility/refuelings/new" className="gap-1">
             Add refueling <Fuel className="h-5 w-5" />

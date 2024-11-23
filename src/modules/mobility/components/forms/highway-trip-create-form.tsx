@@ -14,9 +14,11 @@ import {
 } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export function HighwayTripCreateForm() {
+  const router = useRouter();
   const form = useForm<HighwayTripCreateForm>({
     resolver: zodResolver(highwayTripCreateFormSchema),
     defaultValues: {
@@ -33,7 +35,11 @@ export function HighwayTripCreateForm() {
   }
 
   function onValidSubmit(values: HighwayTripCreateForm) {
-    mutation.mutate(values, { onSuccess: () => {} });
+    mutation.mutate(values, {
+      onSuccess: () => {
+        router.push("/mobility");
+      },
+    });
   }
 
   return (
@@ -87,14 +93,11 @@ function ComponentSkeleton() {
         <InputSkeleton />
         <InputSkeleton />
       </div>
-
       <InputSkeleton />
-
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
         <InputSkeleton />
         <InputSkeleton />
       </div>
-
       <div className="flex items-center justify-end gap-3">
         <Skeleton className="h-10 w-20 text-right" />
       </div>
