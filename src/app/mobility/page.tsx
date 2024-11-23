@@ -1,5 +1,6 @@
 import { Heading1, Heading2 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
+import { CarList } from "@/modules/mobility/components/car-list";
 import CarStats from "@/modules/mobility/components/car-stats";
 import { HighwayTrips } from "@/modules/mobility/components/highway-trips";
 import { Refuelings } from "@/modules/mobility/components/refuelings";
@@ -23,6 +24,10 @@ export default function MobilityPage() {
           </Link>
         </Button>
       </div>
+      <section className="space-y-6">
+        <Heading2>Cars</Heading2>
+        <CarList />
+      </section>
       <section className="space-y-6">
         <Heading2>Stats</Heading2>
         <CarStats />
