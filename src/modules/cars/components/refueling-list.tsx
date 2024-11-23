@@ -61,7 +61,9 @@ export function RefuelingList(props: RefuelingListProps) {
                 <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
               )}
               <TableCell>{refueling.place?.name}</TableCell>
-              <TableCell>{refueling.ron}</TableCell>
+              <TableCell>
+                <code>{refueling.ron}</code>
+              </TableCell>
               <TableCell>
                 <code>{refueling.cost}</code>
               </TableCell>

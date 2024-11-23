@@ -39,7 +39,7 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
   return (
     <Dialog open={showNewWalletDialog} onOpenChange={setShowNewWalletDialog}>
       <Popover open={open} onOpenChange={setOpen}>
-        {query.isFetching && <Skeleton className="h-10 w-60" />}
+        {query.isFetching && <Skeleton className="h-10 w-full" />}
         {!query.isFetching && (
           <PopoverTrigger asChild>
             <Button
@@ -47,14 +47,14 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
               role="combobox"
               aria-expanded={!!open}
               aria-label="Select a team"
-              className={cn("w-[250px] justify-between")}
+              className={cn("w-full justify-between")}
             >
               {props.selectedWallet?.name ?? "No wallet selected"}
               <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
             </Button>
           </PopoverTrigger>
         )}
-        <PopoverContent className="w-[250px] p-0">
+        <PopoverContent className="w-full p-0" align="end">
           <Command>
             <CommandList>
               <CommandItem

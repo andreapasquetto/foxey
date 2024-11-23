@@ -158,7 +158,7 @@ function TableRowsSkeleton() {
   return Array.from({ length: 3 }).map((_, i) => (
     <TableRow key={i}>
       <TableCell>
-        <Skeleton className="h-4 w-32" />
+        <Skeleton className="h-4 w-44" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-20" />
@@ -170,19 +170,22 @@ function TableRowsSkeleton() {
         </div>
       </TableCell>
       <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-1">
-          <Skeleton className="h-5 w-16" />
-          <Skeleton className="h-5 w-16" />
+        <div className="space-y-1">
+          <Skeleton className="h-4 w-32" />
+          <Skeleton className="h-4 w-24" />
         </div>
       </TableCell>
       <TableCell>
-        <Skeleton className="h-4 w-48" />
+        <div className="flex items-center gap-1">
+          <Skeleton className="h-5 w-16 rounded-full" />
+          <Skeleton className="h-5 w-16 rounded-full" />
+        </div>
       </TableCell>
       <TableCell>
-        <Skeleton className="ml-auto h-4 w-20" />
+        <Skeleton className="h-4 w-40" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="ml-auto h-4 w-12" />
       </TableCell>
       <TableCell>
         <div className="flex items-center justify-end">

@@ -10,8 +10,10 @@ export function Services() {
 
   return (
     <>
-      <div className="flex items-center justify-end gap-3">
-        <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+      <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
+        <div className="sm:w-[250px]">
+          <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+        </div>
       </div>
       <ServiceList carId={selectedCar?.id} />
     </>

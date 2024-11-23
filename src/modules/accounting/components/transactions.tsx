@@ -2,49 +2,36 @@
 
 import { thisMonthToDateRange } from "@/common/dates";
 import { RangeDatePicker } from "@/components/range-date-picker";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { TransactionList } from "@/modules/accounting/components/transaction-list";
 import { WalletSwitcher } from "@/modules/accounting/components/wallet-switcher";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 
 export function Transactions() {
-  const router = useRouter();
-
   const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
   const [dateRange, setDateRange] = useState<DateRange | undefined>(thisMonthToDateRange());
 
   // TODO: add some sort of debounce when updating the search filter
   const [searchFilter, setSearchFilter] = useState<string>("");
 
-  function redirectToTransactionCreatePage() {
-    router.push("/accounting/transactions/new");
-  }
-
   return (
     <>
-      <div className="flex items-center justify-end gap-3">
-        <Input
-          value={searchFilter}
-          onChange={(e) => setSearchFilter(e.target.value)}
-          placeholder="Search..."
-        />
-        <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} showPresets />
-        <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
-        <Button
-          className="hidden sm:inline-flex"
-          size="sm"
-          onClick={() => redirectToTransactionCreatePage()}
-        >
-          Add transaction
-        </Button>
-        <Button className="sm:hidden" size="icon" onClick={() => redirectToTransactionCreatePage()}>
-          <Plus className="h-5 w-5" />
-        </Button>
+      <div className="gap-3 space-y-3 sm:grid sm:grid-cols-2 sm:space-y-0 lg:grid-cols-7">
+        <div className="sm:col-span-full lg:col-span-3">
+          <Input
+            value={searchFilter}
+            onChange={(e) => setSearchFilter(e.target.value)}
+            placeholder="Search..."
+          />
+        </div>
+        <div className="sm:col-span-1 lg:col-span-2">
+          <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} showPresets />
+        </div>
+        <div className="sm:col-span-1 lg:col-span-2">
+          <WalletSwitcher selectedWallet={selectedWallet} onSelectWallet={setSelectedWallet} />
+        </div>
       </div>
       <TransactionList
         walletId={selectedWallet?.id}

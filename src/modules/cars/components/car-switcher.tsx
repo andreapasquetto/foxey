@@ -36,7 +36,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
   const query = useCarsGetAllQuery();
 
   if (query.isFetching) {
-    return <Skeleton className="h-10 w-60" />;
+    return <Skeleton className="h-10 w-full" />;
   }
 
   return (
@@ -48,7 +48,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
             role="combobox"
             aria-expanded={!!open}
             aria-label="Select a team"
-            className={cn("w-[250px] justify-between")}
+            className={cn("w-full justify-between")}
           >
             {props.selectedCar
               ? `${props.selectedCar.make} ${props.selectedCar.model}`
@@ -56,7 +56,7 @@ export function CarSwitcher(props: CarSwitcherProps) {
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-[250px] p-0">
+        <PopoverContent className="w-full p-0" align="end">
           <Command>
             <CommandList>
               <CommandItem
