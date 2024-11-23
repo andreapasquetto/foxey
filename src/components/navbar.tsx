@@ -19,9 +19,9 @@ const navigationItems = [
     title: "Accounting",
   },
   {
-    href: "/cars",
+    href: "/mobility",
     icon: <Car className="h-5 w-5" />,
-    title: "Cars",
+    title: "Mobility",
   },
   {
     href: "/contacts",
