@@ -10,7 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DeletePlace } from "@/modules/places/components/delete-place";
 import { usePlacesPaginatedQuery } from "@/modules/places/places-queries";
 import { CheckIcon, XIcon } from "lucide-react";
 
@@ -68,11 +67,6 @@ export function PlaceList() {
                   <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
                 )}
               </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-end">
-                  <DeletePlace place={place} />
-                </div>
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -89,7 +83,6 @@ function TableHeaderRow() {
       <TableHead>Coordinates</TableHead>
       <TableHead>Address</TableHead>
       <TableHead>Visited</TableHead>
-      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -104,15 +97,13 @@ function TableRowsSkeleton() {
         </div>
       </TableCell>
       <TableCell>
+        <Skeleton className="h-4 w-32" />
+      </TableCell>
+      <TableCell>
         <Skeleton className="h-4 w-52" />
       </TableCell>
       <TableCell>
-        <Skeleton className="aspect-square h-5" />
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center justify-end">
-          <Skeleton className="aspect-square h-10" />
-        </div>
+        <Skeleton className="h-5 w-5" />
       </TableCell>
     </TableRow>
   ));

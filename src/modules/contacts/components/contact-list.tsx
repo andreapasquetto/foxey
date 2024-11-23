@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { DeleteContact } from "@/modules/contacts/components/delete-contact";
 import { useContactsPaginatedQuery } from "@/modules/contacts/contacts-queries";
 import { Building, User } from "lucide-react";
 
@@ -63,11 +62,8 @@ export function ContactList() {
                   <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
                 )}
               </TableCell>
-              <TableCell>{contact.dob}</TableCell>
               <TableCell>
-                <div className="flex items-center justify-end">
-                  <DeleteContact contact={contact} />
-                </div>
+                <code>{contact.dob}</code>
               </TableCell>
             </TableRow>
           ))}
@@ -84,7 +80,6 @@ function TableHeaderRow() {
       <TableHead></TableHead>
       <TableHead>Full name</TableHead>
       <TableHead>Date of birth</TableHead>
-      <TableHead>Actions</TableHead>
     </TableRow>
   );
 }
@@ -102,11 +97,6 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center justify-end">
-          <Skeleton className="aspect-square h-10" />
-        </div>
       </TableCell>
     </TableRow>
   ));

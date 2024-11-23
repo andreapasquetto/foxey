@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useTransactionsGetPaginatedQuery } from "@/modules/accounting/accounting-queries";
-import { DeleteTransaction } from "@/modules/accounting/components/delete-transaction";
 import { format } from "date-fns";
 import { ChevronsRight } from "lucide-react";
 import { DateRange } from "react-day-picker";
@@ -125,11 +124,6 @@ export function TransactionList(props: RecentTransactionsProps) {
                   </code>
                 }
               </TableCell>
-              <TableCell>
-                <div className="flex items-center justify-end">
-                  <DeleteTransaction transaction={tx} />
-                </div>
-              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -149,7 +143,6 @@ function TableHeaderRow() {
       <TableHead>Tags</TableHead>
       <TableHead>Description</TableHead>
       <TableHead className="text-right">Amount</TableHead>
-      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -186,11 +179,6 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="ml-auto h-4 w-12" />
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center justify-end">
-          <Skeleton className="aspect-square h-10" />
-        </div>
       </TableCell>
     </TableRow>
   ));
