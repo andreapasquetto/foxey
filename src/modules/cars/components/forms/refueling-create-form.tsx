@@ -25,6 +25,7 @@ import {
 } from "@/modules/cars/schemas/refueling-create-form-schema";
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfMinute } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -34,11 +35,7 @@ export function RefuelingCreateForm() {
   const form = useForm<RefuelingCreateForm>({
     resolver: zodResolver(refuelingCreateFormSchema),
     defaultValues: {
-      datetime: new Date(),
-      cost: 0,
-      quantity: 0,
-      price: 0,
-      trip: 0,
+      datetime: startOfMinute(new Date()),
     },
   });
 
@@ -104,29 +101,51 @@ export function RefuelingCreateForm() {
           </XSelect>
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XInput type="number" step={0.01} control={form.control} name="cost" label="Cost" />
           <XInput
             type="number"
+            control={form.control}
+            name="cost"
             step={0.01}
+            label="Cost"
+            placeholder="0.00"
+          />
+          <XInput
+            type="number"
             control={form.control}
             name="quantity"
+            step={0.01}
             label="Quantity"
+            placeholder="0.00"
           />
-          <XInput type="number" step={0.001} control={form.control} name="price" label="Price" />
+          <XInput
+            type="number"
+            control={form.control}
+            name="price"
+            step={0.001}
+            label="Price"
+            placeholder="0.000"
+          />
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XCheckbox control={form.control} name="isFull" label="Full Tank" />
           <XCheckbox control={form.control} name="isNecessary" label="Necessary" />
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <XInput type="number" step={0.01} control={form.control} name="trip" label="Trip" />
           <XInput
             type="number"
-            step={1}
+            control={form.control}
+            name="trip"
+            step={0.01}
+            label="Trip"
+            placeholder="0.0"
+          />
+          <XInput
+            type="number"
             control={form.control}
             name="odometer"
+            step={1}
             label="Odometer"
-            placeholder="69420"
+            placeholder="0"
           />
         </div>
         <div className="flex items-center justify-end gap-3">

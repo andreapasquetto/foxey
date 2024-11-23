@@ -18,6 +18,7 @@ import {
   contactCreateFormSchema,
 } from "@/modules/contacts/schemas/contact-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfDay } from "date-fns";
 import { useForm } from "react-hook-form";
 
 interface ContactCreateFormProps {
@@ -28,9 +29,7 @@ export function ContactCreateForm(props: ContactCreateFormProps) {
   const form = useForm<ContactCreateForm>({
     resolver: zodResolver(contactCreateFormSchema),
     defaultValues: {
-      fullName: "",
-      subtitle: "",
-      dob: new Date(),
+      dob: startOfDay(new Date()),
       isArchived: false,
       isBusiness: false,
       addresses: [],

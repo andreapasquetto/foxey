@@ -17,10 +17,6 @@ interface WalletCreateFormProps {
 export function WalletCreateForm(props: WalletCreateFormProps) {
   const form = useForm<WalletCreateForm>({
     resolver: zodResolver(walletCreateFormSchema),
-    defaultValues: {
-      name: "",
-      initialAmount: 0,
-    },
   });
 
   const mutation = useWalletCreateMutation();
@@ -36,7 +32,14 @@ export function WalletCreateForm(props: WalletCreateFormProps) {
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
         <XInput control={form.control} name="name" label="Name" />
 
-        <XInput type="number" control={form.control} name="initialAmount" label="Initial amount" />
+        <XInput
+          type="number"
+          control={form.control}
+          name="initialAmount"
+          step={0.01}
+          label="Initial amount"
+          placeholder="0.00"
+        />
 
         <div className="flex items-center gap-3">
           <Button type="submit" disabled={mutation.isPending}>

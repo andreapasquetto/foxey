@@ -19,8 +19,6 @@ export function CarCreateForm(props: CarCreateFormProps) {
     resolver: zodResolver(carCreateFormSchema),
     defaultValues: {
       year: new Date().getFullYear(),
-      make: "",
-      model: "",
     },
   });
 
@@ -35,7 +33,7 @@ export function CarCreateForm(props: CarCreateFormProps) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <XInput type="number" control={form.control} name="year" label="Year" />
+        <XInput type="number" control={form.control} name="year" step={1} label="Year" />
 
         <XInput control={form.control} name="make" label="Make" />
 

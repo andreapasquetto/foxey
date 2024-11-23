@@ -13,16 +13,14 @@ import {
   highwayTripCreateFormSchema,
 } from "@/modules/cars/schemas/highway-trip-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfMinute } from "date-fns";
 import { useForm } from "react-hook-form";
 
 export function HighwayTripCreateForm() {
   const form = useForm<HighwayTripCreateForm>({
     resolver: zodResolver(highwayTripCreateFormSchema),
     defaultValues: {
-      datetime: new Date(),
-      distance: 0,
-      cost: 0,
-      avgSpeed: 0,
+      datetime: startOfMinute(new Date()),
     },
   });
 
@@ -45,21 +43,30 @@ export function HighwayTripCreateForm() {
           <XInput control={form.control} name="startingToll" label="Start" />
           <XInput control={form.control} name="endingToll" label="End" />
         </div>
-        <XInput type="number" step={0.01} control={form.control} name="cost" label="Cost" />
+        <XInput
+          type="number"
+          control={form.control}
+          name="cost"
+          step={0.01}
+          label="Cost"
+          placeholder="0.00"
+        />
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XInput
             type="number"
-            step={0.01}
             control={form.control}
             name="distance"
+            step={0.01}
             label="Distance"
+            placeholder="0.00"
           />
           <XInput
             type="number"
-            step={0.01}
             control={form.control}
             name="avgSpeed"
+            step={1}
             label="Average speed"
+            placeholder="0"
           />
         </div>
         <div className="flex items-center justify-end gap-3">

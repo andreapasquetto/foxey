@@ -21,8 +21,6 @@ export function PlaceCreateForm(props: PlaceCreateFormProps) {
   const form = useForm<PlaceCreateForm>({
     resolver: zodResolver(placeCreateFormSchema),
     defaultValues: {
-      name: "",
-      address: "",
       isVisited: false,
     },
   });

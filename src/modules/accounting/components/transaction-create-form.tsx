@@ -26,6 +26,7 @@ import {
 } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfMinute } from "date-fns";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -35,8 +36,7 @@ export function TransactionCreateForm() {
   const form = useForm<TransactionCreateForm>({
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
-      datetime: new Date(),
-      amount: 0,
+      datetime: startOfMinute(new Date()),
     },
   });
 
@@ -137,7 +137,14 @@ export function TransactionCreateForm() {
             ))}
           </XSelect>
         </div>
-        <XInput control={form.control} name="amount" type="number" label="Amount" />
+        <XInput
+          type="number"
+          control={form.control}
+          name="amount"
+          step={0.01}
+          label="Amount"
+          placeholder="0.00"
+        />
         <XInput control={form.control} name="description" label="Description" />
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
