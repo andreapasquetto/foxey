@@ -59,7 +59,7 @@ export function ThisYearIncomeExpensesChart() {
           <YAxis tickLine={false} axisLine={false} domain={[0, "dataMax"]} />
           <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
           <Bar dataKey="income" fill="hsl(var(--foreground))" radius={2} />
-          <Bar dataKey="expenses" fill="hsl(0 84.2% 60.2%)" radius={2} />
+          <Bar dataKey="expenses" fill="hsl(var(--chart-accent))" radius={2} />
         </BarChart>
       </ChartContainer>
     </div>
@@ -73,7 +73,7 @@ function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
     <div className="space-y-3">
       <CardTitle>Income VS Expenses</CardTitle>
       <div className="relative h-[350px]">
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
           <Button variant="outline" onClick={props.onGenerateChart}>
             Generate Chart
           </Button>
@@ -85,7 +85,7 @@ function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
             <YAxis tickLine={false} axisLine={false} domain={[0, "dataMax"]} />
             <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
             <Bar dataKey="income" fill="hsl(var(--foreground))" radius={2} />
-            <Bar dataKey="expenses" fill="hsl(0 84.2% 60.2%)" radius={2} />
+            <Bar dataKey="expenses" fill="hsl(var(--chart-accent))" radius={2} />
           </BarChart>
         </ChartContainer>
       </div>
@@ -98,7 +98,7 @@ function NotEnoughDataSkeleton() {
     <div className="space-y-3">
       <CardTitle>Income VS Expenses</CardTitle>
       <div className="relative h-[350px] overflow-hidden rounded-md border border-dashed">
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
           <p className="text-sm text-muted-foreground">Not enough data.</p>
         </div>
       </div>

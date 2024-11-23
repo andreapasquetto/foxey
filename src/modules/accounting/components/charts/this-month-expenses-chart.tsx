@@ -79,7 +79,7 @@ function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
       <CardTitle>Expenses</CardTitle>
 
       <div className="relative h-[380px]">
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
           <Button variant="outline" onClick={props.onGenerateChart}>
             Generate Chart
           </Button>
@@ -111,7 +111,7 @@ function NotEnoughDataSkeleton() {
     <div className="space-y-3">
       <CardTitle>Expenses</CardTitle>
       <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
           <p className="text-sm text-muted-foreground">Not enough data.</p>
         </div>
       </div>
