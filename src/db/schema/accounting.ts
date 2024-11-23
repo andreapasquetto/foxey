@@ -13,7 +13,7 @@ import {
 export const wallets = pgTable("wallets", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
-  initialAmount: numeric("initial_amount").default("0"),
+  initialAmount: numeric("initial_amount").notNull().default("0"),
   amount: numeric("amount").notNull().default("0"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });

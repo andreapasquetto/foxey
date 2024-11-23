@@ -4,6 +4,7 @@ import { ThisMonthTrendChart } from "@/modules/accounting/components/charts/this
 import { ThisYearIncomeExpensesChart } from "@/modules/accounting/components/charts/this-year-income-expenses-chart";
 import { ThisMonthStats } from "@/modules/accounting/components/this-month-stats";
 import { Transactions } from "@/modules/accounting/components/transactions";
+import { WalletList } from "@/modules/accounting/components/wallet-list";
 
 export default function AccountingPage() {
   return (
@@ -12,6 +13,10 @@ export default function AccountingPage() {
       <section className="space-y-6">
         <Heading2>Transactions</Heading2>
         <Transactions />
+      </section>
+      <section className="space-y-6">
+        <Heading2>Wallets</Heading2>
+        <WalletList />
       </section>
       <section className="space-y-6">
         <Heading2>This month</Heading2>

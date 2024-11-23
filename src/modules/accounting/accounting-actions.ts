@@ -18,7 +18,7 @@ import { alias } from "drizzle-orm/pg-core";
 import { DateRange } from "react-day-picker";
 
 export async function walletsGetAll() {
-  return await db.select().from(wallets);
+  return await db.select().from(wallets).orderBy(desc(wallets.amount));
 }
 
 export async function walletCreate(wallet: WalletCreateForm) {
@@ -167,6 +167,8 @@ export async function transactionCreate(tx: TransactionCreateForm) {
     categoryId: tx.categoryId,
     placeId: tx.placeId,
     amount: tx.amount.toString(),
+
+    // TODO: if tx.description is undefined, DB saves it as "" instead of <NULL>
     description: tx.description,
   });
 }
