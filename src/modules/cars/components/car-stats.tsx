@@ -29,8 +29,10 @@ export default function CarStats() {
   if (!selectedCar) {
     return (
       <>
-        <div className="flex items-center justify-end gap-3">
-          <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+        <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
+          <div className="sm:w-[250px]">
+            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+          </div>
         </div>
         <p className="text-center text-sm text-muted-foreground">
           Select a car to see its statistics.
@@ -43,8 +45,10 @@ export default function CarStats() {
   if (isFetching) {
     return (
       <>
-        <div className="flex items-center justify-end gap-3">
-          <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+        <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
+          <div className="sm:w-[250px]">
+            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+          </div>
         </div>
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -107,8 +111,10 @@ export default function CarStats() {
   if (!refuelings.length) {
     return (
       <>
-        <div className="flex items-center justify-end gap-3">
-          <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+        <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
+          <div className="sm:w-[250px]">
+            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+          </div>
         </div>
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
@@ -182,8 +188,10 @@ export default function CarStats() {
 
   return (
     <>
-      <div className="flex items-center justify-end gap-3">
-        <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+      <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
+        <div className="sm:w-[250px]">
+          <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+        </div>
       </div>
       <div className="space-y-6">
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">

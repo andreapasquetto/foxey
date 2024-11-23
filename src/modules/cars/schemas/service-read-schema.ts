@@ -1,4 +1,4 @@
-import { CarRead } from "./car-read-schema";
+import { CarRead } from "@/modules/cars/schemas/car-read-schema";
 
 export interface ServiceRead {
   id: string;
