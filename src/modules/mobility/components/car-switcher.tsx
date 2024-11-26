@@ -20,8 +20,6 @@ interface CarSwitcherProps {
 }
 
 export function CarSwitcher(props: CarSwitcherProps) {
-  const [open, setOpen] = useState(false);
-
   const query = useCarsGetAllQuery();
 
   if (query.isFetching) {
@@ -29,14 +27,17 @@ export function CarSwitcher(props: CarSwitcherProps) {
   }
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           role="combobox"
           aria-expanded={!!open}
           aria-label="Select a team"
-          className={cn("w-full justify-between")}
+          className={cn(
+            "w-full justify-between px-3 py-2 font-normal",
+            !props.selectedCar && "text-muted-foreground",
+          )}
         >
           {props.selectedCar
             ? `${props.selectedCar.make} ${props.selectedCar.model}`
@@ -50,7 +51,6 @@ export function CarSwitcher(props: CarSwitcherProps) {
             <CommandItem
               onSelect={() => {
                 props.onSelectCar(undefined);
-                setOpen(false);
               }}
             >
               No car selected
@@ -64,7 +64,6 @@ export function CarSwitcher(props: CarSwitcherProps) {
                 key={car.id}
                 onSelect={() => {
                   props.onSelectCar(car);
-                  setOpen(false);
                 }}
                 className="gap-2 text-sm"
               >

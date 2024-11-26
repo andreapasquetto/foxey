@@ -6,6 +6,14 @@ import { DatePicker } from "@/components/date-picker";
 import { InputSkeleton } from "@/components/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
+import {
   Form,
   FormControl,
   FormField,
@@ -13,10 +21,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
 import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
+import { cn } from "@/lib/utils";
 import { useRefuelingCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
@@ -26,6 +36,7 @@ import {
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
+import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
@@ -85,20 +96,64 @@ export function RefuelingCreateForm() {
               </FormItem>
             )}
           />
-          <XSelect control={form.control} name="placeId" label="Place">
-            {places.map((place) => (
-              <XSelectOption key={place.id} value={place.id}>
-                {!place.category && <div>{place.name}</div>}
-                {place.category && (
-                  <div>
-                    <span>{place.category.name}</span>
-                    <span className="mx-1">•</span>
-                    <span className="text-muted-foreground">{place.name}</span>
-                  </div>
-                )}
-              </XSelectOption>
-            ))}
-          </XSelect>
+          <FormField
+            control={form.control}
+            name="placeId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col justify-end">
+                <FormLabel>Place</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "justify-between px-3 py-2 font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value
+                          ? places.find((place) => place.id === field.value)?.name
+                          : "Select an option"}
+                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-0">
+                    <Command>
+                      <CommandInput placeholder="Search..." />
+                      <CommandList>
+                        <CommandEmpty>No option found.</CommandEmpty>
+                        <CommandGroup>
+                          {places.map((place) => (
+                            <CommandItem
+                              value={
+                                place.category ? `${place.category.name}-${place.name}` : place.name
+                              }
+                              key={place.id}
+                              onSelect={() => {
+                                form.setValue("placeId", place.id);
+                              }}
+                            >
+                              {place.name}
+                              <Check
+                                className={cn(
+                                  "ml-auto",
+                                  place.id === field.value ? "opacity-100" : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <XInput

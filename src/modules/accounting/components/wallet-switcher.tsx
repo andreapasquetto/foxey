@@ -13,7 +13,6 @@ import { cn } from "@/lib/utils";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { CheckIcon, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
 
 interface WalletSwitcherProps {
   selectedWallet: WalletRead | undefined;
@@ -21,12 +20,10 @@ interface WalletSwitcherProps {
 }
 
 export function WalletSwitcher(props: WalletSwitcherProps) {
-  const [open, setOpen] = useState(false);
-
   const query = useWalletsGetAllQuery();
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
+    <Popover>
       {query.isFetching && <Skeleton className="h-10 w-full" />}
       {!query.isFetching && (
         <PopoverTrigger asChild>
@@ -35,7 +32,10 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
             role="combobox"
             aria-expanded={!!open}
             aria-label="Select a team"
-            className={cn("w-full justify-between")}
+            className={cn(
+              "w-full justify-between px-3 py-2 font-normal",
+              !props.selectedWallet && "text-muted-foreground",
+            )}
           >
             {props.selectedWallet?.name ?? "No wallet selected"}
             <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
@@ -48,7 +48,6 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
             <CommandItem
               onSelect={() => {
                 props.onSelectWallet(undefined);
-                setOpen(false);
               }}
               className="gap-2 text-sm"
             >
@@ -63,7 +62,6 @@ export function WalletSwitcher(props: WalletSwitcherProps) {
                 key={wallet.id}
                 onSelect={() => {
                   props.onSelectWallet(wallet);
-                  setOpen(false);
                 }}
                 className="gap-2 text-sm"
               >

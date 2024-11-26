@@ -6,6 +6,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { cn } from "@/lib/utils";
 import { ComponentProps, useId } from "react";
 import { Control, FieldValue, FieldValues, Path, useController } from "react-hook-form";
 
@@ -41,7 +42,7 @@ export function XSelect<T extends FieldValue<K>, K extends FieldValues>(props: X
           onValueChange={field.onChange}
           disabled={field.disabled || props.disabled}
         >
-          <SelectTrigger id={id}>
+          <SelectTrigger id={id} className={cn(!field.value && "text-muted-foreground")}>
             <SelectValue placeholder={props.placeholder ?? "Select an option"} />
           </SelectTrigger>
           <SelectContent>{props.children}</SelectContent>
