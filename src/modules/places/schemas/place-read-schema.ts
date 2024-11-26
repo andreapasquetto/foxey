@@ -1,4 +1,4 @@
-import { IdAndName } from "@/common/schemas/id-and-name-schema";
+import { IdAndName } from "@/common/types";
 
 export interface PlaceRead {
   id: string;

@@ -1,4 +1,4 @@
-import { IdAndName } from "@/common/schemas/id-and-name-schema";
+import { IdAndName } from "@/common/types";
 import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 
 interface TransactionCategory extends IdAndName {

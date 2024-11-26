@@ -1,3 +1,4 @@
+import { coercedOptionalString } from "@/common/schemas";
 import { z } from "zod";
 
 export const transactionCreateFormSchema = z.object({
@@ -7,7 +8,7 @@ export const transactionCreateFormSchema = z.object({
   categoryId: z.string().optional(),
   placeId: z.string().optional(),
   amount: z.number().min(0.01),
-  description: z.string().optional(),
+  description: coercedOptionalString,
 });
 
 export type TransactionCreateForm = z.infer<typeof transactionCreateFormSchema>;
