@@ -22,6 +22,7 @@ import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-
 import { OdometerChart } from "@/modules/mobility/components/charts/odometer-chart";
 import { CarRead } from "@/modules/mobility/schemas/car-read-schema";
 import { useState } from "react";
+import { cn } from "@/lib/utils";
 
 export default function CarStats() {
   const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);
@@ -189,6 +190,11 @@ export default function CarStats() {
     },
   };
 
+  const fuelCostPercentageFromLastMonth = calculatePercentageChange(
+    stats.fuelCosts.lastMonth,
+    stats.fuelCosts.thisMonth,
+  ).toNumber();
+
   return (
     <>
       <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
@@ -203,13 +209,14 @@ export default function CarStats() {
               <CardDescription>Monthly fuel costs</CardDescription>
               <CardTitle className="flex items-center gap-2">
                 {currencyFormatter.format(stats.fuelCosts.thisMonth)}
-                <Badge variant="outline">
-                  {percentageFormatter.format(
-                    calculatePercentageChange(
-                      stats.fuelCosts.lastMonth,
-                      stats.fuelCosts.thisMonth,
-                    ).toNumber(),
-                  )}
+                <Badge
+                  variant="outline"
+                  className={cn({
+                    "border-red-500": fuelCostPercentageFromLastMonth > 0,
+                    "border-green-500": fuelCostPercentageFromLastMonth < 0,
+                  })}
+                >
+                  {percentageFormatter.format(fuelCostPercentageFromLastMonth)}
                 </Badge>
               </CardTitle>
             </CardHeader>

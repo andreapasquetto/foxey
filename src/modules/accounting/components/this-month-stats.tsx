@@ -6,6 +6,7 @@ import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import {
   calculateTransactionsAmount,
@@ -119,16 +120,25 @@ export function ThisMonthStats() {
 }
 
 function IncomeCard(props: { thisMonth: number; lastMonth: number }) {
+  const percentageFromLastMonth = calculatePercentageChange(
+    props.lastMonth,
+    props.thisMonth,
+  ).toNumber();
+
   return (
     <div>
       <CardHeader className="pb-2">
         <CardDescription>Income</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisMonth)}
-          <Badge variant="outline" className="hidden sm:inline-block">
-            {percentageFormatter.format(
-              calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
-            )}
+          <Badge
+            variant="outline"
+            className={cn({
+              "border-red-500": percentageFromLastMonth < 0,
+              "border-green-500": percentageFromLastMonth > 0,
+            })}
+          >
+            {percentageFormatter.format(percentageFromLastMonth)}
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -142,16 +152,25 @@ function IncomeCard(props: { thisMonth: number; lastMonth: number }) {
 }
 
 function ExpensesCard(props: { thisMonth: number; lastMonth: number }) {
+  const percentageFromLastMonth = calculatePercentageChange(
+    props.lastMonth,
+    props.thisMonth,
+  ).toNumber();
+
   return (
     <div>
       <CardHeader className="pb-2">
         <CardDescription>Expenses</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisMonth)}
-          <Badge variant="outline" className="hidden sm:inline-block">
-            {percentageFormatter.format(
-              calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
-            )}
+          <Badge
+            variant="outline"
+            className={cn({
+              "border-red-500": percentageFromLastMonth > 0,
+              "border-green-500": percentageFromLastMonth < 0,
+            })}
+          >
+            {percentageFormatter.format(percentageFromLastMonth)}
           </Badge>
         </CardTitle>
       </CardHeader>
@@ -165,16 +184,26 @@ function ExpensesCard(props: { thisMonth: number; lastMonth: number }) {
 }
 
 function SavingCard(props: { thisMonth: number; lastMonth: number }) {
+  const percentageFromLastMonth = calculatePercentageChange(
+    props.lastMonth,
+    props.thisMonth,
+  ).toNumber();
+
   return (
     <div>
       <CardHeader className="pb-2">
         <CardDescription>Saved</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisMonth)}
-          <Badge variant="outline" className="hidden sm:inline-block">
-            {percentageFormatter.format(
-              calculatePercentageChange(props.lastMonth, props.thisMonth).toNumber(),
-            )}
+
+          <Badge
+            variant="outline"
+            className={cn({
+              "border-red-500": percentageFromLastMonth < 0,
+              "border-green-500": percentageFromLastMonth > 0,
+            })}
+          >
+            {percentageFormatter.format(percentageFromLastMonth)}
           </Badge>
         </CardTitle>
       </CardHeader>
