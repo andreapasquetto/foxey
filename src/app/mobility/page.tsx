@@ -28,14 +28,6 @@ export default function MobilityPage() {
           <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
             <DropdownMenuItem asChild>
               <Link
-                href="/mobility/cars/new"
-                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-              >
-                Add car <CarFront className="h-5 w-5" />
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link
                 href="/mobility/refuelings/new"
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
@@ -48,6 +40,14 @@ export default function MobilityPage() {
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
                 Add highway trip <Gauge className="h-5 w-5" />
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
+                href="/mobility/cars/new"
+                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+              >
+                Add car <CarFront className="h-5 w-5" />
               </Link>
             </DropdownMenuItem>
           </DropdownMenuContent>

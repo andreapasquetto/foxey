@@ -123,26 +123,17 @@ export default function CarStats() {
         <div className="space-y-6">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
             <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-              <CardHeader className="pb-2">
-                <CardDescription>Monthly fuel costs</CardDescription>
-              </CardHeader>
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-95% to-neutral-950 p-2">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
                 <p className="text-sm text-muted-foreground">Not enough data.</p>
               </div>
             </div>
             <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-              <CardHeader className="pb-2">
-                <CardDescription>Average distance before refueling</CardDescription>
-              </CardHeader>
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-95% to-neutral-950 p-2">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
                 <p className="text-sm text-muted-foreground">Not enough data.</p>
               </div>
             </div>
             <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-              <CardHeader className="pb-2">
-                <CardDescription>Last fuel economy</CardDescription>
-              </CardHeader>
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-95% to-neutral-950 p-2">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
                 <p className="text-sm text-muted-foreground">Not enough data.</p>
               </div>
             </div>
@@ -152,7 +143,7 @@ export default function CarStats() {
             <div className="space-y-3">
               <CardTitle>Fuel price</CardTitle>
               <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
                   <p className="text-sm text-muted-foreground">Not enough data.</p>
                 </div>
               </div>
@@ -160,7 +151,7 @@ export default function CarStats() {
             <div className="space-y-3">
               <CardTitle>Odometer</CardTitle>
               <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-950/95 from-10% to-neutral-950 p-2">
+                <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
                   <p className="text-sm text-muted-foreground">Not enough data.</p>
                 </div>
               </div>
@@ -209,15 +200,17 @@ export default function CarStats() {
               <CardDescription>Monthly fuel costs</CardDescription>
               <CardTitle className="flex items-center gap-2">
                 {currencyFormatter.format(stats.fuelCosts.thisMonth)}
-                <Badge
-                  variant="outline"
-                  className={cn({
-                    "border-red-500": fuelCostPercentageFromLastMonth > 0,
-                    "border-green-500": fuelCostPercentageFromLastMonth < 0,
-                  })}
-                >
-                  {percentageFormatter.format(fuelCostPercentageFromLastMonth)}
-                </Badge>
+                {stats.fuelCosts.lastMonth > 0 && !isNaN(fuelCostPercentageFromLastMonth) && (
+                  <Badge
+                    variant="outline"
+                    className={cn({
+                      "border-red-500": fuelCostPercentageFromLastMonth > 0,
+                      "border-green-500": fuelCostPercentageFromLastMonth < 0,
+                    })}
+                  >
+                    {percentageFormatter.format(fuelCostPercentageFromLastMonth)}
+                  </Badge>
+                )}
               </CardTitle>
             </CardHeader>
             <CardContent>

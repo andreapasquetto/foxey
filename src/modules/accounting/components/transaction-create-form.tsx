@@ -161,7 +161,14 @@ export function TransactionCreateForm() {
                                 form.setValue("categoryId", category.id);
                               }}
                             >
-                              {category.name}
+                              {!category.parent && <div>{category.name}</div>}
+                              {category.parent && (
+                                <div>
+                                  <span>{category.parent.name}</span>
+                                  <span className="mx-1">•</span>
+                                  <span className="text-muted-foreground">{category.name}</span>
+                                </div>
+                              )}
                               <Check
                                 className={cn(
                                   "ml-auto",

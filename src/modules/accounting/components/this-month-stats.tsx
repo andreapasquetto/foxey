@@ -131,15 +131,17 @@ function IncomeCard(props: { thisMonth: number; lastMonth: number }) {
         <CardDescription>Income</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisMonth)}
-          <Badge
-            variant="outline"
-            className={cn({
-              "border-red-500": percentageFromLastMonth < 0,
-              "border-green-500": percentageFromLastMonth > 0,
-            })}
-          >
-            {percentageFormatter.format(percentageFromLastMonth)}
-          </Badge>
+          {props.lastMonth > 0 && !isNaN(percentageFromLastMonth) && (
+            <Badge
+              variant="outline"
+              className={cn({
+                "border-red-500": percentageFromLastMonth < 0,
+                "border-green-500": percentageFromLastMonth > 0,
+              })}
+            >
+              {percentageFormatter.format(percentageFromLastMonth)}
+            </Badge>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -163,15 +165,17 @@ function ExpensesCard(props: { thisMonth: number; lastMonth: number }) {
         <CardDescription>Expenses</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisMonth)}
-          <Badge
-            variant="outline"
-            className={cn({
-              "border-red-500": percentageFromLastMonth > 0,
-              "border-green-500": percentageFromLastMonth < 0,
-            })}
-          >
-            {percentageFormatter.format(percentageFromLastMonth)}
-          </Badge>
+          {props.lastMonth > 0 && !isNaN(percentageFromLastMonth) && (
+            <Badge
+              variant="outline"
+              className={cn({
+                "border-red-500": percentageFromLastMonth > 0,
+                "border-green-500": percentageFromLastMonth < 0,
+              })}
+            >
+              {percentageFormatter.format(percentageFromLastMonth)}
+            </Badge>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -195,16 +199,17 @@ function SavingCard(props: { thisMonth: number; lastMonth: number }) {
         <CardDescription>Saved</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisMonth)}
-
-          <Badge
-            variant="outline"
-            className={cn({
-              "border-red-500": percentageFromLastMonth < 0,
-              "border-green-500": percentageFromLastMonth > 0,
-            })}
-          >
-            {percentageFormatter.format(percentageFromLastMonth)}
-          </Badge>
+          {props.lastMonth !== 0 && !isNaN(percentageFromLastMonth) && (
+            <Badge
+              variant="outline"
+              className={cn({
+                "border-red-500": percentageFromLastMonth < 0,
+                "border-green-500": percentageFromLastMonth > 0,
+              })}
+            >
+              {percentageFormatter.format(percentageFromLastMonth)}
+            </Badge>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent>

@@ -70,19 +70,19 @@ export function RefuelingCreateForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <XSelect control={form.control} name="carId" label="Car">
-          {cars.map((car) => (
-            <XSelectOption key={car.id} value={car.id}>
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
-                <div>
-                  {car.make} {car.model}
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <XSelect control={form.control} name="carId" label="Car">
+            {cars.map((car) => (
+              <XSelectOption key={car.id} value={car.id}>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <div>
+                    {car.make} {car.model}
+                  </div>
                 </div>
-              </div>
-            </XSelectOption>
-          ))}
-        </XSelect>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+              </XSelectOption>
+            ))}
+          </XSelect>
           <FormField
             control={form.control}
             name="datetime"
@@ -181,7 +181,7 @@ export function RefuelingCreateForm() {
             placeholder="0.000"
           />
         </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-2 gap-3">
           <XCheckbox control={form.control} name="isFull" label="Full Tank" />
           <XCheckbox control={form.control} name="isNecessary" label="Necessary" />
         </div>
