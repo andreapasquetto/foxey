@@ -11,4 +11,10 @@ export const transactionCreateFormSchema = z.object({
   description: coercedOptionalString,
 });
 
+export const transactionUpdateFormSchema = transactionCreateFormSchema.extend({
+  id: z.string(),
+});
+
 export type TransactionCreateForm = z.infer<typeof transactionCreateFormSchema>;
+
+export type TransactionUpdateForm = z.infer<typeof transactionUpdateFormSchema>;

@@ -12,6 +12,10 @@ export async function placeCategoriesGetAll() {
   return await db.select().from(placeCategories);
 }
 
+export async function placeCategoryGetById(id: string) {
+  return (await db.select().from(placeCategories).where(eq(placeCategories.id, id)))[0];
+}
+
 export async function placesGetPaginated(paginate: Paginate) {
   const categories = await placeCategoriesGetAll();
 
@@ -34,7 +38,6 @@ export async function placesGetPaginated(paginate: Paginate) {
 
 export async function placesGetAll() {
   const categories = await placeCategoriesGetAll();
-
   const records = await db.select().from(places).orderBy(places.categoryId, places.name);
 
   const result: PlaceRead[] = [];
@@ -44,6 +47,12 @@ export async function placesGetAll() {
   }
 
   return result;
+}
+
+export async function placeGetById(id: string) {
+  const record = (await db.select().from(places).where(eq(places.id, id)))[0];
+  const category = record.categoryId ? await placeCategoryGetById(record.categoryId) : null;
+  return { ...record, category };
 }
 
 export async function createPlace(place: PlaceCreateForm) {

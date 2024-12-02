@@ -1,6 +1,13 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { QueryPagination } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -13,7 +20,8 @@ import {
 import { cn } from "@/lib/utils";
 import { useTransactionsGetPaginatedQuery } from "@/modules/accounting/accounting-queries";
 import { format } from "date-fns";
-import { ChevronsRight } from "lucide-react";
+import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { DateRange } from "react-day-picker";
 
 interface RecentTransactionsProps {
@@ -124,6 +132,25 @@ export function TransactionList(props: RecentTransactionsProps) {
                   </code>
                 }
               </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`/accounting/transactions/${tx.id}`}
+                        className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                      >
+                        Edit <Edit className="h-5 w-5" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -143,6 +170,7 @@ function TableHeaderRow() {
       <TableHead>Tags</TableHead>
       <TableHead>Description</TableHead>
       <TableHead className="text-right">Amount</TableHead>
+      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -179,6 +207,9 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="ml-auto h-4 w-12" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="ml-auto h-9 w-11" />
       </TableCell>
     </TableRow>
   ));

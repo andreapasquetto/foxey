@@ -23,34 +23,67 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
 import { cn } from "@/lib/utils";
-import { useTransactionCreateMutation } from "@/modules/accounting/accounting-mutations";
+import { useTransactionUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   useTransactionCategoriesGetAllQuery,
+  useTransactionGetByIdQuery,
   useWalletsGetAllQuery,
 } from "@/modules/accounting/accounting-queries";
 import { TransactionFormSkeleton } from "@/modules/accounting/components/forms/transaction-form-skeleton";
 import {
-  type TransactionCreateForm,
-  transactionCreateFormSchema,
+  type TransactionUpdateForm,
+  transactionUpdateFormSchema,
 } from "@/modules/accounting/schemas/transaction-create-form-schema";
+import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export function TransactionCreateForm() {
-  const router = useRouter();
+interface TransactionUpdateFormProps {
+  id: string;
+}
 
-  const form = useForm<TransactionCreateForm>({
-    resolver: zodResolver(transactionCreateFormSchema),
+export function TransactionUpdateForm(props: TransactionUpdateFormProps) {
+  const router = useRouter();
+  const query = useTransactionGetByIdQuery(props.id);
+
+  if (!query.data) {
+    return <TransactionFormSkeleton />;
+  }
+
+  return (
+    <UpdateForm
+      transaction={query.data}
+      onUpdate={() => {
+        router.push("/accounting");
+      }}
+    />
+  );
+}
+
+interface UpdateFormProps {
+  transaction: TransactionRead;
+  onUpdate: () => void;
+}
+
+function UpdateForm(props: UpdateFormProps) {
+  const form = useForm<TransactionUpdateForm>({
+    resolver: zodResolver(transactionUpdateFormSchema),
     defaultValues: {
-      datetime: startOfMinute(new Date()),
+      id: props.transaction.id,
+      datetime: props.transaction.datetime,
+      fromWalletId: props.transaction.fromWallet?.id,
+      toWalletId: props.transaction.toWallet?.id,
+      categoryId: props.transaction.category?.id,
+      placeId: props.transaction.place?.id,
+      amount: Number(props.transaction.amount),
+      description: props.transaction.description ?? undefined,
     },
   });
 
-  const mutation = useTransactionCreateMutation();
+  const mutation = useTransactionUpdateMutation(props.transaction.id);
 
   const { data: wallets } = useWalletsGetAllQuery();
   const { data: categories } = useTransactionCategoriesGetAllQuery();
@@ -60,10 +93,10 @@ export function TransactionCreateForm() {
     return <TransactionFormSkeleton />;
   }
 
-  function onSubmit(values: TransactionCreateForm) {
+  function onSubmit(values: TransactionUpdateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/accounting");
+        props.onUpdate();
       },
     });
   }
@@ -125,7 +158,7 @@ export function TransactionCreateForm() {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="p-0">
+                  <PopoverContent className="p-0" align="end">
                     <Command>
                       <CommandInput placeholder="Search..." />
                       <CommandList>
@@ -192,7 +225,7 @@ export function TransactionCreateForm() {
                       </Button>
                     </FormControl>
                   </PopoverTrigger>
-                  <PopoverContent className="p-0">
+                  <PopoverContent className="p-0" align="end">
                     <Command>
                       <CommandInput placeholder="Search..." />
                       <CommandList>

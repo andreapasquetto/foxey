@@ -8,6 +8,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { Menu } from "lucide-react";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { ReactNode } from "react";
 
 import "./globals.css";
 
@@ -21,7 +22,7 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -44,7 +45,6 @@ export default function RootLayout({
                         <NavbarMobile />
                       </SheetContent>
                     </Sheet>
-
                     <div className="sm:hidden">
                       <ThemeToggle />
                     </div>

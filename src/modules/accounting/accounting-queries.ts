@@ -1,11 +1,13 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   transactionCategoriesQueryKey,
+  transactionQueryKey,
   transactionsQueryKey,
   walletsQueryKey,
 } from "@/common/query-keys";
 import {
   transactionCategoriesGetAll,
+  transactionGetById,
   transactionsGetAll,
   transactionsGetPaginated,
   walletsGetAll,
@@ -54,5 +56,13 @@ export function useTransactionsGetAllQuery(
     queryKey: transactionsQueryKey(params),
     queryFn: () => transactionsGetAll(params),
     enabled: params.enabled ?? true,
+  });
+}
+
+export function useTransactionGetByIdQuery(id: string) {
+  return useQuery({
+    queryKey: transactionQueryKey(id),
+    queryFn: () => transactionGetById(id),
+    enabled: true,
   });
 }

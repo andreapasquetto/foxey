@@ -36,21 +36,17 @@ export function transactionCategoriesQueryKey() {
 }
 
 export function transactionsQueryKey(
-  params: { walletId?: string; dateRange?: DateRange; searchFilter?: string } = {},
+  params: {
+    walletId?: string;
+    dateRange?: DateRange;
+    searchFilter?: string;
+  } = {},
 ) {
-  const key = ["transactions"];
+  return ["transactions", { ...params }];
+}
 
-  if (params.walletId) {
-    key.push(params.walletId);
-  }
-  if (params.dateRange) {
-    key.push(`from-${params.dateRange.from ?? "start"}`, `to-${params.dateRange.to ?? "finish"}`);
-  }
-  if (params.searchFilter) {
-    key.push(`search-${params.searchFilter}`);
-  }
-
-  return key;
+export function transactionQueryKey(id: string) {
+  return ["transactions", id];
 }
 
 export function transactionDeleteQueryKey(id: string) {
