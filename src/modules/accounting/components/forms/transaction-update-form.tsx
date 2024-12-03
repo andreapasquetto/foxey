@@ -30,11 +30,11 @@ import {
   useWalletsGetAllQuery,
 } from "@/modules/accounting/accounting-queries";
 import { TransactionFormSkeleton } from "@/modules/accounting/components/forms/transaction-form-skeleton";
+import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import {
   type TransactionUpdateForm,
   transactionUpdateFormSchema,
-} from "@/modules/accounting/schemas/transaction-create-form-schema";
-import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
+} from "@/modules/accounting/schemas/transaction-update-form-schema";
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";

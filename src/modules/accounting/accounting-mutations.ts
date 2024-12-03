@@ -9,12 +9,12 @@ import {
   transactionDelete,
   transactionUpdate,
   walletCreate,
+  walletUpdate,
 } from "@/modules/accounting/accounting-actions";
-import {
-  TransactionCreateForm,
-  TransactionUpdateForm,
-} from "@/modules/accounting/schemas/transaction-create-form-schema";
+import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
+import { TransactionUpdateForm } from "@/modules/accounting/schemas/transaction-update-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
+import { WalletUpdateForm } from "@/modules/accounting/schemas/wallet-update-form-schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useWalletCreateMutation() {
@@ -22,6 +22,15 @@ export function useWalletCreateMutation() {
   return useMutation({
     mutationKey: walletsQueryKey(),
     mutationFn: (wallet: WalletCreateForm) => walletCreate(wallet),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: walletsQueryKey() }),
+  });
+}
+
+export function useWalletUpdateMutation(id: string) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: walletsQueryKey(id),
+    mutationFn: (wallet: WalletUpdateForm) => walletUpdate(wallet),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: walletsQueryKey() }),
   });
 }

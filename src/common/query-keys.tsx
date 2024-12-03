@@ -27,8 +27,8 @@ export function contactDeleteQueryKey(id: string) {
   return ["contacts", id, "delete"];
 }
 
-export function walletsQueryKey() {
-  return ["wallets"];
+export function walletsQueryKey(id?: string) {
+  return ["wallets", id];
 }
 
 export function transactionCategoriesQueryKey() {

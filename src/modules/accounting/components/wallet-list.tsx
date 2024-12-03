@@ -1,6 +1,13 @@
 "use client";
 
 import { rawCurrencyFormatter } from "@/common/formatters";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -12,6 +19,8 @@ import {
 } from "@/components/ui/table";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { format } from "date-fns";
+import { Edit, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 
 export function WalletList() {
   const walletsQuery = useWalletsGetAllQuery();
@@ -58,6 +67,25 @@ export function WalletList() {
               <TableCell>
                 <code>{rawCurrencyFormatter.format(parseFloat(wallet.amount))}</code>
               </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`/accounting/wallets/${wallet.id}`}
+                        className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                      >
+                        Edit <Edit className="h-5 w-5" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -73,6 +101,7 @@ function TableHeaderRow() {
       <TableHead>Name</TableHead>
       <TableHead>Initial amount</TableHead>
       <TableHead>Current amount</TableHead>
+      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -91,6 +120,9 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="ml-auto h-9 w-11" />
       </TableCell>
     </TableRow>
   ));

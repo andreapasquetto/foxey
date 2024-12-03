@@ -9,12 +9,11 @@ import {
   transactionTags,
   wallets,
 } from "@/db/schema/accounting";
-import {
-  TransactionCreateForm,
-  TransactionUpdateForm,
-} from "@/modules/accounting/schemas/transaction-create-form-schema";
+import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
+import { TransactionUpdateForm } from "@/modules/accounting/schemas/transaction-update-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
+import { WalletUpdateForm } from "@/modules/accounting/schemas/wallet-update-form-schema";
 import { placeGetById, placesGetAll } from "@/modules/places/places-actions";
 import { and, between, desc, eq, ilike, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
@@ -24,7 +23,7 @@ export async function walletsGetAll() {
   return await db.select().from(wallets).orderBy(desc(wallets.amount));
 }
 
-async function walletGetById(id: string) {
+export async function walletGetById(id: string) {
   return (await db.select().from(wallets).where(eq(wallets.id, id)))[0];
 }
 
@@ -34,6 +33,15 @@ export async function walletCreate(wallet: WalletCreateForm) {
     initialAmount: wallet.initialAmount.toString(),
     amount: (wallet.initialAmount ?? 0).toString(),
   });
+}
+
+export async function walletUpdate(wallet: WalletUpdateForm) {
+  await db
+    .update(wallets)
+    .set({
+      name: wallet.name,
+    })
+    .where(eq(wallets.id, wallet.id));
 }
 
 export async function transactionCategoriesGetAll() {

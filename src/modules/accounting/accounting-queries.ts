@@ -10,6 +10,7 @@ import {
   transactionGetById,
   transactionsGetAll,
   transactionsGetPaginated,
+  walletGetById,
   walletsGetAll,
 } from "@/modules/accounting/accounting-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
@@ -19,6 +20,14 @@ export function useWalletsGetAllQuery() {
   return useQuery({
     queryKey: walletsQueryKey(),
     queryFn: () => walletsGetAll(),
+  });
+}
+
+export function useWalletGetByIdQuery(id: string) {
+  return useQuery({
+    queryKey: walletsQueryKey(id),
+    queryFn: () => walletGetById(id),
+    enabled: true,
   });
 }
 
