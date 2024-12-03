@@ -61,8 +61,7 @@ export function TransactionList(props: RecentTransactionsProps) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          {props.walletId && "No transactions found for the selected wallet."}
-          {!props.walletId && "There are no transactions."}
+          No transactions found for the selected filters.
         </p>
       </div>
     );

@@ -1,11 +1,17 @@
 "use client";
 
 import { thisMonthToDateRange } from "@/common/dates";
+import { ChipCombobox } from "@/components/chip-combobox";
 import { RangeDatePicker } from "@/components/range-date-picker";
 import { Input } from "@/components/ui/input";
+import {
+  useTransactionCategoriesGetAllQuery,
+  useWalletsGetAllQuery,
+} from "@/modules/accounting/accounting-queries";
 import { TransactionList } from "@/modules/accounting/components/transaction-list";
 import { TransactionCategoryRead } from "@/modules/accounting/schemas/transaction-category-read-schema";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
+import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
@@ -21,20 +27,72 @@ export function Transactions() {
   );
   const [selectedPlace, setSelectedPlace] = useState<PlaceRead | undefined>(undefined);
 
+  const walletsQuery = useWalletsGetAllQuery();
+  const placesQuery = usePlacesGetAllQuery();
+  const categoriesQuery = useTransactionCategoriesGetAllQuery();
+
   return (
     <>
-      <div className="gap-3 space-y-3 lg:grid lg:grid-cols-7 lg:space-y-0">
-        <div className="sm:col-span-full lg:col-span-5">
+      <div className="flex-wrap items-center gap-3 space-y-3 sm:flex sm:space-y-0">
+        <div className="shrink-0 sm:w-[250px]">
           <Input
             value={searchFilter}
             onChange={(e) => setSearchFilter(e.target.value)}
             placeholder="Search..."
           />
         </div>
-        <div className="sm:col-span-1 lg:col-span-2">
+        <div>
           <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} showPresets />
         </div>
-        {/* TODO: add wallet, place and category filters */}
+        <div className="flex-wrap items-center gap-1 space-y-1 sm:flex sm:space-y-0">
+          <div>
+            <ChipCombobox
+              label="Wallet"
+              selectedValue={selectedWallet}
+              onSelectValue={setSelectedWallet}
+              options={walletsQuery.data}
+              optionIndexer={(option) => option.name}
+              optionFormatter={(option) => option.name}
+            />
+          </div>
+          <div>
+            <ChipCombobox
+              label="Place"
+              selectedValue={selectedPlace}
+              onSelectValue={setSelectedPlace}
+              options={placesQuery.data}
+              optionIndexer={(option) =>
+                option.category ? `${option.category.name}-${option.name}` : option.name
+              }
+              optionFormatter={(option) => option.name}
+              withSearch
+            />
+          </div>
+          <div>
+            <ChipCombobox
+              label="Category"
+              selectedValue={selectedCategory}
+              onSelectValue={setSelectedCategory}
+              options={categoriesQuery.data}
+              optionIndexer={(option) =>
+                option.parent ? `${option.parent.name}-${option.name}` : option.name
+              }
+              optionFormatter={(option) => (
+                <>
+                  {!option.parent && <div>{option.name}</div>}
+                  {option.parent && (
+                    <div>
+                      <span className="text-muted-foreground">{option.parent.name}</span>
+                      <span className="mx-1">•</span>
+                      <span>{option.name}</span>
+                    </div>
+                  )}
+                </>
+              )}
+              withSearch
+            />
+          </div>
+        </div>
       </div>
       <TransactionList
         searchFilter={searchFilter}
