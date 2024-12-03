@@ -26,16 +26,20 @@ import Link from "next/link";
 import { DateRange } from "react-day-picker";
 
 interface RecentTransactionsProps {
-  walletId?: string;
-  dateRange?: DateRange;
   searchFilter?: string;
+  dateRange?: DateRange;
+  walletId?: string;
+  placeId?: string;
+  categoryId?: string;
 }
 
 export function TransactionList(props: RecentTransactionsProps) {
   const transactionsQuery = useTransactionsGetPaginatedQuery({
-    walletId: props.walletId,
-    dateRange: props.dateRange,
     searchFilter: props.searchFilter,
+    dateRange: props.dateRange,
+    walletId: props.walletId,
+    placeId: props.placeId,
+    categoryId: props.categoryId,
   });
 
   if (!transactionsQuery.data) {

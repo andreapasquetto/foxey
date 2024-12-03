@@ -40,9 +40,11 @@ export function useTransactionCategoriesGetAllQuery() {
 
 export function useTransactionsGetPaginatedQuery(
   params: {
-    walletId?: string;
-    dateRange?: DateRange;
     searchFilter?: string;
+    dateRange?: DateRange;
+    walletId?: string;
+    placeId?: string;
+    categoryId?: string;
   } = {},
 ) {
   return usePaginatedQuery({
@@ -50,9 +52,11 @@ export function useTransactionsGetPaginatedQuery(
     queryFn: (paginate) =>
       transactionsGetPaginated({
         paginate,
-        walletId: params.walletId,
-        dateRange: params.dateRange,
         searchFilter: params.searchFilter,
+        dateRange: params.dateRange,
+        walletId: params.walletId,
+        placeId: params.placeId,
+        categoryId: params.categoryId,
       }),
     placeholderData: keepPreviousData,
   });

@@ -5,26 +5,19 @@ export function carsQueryKey() {
 }
 
 export function refuelingsQueryKey(carId?: string) {
-  if (carId) return ["refuelings", carId];
-  return ["refuelings"];
+  return ["refuelings", carId];
 }
 
 export function servicesQueryKey(carId?: string) {
-  if (carId) return ["services", carId];
-  return ["services"];
+  return ["services", carId];
 }
 
 export function highwayTripsQueryKey(carId?: string) {
-  if (carId) return ["highway-trips", carId];
-  return ["highway-trips"];
+  return ["highway-trips", carId];
 }
 
-export function contactsQueryKey() {
-  return ["contacts"];
-}
-
-export function contactDeleteQueryKey(id: string) {
-  return ["contacts", id, "delete"];
+export function contactsQueryKey(id?: string) {
+  return ["contacts", id];
 }
 
 export function walletsQueryKey(id?: string) {
@@ -37,9 +30,11 @@ export function transactionCategoriesQueryKey() {
 
 export function transactionsQueryKey(
   params: {
-    walletId?: string;
-    dateRange?: DateRange;
     searchFilter?: string;
+    dateRange?: DateRange;
+    walletId?: string;
+    placeId?: string;
+    categoryId?: string;
   } = {},
 ) {
   return ["transactions", { ...params }];
@@ -49,18 +44,10 @@ export function transactionQueryKey(id: string) {
   return ["transactions", id];
 }
 
-export function transactionDeleteQueryKey(id: string) {
-  return ["transactions", id, "delete"];
-}
-
 export function placeCategoriesQueryKey() {
   return ["place-categories"];
 }
 
-export function placesQueryKey() {
-  return ["places"];
-}
-
-export function placeDeleteQueryKey(id: string) {
-  return ["places", id, "delete"];
+export function placesQueryKey(id?: string) {
+  return ["places", id];
 }

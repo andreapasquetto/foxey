@@ -81,9 +81,11 @@ async function transactionCategoryGetById(id: string) {
 
 export async function transactionsGetPaginated(params: {
   paginate: Paginate;
-  walletId?: string;
-  dateRange?: DateRange;
   searchFilter?: string;
+  dateRange?: DateRange;
+  walletId?: string;
+  placeId?: string;
+  categoryId?: string;
 }) {
   const wallets = await walletsGetAll();
   const categories = await transactionCategoriesGetAll();
@@ -96,18 +98,20 @@ export async function transactionsGetPaginated(params: {
     .from(transactions)
     .where(
       and(
+        params.searchFilter
+          ? ilike(transactions.description, `%${params.searchFilter}%`)
+          : undefined,
+        params.dateRange?.from && params.dateRange.to
+          ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
+          : undefined,
         params.walletId
           ? or(
               eq(transactions.fromWalletId, params.walletId),
               eq(transactions.toWalletId, params.walletId),
             )
           : undefined,
-        params.dateRange?.from && params.dateRange.to
-          ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
-          : undefined,
-        params.searchFilter
-          ? ilike(transactions.description, `%${params.searchFilter}%`)
-          : undefined,
+        params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
+        params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
       ),
     )
     .limit(limit)
@@ -252,27 +256,31 @@ export async function transactionDelete(id: string) {
 
 async function transactionsCountTotal(params: {
   paginate: Paginate;
-  walletId?: string;
-  dateRange?: DateRange;
   searchFilter?: string;
+  dateRange?: DateRange;
+  walletId?: string;
+  placeId?: string;
+  categoryId?: string;
 }) {
   const records = await db
     .select()
     .from(transactions)
     .where(
       and(
+        params.searchFilter
+          ? ilike(transactions.description, `%${params.searchFilter}%`)
+          : undefined,
+        params.dateRange?.from && params.dateRange.to
+          ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
+          : undefined,
         params.walletId
           ? or(
               eq(transactions.fromWalletId, params.walletId),
               eq(transactions.toWalletId, params.walletId),
             )
           : undefined,
-        params.dateRange?.from && params.dateRange.to
-          ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
-          : undefined,
-        params.searchFilter
-          ? ilike(transactions.description, `%${params.searchFilter}%`)
-          : undefined,
+        params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
+        params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
       ),
     );
 

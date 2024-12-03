@@ -1,9 +1,4 @@
-import {
-  transactionDeleteQueryKey,
-  transactionQueryKey,
-  transactionsQueryKey,
-  walletsQueryKey,
-} from "@/common/query-keys";
+import { transactionQueryKey, transactionsQueryKey, walletsQueryKey } from "@/common/query-keys";
 import {
   transactionCreate,
   transactionDelete,
@@ -64,7 +59,7 @@ export function useTransactionUpdateMutation(id: string) {
 export function useTransactionDeleteMutation(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationKey: transactionDeleteQueryKey(id),
+    mutationKey: transactionQueryKey(id),
     mutationFn: (id: string) => transactionDelete(id),
     onSuccess: () =>
       Promise.all([
