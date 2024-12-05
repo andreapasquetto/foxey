@@ -1,5 +1,4 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
-import { placeCategoriesQueryKey, placesQueryKey } from "@/common/query-keys";
 import {
   placeCategoriesGetAll,
   placesGetAll,
@@ -9,14 +8,14 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export function usePlaceCategoriesQuery() {
   return useQuery({
-    queryKey: placeCategoriesQueryKey(),
+    queryKey: ["place-categories"],
     queryFn: () => placeCategoriesGetAll(),
   });
 }
 
 export function usePlacesPaginatedQuery() {
   return usePaginatedQuery({
-    queryKey: placesQueryKey(),
+    queryKey: ["places"],
     queryFn: (paginate) => placesGetPaginated(paginate),
     placeholderData: keepPreviousData,
   });
@@ -24,7 +23,7 @@ export function usePlacesPaginatedQuery() {
 
 export function usePlacesGetAllQuery() {
   return useQuery({
-    queryKey: placesQueryKey(),
+    queryKey: ["places"],
     queryFn: () => placesGetAll(),
   });
 }

@@ -1,11 +1,5 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
-  carsQueryKey,
-  highwayTripsQueryKey,
-  refuelingsQueryKey,
-  servicesQueryKey,
-} from "@/common/query-keys";
-import {
   carsGetAll,
   highwayTripsGetPaginated,
   refuelingsGetAll,
@@ -17,21 +11,21 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
 export function useCarsGetAllQuery() {
   return useQuery({
-    queryKey: carsQueryKey(),
+    queryKey: ["cars"],
     queryFn: () => carsGetAll(),
   });
 }
 
 export function useRefuelingsGetAllQuery(carId?: string) {
   return useQuery({
-    queryKey: refuelingsQueryKey(carId),
+    queryKey: ["refuelings", { carId }],
     queryFn: () => refuelingsGetAll(carId),
   });
 }
 
 export function useRefuelingsGetPaginatedQuery(carId?: string) {
   return usePaginatedQuery({
-    queryKey: refuelingsQueryKey(carId),
+    queryKey: ["refuelings", { carId }],
     queryFn: (paginate) => refuelingsGetPaginated({ paginate, carId }),
     placeholderData: keepPreviousData,
   });
@@ -39,14 +33,14 @@ export function useRefuelingsGetPaginatedQuery(carId?: string) {
 
 export function useServicesGetAllQuery(carId?: string) {
   return useQuery({
-    queryKey: servicesQueryKey(carId),
+    queryKey: ["services", { carId }],
     queryFn: () => servicesGetAll(carId),
   });
 }
 
 export function useServicesGetPaginatedQuery(carId?: string) {
   return usePaginatedQuery({
-    queryKey: servicesQueryKey(carId),
+    queryKey: ["services", { carId }],
     queryFn: (paginate) => servicesGetPaginated({ paginate, carId }),
     placeholderData: keepPreviousData,
   });
@@ -54,7 +48,7 @@ export function useServicesGetPaginatedQuery(carId?: string) {
 
 export function useHighwayTripsGetPaginatedQuery(carId?: string) {
   return usePaginatedQuery({
-    queryKey: highwayTripsQueryKey(carId),
+    queryKey: ["highway-trips", { carId }],
     queryFn: (paginate) => highwayTripsGetPaginated({ paginate, carId }),
     placeholderData: keepPreviousData,
   });

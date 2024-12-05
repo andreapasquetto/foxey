@@ -62,7 +62,7 @@ export function usePaginatedQuery<T>(
   const query = useQuery({
     ...options,
     queryFn: () => options.queryFn({ page, pageSize }),
-    queryKey: [options.queryKey, page, pageSize],
+    queryKey: [...options.queryKey, page, pageSize],
   });
 
   useEffect(() => {
