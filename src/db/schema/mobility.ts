@@ -1,5 +1,4 @@
-import { places } from "@/db/schema/places";
-import { relations } from "drizzle-orm";
+import { transactions } from "@/db/schema/accounting";
 import { boolean, integer, numeric, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const cars = pgTable("cars", {
@@ -9,20 +8,19 @@ export const cars = pgTable("cars", {
   model: varchar("model").notNull(),
 });
 
-// TODO: add transactionId for tracking the payment of a refueling
 export const refuelings = pgTable("car_refuelings", {
   id: uuid("id").defaultRandom().primaryKey(),
+  transactionId: uuid("transaction_id")
+    .notNull()
+    .references(() => transactions.id),
   carId: uuid("car_id")
     .notNull()
     .references(() => cars.id),
-  ron: integer("ron").default(95),
-  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
-  placeId: uuid("place_id").references(() => places.id),
-  cost: numeric("cost").notNull(),
+  ron: integer("ron").notNull().default(95),
   quantity: numeric("quantity").notNull(),
   price: numeric("price").notNull(),
-  isFull: boolean("is_full").default(false),
-  isNecessary: boolean("is_necessary").default(true),
+  isFull: boolean("is_full").notNull().default(false),
+  isNecessary: boolean("is_necessary").notNull().default(true),
   trip: numeric("trip"),
   odometer: numeric("odometer").notNull(),
 });
@@ -49,22 +47,3 @@ export const services = pgTable("car_services", {
   datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
   odometer: numeric("odometer").notNull(),
 });
-
-export const carRelations = relations(cars, ({ many }) => ({
-  refuelings: many(refuelings),
-  highwayTrips: many(highwayTrips),
-}));
-
-export const refuelingRelations = relations(refuelings, ({ one }) => ({
-  cars: one(cars, {
-    fields: [refuelings.carId],
-    references: [cars.id],
-  }),
-}));
-
-export const highwayTripRelations = relations(highwayTrips, ({ one }) => ({
-  cars: one(cars, {
-    fields: [highwayTrips.carId],
-    references: [cars.id],
-  }),
-}));

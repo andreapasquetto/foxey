@@ -2,13 +2,14 @@
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { db } from "@/db/db";
+import { transactions } from "@/db/schema/accounting";
 import { cars, highwayTrips, refuelings, services } from "@/db/schema/mobility";
+import { transactionGetById } from "@/modules/accounting/accounting-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
 import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
 import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
-import { placesGetAll } from "@/modules/places/places-actions";
 import { desc, eq } from "drizzle-orm";
 
 export async function carsGetAll() {
@@ -21,19 +22,23 @@ export async function carCreate(car: CarCreateForm) {
 
 export async function refuelingsGetAll(carId?: string) {
   const cars = await carsGetAll();
-  const places = await placesGetAll();
 
   const records = await db
     .select()
     .from(refuelings)
+    .innerJoin(transactions, eq(refuelings.transactionId, transactions.id))
     .where(carId ? eq(refuelings.carId, carId) : undefined)
-    .orderBy(refuelings.datetime);
+    .orderBy(transactions.datetime);
 
   const result: RefuelingRead[] = [];
   for (const record of records) {
-    const car = cars.find((c) => c.id === record.carId)!;
-    const place = places.find((p) => p.id === record.placeId) ?? null;
-    result.push({ ...record, car, place });
+    const car = cars.find((c) => c.id === record.car_refuelings.carId)!;
+    const transaction = await transactionGetById(record.transactions.id);
+    result.push({
+      ...record.car_refuelings,
+      car,
+      transaction,
+    });
   }
 
   return result;
@@ -44,38 +49,55 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
 
   const cars = await carsGetAll();
-  const places = await placesGetAll();
 
   const records = await db
     .select()
     .from(refuelings)
+    .innerJoin(transactions, eq(refuelings.transactionId, transactions.id))
     .where(options.carId ? eq(refuelings.carId, options.carId) : undefined)
     .limit(limit)
     .offset(offset)
-    .orderBy(desc(refuelings.datetime));
+    .orderBy(desc(transactions.datetime));
 
   const result: RefuelingRead[] = [];
   for (const record of records) {
-    const car = cars.find((c) => c.id === record.carId)!;
-    const place = places.find((p) => p.id === record.placeId) ?? null;
-    result.push({ ...record, car, place });
+    const car = cars.find((c) => c.id === record.car_refuelings.carId)!;
+    const transaction = await transactionGetById(record.transactions.id);
+    result.push({
+      ...record.car_refuelings,
+      car,
+      transaction,
+    });
   }
 
   return toPaginated(result, total);
 }
 
 export async function refuelingCreate(refueling: RefuelingCreateForm) {
-  await db.insert(refuelings).values({
-    carId: refueling.carId,
-    datetime: refueling.datetime,
-    placeId: refueling.placeId,
-    price: String(refueling.price),
-    quantity: String(refueling.quantity),
-    cost: String(refueling.cost),
-    isFull: refueling.isFull,
-    isNecessary: refueling.isNecessary,
-    trip: refueling.trip ? String(refueling.trip) : undefined,
-    odometer: String(refueling.odometer),
+  await db.transaction(async (tx) => {
+    const newTransactionRecord = (
+      await tx
+        .insert(transactions)
+        .values({
+          datetime: refueling.datetime,
+          fromWalletId: refueling.walletId,
+          placeId: refueling.placeId,
+          amount: refueling.cost.toString(),
+          description: refueling.description,
+        })
+        .returning({ id: transactions.id })
+    )[0];
+
+    await tx.insert(refuelings).values({
+      carId: refueling.carId,
+      transactionId: newTransactionRecord.id,
+      price: String(refueling.price),
+      quantity: String(refueling.quantity),
+      isFull: refueling.isFull,
+      isNecessary: refueling.isNecessary,
+      trip: refueling.trip ? String(refueling.trip) : undefined,
+      odometer: String(refueling.odometer),
+    });
   });
 }
 

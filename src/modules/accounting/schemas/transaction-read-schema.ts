@@ -6,13 +6,13 @@ interface TransactionCategory extends IdAndName {
 }
 
 export interface TransactionRead {
-  datetime: Date;
   id: string;
-  amount: string;
+  datetime: Date;
   fromWallet: IdAndName | null;
   toWallet: IdAndName | null;
   category: TransactionCategory | null;
   place: PlaceRead | null;
   description: string | null;
+  amount: string;
   tags: IdAndName[];
 }

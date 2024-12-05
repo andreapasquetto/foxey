@@ -17,15 +17,21 @@ export function extractRefuelingPeriods(refuelings: RefuelingRead[]) {
   const startOfLastYear = startOfYear(sub(today, { years: 1 }));
 
   return {
-    thisMonth: refuelings.filter((refueling) => isSameMonth(refueling.datetime, today)),
-    lastMonth: refuelings.filter((refueling) => isSameMonth(refueling.datetime, startOfLastMonth)),
-    thisYear: refuelings.filter((refueling) => isSameYear(refueling.datetime, today)),
-    lastYear: refuelings?.filter((refueling) => isSameYear(refueling.datetime, startOfLastYear)),
+    thisMonth: refuelings.filter((refueling) => isSameMonth(refueling.transaction.datetime, today)),
+    lastMonth: refuelings.filter((refueling) =>
+      isSameMonth(refueling.transaction.datetime, startOfLastMonth),
+    ),
+    thisYear: refuelings.filter((refueling) => isSameYear(refueling.transaction.datetime, today)),
+    lastYear: refuelings?.filter((refueling) =>
+      isSameYear(refueling.transaction.datetime, startOfLastYear),
+    ),
   };
 }
 
 export function calculateMonthlyCost(refuelings: RefuelingRead[]) {
-  return refuelings.reduce((prev, curr) => prev.add(curr.cost), new Decimal(0)).toNumber();
+  return refuelings
+    .reduce((prev, curr) => prev.add(curr.transaction.amount), new Decimal(0))
+    .toNumber();
 }
 
 export function getEligibleRefuelings(refuelings: RefuelingRead[]) {
@@ -84,7 +90,7 @@ export function generateOdometerChartData(params: {
 }) {
   return [
     ...params.refuelings.map((refueling) => ({
-      datetime: refueling.datetime,
+      datetime: refueling.transaction.datetime,
       refueling: Number(refueling.odometer),
     })),
     ...params.services.map((service) => ({

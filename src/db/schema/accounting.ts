@@ -1,5 +1,4 @@
 import { places } from "@/db/schema/places";
-import { relations } from "drizzle-orm";
 import {
   AnyPgColumn,
   numeric,
@@ -54,14 +53,3 @@ export const transactionTags = pgTable(
     pk: primaryKey({ columns: [table.transactionId, table.tagId] }),
   }),
 );
-
-export const transactionCategoriesRelations = relations(transactionCategories, ({ many }) => ({
-  transactions: many(transactions),
-}));
-
-export const transactionRelations = relations(transactions, ({ one }) => ({
-  transactionCategories: one(transactionCategories, {
-    fields: [transactions.categoryId],
-    references: [transactionCategories.id],
-  }),
-}));

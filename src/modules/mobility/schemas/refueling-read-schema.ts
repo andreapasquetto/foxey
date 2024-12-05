@@ -1,17 +1,15 @@
+import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { CarRead } from "@/modules/mobility/schemas/car-read-schema";
-import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 
 export interface RefuelingRead {
   id: string;
-  datetime: Date;
   car: CarRead;
-  place: PlaceRead | null;
-  ron: number | null;
-  cost: string;
+  transaction: TransactionRead;
+  ron: number;
   quantity: string;
   price: string;
-  isFull: boolean | null;
-  isNecessary: boolean | null;
+  isFull: boolean;
+  isNecessary: boolean;
   trip: string | null;
   odometer: string;
 }

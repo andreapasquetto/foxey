@@ -27,6 +27,7 @@ import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
 import { cn } from "@/lib/utils";
+import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { useRefuelingCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
@@ -53,9 +54,10 @@ export function RefuelingCreateForm() {
   const mutation = useRefuelingCreateMutation();
 
   const { data: cars } = useCarsGetAllQuery();
+  const { data: wallets } = useWalletsGetAllQuery();
   const { data: places } = usePlacesGetAllQuery();
 
-  if (!cars || !places) {
+  if (!cars || !wallets || !places) {
     return <ComponentSkeleton />;
   }
 
@@ -70,19 +72,7 @@ export function RefuelingCreateForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XSelect control={form.control} name="carId" label="Car">
-            {cars.map((car) => (
-              <XSelectOption key={car.id} value={car.id}>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
-                  <div>
-                    {car.make} {car.model}
-                  </div>
-                </div>
-              </XSelectOption>
-            ))}
-          </XSelect>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <FormField
             control={form.control}
             name="datetime"
@@ -154,6 +144,25 @@ export function RefuelingCreateForm() {
               </FormItem>
             )}
           />
+          <XSelect control={form.control} name="carId" label="Car">
+            {cars.map((car) => (
+              <XSelectOption key={car.id} value={car.id}>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <div>
+                    {car.make} {car.model}
+                  </div>
+                </div>
+              </XSelectOption>
+            ))}
+          </XSelect>
+          <XSelect control={form.control} name="walletId" label="Wallet">
+            {wallets.map((w) => (
+              <XSelectOption key={w.id} value={w.id}>
+                {w.name}
+              </XSelectOption>
+            ))}
+          </XSelect>
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <XInput
@@ -203,6 +212,7 @@ export function RefuelingCreateForm() {
             placeholder="0"
           />
         </div>
+        <XInput control={form.control} name="description" label="Description" />
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
@@ -217,8 +227,9 @@ export function RefuelingCreateForm() {
 function ComponentSkeleton() {
   return (
     <div className="space-y-4 py-2 pb-4">
-      <InputSkeleton />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <InputSkeleton />
+        <InputSkeleton />
         <InputSkeleton />
         <InputSkeleton />
       </div>
@@ -235,6 +246,7 @@ function ComponentSkeleton() {
         <InputSkeleton />
         <InputSkeleton />
       </div>
+      <InputSkeleton />
       <div className="flex items-center justify-end gap-3">
         <Skeleton className="h-10 w-20 text-right" />
       </div>

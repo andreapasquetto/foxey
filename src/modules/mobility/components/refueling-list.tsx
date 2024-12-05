@@ -55,17 +55,17 @@ export function RefuelingList(props: RefuelingListProps) {
           {refuelings.map((refueling) => (
             <TableRow key={refueling.id}>
               <TableCell>
-                <code>{format(refueling.datetime, "ccc y-MM-dd HH:mm")}</code>
+                <code>{format(refueling.transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
               {!props.carId && (
                 <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
               )}
-              <TableCell>{refueling.place?.name}</TableCell>
+              <TableCell>{refueling.transaction.place?.name}</TableCell>
               <TableCell>
                 <code>{refueling.ron}</code>
               </TableCell>
               <TableCell>
-                <code>{refueling.cost}</code>
+                <code>{refueling.transaction.amount}</code>
               </TableCell>
               <TableCell>
                 <code>{refueling.quantity}</code>

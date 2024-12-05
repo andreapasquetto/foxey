@@ -21,7 +21,7 @@ interface FuelPriceChartProps {
 
 export function FuelPriceChart(props: FuelPriceChartProps) {
   const chartData = props.refuelings.map((refueling) => ({
-    datetime: refueling.datetime,
+    datetime: refueling.transaction.datetime,
     price: refueling.price,
   }));
 

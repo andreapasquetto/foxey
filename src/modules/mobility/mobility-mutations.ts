@@ -22,6 +22,7 @@ export function useRefuelingCreateMutation() {
     mutationFn: (refueling: RefuelingCreateForm) => refuelingCreate(refueling),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["refuelings"] });
+      queryClient.invalidateQueries({ queryKey: ["transactions"] });
     },
   });
 }
