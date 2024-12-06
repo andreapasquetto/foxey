@@ -54,7 +54,7 @@ export function HighwayTripList(props: HighwayTripsProps) {
           {trips.map((trip) => (
             <TableRow key={trip.id}>
               <TableCell>
-                <code>{format(trip.datetime, "ccc y-MM-dd HH:mm")}</code>
+                <code>{format(trip.transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
               {!props.carId && <TableCell>{`${trip.car.make} ${trip.car.model}`}</TableCell>}
               <TableCell>{trip.startingToll}</TableCell>
@@ -63,7 +63,7 @@ export function HighwayTripList(props: HighwayTripsProps) {
                 <code>{trip.distance}</code>
               </TableCell>
               <TableCell>
-                <code>{trip.cost}</code>
+                <code>{trip.transaction.amount}</code>
               </TableCell>
               <TableCell>
                 <code>{trip.avgSpeed}</code>

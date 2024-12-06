@@ -7,6 +7,7 @@ import { cars, highwayTrips, refuelings, services } from "@/db/schema/mobility";
 import { transactionGetById } from "@/modules/accounting/accounting-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
+import { HighwayTripRead } from "@/modules/mobility/schemas/highway-trip-read-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
 import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
 import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
@@ -104,38 +105,55 @@ export async function refuelingCreate(refueling: RefuelingCreateForm) {
 export async function highwayTripsGetPaginated(options: { paginate: Paginate; carId?: string }) {
   const total = await countTotalHighwayTrips(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+
+  const cars = await carsGetAll();
+
   const records = await db
-    .select({
-      id: highwayTrips.id,
-      datetime: highwayTrips.datetime,
-      startingToll: highwayTrips.startingToll,
-      endingToll: highwayTrips.endingToll,
-      distance: highwayTrips.distance,
-      cost: highwayTrips.cost,
-      avgSpeed: highwayTrips.avgSpeed,
-      car: {
-        make: cars.make,
-        model: cars.model,
-      },
-    })
+    .select()
     .from(highwayTrips)
-    .innerJoin(cars, eq(cars.id, highwayTrips.carId))
+    .innerJoin(transactions, eq(highwayTrips.transactionId, transactions.id))
     .where(options.carId ? eq(highwayTrips.carId, options.carId) : undefined)
     .limit(limit)
     .offset(offset)
-    .orderBy(desc(highwayTrips.datetime));
-  return toPaginated(records, total);
+    .orderBy(desc(transactions.datetime));
+
+  const result: HighwayTripRead[] = [];
+  for (const record of records) {
+    const car = cars.find((c) => c.id === record.car_highway_trips.carId)!;
+    const transaction = await transactionGetById(record.transactions.id);
+    result.push({
+      ...record.car_highway_trips,
+      car,
+      transaction,
+    });
+  }
+
+  return toPaginated(result, total);
 }
 
 export async function highwayTripCreate(trip: HighwayTripCreateForm) {
-  await db.insert(highwayTrips).values({
-    carId: trip.carId,
-    datetime: trip.datetime,
-    startingToll: trip.startingToll,
-    endingToll: trip.endingToll,
-    cost: String(trip.cost),
-    distance: String(trip.distance),
-    avgSpeed: String(trip.avgSpeed),
+  await db.transaction(async (tx) => {
+    const newTransactionRecord = (
+      await tx
+        .insert(transactions)
+        .values({
+          datetime: trip.datetime,
+          fromWalletId: trip.walletId,
+          amount: trip.cost.toString(),
+          placeId: trip.placeId,
+          description: trip.description ?? `${trip.startingToll} - ${trip.endingToll}`,
+        })
+        .returning({ id: transactions.id })
+    )[0];
+
+    await tx.insert(highwayTrips).values({
+      carId: trip.carId,
+      transactionId: newTransactionRecord.id,
+      startingToll: trip.startingToll,
+      endingToll: trip.endingToll,
+      distance: String(trip.distance),
+      avgSpeed: String(trip.avgSpeed),
+    });
   });
 }
 

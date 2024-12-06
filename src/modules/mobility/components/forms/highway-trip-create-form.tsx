@@ -1,18 +1,28 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
+import { DatePicker } from "@/components/date-picker";
 import { InputSkeleton } from "@/components/input-skeleton";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { XInput } from "@/components/x-input";
 import { XSelect, XSelectOption } from "@/components/x-select";
+import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { useHighwayTripCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
   type HighwayTripCreateForm,
   highwayTripCreateFormSchema,
 } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
+import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { useRouter } from "next/navigation";
@@ -30,8 +40,10 @@ export function HighwayTripCreateForm() {
   const mutation = useHighwayTripCreateMutation();
 
   const { data: cars } = useCarsGetAllQuery();
+  const { data: wallets } = useWalletsGetAllQuery();
+  const { data: places } = usePlacesGetAllQuery();
 
-  if (!cars) {
+  if (!cars || !wallets || !places) {
     return <ComponentSkeleton />;
   }
 
@@ -47,6 +59,19 @@ export function HighwayTripCreateForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <FormField
+            control={form.control}
+            name="datetime"
+            render={({ field }) => (
+              <FormItem className="flex flex-col justify-end">
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <XSelect control={form.control} name="carId" label="Car">
             {cars.map((car) => (
               <XSelectOption key={car.id} value={car.id}>
@@ -59,6 +84,15 @@ export function HighwayTripCreateForm() {
               </XSelectOption>
             ))}
           </XSelect>
+          <XSelect control={form.control} name="walletId" label="Wallet">
+            {wallets.map((w) => (
+              <XSelectOption key={w.id} value={w.id}>
+                {w.name}
+              </XSelectOption>
+            ))}
+          </XSelect>
+        </div>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XInput control={form.control} name="startingToll" label="Start" />
           <XInput control={form.control} name="endingToll" label="End" />
         </div>
@@ -88,6 +122,7 @@ export function HighwayTripCreateForm() {
             placeholder="0"
           />
         </div>
+        <XInput control={form.control} name="description" label="Description" />
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
@@ -102,15 +137,21 @@ export function HighwayTripCreateForm() {
 function ComponentSkeleton() {
   return (
     <div className="space-y-4 py-2 pb-4">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <InputSkeleton />
+        <InputSkeleton />
+        <InputSkeleton />
+      </div>
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <InputSkeleton />
+        <InputSkeleton />
+      </div>
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <InputSkeleton />
         <InputSkeleton />
         <InputSkeleton />
       </div>
       <InputSkeleton />
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
       <div className="flex items-center justify-end gap-3">
         <Skeleton className="h-10 w-20 text-right" />
       </div>

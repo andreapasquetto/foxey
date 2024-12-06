@@ -25,17 +25,15 @@ export const refuelings = pgTable("car_refuelings", {
   odometer: numeric("odometer").notNull(),
 });
 
-// TODO: add a transactionId for tracking the payment of a trip
 export const highwayTrips = pgTable("car_highway_trips", {
   id: uuid("id").defaultRandom().primaryKey(),
+  transactionId: uuid("transaction_id").references(() => transactions.id),
   carId: uuid("car_id")
     .notNull()
     .references(() => cars.id),
-  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
   startingToll: varchar("starting_toll").notNull(),
   endingToll: varchar("ending_toll").notNull(),
   distance: numeric("distance").notNull(),
-  cost: numeric("cost").notNull(),
   avgSpeed: numeric("avg_speed"),
 });
 
