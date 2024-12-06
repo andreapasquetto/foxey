@@ -8,8 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useHighwayTripsGetPaginatedQuery } from "@/modules/mobility/mobility-queries";
 import { format } from "date-fns";
+import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 
 interface HighwayTripsProps {
   carId: string | undefined;
@@ -68,6 +72,25 @@ export function HighwayTripList(props: HighwayTripsProps) {
               <TableCell>
                 <code>{trip.avgSpeed}</code>
               </TableCell>
+              <TableCell>
+                <div className="flex items-center justify-end gap-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={`/accounting/transactions/${trip.transaction.id}`}
+                        target="_blank"
+                        className={cn(
+                          "flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-accent",
+                        )}
+                      >
+                        <ExternalLink className="h-5 w-5" />
+                        <span className="sr-only">Related transaction</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">View related transaction</TooltipContent>
+                  </Tooltip>
+                </div>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -93,6 +116,7 @@ function TableHeaderRow(props: { carId?: string }) {
       <TableHead>
         Average speed (<code>km/h</code>)
       </TableHead>
+      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -120,6 +144,9 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-10" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-10 w-10" />
       </TableCell>
     </TableRow>
   ));

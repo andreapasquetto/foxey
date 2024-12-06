@@ -8,9 +8,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useRefuelingsGetPaginatedQuery } from "@/modules/mobility/mobility-queries";
 import { format } from "date-fns";
-import { CheckIcon, XIcon } from "lucide-react";
+import { Check, ExternalLink, X } from "lucide-react";
+import Link from "next/link";
 
 interface RefuelingListProps {
   carId: string | undefined;
@@ -75,16 +78,16 @@ export function RefuelingList(props: RefuelingListProps) {
               </TableCell>
               <TableCell>
                 {refueling.isFull ? (
-                  <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+                  <Check className="h-5 w-5 text-green-500 dark:text-green-400" />
                 ) : (
-                  <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+                  <X className="h-5 w-5 text-red-500 dark:text-red-400" />
                 )}
               </TableCell>
               <TableCell>
                 {refueling.isNecessary ? (
-                  <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+                  <Check className="h-5 w-5 text-green-500 dark:text-green-400" />
                 ) : (
-                  <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+                  <X className="h-5 w-5 text-red-500 dark:text-red-400" />
                 )}
               </TableCell>
               <TableCell>
@@ -92,6 +95,25 @@ export function RefuelingList(props: RefuelingListProps) {
               </TableCell>
               <TableCell>
                 <code>{refueling.odometer}</code>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center justify-end gap-1">
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={`/accounting/transactions/${refueling.transaction.id}`}
+                        target="_blank"
+                        className={cn(
+                          "flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-accent",
+                        )}
+                      >
+                        <ExternalLink className="h-5 w-5" />
+                        <span className="sr-only">Related transaction</span>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent side="top">View related transaction</TooltipContent>
+                  </Tooltip>
+                </div>
               </TableCell>
             </TableRow>
           ))}
@@ -126,6 +148,7 @@ function TableHeaderRow(props: { carId?: string }) {
       <TableHead>
         Odometer (<code>km</code>)
       </TableHead>
+      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -165,6 +188,9 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-10 w-10" />
       </TableCell>
     </TableRow>
   ));
