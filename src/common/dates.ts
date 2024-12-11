@@ -13,6 +13,10 @@ export function thisMonthToDateRange(): DateRange {
   return { from: startOfMonth(startOfToday()), to: endOfDay(startOfToday()) };
 }
 
+export function thisMonthRange(): DateRange {
+  return { from: startOfMonth(startOfToday()), to: endOfMonth(startOfToday()) };
+}
+
 export function lastMonthRange(): DateRange {
   const startOfLastMonth = startOfMonth(sub(startOfToday(), { months: 1 }));
   return {

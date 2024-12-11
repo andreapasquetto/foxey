@@ -1,6 +1,16 @@
-import { thisMonthToDateRange, thisYearRange } from "@/common/dates";
+import { thisMonthRange, thisMonthToDateRange, thisYearRange } from "@/common/dates";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
-import { eachMonthOfInterval, format, isSameMonth, isWithinInterval } from "date-fns";
+import {
+  eachDayOfInterval,
+  eachMonthOfInterval,
+  endOfMonth,
+  format,
+  isSameDay,
+  isSameMonth,
+  isWithinInterval,
+  startOfMonth,
+  startOfToday,
+} from "date-fns";
 import { Decimal } from "decimal.js";
 
 export function getTransactionsWithoutTransfers(transactions: TransactionRead[]) {
@@ -21,6 +31,40 @@ export function calculateTransactionsAmount(transactions: TransactionRead[]) {
 
 export function groupTransactionsByCategoryName(transactions: TransactionRead[]) {
   return Object.groupBy(transactions, (tx) => tx.category?.name ?? "NONE");
+}
+
+export function generateThisMonthExpensesPerDayChartData(transactions: TransactionRead[]) {
+  if (!transactions.length) return [];
+
+  const thisMonth = thisMonthRange();
+  const days = eachDayOfInterval({ start: thisMonth.from!, end: thisMonth.to! });
+
+  const result = days.map((day) => {
+    const dayTransactions = transactions.filter((transaction) =>
+      isSameDay(transaction.datetime, day),
+    );
+
+    return {
+      day: format(day, "dd"),
+      amount: dayTransactions.length
+        ? calculateTransactionsAmount(
+            getTransactionsWithoutTransfers(getOutgoingTransactions(dayTransactions)),
+          ).toNumber()
+        : 0,
+    };
+  });
+
+  return result;
+}
+
+export function generateThisMonthExpensesPerDayPlaceholderData() {
+  return eachDayOfInterval({
+    start: startOfMonth(startOfToday()),
+    end: endOfMonth(startOfToday()),
+  }).map((day) => ({
+    day: format(day, "dd"),
+    amount: Math.trunc(Math.random() * 100),
+  }));
 }
 
 export function generateThisMonthExpensesChartData(transactions: TransactionRead[]) {
@@ -164,9 +208,8 @@ export function generateThisMonthTrendChartPlaceholderData() {
 export function generateThisYearTrendChartData(transactions: TransactionRead[]) {
   if (!transactions.length) return [];
 
-  const yearToDate = thisYearRange();
-
-  const months = eachMonthOfInterval({ start: yearToDate.from!, end: yearToDate.to! });
+  const thisYear = thisYearRange();
+  const months = eachMonthOfInterval({ start: thisYear.from!, end: thisYear.to! });
 
   if (!months.length) return [];
 
