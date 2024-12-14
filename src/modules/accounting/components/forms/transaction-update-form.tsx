@@ -19,15 +19,15 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { XInput } from "@/components/x-input";
-import { XSelect, XSelectOption } from "@/components/x-select";
 import { cn } from "@/lib/utils";
 import { useTransactionUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   useTransactionCategoriesGetAllQuery,
   useTransactionGetByIdQuery,
-  useWalletsGetAllQuery,
 } from "@/modules/accounting/accounting-queries";
 import { TransactionFormSkeleton } from "@/modules/accounting/components/forms/transaction-form-skeleton";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
@@ -74,8 +74,6 @@ function UpdateForm(props: UpdateFormProps) {
     defaultValues: {
       id: props.transaction.id,
       datetime: props.transaction.datetime,
-      fromWalletId: props.transaction.fromWallet?.id,
-      toWalletId: props.transaction.toWallet?.id,
       categoryId: props.transaction.category?.id,
       placeId: props.transaction.place?.id,
       amount: Number(props.transaction.amount),
@@ -85,11 +83,10 @@ function UpdateForm(props: UpdateFormProps) {
 
   const mutation = useTransactionUpdateMutation(props.transaction.id);
 
-  const { data: wallets } = useWalletsGetAllQuery();
   const { data: categories } = useTransactionCategoriesGetAllQuery();
   const { data: places } = usePlacesGetAllQuery();
 
-  if (!wallets || !categories || !places) {
+  if (!categories || !places) {
     return <TransactionFormSkeleton />;
   }
 
@@ -118,20 +115,15 @@ function UpdateForm(props: UpdateFormProps) {
           )}
         />
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <XSelect control={form.control} name="fromWalletId" label="From">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
-          <XSelect control={form.control} name="toWalletId" label="To">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
+          <div className="space-y-2">
+            <Label htmlFor="fromWalletId">From</Label>
+            <Input id="fromWalletId" disabled readOnly value={props.transaction.fromWallet?.name} />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="toWalletId">To</Label>
+            <Input id="toWalletId" disabled readOnly value={props.transaction.toWallet?.name} />
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <FormField
