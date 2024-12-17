@@ -1,5 +1,5 @@
 import { Heading1 } from "@/components/typography";
-import { PlaceCreateForm } from "@/modules/places/components/place-create-form";
+import { PlaceCreateForm } from "@/modules/places/components/forms/place-create-form";
 
 export default function PlaceCreatePage() {
   return (

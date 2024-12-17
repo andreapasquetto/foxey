@@ -1,8 +1,6 @@
 "use client";
 
-import { CheckboxSkeleton } from "@/components/checkbox-skeleton";
 import { CircularSpinner } from "@/components/circular-spinner";
-import { InputSkeleton } from "@/components/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -21,57 +19,76 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
 import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { cn } from "@/lib/utils";
-import { useCreatePlaceMutation } from "@/modules/places/places-mutations";
-import { usePlaceCategoriesGetAllQuery } from "@/modules/places/places-queries";
+import { PlaceFormSkeleton } from "@/modules/places/components/forms/place-form-skeleton";
+import { usePlaceUpdateMutation } from "@/modules/places/places-mutations";
 import {
-  type PlaceCreateForm,
-  placeCreateFormSchema,
-} from "@/modules/places/schemas/place-create-form-schema";
+  usePlaceCategoriesGetAllQuery,
+  usePlaceGetByIdQuery,
+} from "@/modules/places/places-queries";
+import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
+import {
+  placeUpdateFormSchema,
+  type PlaceUpdateForm,
+} from "@/modules/places/schemas/place-update-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export function PlaceCreateForm() {
-  const router = useRouter();
+interface PlaceUpdateFormProps {
+  id: string;
+}
 
-  const form = useForm<PlaceCreateForm>({
-    resolver: zodResolver(placeCreateFormSchema),
+export function PlaceUpdateForm(props: PlaceUpdateFormProps) {
+  const router = useRouter();
+  const query = usePlaceGetByIdQuery(props.id);
+
+  if (!query.data) {
+    return <PlaceFormSkeleton />;
+  }
+
+  return (
+    <UpdateForm
+      place={query.data}
+      onUpdate={() => {
+        router.push("/places");
+      }}
+    />
+  );
+}
+
+interface UpdateFormProps {
+  place: PlaceRead;
+  onUpdate: () => void;
+}
+
+function UpdateForm(props: UpdateFormProps) {
+  const form = useForm<PlaceUpdateForm>({
+    resolver: zodResolver(placeUpdateFormSchema),
     defaultValues: {
-      isVisited: false,
+      id: props.place.id,
+      name: props.place.name,
+      categoryId: props.place.category?.id,
+      address: props.place.address ?? undefined,
+      isVisited: props.place.isVisited,
     },
   });
 
-  const mutation = useCreatePlaceMutation();
+  const mutation = usePlaceUpdateMutation(props.place.id);
 
-  const { data: categories, isFetching } = usePlaceCategoriesGetAllQuery();
+  const { data: categories } = usePlaceCategoriesGetAllQuery();
 
-  if (!categories || isFetching) {
-    return (
-      <div className="space-y-4 py-2 pb-4">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <InputSkeleton />
-          <InputSkeleton />
-          <InputSkeleton />
-          <div className="md:mb-3 md:self-end">
-            <CheckboxSkeleton />
-          </div>
-        </div>
-        <div className="flex items-center justify-end gap-3">
-          <Skeleton className="h-10 w-20 text-right" />
-        </div>
-      </div>
-    );
+  if (!categories) {
+    return <PlaceFormSkeleton />;
   }
 
-  function onValidSubmit(values: PlaceCreateForm) {
+  function onValidSubmit(values: PlaceUpdateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/places");
+        props.onUpdate();
       },
     });
   }

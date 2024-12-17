@@ -1,6 +1,7 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   placeCategoriesGetAll,
+  placeGetById,
   placesGetAll,
   placesGetPaginated,
 } from "@/modules/places/places-actions";
@@ -34,4 +35,11 @@ export function usePlacesGetAllQuery() {
     queryKey: ["places"],
     queryFn: () => placesGetAll(),
   });
+}
+
+export function usePlaceGetByIdQuery(id: string) {
+  return useQuery({
+    queryKey: ["places", id],
+    queryFn: () => placeGetById(id)
+  })
 }

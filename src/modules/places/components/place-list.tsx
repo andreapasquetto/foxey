@@ -1,6 +1,13 @@
 "use client";
 
 import { QueryPagination } from "@/components/pagination";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -11,7 +18,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { usePlacesPaginatedQuery } from "@/modules/places/places-queries";
-import { CheckIcon, XIcon } from "lucide-react";
+import { CheckIcon, Edit, MoreHorizontal, XIcon } from "lucide-react";
+import Link from "next/link";
 
 interface PlaceListProps {
   searchFilter?: string;
@@ -77,6 +85,25 @@ export function PlaceList(props: PlaceListProps) {
                   <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
                 )}
               </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`/places/${place.id}`}
+                        className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                      >
+                        Edit <Edit className="h-5 w-5" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -93,6 +120,7 @@ function TableHeaderRow() {
       <TableHead>Coordinates</TableHead>
       <TableHead>Address</TableHead>
       <TableHead>Visited</TableHead>
+      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -114,6 +142,9 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-5 w-5" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="ml-auto h-9 w-11" />
       </TableCell>
     </TableRow>
   ));
