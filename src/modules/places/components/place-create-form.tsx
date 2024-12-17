@@ -21,7 +21,7 @@ import { XCheckbox } from "@/components/x-checkbox";
 import { XInput } from "@/components/x-input";
 import { cn } from "@/lib/utils";
 import { useCreatePlaceMutation } from "@/modules/places/places-mutations";
-import { usePlaceCategoriesQuery } from "@/modules/places/places-queries";
+import { usePlaceCategoriesGetAllQuery } from "@/modules/places/places-queries";
 import {
   type PlaceCreateForm,
   placeCreateFormSchema,
@@ -42,7 +42,7 @@ export function PlaceCreateForm(props: PlaceCreateFormProps) {
     },
   });
 
-  const { data: placeCategories, isFetching } = usePlaceCategoriesQuery();
+  const { data: placeCategories, isFetching } = usePlaceCategoriesGetAllQuery();
 
   const mutation = useCreatePlaceMutation();
 

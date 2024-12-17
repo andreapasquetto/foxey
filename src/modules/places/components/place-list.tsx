@@ -13,8 +13,18 @@ import {
 import { usePlacesPaginatedQuery } from "@/modules/places/places-queries";
 import { CheckIcon, XIcon } from "lucide-react";
 
-export function PlaceList() {
-  const query = usePlacesPaginatedQuery();
+interface PlaceListProps {
+  searchFilter?: string;
+  categoryId?: string;
+  onlyVisited?: boolean;
+}
+
+export function PlaceList(props: PlaceListProps) {
+  const query = usePlacesPaginatedQuery({
+    searchFilter: props.searchFilter,
+    categoryId: props.categoryId,
+    onlyVisited: props.onlyVisited,
+  });
 
   if (!query.data) {
     return (

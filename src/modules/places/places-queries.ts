@@ -6,17 +6,25 @@ import {
 } from "@/modules/places/places-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 
-export function usePlaceCategoriesQuery() {
+export function usePlaceCategoriesGetAllQuery() {
   return useQuery({
     queryKey: ["place-categories"],
     queryFn: () => placeCategoriesGetAll(),
   });
 }
 
-export function usePlacesPaginatedQuery() {
+export function usePlacesPaginatedQuery(
+  params: { searchFilter?: string; categoryId?: string; onlyVisited?: boolean } = {},
+) {
   return usePaginatedQuery({
-    queryKey: ["places"],
-    queryFn: (paginate) => placesGetPaginated(paginate),
+    queryKey: ["places", { ...params }],
+    queryFn: (paginate) =>
+      placesGetPaginated({
+        paginate,
+        searchFilter: params.searchFilter,
+        categoryId: params.categoryId,
+        onlyVisited: params.onlyVisited,
+      }),
     placeholderData: keepPreviousData,
   });
 }

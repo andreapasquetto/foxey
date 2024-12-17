@@ -1,12 +1,11 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
-import { countTotalRecords } from "@/common/server-actions";
 import { db } from "@/db/db";
 import { placeCategories, places } from "@/db/schema/places";
 import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-schema";
 import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
-import { eq } from "drizzle-orm";
+import { and, eq, ilike } from "drizzle-orm";
 
 export async function placeCategoriesGetAll() {
   return await db.select().from(placeCategories);
@@ -16,14 +15,26 @@ export async function placeCategoryGetById(id: string) {
   return (await db.select().from(placeCategories).where(eq(placeCategories.id, id)))[0];
 }
 
-export async function placesGetPaginated(paginate: Paginate) {
+export async function placesGetPaginated(params: {
+  paginate: Paginate;
+  searchFilter?: string;
+  categoryId?: string;
+  onlyVisited?: boolean;
+}) {
   const categories = await placeCategoriesGetAll();
 
-  const total = await countTotalRecords(places);
-  const { limit, offset } = paginateToLimitAndOffset(paginate);
+  const total = await placesCountTotal(params);
+  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
   const records = await db
     .select()
     .from(places)
+    .where(
+      and(
+        params.searchFilter ? ilike(places.name, `%${params.searchFilter}%`) : undefined,
+        params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
+        params.onlyVisited ? eq(places.isVisited, true) : undefined,
+      ),
+    )
     .limit(limit)
     .offset(offset)
     .orderBy(places.categoryId, places.name);
@@ -67,4 +78,24 @@ export async function createPlace(place: PlaceCreateForm) {
 
 export async function deletePlace(id: string) {
   await db.delete(places).where(eq(places.id, id));
+}
+
+async function placesCountTotal(params: {
+  paginate: Paginate;
+  searchFilter?: string;
+  categoryId?: string;
+  onlyVisited?: boolean;
+}) {
+  const records = await db
+    .select()
+    .from(places)
+    .where(
+      and(
+        params.searchFilter ? ilike(places.name, `%${params.searchFilter}%`) : undefined,
+        params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
+        params.onlyVisited ? eq(places.isVisited, true) : undefined,
+      ),
+    );
+
+  return records.length;
 }
