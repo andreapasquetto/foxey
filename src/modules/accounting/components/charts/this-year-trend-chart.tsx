@@ -12,8 +12,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import {
+  generateThisYearTrendChartData,
   generateGenericTrendChartPlaceholderData,
-  generateThisMonthTrendChartData,
 } from "@/modules/accounting/accounting-utils";
 import { format } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
@@ -24,14 +24,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ThisMonthTrendChart() {
+export function ThisYearTrendChart() {
   const query = useTransactionsGetAllQuery({ enabled: false });
 
   if (query.isFetching || query.isRefetching) {
     return (
       <div className="space-y-3">
         <CardTitle>Trend</CardTitle>
-        <Skeleton className="h-[380px] w-full" />
+        <Skeleton className="aspect-auto h-[350px] w-full" />
       </div>
     );
   }
@@ -42,12 +42,12 @@ export function ThisMonthTrendChart() {
 
   if (transactions.length < 2) return <NotEnoughDataSkeleton />;
 
-  const chartData = generateThisMonthTrendChartData(transactions);
+  const chartData = generateThisYearTrendChartData(transactions);
 
   return (
     <div className="space-y-3">
       <CardTitle>Trend</CardTitle>
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
         <LineChart accessibilityLayer data={chartData} margin={{ left: 25 }}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -88,7 +88,7 @@ function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
             Generate Chart
           </Button>
         </div>
-        <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
+        <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
           <LineChart accessibilityLayer data={chartData} margin={{ left: 25 }}>
             <CartesianGrid vertical={false} />
             <XAxis

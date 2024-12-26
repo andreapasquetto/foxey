@@ -10,7 +10,9 @@ import { ThisMonthExpensesChart } from "@/modules/accounting/components/charts/t
 import { ThisMonthExpensesPerDayChart } from "@/modules/accounting/components/charts/this-month-expenses-per-day-chart";
 import { ThisMonthTrendChart } from "@/modules/accounting/components/charts/this-month-trend-chart";
 import { ThisYearIncomeExpensesChart } from "@/modules/accounting/components/charts/this-year-income-expenses-chart";
+import { ThisYearTrendChart } from "@/modules/accounting/components/charts/this-year-trend-chart";
 import { ThisMonthStats } from "@/modules/accounting/components/this-month-stats";
+import { ThisYearStats } from "@/modules/accounting/components/this-year-stats";
 import { Transactions } from "@/modules/accounting/components/transactions";
 import { WalletList } from "@/modules/accounting/components/wallet-list";
 import { ArrowRightLeft, Plus, Wallet } from "lucide-react";
@@ -52,10 +54,6 @@ export default function AccountingPage() {
         <Transactions />
       </section>
       <section className="space-y-6">
-        <Heading2>Wallets</Heading2>
-        <WalletList />
-      </section>
-      <section className="space-y-6">
         <Heading2>This month</Heading2>
         <ThisMonthStats />
         <ThisMonthExpensesPerDayChart />
@@ -66,7 +64,13 @@ export default function AccountingPage() {
       </section>
       <section className="space-y-6">
         <Heading2>This year</Heading2>
+        <ThisYearStats />
+        <ThisYearTrendChart />
         <ThisYearIncomeExpensesChart />
+      </section>
+      <section className="space-y-6">
+        <Heading2>Wallets</Heading2>
+        <WalletList />
       </section>
     </div>
   );

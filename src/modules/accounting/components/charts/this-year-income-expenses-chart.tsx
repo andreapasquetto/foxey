@@ -13,8 +13,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import {
-  generateThisYearTrendChartData,
-  generateThisYearTrendChartPlaceholderData,
+  generateThisYearIncomeExpensesChartData,
+  generateThisYearIncomeExpensesChartPlaceholderData,
 } from "@/modules/accounting/accounting-utils";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
@@ -48,7 +48,7 @@ export function ThisYearIncomeExpensesChart() {
 
   if (!transactions.length) return <NotEnoughDataSkeleton />;
 
-  const chartData = generateThisYearTrendChartData(transactions);
+  const chartData = generateThisYearIncomeExpensesChartData(transactions);
 
   return (
     <div className="space-y-3">
@@ -73,7 +73,7 @@ export function ThisYearIncomeExpensesChart() {
 }
 
 function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
-  const chartData = generateThisYearTrendChartPlaceholderData();
+  const chartData = generateThisYearIncomeExpensesChartPlaceholderData();
 
   return (
     <div className="space-y-3">

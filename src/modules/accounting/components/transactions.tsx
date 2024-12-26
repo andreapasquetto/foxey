@@ -44,7 +44,7 @@ export function Transactions() {
         <div>
           <RangeDatePicker dateRange={dateRange} setDateRange={setDateRange} showPresets />
         </div>
-        <div className="flex-wrap items-center gap-1 space-y-1 sm:flex sm:space-y-0">
+        <div className="flex flex-wrap items-center gap-1 space-y-0">
           <div>
             <ChipCombobox
               label="Wallet"

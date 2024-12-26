@@ -40,6 +40,6 @@ export function usePlacesGetAllQuery() {
 export function usePlaceGetByIdQuery(id: string) {
   return useQuery({
     queryKey: ["places", id],
-    queryFn: () => placeGetById(id)
-  })
+    queryFn: () => placeGetById(id),
+  });
 }

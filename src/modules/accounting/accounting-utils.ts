@@ -160,7 +160,41 @@ export function generateThisMonthTrendChartData(transactions: TransactionRead[])
     .map((item) => ({ ...item, amount: item.amount.toNumber() }));
 }
 
-export function generateThisMonthTrendChartPlaceholderData() {
+export function generateThisYearTrendChartData(transactions: TransactionRead[]) {
+  const thisYear = thisYearRange();
+
+  return transactions
+    .reduce<
+      Array<{
+        datetime: Date;
+        amount: Decimal;
+      }>
+    >((acc, tx) => {
+      let amountChange = new Decimal(0);
+
+      const isTransfer = !!tx.fromWallet && !!tx.toWallet;
+      if (!isTransfer) {
+        if (tx.fromWallet?.id) amountChange = amountChange.sub(tx.amount);
+        if (tx.toWallet?.id) amountChange = amountChange.add(tx.amount);
+      }
+
+      acc.push({
+        datetime: tx.datetime,
+        amount: acc.length ? acc[acc.length - 1].amount.add(amountChange) : amountChange,
+      });
+
+      return acc;
+    }, [])
+    .filter((tx) =>
+      isWithinInterval(tx.datetime, {
+        start: thisYear.from!,
+        end: thisYear.to!,
+      }),
+    )
+    .map((item) => ({ ...item, amount: item.amount.toNumber() }));
+}
+
+export function generateGenericTrendChartPlaceholderData() {
   return [
     {
       datetime: "2024-10-01T00:00:00Z",
@@ -205,7 +239,7 @@ export function generateThisMonthTrendChartPlaceholderData() {
   ].map((it) => ({ datetime: new Date(it.datetime), amount: it.amount }));
 }
 
-export function generateThisYearTrendChartData(transactions: TransactionRead[]) {
+export function generateThisYearIncomeExpensesChartData(transactions: TransactionRead[]) {
   if (!transactions.length) return [];
 
   const thisYear = thisYearRange();
@@ -227,7 +261,7 @@ export function generateThisYearTrendChartData(transactions: TransactionRead[]) 
   });
 }
 
-export function generateThisYearTrendChartPlaceholderData() {
+export function generateThisYearIncomeExpensesChartPlaceholderData() {
   return [
     {
       month: "Jan",
