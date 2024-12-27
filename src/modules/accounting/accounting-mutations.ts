@@ -1,10 +1,12 @@
 import {
+  transactionCategoryCreate,
   transactionCreate,
   transactionDelete,
   transactionUpdate,
   walletCreate,
   walletUpdate,
 } from "@/modules/accounting/accounting-actions";
+import { TransactionCategoryCreateForm } from "@/modules/accounting/schemas/transaction-category-create-form-schema";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { TransactionUpdateForm } from "@/modules/accounting/schemas/transaction-update-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
@@ -29,6 +31,17 @@ export function useWalletUpdateMutation(id: string) {
     mutationFn: (wallet: WalletUpdateForm) => walletUpdate(wallet),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
+    },
+  });
+}
+
+export function useTransactionCategoryCreateMutation() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationKey: ["transaction-categories", "create"],
+    mutationFn: (category: TransactionCategoryCreateForm) => transactionCategoryCreate(category),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["transaction-categories"] });
     },
   });
 }

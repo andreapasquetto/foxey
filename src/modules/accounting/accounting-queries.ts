@@ -1,6 +1,7 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   transactionCategoriesGetAll,
+  transactionCategoriesGetAllWithoutParent,
   transactionCategoriesGetPaginated,
   transactionGetById,
   transactionsGetAll,
@@ -39,6 +40,13 @@ export function useTransactionCategoriesGetAllQuery() {
   return useQuery({
     queryKey: ["transaction-categories"],
     queryFn: () => transactionCategoriesGetAll(),
+  });
+}
+
+export function useTransactionCategoriesGetAllWithoutParentQuery() {
+  return useQuery({
+    queryKey: ["transaction-categories", "no-parent"],
+    queryFn: () => transactionCategoriesGetAllWithoutParent(),
   });
 }
 
