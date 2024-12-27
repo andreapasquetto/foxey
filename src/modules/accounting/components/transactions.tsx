@@ -1,7 +1,7 @@
 "use client";
 
 import { thisMonthToDateRange } from "@/common/dates";
-import { IdAndNameWithParent } from "@/common/types";
+import { IdNameParent } from "@/common/types";
 import { ChipCombobox } from "@/components/chip-combobox";
 import { RangeDatePicker } from "@/components/range-date-picker";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ export function Transactions() {
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(thisMonthToDateRange());
   const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
-  const [selectedCategory, setSelectedCategory] = useState<IdAndNameWithParent | undefined>(
+  const [selectedCategory, setSelectedCategory] = useState<IdNameParent | undefined>(
     undefined,
   );
   const [selectedPlace, setSelectedPlace] = useState<PlaceRead | undefined>(undefined);

@@ -1,6 +1,6 @@
 "use client";
 
-import { IdAndNameWithParent } from "@/common/types";
+import { IdNameParent } from "@/common/types";
 import { ChipCombobox } from "@/components/chip-combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,7 @@ import { useState } from "react";
 
 export function PlaceListWithFilters() {
   const [searchFilter, setSearchFilter] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<IdAndNameWithParent | undefined>(
+  const [selectedCategory, setSelectedCategory] = useState<IdNameParent | undefined>(
     undefined,
   );
   const [onlyVisited, setOnlyVisited] = useState(false);

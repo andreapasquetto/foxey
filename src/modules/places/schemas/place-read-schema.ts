@@ -1,8 +1,8 @@
-import { IdAndNameWithParent } from "@/common/types";
+import { IdNameParent } from "@/common/types";
 
 export interface PlaceRead {
   id: string;
-  category: IdAndNameWithParent | null;
+  category: IdNameParent | null;
   name: string;
   address: string | null;
   coordinates: [number, number] | null;

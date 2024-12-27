@@ -1,9 +1,9 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { IdNameParentUsages } from "@/common/types";
 import { db } from "@/db/db";
 import { placeCategories, places } from "@/db/schema/places";
-import { PlaceCategoryRead } from "@/modules/places/schemas/place-category-read-schema";
 import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-schema";
 import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 import { PlaceUpdateForm } from "@/modules/places/schemas/place-update-form-schema";
@@ -36,7 +36,7 @@ export async function placeCategoriesGetPaginated(params: {
     .offset(offset)
     .orderBy(parent.name, placeCategories.name);
 
-  const result: PlaceCategoryRead[] = [];
+  const result: IdNameParentUsages[] = [];
   for (const record of records) {
     const usages = await placeCategoryCountUsages(record.id);
     result.push({ ...record, usages });
