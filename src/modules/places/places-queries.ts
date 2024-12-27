@@ -1,11 +1,24 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   placeCategoriesGetAll,
+  placeCategoriesGetPaginated,
   placeGetById,
   placesGetAll,
   placesGetPaginated,
 } from "@/modules/places/places-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+
+export function usePlaceCategoriesGetPaginatedQuery(params: { searchFilter?: string }) {
+  return usePaginatedQuery({
+    queryKey: ["place-categories", { ...params }],
+    queryFn: (paginate) =>
+      placeCategoriesGetPaginated({
+        paginate,
+        searchFilter: params.searchFilter,
+      }),
+    placeholderData: keepPreviousData,
+  });
+}
 
 export function usePlaceCategoriesGetAllQuery() {
   return useQuery({

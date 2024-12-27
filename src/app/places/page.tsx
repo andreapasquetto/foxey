@@ -7,14 +7,31 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { PlaceListWithFilters } from "@/modules/places/components/place-list-with-filters";
-import { MapPin, Plus } from "lucide-react";
+import { MapPin, Plus, Settings2, SquareStack } from "lucide-react";
 import Link from "next/link";
 
 export default function PlacesPage() {
   return (
     <div className="space-y-12 pb-20">
       <Heading1>Places</Heading1>
-      <div className="fixed bottom-4 right-4 z-50 sm:bottom-6 sm:right-6">
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-3 sm:bottom-6 sm:right-6">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="h-14 w-14 rounded-xl">
+              <Settings2 className="h-6 w-6" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
+            <DropdownMenuItem asChild>
+              <Link
+                href="/places/categories"
+                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+              >
+                Manage categories <SquareStack className="h-5 w-5" />
+              </Link>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="h-14 w-14 rounded-xl">
