@@ -42,7 +42,7 @@ export function TransactionCategoryCreateForm() {
   function onValidSubmit(values: TransactionCategoryCreateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/accounting/transactions/categories");
+        router.push("/accounting/categories");
       },
     });
   }
