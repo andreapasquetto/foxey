@@ -1,6 +1,7 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { IdNameParentUsages } from "@/common/types";
 import { db } from "@/db/db";
 import {
   tags,
@@ -43,6 +44,43 @@ export async function walletUpdate(wallet: WalletUpdateForm) {
       name: wallet.name,
     })
     .where(eq(wallets.id, wallet.id));
+}
+
+export async function transactionCategoriesGetPaginated(params: {
+  paginate: Paginate;
+  searchFilter?: string;
+}) {
+  const total = await transactionCategoriesCountTotal(params);
+  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
+
+  const parent = alias(transactionCategories, "parent");
+  const records = await db
+    .select({
+      id: transactionCategories.id,
+      name: transactionCategories.name,
+      parent: {
+        id: parent.id,
+        name: parent.name,
+      },
+    })
+    .from(transactionCategories)
+    .leftJoin(parent, eq(parent.id, transactionCategories.parentId))
+    .where(
+      params.searchFilter
+        ? ilike(transactionCategories.name, `%${params.searchFilter}%`)
+        : undefined,
+    )
+    .limit(limit)
+    .offset(offset)
+    .orderBy(parent.name, transactionCategories.name);
+
+  const result: IdNameParentUsages[] = [];
+  for (const record of records) {
+    const usages = await transactionCategoryCountUsages(record.id);
+    result.push({ ...record, usages });
+  }
+
+  return toPaginated(result, total);
 }
 
 export async function transactionCategoriesGetAll() {
@@ -335,7 +373,6 @@ export async function transactionDelete(id: string) {
 }
 
 async function transactionsCountTotal(params: {
-  paginate: Paginate;
   searchFilter?: string;
   dateRange?: DateRange;
   walletId?: string;
@@ -365,4 +402,26 @@ async function transactionsCountTotal(params: {
     );
 
   return records.length;
+}
+
+async function transactionCategoriesCountTotal(params: { searchFilter?: string }) {
+  return (
+    await db
+      .select({ id: transactionCategories.id })
+      .from(transactionCategories)
+      .where(
+        params.searchFilter
+          ? ilike(transactionCategories.name, `%${params.searchFilter}%`)
+          : undefined,
+      )
+  ).length;
+}
+
+async function transactionCategoryCountUsages(id: string) {
+  return (
+    await db
+      .select({ id: transactions.id })
+      .from(transactions)
+      .where(eq(transactions.categoryId, id))
+  ).length;
 }

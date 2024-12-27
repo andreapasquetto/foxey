@@ -1,6 +1,7 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   transactionCategoriesGetAll,
+  transactionCategoriesGetPaginated,
   transactionGetById,
   transactionsGetAll,
   transactionsGetPaginated,
@@ -22,6 +23,15 @@ export function useWalletGetByIdQuery(id: string) {
     queryKey: ["wallets", id],
     queryFn: () => walletGetById(id),
     enabled: true,
+  });
+}
+
+export function useTransactionCategoriesGetPaginatedQuery(params: { searchFilter?: string }) {
+  return usePaginatedQuery({
+    queryKey: ["transaction-categories", { ...params }],
+    queryFn: (paginate) =>
+      transactionCategoriesGetPaginated({ paginate, searchFilter: params.searchFilter }),
+    placeholderData: keepPreviousData,
   });
 }
 
