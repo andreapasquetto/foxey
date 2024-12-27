@@ -1,9 +1,10 @@
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, point, uuid, varchar } from "drizzle-orm/pg-core";
+import { AnyPgColumn, boolean, pgTable, point, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const placeCategories = pgTable("place_categories", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name").notNull(),
+  parentId: uuid("parent_id").references((): AnyPgColumn => placeCategories.id),
 });
 
 export const places = pgTable("places", {

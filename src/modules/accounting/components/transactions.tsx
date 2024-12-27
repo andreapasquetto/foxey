@@ -1,6 +1,7 @@
 "use client";
 
 import { thisMonthToDateRange } from "@/common/dates";
+import { IdAndNameWithParent } from "@/common/types";
 import { ChipCombobox } from "@/components/chip-combobox";
 import { RangeDatePicker } from "@/components/range-date-picker";
 import { Input } from "@/components/ui/input";
@@ -9,7 +10,6 @@ import {
   useWalletsGetAllQuery,
 } from "@/modules/accounting/accounting-queries";
 import { TransactionList } from "@/modules/accounting/components/transaction-list";
-import { TransactionCategoryRead } from "@/modules/accounting/schemas/transaction-category-read-schema";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
@@ -22,7 +22,7 @@ export function Transactions() {
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(thisMonthToDateRange());
   const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
-  const [selectedCategory, setSelectedCategory] = useState<TransactionCategoryRead | undefined>(
+  const [selectedCategory, setSelectedCategory] = useState<IdAndNameWithParent | undefined>(
     undefined,
   );
   const [selectedPlace, setSelectedPlace] = useState<PlaceRead | undefined>(undefined);

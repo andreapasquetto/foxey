@@ -1,6 +1,6 @@
 "use client";
 
-import { IdAndName } from "@/common/types";
+import { IdAndNameWithParent } from "@/common/types";
 import { ChipCombobox } from "@/components/chip-combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -11,7 +11,9 @@ import { useState } from "react";
 
 export function PlaceListWithFilters() {
   const [searchFilter, setSearchFilter] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<IdAndName | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<IdAndNameWithParent | undefined>(
+    undefined,
+  );
   const [onlyVisited, setOnlyVisited] = useState(false);
 
   const categoriesQuery = usePlaceCategoriesGetAllQuery();
@@ -33,8 +35,21 @@ export function PlaceListWithFilters() {
             selectedValue={selectedCategory}
             onSelectValue={setSelectedCategory}
             options={categoriesQuery.data}
-            optionIndexer={(option) => option.name}
-            optionFormatter={(option) => option.name}
+            optionIndexer={(option) =>
+              option.parent ? `${option.parent.name}-${option.name}` : option.name
+            }
+            optionFormatter={(option) => (
+              <>
+                {!option.parent && <div>{option.name}</div>}
+                {option.parent && (
+                  <div>
+                    <span className="text-muted-foreground">{option.parent.name}</span>
+                    <span className="mx-1">•</span>
+                    <span>{option.name}</span>
+                  </div>
+                )}
+              </>
+            )}
             withSearch
           />
         </div>

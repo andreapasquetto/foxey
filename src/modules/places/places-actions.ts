@@ -7,13 +7,40 @@ import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-sche
 import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 import { PlaceUpdateForm } from "@/modules/places/schemas/place-update-form-schema";
 import { and, eq, ilike } from "drizzle-orm";
+import { alias } from "drizzle-orm/pg-core";
 
 export async function placeCategoriesGetAll() {
-  return await db.select().from(placeCategories);
+  const parent = alias(placeCategories, "parent");
+  return await db
+    .select({
+      id: placeCategories.id,
+      name: placeCategories.name,
+      parent: {
+        id: parent.id,
+        name: parent.name,
+      },
+    })
+    .from(placeCategories)
+    .leftJoin(parent, eq(parent.id, placeCategories.parentId))
+    .orderBy(parent.name, placeCategories.name);
 }
 
 export async function placeCategoryGetById(id: string) {
-  return (await db.select().from(placeCategories).where(eq(placeCategories.id, id)))[0];
+  const parent = alias(placeCategories, "parent");
+  return (
+    await db
+      .select({
+        id: placeCategories.id,
+        name: placeCategories.name,
+        parent: {
+          id: parent.id,
+          name: parent.name,
+        },
+      })
+      .from(placeCategories)
+      .leftJoin(parent, eq(parent.id, placeCategories.parentId))
+      .where(eq(placeCategories.id, id))
+  )[0];
 }
 
 export async function placesGetPaginated(params: {

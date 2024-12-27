@@ -96,13 +96,24 @@ export function PlaceCreateForm() {
                         <CommandGroup>
                           {categories.map((category) => (
                             <CommandItem
-                              value={category.name}
+                              value={
+                                category.parent
+                                  ? `${category.parent.name}-${category.name}`
+                                  : category.name
+                              }
                               key={category.id}
                               onSelect={() => {
                                 form.setValue("categoryId", category.id);
                               }}
                             >
-                              {category.name}
+                              {!category.parent && <div>{category.name}</div>}
+                              {category.parent && (
+                                <div>
+                                  <span>{category.parent.name}</span>
+                                  <span className="mx-1">•</span>
+                                  <span className="text-muted-foreground">{category.name}</span>
+                                </div>
+                              )}
                               <Check
                                 className={cn(
                                   "ml-auto",
