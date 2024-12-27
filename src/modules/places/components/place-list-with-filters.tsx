@@ -11,9 +11,7 @@ import { useState } from "react";
 
 export function PlaceListWithFilters() {
   const [searchFilter, setSearchFilter] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<IdNameParent | undefined>(
-    undefined,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<IdNameParent | undefined>(undefined);
   const [onlyVisited, setOnlyVisited] = useState(false);
 
   const categoriesQuery = usePlaceCategoriesGetAllQuery();

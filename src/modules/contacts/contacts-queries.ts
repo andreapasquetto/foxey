@@ -2,10 +2,17 @@ import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import { contactsGetPaginated } from "@/modules/contacts/contacts-actions";
 import { keepPreviousData } from "@tanstack/react-query";
 
-export function useContactsPaginatedQuery() {
+export function useContactsPaginatedQuery(
+  params: { searchFilter?: string; onlyArchived?: boolean } = {},
+) {
   return usePaginatedQuery({
-    queryKey: ["contacts"],
-    queryFn: (paginate) => contactsGetPaginated(paginate),
+    queryKey: ["contacts", { ...params }],
+    queryFn: (paginate) =>
+      contactsGetPaginated({
+        paginate,
+        searchFilter: params.searchFilter,
+        onlyArchived: params.onlyArchived,
+      }),
     placeholderData: keepPreviousData,
   });
 }

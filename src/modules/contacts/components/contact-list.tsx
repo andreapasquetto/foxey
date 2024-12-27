@@ -1,6 +1,13 @@
 "use client";
 
 import { QueryPagination } from "@/components/pagination";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -11,11 +18,22 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
+import { ArchiveContact } from "@/modules/contacts/components/archive-contact";
+import { DeleteContact } from "@/modules/contacts/components/delete-contact";
+import { UnarchiveContact } from "@/modules/contacts/components/unarchive-contact";
 import { useContactsPaginatedQuery } from "@/modules/contacts/contacts-queries";
-import { Building, User } from "lucide-react";
+import { Building, MoreHorizontal, User } from "lucide-react";
 
-export function ContactList() {
-  const query = useContactsPaginatedQuery();
+interface ContactListProps {
+  searchFilter?: string;
+  onlyArchived?: boolean;
+}
+
+export function ContactList(props: ContactListProps) {
+  const query = useContactsPaginatedQuery({
+    searchFilter: props.searchFilter,
+    onlyArchived: props.onlyArchived,
+  });
 
   if (!query.data) {
     return (
@@ -65,6 +83,27 @@ export function ContactList() {
               <TableCell>
                 <code>{contact.dob}</code>
               </TableCell>
+              <TableCell className="text-right">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="h-5 w-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      {contact.isArchived ? (
+                        <UnarchiveContact contact={contact} />
+                      ) : (
+                        <ArchiveContact contact={contact} />
+                      )}
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <DeleteContact contact={contact} />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -80,6 +119,7 @@ function TableHeaderRow() {
       <TableHead></TableHead>
       <TableHead>Full name</TableHead>
       <TableHead>Date of birth</TableHead>
+      <TableHead></TableHead>
     </TableRow>
   );
 }
@@ -97,6 +137,9 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-20" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-9 w-11" />
       </TableCell>
     </TableRow>
   ));

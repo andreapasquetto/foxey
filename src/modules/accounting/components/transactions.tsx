@@ -22,9 +22,7 @@ export function Transactions() {
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(thisMonthToDateRange());
   const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
-  const [selectedCategory, setSelectedCategory] = useState<IdNameParent | undefined>(
-    undefined,
-  );
+  const [selectedCategory, setSelectedCategory] = useState<IdNameParent | undefined>(undefined);
   const [selectedPlace, setSelectedPlace] = useState<PlaceRead | undefined>(undefined);
 
   const walletsQuery = useWalletsGetAllQuery();

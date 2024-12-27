@@ -12,7 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { XInput } from "@/components/x-input";
-import { useCreateContactMutation } from "@/modules/contacts/contacts-mutations";
+import { useContactCreateMutation } from "@/modules/contacts/contacts-mutations";
 import {
   type ContactCreateForm,
   contactCreateFormSchema,
@@ -38,7 +38,7 @@ export function ContactCreateForm(props: ContactCreateFormProps) {
     },
   });
 
-  const mutation = useCreateContactMutation();
+  const mutation = useContactCreateMutation();
 
   function onValidSubmit(values: ContactCreateForm) {
     mutation.mutate(values, {
