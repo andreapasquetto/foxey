@@ -1,7 +1,7 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
-import { DatePicker } from "@/components/date-picker";
+import { DatePicker } from "@/components/form/date-picker";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -22,14 +22,14 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { XInput } from "@/components/x-input";
+import { XInput } from "@/components/form/x-input";
 import { cn } from "@/lib/utils";
 import { useTransactionUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   useTransactionCategoriesGetAllQuery,
   useTransactionGetByIdQuery,
 } from "@/modules/accounting/accounting-queries";
-import { TransactionFormSkeleton } from "@/modules/accounting/components/forms/transaction-form-skeleton";
+import { TransactionFormSkeleton } from "@/modules/accounting/components/skeletons/transaction-form-skeleton";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import {
   type TransactionUpdateForm,

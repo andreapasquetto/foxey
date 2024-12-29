@@ -1,4 +1,4 @@
-import { InputSkeleton } from "@/components/input-skeleton";
+import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function TransactionFormSkeleton() {

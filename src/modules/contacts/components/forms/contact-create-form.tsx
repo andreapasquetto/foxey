@@ -1,7 +1,7 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
-import { DatePicker } from "@/components/date-picker";
+import { DatePicker } from "@/components/form/date-picker";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,7 +11,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { XInput } from "@/components/x-input";
+import { XInput } from "@/components/form/x-input";
 import { useContactCreateMutation } from "@/modules/contacts/contacts-mutations";
 import {
   type ContactCreateForm,

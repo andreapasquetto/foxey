@@ -5,6 +5,10 @@ import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { CarSwitcher } from "@/modules/mobility/components/car-switcher";
+import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
+import { OdometerChart } from "@/modules/mobility/components/charts/odometer-chart";
 import {
   useRefuelingsGetAllQuery,
   useServicesGetAllQuery,
@@ -13,17 +17,13 @@ import {
   calculateAvgDistance,
   calculateAvgFuelEconomy,
   calculateFuelEconomy,
-  calculateTotalCost,
   calculatePricePerDistance,
+  calculateTotalCost,
   calculateTotalDistance,
   extractRefuelingPeriods,
 } from "@/modules/mobility/mobility-utils";
-import { CarSwitcher } from "@/modules/mobility/components/car-switcher";
-import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
-import { OdometerChart } from "@/modules/mobility/components/charts/odometer-chart";
 import { CarRead } from "@/modules/mobility/schemas/car-read-schema";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 export default function CarStats() {
   const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);

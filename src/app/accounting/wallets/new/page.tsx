@@ -1,5 +1,5 @@
 import { Heading1 } from "@/components/typography";
-import { WalletCreateForm } from "@/modules/accounting/components/wallet-create-form";
+import { WalletCreateForm } from "@/modules/accounting/components/forms/wallet-create-form";
 
 export default function WalletCreatePage() {
   return (

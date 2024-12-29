@@ -2,8 +2,8 @@
 
 import { thisMonthToDateRange } from "@/common/dates";
 import { IdNameParent } from "@/common/types";
-import { ChipCombobox } from "@/components/chip-combobox";
-import { RangeDatePicker } from "@/components/range-date-picker";
+import { ChipCombobox } from "@/components/form/chip-combobox";
+import { RangeDatePicker } from "@/components/form/range-date-picker";
 import { Input } from "@/components/ui/input";
 import {
   useTransactionCategoriesGetAllQuery,

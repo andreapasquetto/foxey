@@ -1,5 +1,5 @@
 import { Heading1 } from "@/components/typography";
-import { WalletUpdateForm } from "@/modules/accounting/components/wallet-update-form";
+import { WalletUpdateForm } from "@/modules/accounting/components/forms/wallet-update-form";
 
 interface WalletUpdatePageProps {
   params: Promise<{ id: string }>;

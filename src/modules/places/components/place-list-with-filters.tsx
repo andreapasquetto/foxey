@@ -1,7 +1,7 @@
 "use client";
 
 import { IdNameParent } from "@/common/types";
-import { ChipCombobox } from "@/components/chip-combobox";
+import { ChipCombobox } from "@/components/form/chip-combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";

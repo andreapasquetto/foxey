@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useTransactionsGetPaginatedQuery } from "@/modules/accounting/accounting-queries";
-import { DeleteTransaction } from "@/modules/accounting/components/delete-transaction";
+import { DeleteTransaction } from "@/modules/accounting/components/dialogs/delete-transaction";
 import { format } from "date-fns";
-import { ChevronsRight, Edit, ExternalLink, MoreHorizontal } from "lucide-react";
+import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { DateRange } from "react-day-picker";
 

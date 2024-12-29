@@ -18,9 +18,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { ArchiveContact } from "@/modules/contacts/components/archive-contact";
-import { DeleteContact } from "@/modules/contacts/components/delete-contact";
-import { UnarchiveContact } from "@/modules/contacts/components/unarchive-contact";
+import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-contact";
+import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
+import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
 import { useContactsPaginatedQuery } from "@/modules/contacts/contacts-queries";
 import { Building, MoreHorizontal, User } from "lucide-react";
 

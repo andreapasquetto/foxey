@@ -1,5 +1,5 @@
-import { CheckboxSkeleton } from "@/components/checkbox-skeleton";
-import { InputSkeleton } from "@/components/input-skeleton";
+import { CheckboxSkeleton } from "@/components/skeleton/checkbox-skeleton";
+import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function PlaceFormSkeleton() {

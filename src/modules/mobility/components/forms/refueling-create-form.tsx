@@ -1,9 +1,9 @@
 "use client";
 
-import { CheckboxSkeleton } from "@/components/checkbox-skeleton";
+import { CheckboxSkeleton } from "@/components/skeleton/checkbox-skeleton";
 import { CircularSpinner } from "@/components/circular-spinner";
-import { DatePicker } from "@/components/date-picker";
-import { InputSkeleton } from "@/components/input-skeleton";
+import { DatePicker } from "@/components/form/date-picker";
+import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -23,9 +23,9 @@ import {
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { XCheckbox } from "@/components/x-checkbox";
-import { XInput } from "@/components/x-input";
-import { XSelect, XSelectOption } from "@/components/x-select";
+import { XCheckbox } from "@/components/form/x-checkbox";
+import { XInput } from "@/components/form/x-input";
+import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { cn } from "@/lib/utils";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { useRefuelingCreateMutation } from "@/modules/mobility/mobility-mutations";

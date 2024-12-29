@@ -1,5 +1,5 @@
 import { Heading1 } from "@/components/typography";
-import { TransactionCreateForm } from "@/modules/accounting/components/transaction-create-form";
+import { TransactionCreateForm } from "@/modules/accounting/components/forms/transaction-create-form";
 
 export default function TransactionCreatePage() {
   return (

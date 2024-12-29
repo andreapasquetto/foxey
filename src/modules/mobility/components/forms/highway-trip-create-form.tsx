@@ -1,8 +1,8 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
-import { DatePicker } from "@/components/date-picker";
-import { InputSkeleton } from "@/components/input-skeleton";
+import { DatePicker } from "@/components/form/date-picker";
+import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,8 +13,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { XInput } from "@/components/x-input";
-import { XSelect, XSelectOption } from "@/components/x-select";
+import { XInput } from "@/components/form/x-input";
+import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { useHighwayTripCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";

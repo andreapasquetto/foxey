@@ -3,7 +3,7 @@
 import { CircularSpinner } from "@/components/circular-spinner";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { XInput } from "@/components/x-input";
+import { XInput } from "@/components/form/x-input";
 import { useCarCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
   type CarCreateForm,
