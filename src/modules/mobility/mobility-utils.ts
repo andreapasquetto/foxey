@@ -28,45 +28,50 @@ export function extractRefuelingPeriods(refuelings: RefuelingRead[]) {
   };
 }
 
-export function calculateMonthlyCost(refuelings: RefuelingRead[]) {
-  return refuelings
-    .reduce((prev, curr) => prev.add(curr.transaction.amount), new Decimal(0))
-    .toNumber();
-}
-
 export function getEligibleRefuelings(refuelings: RefuelingRead[]) {
   return refuelings.filter((refueling) => refueling.trip !== null);
 }
 
+export function calculateTotalCost(refuelings: RefuelingRead[]) {
+  return refuelings.reduce((prev, curr) => prev.add(curr.transaction.amount), new Decimal(0));
+}
+
 export function calculateTotalDistance(refuelings: RefuelingRead[]) {
-  return refuelings.reduce((prev, curr) => prev.add(curr.trip ?? 0), new Decimal(0)).toNumber();
+  if (!refuelings.length) {
+    return null;
+  }
+
+  const first = new Decimal(refuelings.at(0)!.odometer);
+  const last = new Decimal(refuelings.at(-1)!.odometer);
+
+  return last.sub(first);
 }
 
 export function calculateAvgDistance(refuelings: RefuelingRead[]) {
   const numberOfTrips = getEligibleRefuelings(refuelings).length;
-  if (!numberOfTrips) return null;
+  if (numberOfTrips < 2) return null;
 
-  return refuelings
-    .reduce((prev, curr) => prev.add(curr.trip ?? 0), new Decimal(0))
-    .div(numberOfTrips)
-    .toDecimalPlaces(2)
-    .toNumber();
+  const distance = calculateTotalDistance(refuelings);
+  if (distance === null) return null;
+
+  return distance.div(numberOfTrips);
 }
 
 export function calculateFuelEconomy(
   refuelingA: RefuelingRead | undefined,
   refuelingB: RefuelingRead | undefined,
 ) {
-  if (!refuelingA || !refuelingB || refuelingA?.trip === null) {
+  if (!refuelingA || !refuelingB || refuelingA.trip === null) {
     return null;
   }
-  return new Decimal(refuelingA.trip).div(refuelingB.quantity).toDecimalPlaces(2).toNumber();
+  return new Decimal(refuelingA.trip).div(refuelingB.quantity);
 }
 
 // TODO: result is not reliable because calculations does NOT handle non-necessary refuelings differently
 export function calculateAvgFuelEconomy(refuelings: RefuelingRead[]) {
-  if (refuelings.length < 2) return null;
-
+  if (refuelings.length < 2) {
+    return null;
+  }
   const { totalQuantity, totalDistance } = refuelings.reduce(
     (acc, refueling) => {
       if (refueling.trip !== null) {
@@ -80,8 +85,15 @@ export function calculateAvgFuelEconomy(refuelings: RefuelingRead[]) {
       totalQuantity: new Decimal(0),
     },
   );
+  return totalDistance.div(totalQuantity);
+}
 
-  return totalDistance.div(totalQuantity).toDecimalPlaces(2).toNumber();
+export function calculatePricePerDistance(refuelings: RefuelingRead[]) {
+  const distance = calculateTotalDistance(refuelings);
+  if (!distance?.toNumber()) {
+    return null;
+  }
+  return calculateTotalCost(refuelings).div(distance);
 }
 
 export function generateOdometerChartData(params: {

@@ -13,7 +13,8 @@ import {
   calculateAvgDistance,
   calculateAvgFuelEconomy,
   calculateFuelEconomy,
-  calculateMonthlyCost,
+  calculateTotalCost,
+  calculatePricePerDistance,
   calculateTotalDistance,
   extractRefuelingPeriods,
 } from "@/modules/mobility/mobility-utils";
@@ -166,18 +167,21 @@ export default function CarStats() {
 
   const stats = {
     fuelCosts: {
-      thisMonth: calculateMonthlyCost(refuelingPeriods.thisMonth),
-      lastMonth: calculateMonthlyCost(refuelingPeriods.lastMonth),
+      thisMonth: calculateTotalCost(refuelingPeriods.thisMonth).toDecimalPlaces(2).toNumber(),
+      lastMonth: calculateTotalCost(refuelingPeriods.lastMonth).toDecimalPlaces(2).toNumber(),
     },
     distance: {
-      average: calculateAvgDistance(refuelings),
-      thisYear: calculateTotalDistance(refuelingPeriods.thisYear),
-      lastYear: calculateTotalDistance(refuelingPeriods.lastYear),
-      total: calculateTotalDistance(refuelings),
+      average: calculateAvgDistance(refuelings)?.toDecimalPlaces(2).toNumber(),
+      thisYear: calculateTotalDistance(refuelingPeriods.thisYear)?.toDecimalPlaces(2).toNumber(),
+      lastYear: calculateTotalDistance(refuelingPeriods.lastYear)?.toDecimalPlaces(2).toNumber(),
+      total: calculateTotalDistance(refuelings)?.toDecimalPlaces(2).toNumber(),
     },
     fuelEconomy: {
-      last: calculateFuelEconomy(refuelings.at(-1), refuelings.at(-2)),
-      avg: calculateAvgFuelEconomy(refuelings),
+      last: calculateFuelEconomy(refuelings.at(-1), refuelings.at(-2))
+        ?.toDecimalPlaces(2)
+        .toNumber(),
+      avg: calculateAvgFuelEconomy(refuelings)?.toDecimalPlaces(2).toNumber(),
+      pricePerDistance: calculatePricePerDistance(refuelings)?.toNumber(),
     },
   };
 
@@ -255,6 +259,12 @@ export default function CarStats() {
               {stats.fuelEconomy.avg && (
                 <p className="text-xs text-muted-foreground">
                   All-time average is {numberFormatter.format(stats.fuelEconomy.avg)} km/l
+                </p>
+              )}
+              {!!stats.fuelEconomy.pricePerDistance && (
+                <p className="text-xs text-muted-foreground">
+                  Price/Distance ratio is{" "}
+                  {`${numberFormatter.format(stats.fuelEconomy.pricePerDistance)} €/km`}
                 </p>
               )}
             </CardContent>
