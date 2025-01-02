@@ -1,13 +1,14 @@
 "use client";
 
+import { accountingRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
+import { XInput } from "@/components/form/x-input";
 import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { XInput } from "@/components/form/x-input";
 import { useWalletUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import { useWalletGetByIdQuery } from "@/modules/accounting/accounting-queries";
 import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
@@ -45,7 +46,7 @@ export function WalletUpdateForm(props: WalletUpdateFormProps) {
     <UpdateForm
       wallet={query.data}
       onUpdate={() => {
-        router.push("/accounting");
+        router.push(accountingRoute);
       }}
     />
   );

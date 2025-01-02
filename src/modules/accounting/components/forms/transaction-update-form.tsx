@@ -1,7 +1,9 @@
 "use client";
 
+import { accountingRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
+import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -22,7 +24,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { XInput } from "@/components/form/x-input";
 import { cn } from "@/lib/utils";
 import { useTransactionUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import {
@@ -57,7 +58,7 @@ export function TransactionUpdateForm(props: TransactionUpdateFormProps) {
     <UpdateForm
       transaction={query.data}
       onUpdate={() => {
-        router.push("/accounting");
+        router.push(accountingRoute);
       }}
     />
   );

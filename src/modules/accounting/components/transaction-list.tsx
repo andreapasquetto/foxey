@@ -1,4 +1,5 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
+import { transactionRoute } from "@/common/routes";
 import { QueryPagination } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,65 +75,69 @@ export function TransactionList(props: RecentTransactionsProps) {
           <TableHeaderRow />
         </TableHeader>
         <TableBody>
-          {transactions.map((tx) => (
-            <TableRow key={tx.id}>
+          {transactions.map((transaction) => (
+            <TableRow key={transaction.id}>
               <TableCell>
-                <code>{format(tx.datetime, "ccc y-MM-dd HH:mm")}</code>
+                <code>{format(transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
               <TableCell>
                 <div>
                   <div className="space-x-2 text-sm text-muted-foreground">
-                    {tx.fromWallet && <span>{tx.fromWallet.name}</span>}
-                    {tx.fromWallet && tx.toWallet && (
+                    {transaction.fromWallet && <span>{transaction.fromWallet.name}</span>}
+                    {transaction.fromWallet && transaction.toWallet && (
                       <ChevronsRight
                         className={cn("inline-block h-5 w-5", {
-                          "text-red-500 dark:text-red-400": props.walletId === tx.fromWallet.id,
-                          "text-green-500 dark:text-green-400": props.walletId === tx.toWallet.id,
+                          "text-red-500 dark:text-red-400":
+                            props.walletId === transaction.fromWallet.id,
+                          "text-green-500 dark:text-green-400":
+                            props.walletId === transaction.toWallet.id,
                         })}
                       />
                     )}
-                    {tx.toWallet && <span>{tx.toWallet.name}</span>}
+                    {transaction.toWallet && <span>{transaction.toWallet.name}</span>}
                   </div>
                 </div>
               </TableCell>
               <TableCell>
                 <div>
-                  <div>{tx.category?.name}</div>
-                  {tx.category?.parent && (
+                  <div>{transaction.category?.name}</div>
+                  {transaction.category?.parent && (
                     <div className="space-x-2 text-sm text-muted-foreground">
-                      <span>{tx.category.parent.name}</span>
+                      <span>{transaction.category.parent.name}</span>
                     </div>
                   )}
                 </div>
               </TableCell>
               <TableCell>
                 <div>
-                  <div>{tx.place?.name}</div>
-                  {tx.place?.category && (
+                  <div>{transaction.place?.name}</div>
+                  {transaction.place?.category && (
                     <div className="space-x-2 text-sm text-muted-foreground">
-                      <span>{tx.place.category.name}</span>
+                      <span>{transaction.place.category.name}</span>
                     </div>
                   )}
                 </div>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-1">
-                  {tx.tags.map((tag) => (
+                  {transaction.tags.map((tag) => (
                     <Badge key={tag.id}>{tag.name}</Badge>
                   ))}
                 </div>
               </TableCell>
-              <TableCell>{tx.description}</TableCell>
+              <TableCell>{transaction.description}</TableCell>
               <TableCell className="text-right">
                 {
                   <code
                     className={cn({
-                      "text-green-500 dark:text-green-400": tx.toWallet && !tx.fromWallet,
-                      "text-red-500 dark:text-red-400": tx.fromWallet && !tx.toWallet,
-                      "text-muted-foreground": tx.fromWallet && tx.toWallet,
+                      "text-green-500 dark:text-green-400":
+                        transaction.toWallet && !transaction.fromWallet,
+                      "text-red-500 dark:text-red-400":
+                        transaction.fromWallet && !transaction.toWallet,
+                      "text-muted-foreground": transaction.fromWallet && transaction.toWallet,
                     })}
                   >
-                    {rawCurrencyFormatter.format(parseFloat(tx.amount))}
+                    {rawCurrencyFormatter.format(parseFloat(transaction.amount))}
                   </code>
                 }
               </TableCell>
@@ -146,14 +151,14 @@ export function TransactionList(props: RecentTransactionsProps) {
                   <DropdownMenuContent align="end" className="w-[250px]">
                     <DropdownMenuItem asChild>
                       <Link
-                        href={`/accounting/transactions/${tx.id}`}
+                        href={transactionRoute(transaction.id)}
                         className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
                       >
                         Edit <Edit className="h-5 w-5" />
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <DeleteTransaction transaction={tx} />
+                      <DeleteTransaction transaction={transaction} />
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

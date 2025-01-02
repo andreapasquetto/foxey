@@ -1,9 +1,17 @@
 "use client";
 
+import {
+  accountingRoute,
+  contactsRoute,
+  eventsRoute,
+  mobilityRoute,
+  placesRoute,
+  privateRoute,
+} from "@/common/routes";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
-import { Calendar, Car, Contact, Home, Landmark, Map, Settings } from "lucide-react";
+import { Calendar, Car, Contact, Home, Landmark, Map } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
@@ -14,27 +22,27 @@ const navigationItems = [
     title: "Home",
   },
   {
-    href: "/accounting",
+    href: accountingRoute,
     icon: <Landmark className="h-5 w-5" />,
     title: "Accounting",
   },
   {
-    href: "/mobility",
+    href: mobilityRoute,
     icon: <Car className="h-5 w-5" />,
     title: "Mobility",
   },
   {
-    href: "/contacts",
+    href: contactsRoute,
     icon: <Contact className="h-5 w-5" />,
     title: "Contacts",
   },
   {
-    href: "/events",
+    href: eventsRoute,
     icon: <Calendar className="h-5 w-5" />,
     title: "Events",
   },
   {
-    href: "/places",
+    href: placesRoute,
     icon: <Map className="h-5 w-5" />,
     title: "Places",
   },
@@ -68,23 +76,6 @@ export function NavbarDesktop() {
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2">
         <ThemeToggle />
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Link
-              href="/settings"
-              className={cn(
-                "flex h-9 w-9 items-center justify-center rounded-lg transition-colors",
-                pathname === "/settings"
-                  ? "bg-foreground text-accent"
-                  : "text-accent-foreground hover:bg-accent hover:text-foreground",
-              )}
-            >
-              <Settings className="h-5 w-5" />
-              <span className="sr-only">Settings</span>
-            </Link>
-          </TooltipTrigger>
-          <TooltipContent side="right">Settings</TooltipContent>
-        </Tooltip>
       </nav>
     </aside>
   );

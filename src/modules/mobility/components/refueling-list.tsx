@@ -1,3 +1,4 @@
+import { transactionRoute } from "@/common/routes";
 import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -101,7 +102,7 @@ export function RefuelingList(props: RefuelingListProps) {
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <Link
-                        href={`/accounting/transactions/${refueling.transaction.id}`}
+                        href={transactionRoute(refueling.transaction.id)}
                         target="_blank"
                         className={cn(
                           "flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-accent",

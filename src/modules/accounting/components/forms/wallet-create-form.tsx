@@ -1,9 +1,10 @@
 "use client";
 
+import { accountingRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
+import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { XInput } from "@/components/form/x-input";
 import { useWalletCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   type WalletCreateForm,
@@ -24,7 +25,7 @@ export function WalletCreateForm() {
   function onValidSubmit(values: WalletCreateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/accounting");
+        router.push(accountingRoute);
       },
     });
   }

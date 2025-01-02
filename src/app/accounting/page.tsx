@@ -1,3 +1,4 @@
+import { newTransactionRoute, newWalletRoute, transactionCategoriesRoute } from "@/common/routes";
 import { Heading1, Heading2 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,7 +33,7 @@ export default function AccountingPage() {
           <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
             <DropdownMenuItem asChild>
               <Link
-                href="/accounting/categories"
+                href={transactionCategoriesRoute}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
                 Manage categories <SquareStack className="h-5 w-5" />
@@ -49,7 +50,7 @@ export default function AccountingPage() {
           <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
             <DropdownMenuItem asChild>
               <Link
-                href="/accounting/transactions/new"
+                href={newTransactionRoute}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
                 Add transaction <ArrowRightLeft className="h-5 w-5" />
@@ -57,7 +58,7 @@ export default function AccountingPage() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href="/accounting/wallets/new"
+                href={newWalletRoute}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
                 Add wallet <Wallet className="h-5 w-5" />

@@ -1,7 +1,10 @@
 "use client";
 
+import { accountingRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
+import { XInput } from "@/components/form/x-input";
+import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -20,8 +23,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { XInput } from "@/components/form/x-input";
-import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { cn } from "@/lib/utils";
 import { useTransactionCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
@@ -63,7 +64,7 @@ export function TransactionCreateForm() {
   function onSubmit(values: TransactionCreateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/accounting");
+        router.push(accountingRoute);
       },
     });
   }

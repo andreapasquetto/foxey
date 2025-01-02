@@ -1,5 +1,6 @@
 "use client";
 
+import { placeRoute } from "@/common/routes";
 import { QueryPagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -95,7 +96,7 @@ export function PlaceList(props: PlaceListProps) {
                   <DropdownMenuContent align="end" className="w-[250px]">
                     <DropdownMenuItem asChild>
                       <Link
-                        href={`/places/${place.id}`}
+                        href={placeRoute(place.id)}
                         className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
                       >
                         Edit <Edit className="h-5 w-5" />

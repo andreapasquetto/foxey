@@ -1,12 +1,13 @@
 "use client";
 
+import { transactionCategoriesRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
+import { XInput } from "@/components/form/x-input";
+import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { XInput } from "@/components/form/x-input";
-import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { useTransactionCategoryCreateMutation } from "@/modules/accounting/accounting-mutations";
 import { useTransactionCategoriesGetAllWithoutParentQuery } from "@/modules/accounting/accounting-queries";
 import {
@@ -42,7 +43,7 @@ export function TransactionCategoryCreateForm() {
   function onValidSubmit(values: TransactionCategoryCreateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/accounting/categories");
+        router.push(transactionCategoriesRoute);
       },
     });
   }

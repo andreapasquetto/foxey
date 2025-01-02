@@ -1,3 +1,4 @@
+import { newCarRoute, newHighwayTripRoute, newRefuelingRoute } from "@/common/routes";
 import { Heading1, Heading2 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,7 +29,7 @@ export default function MobilityPage() {
           <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
             <DropdownMenuItem asChild>
               <Link
-                href="/mobility/refuelings/new"
+                href={newRefuelingRoute}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
                 Add refueling <Fuel className="h-5 w-5" />
@@ -36,7 +37,7 @@ export default function MobilityPage() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href="/mobility/highway-trips/new"
+                href={newHighwayTripRoute}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
                 Add highway trip <Gauge className="h-5 w-5" />
@@ -44,7 +45,7 @@ export default function MobilityPage() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href="/mobility/cars/new"
+                href={newCarRoute}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
                 Add car <CarFront className="h-5 w-5" />

@@ -1,7 +1,10 @@
 "use client";
 
+import { mobilityRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
+import { XInput } from "@/components/form/x-input";
+import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,8 +16,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { XInput } from "@/components/form/x-input";
-import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { useHighwayTripCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
@@ -50,7 +51,7 @@ export function HighwayTripCreateForm() {
   function onValidSubmit(values: HighwayTripCreateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/mobility");
+        router.push(mobilityRoute);
       },
     });
   }

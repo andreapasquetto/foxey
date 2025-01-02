@@ -1,9 +1,10 @@
 "use client";
 
+import { mobilityRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
+import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { XInput } from "@/components/form/x-input";
 import { useCarCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
   type CarCreateForm,
@@ -27,7 +28,7 @@ export function CarCreateForm() {
   function onValidSubmit(values: CarCreateForm) {
     mutation.mutate(values, {
       onSuccess: () => {
-        router.push("/mobility");
+        router.push(mobilityRoute);
       },
     });
   }

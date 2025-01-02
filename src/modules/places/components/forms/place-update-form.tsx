@@ -1,7 +1,9 @@
 "use client";
 
-import { PlaceFormSkeleton } from "@/modules/places/components/skeletons/place-form-skeleton";
+import { placesRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
+import { XCheckbox } from "@/components/form/x-checkbox";
+import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -20,9 +22,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { XCheckbox } from "@/components/form/x-checkbox";
-import { XInput } from "@/components/form/x-input";
 import { cn } from "@/lib/utils";
+import { PlaceFormSkeleton } from "@/modules/places/components/skeletons/place-form-skeleton";
 import { usePlaceUpdateMutation } from "@/modules/places/places-mutations";
 import {
   usePlaceCategoriesGetAllQuery,
@@ -54,7 +55,7 @@ export function PlaceUpdateForm(props: PlaceUpdateFormProps) {
     <UpdateForm
       place={query.data}
       onUpdate={() => {
-        router.push("/places");
+        router.push(placesRoute);
       }}
     />
   );

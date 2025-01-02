@@ -1,6 +1,7 @@
 "use client";
 
 import { rawCurrencyFormatter } from "@/common/formatters";
+import { walletRoute } from "@/common/routes";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -77,7 +78,7 @@ export function WalletList() {
                   <DropdownMenuContent align="end" className="w-[250px]">
                     <DropdownMenuItem asChild>
                       <Link
-                        href={`/accounting/wallets/${wallet.id}`}
+                        href={walletRoute(wallet.id)}
                         className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
                       >
                         Edit <Edit className="h-5 w-5" />
