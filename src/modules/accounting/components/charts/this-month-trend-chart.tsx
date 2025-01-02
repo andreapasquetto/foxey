@@ -39,10 +39,9 @@ export function ThisMonthTrendChart() {
   if (!query.data) return <GenerateChartSkeleton onGenerateChart={() => query.refetch()} />;
 
   const transactions = query.data;
-
-  if (transactions.length < 2) return <NotEnoughDataSkeleton />;
-
   const chartData = generateThisMonthTrendChartData(transactions);
+
+  if (chartData.length < 2) return <NotEnoughDataSkeleton />;
 
   return (
     <div className="space-y-3">
