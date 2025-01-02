@@ -1,17 +1,16 @@
-// TODO: change this to "/private" when moving app routes for authentication
-export const privateRoute = "";
+export const privateRoute = "/private";
 
 export const accountingRoute = `${privateRoute}/accounting`;
 export const transactionCategoriesRoute = `${accountingRoute}/categories`;
 export const newTransactionCategoryRoute = `${accountingRoute}/categories/new`;
-export const newTransactionRoute = `${accountingRoute}/transactions/new"`;
+export const newTransactionRoute = `${accountingRoute}/transactions/new`;
 export const newWalletRoute = `${accountingRoute}/wallets/new`;
 
 export function transactionRoute(id: string) {
   return `${accountingRoute}/transactions/${id}`;
 }
 export function walletRoute(id: string) {
-  return `${accountingRoute}/walets/${id}`;
+  return `${accountingRoute}/wallets/${id}`;
 }
 
 export const contactsRoute = `${privateRoute}/contacts`;

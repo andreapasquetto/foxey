@@ -11,13 +11,14 @@ import {
 import { ThemeToggle } from "@/components/theme-toggle";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
+import { UserButton } from "@clerk/nextjs";
 import { Calendar, Car, Contact, Home, Landmark, Map } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 const navigationItems = [
   {
-    href: "/",
+    href: privateRoute,
     icon: <Home className="h-5 w-5" />,
     title: "Home",
   },
@@ -76,6 +77,7 @@ export function NavbarDesktop() {
       </nav>
       <nav className="mt-auto flex flex-col items-center gap-4 px-2">
         <ThemeToggle />
+        <UserButton />
       </nav>
     </aside>
   );
