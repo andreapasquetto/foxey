@@ -1,4 +1,13 @@
 import { QueryPagination } from "@/components/pagination";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -8,8 +17,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { useServicesGetPaginatedQuery } from "@/modules/mobility/mobility-queries";
 import { format } from "date-fns";
+import { Notebook } from "lucide-react";
 
 interface ServiceListProps {
   carId: string | undefined;
@@ -60,6 +72,39 @@ export function ServiceList(props: ServiceListProps) {
               {!props.carId && <TableCell>{`${service.car.make} ${service.car.model}`}</TableCell>}
               <TableCell>
                 <code>{service.odometer}</code>
+              </TableCell>
+              <TableCell>
+                <div className="flex items-center justify-end gap-1">
+                  {service.notes && (
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Dialog>
+                          <DialogTrigger>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button variant="ghost" size="icon">
+                                  <Notebook className="h-5 w-5" />
+                                  <span className="sr-only">View notes</span>
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent side="top">View notes</TooltipContent>
+                            </Tooltip>
+                          </DialogTrigger>
+                          <DialogContent>
+                            <DialogHeader>
+                              <DialogTitle>Service notes</DialogTitle>
+                              <DialogDescription>
+                                {`${service.car.make} ${service.car.model} • ${format(service.datetime, "ccc y-MM-dd HH:mm")}`}
+                              </DialogDescription>
+                            </DialogHeader>
+                            <pre className="max-w-full text-wrap">{service.notes}</pre>
+                          </DialogContent>
+                        </Dialog>
+                      </TooltipTrigger>
+                      <TooltipContent side="top">View notes</TooltipContent>
+                    </Tooltip>
+                  )}
+                </div>
               </TableCell>
             </TableRow>
           ))}

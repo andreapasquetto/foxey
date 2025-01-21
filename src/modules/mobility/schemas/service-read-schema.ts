@@ -5,4 +5,5 @@ export interface ServiceRead {
   car: CarRead;
   datetime: Date;
   odometer: string;
+  notes: string | null;
 }

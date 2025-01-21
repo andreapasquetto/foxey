@@ -1,5 +1,14 @@
 import { transactions } from "@/db/schema/accounting";
-import { boolean, integer, numeric, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  integer,
+  numeric,
+  pgTable,
+  text,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const cars = pgTable("cars", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -44,4 +53,5 @@ export const services = pgTable("car_services", {
     .references(() => cars.id),
   datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
   odometer: numeric("odometer").notNull(),
+  notes: text("notes"),
 });
