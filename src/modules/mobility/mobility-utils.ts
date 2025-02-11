@@ -1,3 +1,4 @@
+import { InspectionRead } from "@/modules/mobility/schemas/inspection-read-schema";
 import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
 import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
 import {
@@ -111,6 +112,7 @@ export function calculatePricePerDistance(refuelings: RefuelingRead[]) {
 export function generateOdometerChartData(params: {
   refuelings: RefuelingRead[];
   services: ServiceRead[];
+  inspections: InspectionRead[];
 }) {
   return [
     ...params.refuelings.map((refueling) => ({
@@ -120,6 +122,10 @@ export function generateOdometerChartData(params: {
     ...params.services.map((service) => ({
       datetime: service.datetime,
       service: Number(service.odometer),
+    })),
+    ...params.inspections.map((inspection) => ({
+      datetime: inspection.datetime,
+      inspection: Number(inspection.odometer),
     })),
   ].toSorted((a, b) => (isBefore(a.datetime, b.datetime) ? -1 : 1));
 }

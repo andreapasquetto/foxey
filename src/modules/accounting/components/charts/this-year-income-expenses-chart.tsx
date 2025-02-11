@@ -65,7 +65,7 @@ export function ThisYearIncomeExpensesChart() {
           />
           <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
           <Bar dataKey="income" fill="hsl(var(--foreground))" radius={2} />
-          <Bar dataKey="expenses" fill="hsl(var(--chart-accent))" radius={2} />
+          <Bar dataKey="expenses" fill="hsl(var(--chart-accent-1))" radius={2} />
         </BarChart>
       </ChartContainer>
     </div>
@@ -91,7 +91,7 @@ function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
             <YAxis tickLine={false} axisLine={false} domain={[0, "dataMax"]} />
             <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
             <Bar dataKey="income" fill="hsl(var(--foreground))" radius={2} />
-            <Bar dataKey="expenses" fill="hsl(var(--chart-accent))" radius={2} />
+            <Bar dataKey="expenses" fill="hsl(var(--chart-accent-1))" radius={2} />
           </BarChart>
         </ChartContainer>
       </div>

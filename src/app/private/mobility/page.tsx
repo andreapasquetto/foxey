@@ -1,4 +1,9 @@
-import { newCarRoute, newHighwayTripRoute, newRefuelingRoute } from "@/common/routes";
+import {
+  newCarRoute,
+  newHighwayTripRoute,
+  newInspectionRoute,
+  newRefuelingRoute,
+} from "@/common/routes";
 import { Heading1, Heading2 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,9 +15,10 @@ import {
 import { CarList } from "@/modules/mobility/components/car-list";
 import CarStats from "@/modules/mobility/components/car-stats";
 import { HighwayTrips } from "@/modules/mobility/components/highway-trips";
+import { Inspections } from "@/modules/mobility/components/inspections";
 import { Refuelings } from "@/modules/mobility/components/refuelings";
 import { Services } from "@/modules/mobility/components/services";
-import { CarFront, Fuel, Gauge, Plus } from "lucide-react";
+import { BookOpenCheck, CarFront, Fuel, Gauge, Plus } from "lucide-react";
 import Link from "next/link";
 
 export default function MobilityPage() {
@@ -45,6 +51,14 @@ export default function MobilityPage() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
+                href={newInspectionRoute}
+                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+              >
+                Add inspection <BookOpenCheck className="h-5 w-5" />
+              </Link>
+            </DropdownMenuItem>
+            <DropdownMenuItem asChild>
+              <Link
                 href={newCarRoute}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
               >
@@ -73,6 +87,10 @@ export default function MobilityPage() {
       <section className="space-y-6">
         <Heading2>Services</Heading2>
         <Services />
+      </section>
+      <section className="space-y-6">
+        <Heading2>Inspections</Heading2>
+        <Inspections />
       </section>
     </div>
   );

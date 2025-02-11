@@ -6,6 +6,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { generateOdometerChartData } from "@/modules/mobility/mobility-utils";
+import { InspectionRead } from "@/modules/mobility/schemas/inspection-read-schema";
 import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
 import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
 import { format } from "date-fns";
@@ -18,11 +19,15 @@ const chartConfig = {
   service: {
     label: "Service",
   },
+  inspection: {
+    label: "Inspection",
+  },
 } satisfies ChartConfig;
 
 interface OdometerChartProps {
   refuelings: RefuelingRead[];
   services: ServiceRead[];
+  inspections: InspectionRead[];
 }
 
 export function OdometerChart(props: OdometerChartProps) {
@@ -30,6 +35,7 @@ export function OdometerChart(props: OdometerChartProps) {
   const chartData = generateOdometerChartData({
     refuelings: props.refuelings,
     services: props.services,
+    inspections: props.inspections,
   });
 
   return (
@@ -60,8 +66,15 @@ export function OdometerChart(props: OdometerChartProps) {
             dataKey="service"
             type="linear"
             stroke="none"
-            dot={{ fill: "hsl(var(--chart-accent))" }}
-            activeDot={{ fill: "hsl(var(--chart-accent))", r: 4 }}
+            dot={{ fill: "hsl(var(--chart-accent-1))" }}
+            activeDot={{ fill: "hsl(var(--chart-accent-1))", r: 4 }}
+          />
+          <Line
+            dataKey="inspection"
+            type="linear"
+            stroke="none"
+            dot={{ fill: "hsl(var(--chart-accent-2))" }}
+            activeDot={{ fill: "hsl(var(--chart-accent-2))", r: 4 }}
           />
         </ComposedChart>
       </ChartContainer>

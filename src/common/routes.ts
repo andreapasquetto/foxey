@@ -21,6 +21,7 @@ export const mobilityRoute = `${privateRoute}/mobility`;
 export const newCarRoute = `${mobilityRoute}/cars/new`;
 export const newHighwayTripRoute = `${mobilityRoute}/highway-trips/new`;
 export const newRefuelingRoute = `${mobilityRoute}/refuelings/new`;
+export const newInspectionRoute = `${mobilityRoute}/inspections/new`;
 
 export const placesRoute = `${privateRoute}/places`;
 export const placeCategoriesRoute = `${placesRoute}/categories`;

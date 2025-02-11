@@ -34,7 +34,8 @@
 
     --radius: 0.5rem;
 
-    --chart-accent: 217.2 91.2% 59.8%;
+    --chart-accent-1: 217.2 91.2% 59.8%;
+    --chart-accent-2: 142.1 70.6% 45.3%;
   }
 
   .dark {

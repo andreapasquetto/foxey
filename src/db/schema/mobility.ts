@@ -55,3 +55,13 @@ export const services = pgTable("car_services", {
   odometer: numeric("odometer").notNull(),
   notes: text("notes"),
 });
+
+export const inspections = pgTable("car_inspections", {
+  id: uuid("id").defaultRandom().primaryKey(),
+  carId: uuid("car_id")
+    .notNull()
+    .references(() => cars.id),
+  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
+  odometer: numeric("odometer").notNull(),
+  isSuccessful: boolean("is_successful").notNull().default(true),
+});

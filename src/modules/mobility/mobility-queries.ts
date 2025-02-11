@@ -2,6 +2,8 @@ import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   carsGetAll,
   highwayTripsGetPaginated,
+  inspectionsGetAll,
+  inspectionsGetPaginated,
   refuelingsGetAll,
   refuelingsGetPaginated,
   servicesGetAll,
@@ -50,6 +52,21 @@ export function useHighwayTripsGetPaginatedQuery(carId?: string) {
   return usePaginatedQuery({
     queryKey: ["highway-trips", { carId }],
     queryFn: (paginate) => highwayTripsGetPaginated({ paginate, carId }),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useInspectionsGetAllQuery(carId?: string) {
+  return useQuery({
+    queryKey: ["inspections", { carId }],
+    queryFn: () => inspectionsGetAll(carId),
+  });
+}
+
+export function useInspectionsGetPaginatedQuery(carId?: string) {
+  return usePaginatedQuery({
+    queryKey: ["inspections", { carId }],
+    queryFn: (paginate) => inspectionsGetPaginated({ paginate, carId }),
     placeholderData: keepPreviousData,
   });
 }

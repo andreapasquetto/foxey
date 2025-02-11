@@ -3,11 +3,13 @@
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { db } from "@/db/db";
 import { transactions } from "@/db/schema/accounting";
-import { cars, highwayTrips, refuelings, services } from "@/db/schema/mobility";
+import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schema/mobility";
 import { transactionGetById } from "@/modules/accounting/accounting-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { HighwayTripRead } from "@/modules/mobility/schemas/highway-trip-read-schema";
+import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";
+import { InspectionRead } from "@/modules/mobility/schemas/inspection-read-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
 import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
 import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
@@ -197,6 +199,55 @@ export async function servicesGetPaginated(options: { paginate: Paginate; carId?
   return toPaginated(result, total);
 }
 
+export async function inspectionsCreate(inspection: InspectionCreateForm) {
+  await db.insert(inspections).values({
+    datetime: inspection.datetime,
+    carId: inspection.carId,
+    odometer: String(inspection.odometer),
+    isSuccessful: true,
+  });
+}
+
+export async function inspectionsGetAll(carId?: string) {
+  const cars = await carsGetAll();
+  const records = await db
+    .select()
+    .from(inspections)
+    .where(carId ? eq(inspections.carId, carId) : undefined)
+    .orderBy(inspections.datetime);
+
+  const result: InspectionRead[] = [];
+  for (const record of records) {
+    const car = cars.find((c) => c.id === record.carId)!;
+    result.push({ ...record, car });
+  }
+
+  return result;
+}
+
+export async function inspectionsGetPaginated(options: { paginate: Paginate; carId?: string }) {
+  const total = await countTotalInspections(options.carId);
+  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
+
+  const cars = await carsGetAll();
+
+  const records = await db
+    .select()
+    .from(inspections)
+    .where(options.carId ? eq(inspections.carId, options.carId) : undefined)
+    .limit(limit)
+    .offset(offset)
+    .orderBy(desc(inspections.datetime));
+
+  const result: InspectionRead[] = [];
+  for (const record of records) {
+    const car = cars.find((c) => c.id === record.carId)!;
+    result.push({ ...record, car });
+  }
+
+  return toPaginated(result, total);
+}
+
 async function countTotalRefuelings(carId?: string) {
   const totalRecordsQB = db.select().from(refuelings);
   if (carId) {
@@ -217,6 +268,14 @@ async function countTotalHighwayTrips(carId?: string) {
   const totalRecordsQB = db.select().from(highwayTrips);
   if (carId) {
     totalRecordsQB.where(eq(highwayTrips.carId, carId));
+  }
+  return (await totalRecordsQB).length;
+}
+
+async function countTotalInspections(carId?: string) {
+  const totalRecordsQB = db.select().from(inspections);
+  if (carId) {
+    totalRecordsQB.where(eq(inspections.carId, carId));
   }
   return (await totalRecordsQB).length;
 }

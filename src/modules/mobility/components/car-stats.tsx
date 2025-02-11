@@ -11,6 +11,7 @@ import { CarSwitcher } from "@/modules/mobility/components/car-switcher";
 import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
 import { OdometerChart } from "@/modules/mobility/components/charts/odometer-chart";
 import {
+  useInspectionsGetAllQuery,
   useRefuelingsGetAllQuery,
   useServicesGetAllQuery,
 } from "@/modules/mobility/mobility-queries";
@@ -33,6 +34,7 @@ export default function CarStats() {
 
   const refuelingsQuery = useRefuelingsGetAllQuery(selectedCar?.id);
   const servicesQuery = useServicesGetAllQuery(selectedCar?.id);
+  const inspectionsQuery = useInspectionsGetAllQuery(selectedCar?.id);
 
   if (!selectedCar) {
     return (
@@ -49,7 +51,8 @@ export default function CarStats() {
     );
   }
 
-  const isFetching = refuelingsQuery.isFetching || servicesQuery.isFetching;
+  const isFetching =
+    refuelingsQuery.isFetching || servicesQuery.isFetching || inspectionsQuery.isFetching;
   if (isFetching) {
     return (
       <>
@@ -113,6 +116,7 @@ export default function CarStats() {
 
   const refuelings = refuelingsQuery.data ?? [];
   const services = servicesQuery.data ?? [];
+  const inspections = inspectionsQuery.data ?? [];
 
   if (!refuelings.length) {
     return (
@@ -296,7 +300,7 @@ export default function CarStats() {
 
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           <FuelPriceChart refuelings={refuelings} />
-          <OdometerChart refuelings={refuelings} services={services} />
+          <OdometerChart refuelings={refuelings} services={services} inspections={inspections} />
         </div>
       </div>
     </>
