@@ -4,7 +4,7 @@ import {
   newInspectionRoute,
   newRefuelingRoute,
 } from "@/common/routes";
-import { Heading1, Heading2 } from "@/components/typography";
+import { Heading1 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -13,11 +13,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CarList } from "@/modules/mobility/components/car-list";
-import CarStats from "@/modules/mobility/components/car-stats";
-import { HighwayTrips } from "@/modules/mobility/components/highway-trips";
-import { Inspections } from "@/modules/mobility/components/inspections";
-import { Refuelings } from "@/modules/mobility/components/refuelings";
-import { Services } from "@/modules/mobility/components/services";
 import { BookOpenCheck, CarFront, Fuel, Gauge, Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -69,28 +64,7 @@ export default function MobilityPage() {
         </DropdownMenu>
       </div>
       <section className="space-y-6">
-        <Heading2>Cars</Heading2>
         <CarList />
-      </section>
-      <section className="space-y-6">
-        <Heading2>Stats</Heading2>
-        <CarStats />
-      </section>
-      <section className="space-y-6">
-        <Heading2>Refuelings</Heading2>
-        <Refuelings />
-      </section>
-      <section className="space-y-6">
-        <Heading2>Highway trips</Heading2>
-        <HighwayTrips />
-      </section>
-      <section className="space-y-6">
-        <Heading2>Services</Heading2>
-        <Services />
-      </section>
-      <section className="space-y-6">
-        <Heading2>Inspections</Heading2>
-        <Inspections />
       </section>
     </div>
   );

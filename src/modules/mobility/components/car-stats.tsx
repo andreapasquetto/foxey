@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
-import { CarSwitcher } from "@/modules/mobility/components/car-switcher";
 import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
 import { OdometerChart } from "@/modules/mobility/components/charts/odometer-chart";
 import {
@@ -28,89 +27,70 @@ import { CarRead } from "@/modules/mobility/schemas/car-read-schema";
 import { Calculator } from "lucide-react";
 import { useState } from "react";
 
-export default function CarStats() {
-  const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);
+interface CarStatsProps {
+  carId: string;
+}
+
+export function CarStats(props: CarStatsProps) {
   const [fuelConsumptionFormat, setFuelConsumptionFormat] = useState<"km/L" | "L/100km">("km/L");
 
-  const refuelingsQuery = useRefuelingsGetAllQuery(selectedCar?.id);
-  const servicesQuery = useServicesGetAllQuery(selectedCar?.id);
-  const inspectionsQuery = useInspectionsGetAllQuery(selectedCar?.id);
-
-  if (!selectedCar) {
-    return (
-      <>
-        <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
-          <div className="sm:w-[250px]">
-            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
-          </div>
-        </div>
-        <p className="text-center text-sm text-muted-foreground">
-          Select a car to see its statistics.
-        </p>
-      </>
-    );
-  }
+  const refuelingsQuery = useRefuelingsGetAllQuery(props.carId);
+  const servicesQuery = useServicesGetAllQuery(props.carId);
+  const inspectionsQuery = useInspectionsGetAllQuery(props.carId);
 
   const isFetching =
     refuelingsQuery.isFetching || servicesQuery.isFetching || inspectionsQuery.isFetching;
   if (isFetching) {
     return (
-      <>
-        <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
-          <div className="sm:w-[250px]">
-            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <div>
+            <CardHeader className="pb-2">
+              <CardDescription>Monthly fuel costs</CardDescription>
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-6 w-24" />
+                <Skeleton className="h-5 w-14 rounded-full" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-4 w-28" />
+            </CardContent>
+          </div>
+          <div>
+            <CardHeader className="pb-2">
+              <CardDescription>Average distance before refueling</CardDescription>
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-6 w-24" />
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-1">
+              <Skeleton className="h-4 w-28" />
+            </CardContent>
+          </div>
+          <div>
+            <CardHeader className="pb-2">
+              <CardDescription>Last fuel consumption</CardDescription>
+              <div className="flex items-center gap-2">
+                <Skeleton className="h-6 w-24" />
+              </div>
+            </CardHeader>
+            <CardContent>
+              <Skeleton className="h-4 w-28" />
+            </CardContent>
           </div>
         </div>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            <div>
-              <CardHeader className="pb-2">
-                <CardDescription>Monthly fuel costs</CardDescription>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-5 w-14 rounded-full" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-4 w-28" />
-              </CardContent>
-            </div>
-            <div>
-              <CardHeader className="pb-2">
-                <CardDescription>Average distance before refueling</CardDescription>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-6 w-24" />
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-1">
-                <Skeleton className="h-4 w-28" />
-              </CardContent>
-            </div>
-            <div>
-              <CardHeader className="pb-2">
-                <CardDescription>Last fuel consumption</CardDescription>
-                <div className="flex items-center gap-2">
-                  <Skeleton className="h-6 w-24" />
-                </div>
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-4 w-28" />
-              </CardContent>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-            <div className="space-y-3">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-[380px] w-full" />
-            </div>
-            <div className="space-y-3">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-[380px] w-full" />
-            </div>
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <div className="space-y-3">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-[380px] w-full" />
+          </div>
+          <div className="space-y-3">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-[380px] w-full" />
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
@@ -120,51 +100,44 @@ export default function CarStats() {
 
   if (!refuelings.length) {
     return (
-      <>
-        <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
-          <div className="sm:w-[250px]">
-            <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
+      <div className="space-y-6">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+              <p className="text-sm text-muted-foreground">Not enough data.</p>
+            </div>
+          </div>
+          <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+              <p className="text-sm text-muted-foreground">Not enough data.</p>
+            </div>
+          </div>
+          <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+              <p className="text-sm text-muted-foreground">Not enough data.</p>
+            </div>
           </div>
         </div>
-        <div className="space-y-6">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-            <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-                <p className="text-sm text-muted-foreground">Not enough data.</p>
-              </div>
-            </div>
-            <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-                <p className="text-sm text-muted-foreground">Not enough data.</p>
-              </div>
-            </div>
-            <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-                <p className="text-sm text-muted-foreground">Not enough data.</p>
-              </div>
-            </div>
-          </div>
 
-          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-            <div className="space-y-3">
-              <CardTitle>Fuel price</CardTitle>
-              <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-                  <p className="text-sm text-muted-foreground">Not enough data.</p>
-                </div>
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <div className="space-y-3">
+            <CardTitle>Fuel price</CardTitle>
+            <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+                <p className="text-sm text-muted-foreground">Not enough data.</p>
               </div>
             </div>
-            <div className="space-y-3">
-              <CardTitle>Odometer</CardTitle>
-              <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-                <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-                  <p className="text-sm text-muted-foreground">Not enough data.</p>
-                </div>
+          </div>
+          <div className="space-y-3">
+            <CardTitle>Odometer</CardTitle>
+            <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
+              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+                <p className="text-sm text-muted-foreground">Not enough data.</p>
               </div>
             </div>
           </div>
         </div>
-      </>
+      </div>
     );
   }
 
@@ -194,115 +167,108 @@ export default function CarStats() {
   ).toNumber();
 
   return (
-    <>
-      <div className="sm:flex sm:items-center sm:justify-end sm:gap-3">
-        <div className="sm:w-[250px]">
-          <CarSwitcher selectedCar={selectedCar} onSelectCar={setSelectedCar} />
-        </div>
-      </div>
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-          <div>
-            <CardHeader className="pb-2">
-              <CardDescription>Monthly fuel costs</CardDescription>
-              <CardTitle className="flex items-center gap-2">
-                {currencyFormatter.format(stats.fuelCosts.thisMonth)}
-                {stats.fuelCosts.lastMonth > 0 && !isNaN(fuelCostPercentageFromLastMonth) && (
-                  <Badge
-                    variant="outline"
-                    className={cn({
-                      "border-red-500": fuelCostPercentageFromLastMonth > 0,
-                      "border-green-500": fuelCostPercentageFromLastMonth < 0,
-                    })}
-                  >
-                    {percentageFormatter.format(fuelCostPercentageFromLastMonth)}
-                  </Badge>
-                )}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="text-xs text-muted-foreground">
-                {currencyFormatter.format(stats.fuelCosts.lastMonth)} last month
-              </p>
-            </CardContent>
-          </div>
-          <div>
-            <CardHeader className="pb-2">
-              <CardDescription>Average distance before refueling</CardDescription>
-              <CardTitle>
-                {`${stats.distance.average ? numberFormatter.format(stats.distance.average) : "-"} km`}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {!!stats.distance.thisYear && !!stats.distance.lastYear && (
-                <>
-                  <p className="text-xs text-muted-foreground">
-                    {`${numberFormatter.format(stats.distance.thisYear)} km driven so far this year`}
-                  </p>
-                  <p className="text-xs text-muted-foreground">
-                    {`${numberFormatter.format(stats.distance.lastYear)} km last year`}
-                  </p>
-                </>
-              )}
-              {!!stats.distance.total && (
-                <p className="text-xs text-muted-foreground">
-                  {`${numberFormatter.format(stats.distance.total)} km in total`}
-                </p>
-              )}
-            </CardContent>
-          </div>
-          <div>
-            <CardHeader className="pb-2">
-              <CardDescription className="relative">
-                Last fuel consumption
-                <Button
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Monthly fuel costs</CardDescription>
+            <CardTitle className="flex items-center gap-2">
+              {currencyFormatter.format(stats.fuelCosts.thisMonth)}
+              {stats.fuelCosts.lastMonth > 0 && !isNaN(fuelCostPercentageFromLastMonth) && (
+                <Badge
                   variant="outline"
-                  size="sm"
-                  className="absolute right-0 top-0 text-foreground"
-                  onClick={() =>
-                    setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
-                  }
+                  className={cn({
+                    "border-red-500": fuelCostPercentageFromLastMonth > 0,
+                    "border-green-500": fuelCostPercentageFromLastMonth < 0,
+                  })}
                 >
-                  <Calculator className="h-4 w-4" />
-                </Button>
-              </CardDescription>
-              {stats.fuelConsumption.last && (
-                <CardTitle>
-                  {fuelConsumptionFormat === "km/L" &&
-                    `${numberFormatter.format(stats.fuelConsumption.last["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
-                  {fuelConsumptionFormat === "L/100km" &&
-                    `${numberFormatter.format(stats.fuelConsumption.last["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
-                </CardTitle>
+                  {percentageFormatter.format(fuelCostPercentageFromLastMonth)}
+                </Badge>
               )}
-              {!stats.fuelConsumption.last && "-"}
-            </CardHeader>
-            <CardContent>
-              {stats.fuelConsumption.avg && (
-                <p className="text-xs text-muted-foreground">
-                  <span>All-time average is </span>
-                  <span>
-                    {fuelConsumptionFormat === "km/L" &&
-                      `${numberFormatter.format(stats.fuelConsumption.avg["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
-                    {fuelConsumptionFormat === "L/100km" &&
-                      `${numberFormatter.format(stats.fuelConsumption.avg["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
-                  </span>
-                </p>
-              )}
-              {!!stats.fuelConsumption.pricePerDistance && (
-                <p className="text-xs text-muted-foreground">
-                  <span>Price/Distance ratio is </span>
-                  <span>{`${numberFormatter.format(stats.fuelConsumption.pricePerDistance)} €/km`}</span>
-                </p>
-              )}
-            </CardContent>
-          </div>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-xs text-muted-foreground">
+              {currencyFormatter.format(stats.fuelCosts.lastMonth)} last month
+            </p>
+          </CardContent>
         </div>
-
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <FuelPriceChart refuelings={refuelings} />
-          <OdometerChart refuelings={refuelings} services={services} inspections={inspections} />
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Average distance before refueling</CardDescription>
+            <CardTitle>
+              {`${stats.distance.average ? numberFormatter.format(stats.distance.average) : "-"} km`}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            {!!stats.distance.thisYear && !!stats.distance.lastYear && (
+              <>
+                <p className="text-xs text-muted-foreground">
+                  {`${numberFormatter.format(stats.distance.thisYear)} km driven so far this year`}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  {`${numberFormatter.format(stats.distance.lastYear)} km last year`}
+                </p>
+              </>
+            )}
+            {!!stats.distance.total && (
+              <p className="text-xs text-muted-foreground">
+                {`${numberFormatter.format(stats.distance.total)} km in total`}
+              </p>
+            )}
+          </CardContent>
+        </div>
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription className="relative">
+              Last fuel consumption
+              <Button
+                variant="outline"
+                size="sm"
+                className="absolute right-0 top-0 text-foreground"
+                onClick={() =>
+                  setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
+                }
+              >
+                <Calculator className="h-4 w-4" />
+              </Button>
+            </CardDescription>
+            {stats.fuelConsumption.last && (
+              <CardTitle>
+                {fuelConsumptionFormat === "km/L" &&
+                  `${numberFormatter.format(stats.fuelConsumption.last["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
+                {fuelConsumptionFormat === "L/100km" &&
+                  `${numberFormatter.format(stats.fuelConsumption.last["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
+              </CardTitle>
+            )}
+            {!stats.fuelConsumption.last && "-"}
+          </CardHeader>
+          <CardContent>
+            {stats.fuelConsumption.avg && (
+              <p className="text-xs text-muted-foreground">
+                <span>All-time average is </span>
+                <span>
+                  {fuelConsumptionFormat === "km/L" &&
+                    `${numberFormatter.format(stats.fuelConsumption.avg["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
+                  {fuelConsumptionFormat === "L/100km" &&
+                    `${numberFormatter.format(stats.fuelConsumption.avg["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
+                </span>
+              </p>
+            )}
+            {!!stats.fuelConsumption.pricePerDistance && (
+              <p className="text-xs text-muted-foreground">
+                <span>Price/Distance ratio is </span>
+                <span>{`${numberFormatter.format(stats.fuelConsumption.pricePerDistance)} €/km`}</span>
+              </p>
+            )}
+          </CardContent>
         </div>
       </div>
-    </>
+
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <FuelPriceChart refuelings={refuelings} />
+        <OdometerChart refuelings={refuelings} services={services} inspections={inspections} />
+      </div>
+    </div>
   );
 }

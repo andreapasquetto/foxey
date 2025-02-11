@@ -1,30 +1,16 @@
 "use client";
 
+import { carRoute } from "@/common/routes";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
+import Link from "next/link";
 
 export function CarList() {
   const query = useCarsGetAllQuery();
 
   if (!query.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const cars = query.data;
@@ -38,49 +24,30 @@ export function CarList() {
   }
 
   return (
-    <div>
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          {cars.map((car) => (
-            <TableRow key={car.id}>
-              <TableCell>
-                <code>{car.year}</code>
-              </TableCell>
-              <TableCell>{car.make}</TableCell>
-              <TableCell>{car.model}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {cars.map((car) => (
+        <Link key={car.id} href={carRoute(car.id)}>
+          <Card>
+            <CardHeader>
+              <CardTitle>
+                {car.make} {car.model}
+              </CardTitle>
+              <CardDescription>{car.year}</CardDescription>
+            </CardHeader>
+            <CardContent></CardContent>
+          </Card>
+        </Link>
+      ))}
     </div>
   );
 }
 
-function TableHeaderRow() {
+function ComponentSkeleton() {
   return (
-    <TableRow>
-      <TableHead>Year</TableHead>
-      <TableHead>Make</TableHead>
-      <TableHead>Model</TableHead>
-    </TableRow>
+    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
+      {Array.from({ length: 3 }).map((_, i) => (
+        <Skeleton key={i} className="h-24 w-full" />
+      ))}
+    </div>
   );
-}
-
-function TableRowsSkeleton() {
-  return Array.from({ length: 3 }).map((_, i) => (
-    <TableRow key={i}>
-      <TableCell>
-        <Skeleton className="h-4 w-12" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-    </TableRow>
-  ));
 }

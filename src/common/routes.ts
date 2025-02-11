@@ -23,6 +23,10 @@ export const newHighwayTripRoute = `${mobilityRoute}/highway-trips/new`;
 export const newRefuelingRoute = `${mobilityRoute}/refuelings/new`;
 export const newInspectionRoute = `${mobilityRoute}/inspections/new`;
 
+export function carRoute(id: string) {
+  return `${mobilityRoute}/cars/${id}`;
+}
+
 export const placesRoute = `${privateRoute}/places`;
 export const placeCategoriesRoute = `${placesRoute}/categories`;
 export const newPlaceRoute = `${placesRoute}/new`;

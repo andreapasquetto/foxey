@@ -1,3 +1,5 @@
+"use client";
+
 import { QueryPagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,7 +26,7 @@ import { format } from "date-fns";
 import { Notebook } from "lucide-react";
 
 interface ServiceListProps {
-  carId: string | undefined;
+  carId: string;
 }
 
 // TODO: show what has been changed on the single service
@@ -35,7 +37,7 @@ export function ServiceList(props: ServiceListProps) {
     return (
       <Table>
         <TableHeader>
-          <TableHeaderRow carId={props.carId} />
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
           <TableRowsSkeleton />
@@ -50,8 +52,7 @@ export function ServiceList(props: ServiceListProps) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          {props.carId && "No refuelings found for the selected car."}
-          {!props.carId && "There are no refuelings."}
+          There are no services for this car.
         </p>
       </div>
     );
@@ -61,7 +62,7 @@ export function ServiceList(props: ServiceListProps) {
     <div>
       <Table>
         <TableHeader>
-          <TableHeaderRow carId={props.carId} />
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
           {services.map((service) => (
@@ -115,11 +116,10 @@ export function ServiceList(props: ServiceListProps) {
   );
 }
 
-function TableHeaderRow(props: { carId?: string }) {
+function TableHeaderRow() {
   return (
     <TableRow>
       <TableHead className="min-w-36">Date</TableHead>
-      {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>
         Odometer (<code>km</code>)
       </TableHead>

@@ -1,3 +1,5 @@
+"use client";
+
 import { transactionRoute } from "@/common/routes";
 import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,7 +19,7 @@ import { ExternalLink } from "lucide-react";
 import Link from "next/link";
 
 interface HighwayTripsProps {
-  carId: string | undefined;
+  carId: string;
 }
 
 export function HighwayTripList(props: HighwayTripsProps) {
@@ -42,8 +44,7 @@ export function HighwayTripList(props: HighwayTripsProps) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          {props.carId && "No highway trips found for the selected car."}
-          {!props.carId && "There are no highway trips."}
+          There are no highway trips for this car.
         </p>
       </div>
     );
@@ -53,7 +54,7 @@ export function HighwayTripList(props: HighwayTripsProps) {
     <div>
       <Table>
         <TableHeader>
-          <TableHeaderRow carId={props.carId} />
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
           {trips.map((trip) => (
@@ -61,7 +62,6 @@ export function HighwayTripList(props: HighwayTripsProps) {
               <TableCell>
                 <code>{format(trip.transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
-              {!props.carId && <TableCell>{`${trip.car.make} ${trip.car.model}`}</TableCell>}
               <TableCell>{trip.startingToll}</TableCell>
               <TableCell>{trip.endingToll}</TableCell>
               <TableCell>
@@ -101,11 +101,10 @@ export function HighwayTripList(props: HighwayTripsProps) {
   );
 }
 
-function TableHeaderRow(props: { carId?: string }) {
+function TableHeaderRow() {
   return (
     <TableRow>
       <TableHead className="min-w-36">Date</TableHead>
-      {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>Starting toll</TableHead>
       <TableHead>Ending toll</TableHead>
       <TableHead>
@@ -130,9 +129,6 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-24" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-36" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-36" />

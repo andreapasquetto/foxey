@@ -1,3 +1,5 @@
+"use client";
+
 import { transactionRoute } from "@/common/routes";
 import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -17,7 +19,7 @@ import { Check, ExternalLink, X } from "lucide-react";
 import Link from "next/link";
 
 interface RefuelingListProps {
-  carId: string | undefined;
+  carId: string;
 }
 
 export function RefuelingList(props: RefuelingListProps) {
@@ -27,7 +29,7 @@ export function RefuelingList(props: RefuelingListProps) {
     return (
       <Table>
         <TableHeader>
-          <TableHeaderRow carId={props.carId} />
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
           <TableRowsSkeleton />
@@ -42,8 +44,7 @@ export function RefuelingList(props: RefuelingListProps) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          {props.carId && "No refuelings found for the selected car."}
-          {!props.carId && "There are no refuelings."}
+          There are no refuelings for this car.
         </p>
       </div>
     );
@@ -53,7 +54,7 @@ export function RefuelingList(props: RefuelingListProps) {
     <div>
       <Table>
         <TableHeader>
-          <TableHeaderRow carId={props.carId} />
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
           {refuelings.map((refueling) => (
@@ -61,9 +62,6 @@ export function RefuelingList(props: RefuelingListProps) {
               <TableCell>
                 <code>{format(refueling.transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
-              {!props.carId && (
-                <TableCell>{`${refueling.car.make} ${refueling.car.model}`}</TableCell>
-              )}
               <TableCell>{refueling.transaction.place?.name}</TableCell>
               <TableCell>
                 <code>{refueling.ron}</code>
@@ -125,11 +123,10 @@ export function RefuelingList(props: RefuelingListProps) {
   );
 }
 
-function TableHeaderRow(props: { carId?: string }) {
+function TableHeaderRow() {
   return (
     <TableRow>
       <TableHead className="min-w-36">Date</TableHead>
-      {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>Place</TableHead>
       <TableHead>RON</TableHead>
       <TableHead>
@@ -171,9 +168,6 @@ function TableRowsSkeleton() {
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-8" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-14" />
       </TableCell>
       <TableCell>
         <Skeleton className="h-4 w-14" />

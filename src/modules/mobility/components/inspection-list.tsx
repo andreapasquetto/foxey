@@ -1,3 +1,5 @@
+"use client";
+
 import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -12,7 +14,7 @@ import { useInspectionsGetPaginatedQuery } from "@/modules/mobility/mobility-que
 import { format } from "date-fns";
 
 interface InspectionListProps {
-  carId: string | undefined;
+  carId: string;
 }
 
 export function InspectionList(props: InspectionListProps) {
@@ -37,8 +39,7 @@ export function InspectionList(props: InspectionListProps) {
     return (
       <div className="my-6">
         <p className="text-center text-sm text-muted-foreground">
-          {props.carId && "No inspections found for the selected car."}
-          {!props.carId && "There are no inspections."}
+          There are no inspections for this car.
         </p>
       </div>
     );
@@ -56,9 +57,6 @@ export function InspectionList(props: InspectionListProps) {
               <TableCell>
                 <code>{format(inspection.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
-              {!props.carId && (
-                <TableCell>{`${inspection.car.make} ${inspection.car.model}`}</TableCell>
-              )}
               <TableCell>
                 <code>{inspection.odometer}</code>
               </TableCell>
@@ -76,7 +74,6 @@ function TableHeaderRow(props: { carId?: string }) {
   return (
     <TableRow>
       <TableHead className="min-w-36">Date</TableHead>
-      {!props.carId && <TableHead>Car</TableHead>}
       <TableHead>
         Odometer (<code>km</code>)
       </TableHead>
@@ -88,13 +85,10 @@ function TableRowsSkeleton() {
   return Array.from({ length: 3 }).map((_, i) => (
     <TableRow key={i}>
       <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-24" />
-      </TableCell>
-      <TableCell>
         <Skeleton className="h-4 w-36" />
+      </TableCell>
+      <TableCell>
+        <Skeleton className="h-4 w-20" />
       </TableCell>
     </TableRow>
   ));

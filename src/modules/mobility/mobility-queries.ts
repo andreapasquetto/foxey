@@ -1,6 +1,7 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   carsGetAll,
+  carsGetById,
   highwayTripsGetPaginated,
   inspectionsGetAll,
   inspectionsGetPaginated,
@@ -15,6 +16,13 @@ export function useCarsGetAllQuery() {
   return useQuery({
     queryKey: ["cars"],
     queryFn: () => carsGetAll(),
+  });
+}
+
+export function useCarsGetByIdQuery(id: string) {
+  return useQuery({
+    queryKey: ["cars", { id }],
+    queryFn: () => carsGetById(id),
   });
 }
 

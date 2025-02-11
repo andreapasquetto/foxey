@@ -19,6 +19,10 @@ export async function carsGetAll() {
   return await db.select().from(cars);
 }
 
+export async function carsGetById(id: string) {
+  return (await db.select().from(cars).where(eq(cars.id, id)))[0];
+}
+
 export async function carCreate(car: CarCreateForm) {
   await db.insert(cars).values(car);
 }
