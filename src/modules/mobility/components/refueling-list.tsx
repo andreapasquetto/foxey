@@ -26,28 +26,13 @@ export function RefuelingList(props: RefuelingListProps) {
   const query = useRefuelingsGetPaginatedQuery(props.carId);
 
   if (!query.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const refuelings = query.data.records;
 
   if (!refuelings.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">
-          There are no refuelings for this car.
-        </p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -189,4 +174,27 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">
+        There are no refuelings for this car.
+      </p>
+    </div>
+  );
 }

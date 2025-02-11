@@ -52,7 +52,7 @@ export function PlaceUpdateForm(props: PlaceUpdateFormProps) {
   }
 
   return (
-    <UpdateForm
+    <ComponentForm
       place={query.data}
       onUpdate={() => {
         router.push(placesRoute);
@@ -66,7 +66,7 @@ interface UpdateFormProps {
   onUpdate: () => void;
 }
 
-function UpdateForm(props: UpdateFormProps) {
+function ComponentForm(props: UpdateFormProps) {
   const form = useForm<PlaceUpdateForm>({
     resolver: zodResolver(placeUpdateFormSchema),
     defaultValues: {

@@ -31,19 +31,18 @@ export function ThisMonthExpensesPerDayChart() {
   });
 
   if (query.isFetching || query.isRefetching) {
-    return (
-      <div className="space-y-3">
-        <CardTitle>Expenses per day</CardTitle>
-        <Skeleton className="h-[350px] w-full" />
-      </div>
-    );
+    return <ComponentSkeleton />;
   }
 
-  if (!query.data) return <GenerateChartSkeleton onGenerateChart={() => query.refetch()} />;
+  if (!query.data) {
+    return <ComponentPlaceholder onGenerateChart={() => query.refetch()} />;
+  }
 
   const transactions = query.data;
 
-  if (!transactions.length) return <NotEnoughDataSkeleton />;
+  if (!transactions.length) {
+    return <NotEnoughDataSkeleton />;
+  }
 
   const chartData = generateThisMonthExpensesPerDayChartData(transactions);
 
@@ -68,7 +67,16 @@ export function ThisMonthExpensesPerDayChart() {
   );
 }
 
-function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
+function ComponentSkeleton() {
+  return (
+    <div className="space-y-3">
+      <CardTitle>Expenses per day</CardTitle>
+      <Skeleton className="h-[350px] w-full" />
+    </div>
+  );
+}
+
+function ComponentPlaceholder(props: { onGenerateChart: () => void }) {
   const chartData = generateThisMonthExpensesPerDayPlaceholderData();
 
   return (

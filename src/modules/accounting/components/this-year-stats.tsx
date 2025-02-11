@@ -26,46 +26,7 @@ export function ThisYearStats() {
   const isFetching = transactionsThisYearQuery.isFetching || transactionsLastYearQuery.isFetching;
 
   if (isFetching) {
-    return (
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div>
-          <CardHeader className="pb-2">
-            <CardDescription>Income</CardDescription>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-5 w-14 rounded-full" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-4 w-28" />
-          </CardContent>
-        </div>
-        <div>
-          <CardHeader className="pb-2">
-            <CardDescription>Expenses</CardDescription>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-5 w-14 rounded-full" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-4 w-28" />
-          </CardContent>
-        </div>
-        <div>
-          <CardHeader className="pb-2">
-            <CardDescription>Saved</CardDescription>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-5 w-14 rounded-full" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <Skeleton className="h-4 w-28" />
-          </CardContent>
-        </div>
-      </div>
-    );
+    return <ComponentSkeleton />;
   }
 
   const transactionsWithoutTransfers = {
@@ -213,6 +174,49 @@ function SavingCard(props: { thisYear: number; lastYear: number }) {
           {currencyFormatter.format(props.lastYear)} last year
         </p>
       </CardContent>
+    </div>
+  );
+}
+
+function ComponentSkeleton() {
+  return (
+    <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div>
+        <CardHeader className="pb-2">
+          <CardDescription>Income</CardDescription>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-5 w-14 rounded-full" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-4 w-28" />
+        </CardContent>
+      </div>
+      <div>
+        <CardHeader className="pb-2">
+          <CardDescription>Expenses</CardDescription>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-5 w-14 rounded-full" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-4 w-28" />
+        </CardContent>
+      </div>
+      <div>
+        <CardHeader className="pb-2">
+          <CardDescription>Saved</CardDescription>
+          <div className="flex items-center gap-2">
+            <Skeleton className="h-6 w-24" />
+            <Skeleton className="h-5 w-14 rounded-full" />
+          </div>
+        </CardHeader>
+        <CardContent>
+          <Skeleton className="h-4 w-28" />
+        </CardContent>
+      </div>
     </div>
   );
 }

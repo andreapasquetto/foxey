@@ -21,35 +21,20 @@ export function InspectionList(props: InspectionListProps) {
   const query = useInspectionsGetPaginatedQuery(props.carId);
 
   if (!query.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow carId={props.carId} />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const inspections = query.data.records;
 
   if (!inspections.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">
-          There are no inspections for this car.
-        </p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
     <div>
       <Table>
         <TableHeader>
-          <TableHeaderRow carId={props.carId} />
+          <TableHeaderRow />
         </TableHeader>
         <TableBody>
           {inspections.map((inspection) => (
@@ -70,7 +55,7 @@ export function InspectionList(props: InspectionListProps) {
   );
 }
 
-function TableHeaderRow(props: { carId?: string }) {
+function TableHeaderRow() {
   return (
     <TableRow>
       <TableHead className="min-w-36">Date</TableHead>
@@ -92,4 +77,27 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">
+        There are no inspections for this car.
+      </p>
+    </div>
+  );
 }

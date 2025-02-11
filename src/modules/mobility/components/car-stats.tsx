@@ -23,7 +23,6 @@ import {
   calculateTotalDistance,
   extractRefuelingPeriods,
 } from "@/modules/mobility/mobility-utils";
-import { CarRead } from "@/modules/mobility/schemas/car-read-schema";
 import { Calculator } from "lucide-react";
 import { useState } from "react";
 
@@ -41,57 +40,7 @@ export function CarStats(props: CarStatsProps) {
   const isFetching =
     refuelingsQuery.isFetching || servicesQuery.isFetching || inspectionsQuery.isFetching;
   if (isFetching) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <div>
-            <CardHeader className="pb-2">
-              <CardDescription>Monthly fuel costs</CardDescription>
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-6 w-24" />
-                <Skeleton className="h-5 w-14 rounded-full" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-4 w-28" />
-            </CardContent>
-          </div>
-          <div>
-            <CardHeader className="pb-2">
-              <CardDescription>Average distance before refueling</CardDescription>
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-6 w-24" />
-              </div>
-            </CardHeader>
-            <CardContent className="space-y-1">
-              <Skeleton className="h-4 w-28" />
-            </CardContent>
-          </div>
-          <div>
-            <CardHeader className="pb-2">
-              <CardDescription>Last fuel consumption</CardDescription>
-              <div className="flex items-center gap-2">
-                <Skeleton className="h-6 w-24" />
-              </div>
-            </CardHeader>
-            <CardContent>
-              <Skeleton className="h-4 w-28" />
-            </CardContent>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <div className="space-y-3">
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-[380px] w-full" />
-          </div>
-          <div className="space-y-3">
-            <Skeleton className="h-6 w-24" />
-            <Skeleton className="h-[380px] w-full" />
-          </div>
-        </div>
-      </div>
-    );
+    return <ComponentSkeleton />;
   }
 
   const refuelings = refuelingsQuery.data ?? [];
@@ -99,46 +48,7 @@ export function CarStats(props: CarStatsProps) {
   const inspections = inspectionsQuery.data ?? [];
 
   if (!refuelings.length) {
-    return (
-      <div className="space-y-6">
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-              <p className="text-sm text-muted-foreground">Not enough data.</p>
-            </div>
-          </div>
-          <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-              <p className="text-sm text-muted-foreground">Not enough data.</p>
-            </div>
-          </div>
-          <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-              <p className="text-sm text-muted-foreground">Not enough data.</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <div className="space-y-3">
-            <CardTitle>Fuel price</CardTitle>
-            <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-                <p className="text-sm text-muted-foreground">Not enough data.</p>
-              </div>
-            </div>
-          </div>
-          <div className="space-y-3">
-            <CardTitle>Odometer</CardTitle>
-            <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-              <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-                <p className="text-sm text-muted-foreground">Not enough data.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   const refuelingPeriods = extractRefuelingPeriods(refuelings);
@@ -264,10 +174,104 @@ export function CarStats(props: CarStatsProps) {
           </CardContent>
         </div>
       </div>
-
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <FuelPriceChart refuelings={refuelings} />
         <OdometerChart refuelings={refuelings} services={services} inspections={inspections} />
+      </div>
+    </div>
+  );
+}
+
+function ComponentSkeleton() {
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Monthly fuel costs</CardDescription>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+              <Skeleton className="h-5 w-14 rounded-full" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-4 w-28" />
+          </CardContent>
+        </div>
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Average distance before refueling</CardDescription>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+            </div>
+          </CardHeader>
+          <CardContent className="space-y-1">
+            <Skeleton className="h-4 w-28" />
+          </CardContent>
+        </div>
+        <div>
+          <CardHeader className="pb-2">
+            <CardDescription>Last fuel consumption</CardDescription>
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-6 w-24" />
+            </div>
+          </CardHeader>
+          <CardContent>
+            <Skeleton className="h-4 w-28" />
+          </CardContent>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <div className="space-y-3">
+          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-[380px] w-full" />
+        </div>
+        <div className="space-y-3">
+          <Skeleton className="h-6 w-24" />
+          <Skeleton className="h-[380px] w-full" />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="space-y-6">
+      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+        <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+            <p className="text-sm text-muted-foreground">Not enough data.</p>
+          </div>
+        </div>
+        <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+            <p className="text-sm text-muted-foreground">Not enough data.</p>
+          </div>
+        </div>
+        <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
+          <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+            <p className="text-sm text-muted-foreground">Not enough data.</p>
+          </div>
+        </div>
+      </div>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <div className="space-y-3">
+          <CardTitle>Fuel price</CardTitle>
+          <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+              <p className="text-sm text-muted-foreground">Not enough data.</p>
+            </div>
+          </div>
+        </div>
+        <div className="space-y-3">
+          <CardTitle>Odometer</CardTitle>
+          <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
+            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
+              <p className="text-sm text-muted-foreground">Not enough data.</p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

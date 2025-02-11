@@ -31,19 +31,18 @@ export function ThisMonthExpensesChart() {
   });
 
   if (query.isFetching || query.isRefetching) {
-    return (
-      <div className="space-y-3">
-        <CardTitle>Expenses</CardTitle>
-        <Skeleton className="h-[380px] w-full" />
-      </div>
-    );
+    return <ComponentSkeleton />;
   }
 
-  if (!query.data) return <GenerateChartSkeleton onGenerateChart={() => query.refetch()} />;
+  if (!query.data) {
+    return <ComponentPlaceholder onGenerateChart={() => query.refetch()} />;
+  }
 
   const transactions = query.data;
 
-  if (!transactions.length) return <NotEnoughDataSkeleton />;
+  if (!transactions.length) {
+    return <ComponentEmptyState />;
+  }
 
   const chartData = generateThisMonthExpensesChartData(transactions);
 
@@ -71,7 +70,16 @@ export function ThisMonthExpensesChart() {
   );
 }
 
-function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
+function ComponentSkeleton() {
+  return (
+    <div className="space-y-3">
+      <CardTitle>Expenses</CardTitle>
+      <Skeleton className="h-[380px] w-full" />
+    </div>
+  );
+}
+
+function ComponentPlaceholder(props: { onGenerateChart: () => void }) {
   const chartData = generateThisMonthExpensesChartPlaceholderData();
 
   return (
@@ -106,7 +114,7 @@ function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
   );
 }
 
-function NotEnoughDataSkeleton() {
+function ComponentEmptyState() {
   return (
     <div className="space-y-3">
       <CardTitle>Expenses</CardTitle>

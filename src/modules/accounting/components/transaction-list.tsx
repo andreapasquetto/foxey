@@ -44,28 +44,13 @@ export function TransactionList(props: RecentTransactionsProps) {
   });
 
   if (!transactionsQuery.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const transactions = transactionsQuery.data.records;
 
   if (!transactions.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">
-          No transactions found for the selected filters.
-        </p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -225,4 +210,25 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">There are no transactions.</p>
+    </div>
+  );
 }

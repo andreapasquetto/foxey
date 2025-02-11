@@ -36,26 +36,13 @@ export function ContactList(props: ContactListProps) {
   });
 
   if (!query.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const contacts = query.data.records;
 
   if (!contacts.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">There are no contacts.</p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -143,4 +130,25 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">There are no contacts.</p>
+    </div>
+  );
 }

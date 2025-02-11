@@ -22,26 +22,13 @@ export function TransactionCategoryList(props: TransactionCategoryListProps) {
   });
 
   if (!query.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const categories = query.data.records;
 
   if (!categories.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">There are no categories.</p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -89,4 +76,25 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">There are no categories.</p>
+    </div>
+  );
 }

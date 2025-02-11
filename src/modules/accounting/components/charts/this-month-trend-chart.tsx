@@ -28,20 +28,19 @@ export function ThisMonthTrendChart() {
   const query = useTransactionsGetAllQuery({ enabled: false });
 
   if (query.isFetching || query.isRefetching) {
-    return (
-      <div className="space-y-3">
-        <CardTitle>Trend</CardTitle>
-        <Skeleton className="h-[380px] w-full" />
-      </div>
-    );
+    return <ComponentSkeleton />;
   }
 
-  if (!query.data) return <GenerateChartSkeleton onGenerateChart={() => query.refetch()} />;
+  if (!query.data) {
+    return <ComponentPlaceholder onGenerateChart={() => query.refetch()} />;
+  }
 
   const transactions = query.data;
   const chartData = generateThisMonthTrendChartData(transactions);
 
-  if (chartData.length < 2) return <NotEnoughDataSkeleton />;
+  if (chartData.length < 2) {
+    return <ComponentEmptyState />;
+  }
 
   return (
     <div className="space-y-3">
@@ -75,7 +74,16 @@ export function ThisMonthTrendChart() {
   );
 }
 
-function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
+function ComponentSkeleton() {
+  return (
+    <div className="space-y-3">
+      <CardTitle>Trend</CardTitle>
+      <Skeleton className="h-[380px] w-full" />
+    </div>
+  );
+}
+
+function ComponentPlaceholder(props: { onGenerateChart: () => void }) {
   const chartData = generateGenericTrendChartPlaceholderData();
 
   return (
@@ -117,7 +125,7 @@ function GenerateChartSkeleton(props: { onGenerateChart: () => void }) {
   );
 }
 
-function NotEnoughDataSkeleton() {
+function ComponentEmptyState() {
   return (
     <div className="space-y-3">
       <CardTitle>Trend</CardTitle>

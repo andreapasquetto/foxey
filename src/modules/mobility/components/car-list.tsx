@@ -16,11 +16,7 @@ export function CarList() {
   const cars = query.data;
 
   if (!cars.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">There are no cars.</p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -48,6 +44,14 @@ function ComponentSkeleton() {
       {Array.from({ length: 3 }).map((_, i) => (
         <Skeleton key={i} className="h-24 w-full" />
       ))}
+    </div>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">There are no cars.</p>
     </div>
   );
 }

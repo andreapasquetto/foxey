@@ -27,26 +27,13 @@ export function WalletList() {
   const walletsQuery = useWalletsGetAllQuery();
 
   if (!walletsQuery.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const wallets = walletsQuery.data;
 
   if (!wallets.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">There are no wallets.</p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -127,4 +114,25 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">There are no wallets.</p>
+    </div>
+  );
 }

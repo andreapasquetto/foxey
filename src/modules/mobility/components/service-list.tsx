@@ -20,7 +20,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { useServicesGetPaginatedQuery } from "@/modules/mobility/mobility-queries";
 import { format } from "date-fns";
 import { Notebook } from "lucide-react";
@@ -34,28 +33,13 @@ export function ServiceList(props: ServiceListProps) {
   const query = useServicesGetPaginatedQuery(props.carId);
 
   if (!query.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const services = query.data.records;
 
   if (!services.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">
-          There are no services for this car.
-        </p>
-      </div>
-    );
+    <ComponentEmptyState />;
   }
 
   return (
@@ -141,4 +125,27 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">
+        There are no services for this car.
+      </p>
+    </div>
+  );
 }

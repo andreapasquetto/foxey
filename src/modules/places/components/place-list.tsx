@@ -36,26 +36,13 @@ export function PlaceList(props: PlaceListProps) {
   });
 
   if (!query.data) {
-    return (
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
-        </TableBody>
-      </Table>
-    );
+    return <ComponentSkeleton />;
   }
 
   const places = query.data.records;
 
   if (!places.length) {
-    return (
-      <div className="my-6">
-        <p className="text-center text-sm text-muted-foreground">There are no places.</p>
-      </div>
-    );
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -149,4 +136,25 @@ function TableRowsSkeleton() {
       </TableCell>
     </TableRow>
   ));
+}
+
+function ComponentSkeleton() {
+  return (
+    <Table>
+      <TableHeader>
+        <TableHeaderRow />
+      </TableHeader>
+      <TableBody>
+        <TableRowsSkeleton />
+      </TableBody>
+    </Table>
+  );
+}
+
+function ComponentEmptyState() {
+  return (
+    <div className="my-6">
+      <p className="text-center text-sm text-muted-foreground">There are no places.</p>
+    </div>
+  );
 }
