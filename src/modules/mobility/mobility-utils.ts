@@ -57,18 +57,24 @@ export function calculateAvgDistance(refuelings: RefuelingRead[]) {
   return distance.div(numberOfTrips);
 }
 
-export function calculateFuelEconomy(
+export function calculateFuelConsumption(
   refuelingA: RefuelingRead | undefined,
   refuelingB: RefuelingRead | undefined,
 ) {
   if (!refuelingA || !refuelingB || refuelingA.trip === null) {
     return null;
   }
-  return new Decimal(refuelingA.trip).div(refuelingB.quantity);
+
+  const kmPerL = new Decimal(refuelingA.trip).div(refuelingB.quantity);
+
+  return {
+    "km/L": kmPerL,
+    "L/100km": new Decimal(100).div(kmPerL),
+  };
 }
 
-// TODO: result is not reliable because calculations does NOT handle non-necessary refuelings differently
-export function calculateAvgFuelEconomy(refuelings: RefuelingRead[]) {
+// TODO: result is not reliable because calculations DO NOT handle non-necessary refuelings differently
+export function calculateAvgFuelConsumption(refuelings: RefuelingRead[]) {
   if (refuelings.length < 2) {
     return null;
   }
@@ -85,7 +91,13 @@ export function calculateAvgFuelEconomy(refuelings: RefuelingRead[]) {
       totalQuantity: new Decimal(0),
     },
   );
-  return totalDistance.div(totalQuantity);
+
+  const kmPerL = totalDistance.div(totalQuantity);
+
+  return {
+    "km/L": kmPerL,
+    "L/100km": new Decimal(100).div(kmPerL),
+  };
 }
 
 export function calculatePricePerDistance(refuelings: RefuelingRead[]) {

@@ -3,6 +3,7 @@
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/math";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
@@ -15,18 +16,20 @@ import {
 } from "@/modules/mobility/mobility-queries";
 import {
   calculateAvgDistance,
-  calculateAvgFuelEconomy,
-  calculateFuelEconomy,
+  calculateAvgFuelConsumption,
+  calculateFuelConsumption,
   calculatePricePerDistance,
   calculateTotalCost,
   calculateTotalDistance,
   extractRefuelingPeriods,
 } from "@/modules/mobility/mobility-utils";
 import { CarRead } from "@/modules/mobility/schemas/car-read-schema";
+import { Calculator } from "lucide-react";
 import { useState } from "react";
 
 export default function CarStats() {
   const [selectedCar, setSelectedCar] = useState<CarRead | undefined>(undefined);
+  const [fuelConsumptionFormat, setFuelConsumptionFormat] = useState<"km/L" | "L/100km">("km/L");
 
   const refuelingsQuery = useRefuelingsGetAllQuery(selectedCar?.id);
   const servicesQuery = useServicesGetAllQuery(selectedCar?.id);
@@ -74,7 +77,6 @@ export default function CarStats() {
                 <CardDescription>Average distance before refueling</CardDescription>
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-5 w-14 rounded-full" />
                 </div>
               </CardHeader>
               <CardContent className="space-y-1">
@@ -83,10 +85,9 @@ export default function CarStats() {
             </div>
             <div>
               <CardHeader className="pb-2">
-                <CardDescription>Last fuel economy</CardDescription>
+                <CardDescription>Last fuel consumption</CardDescription>
                 <div className="flex items-center gap-2">
                   <Skeleton className="h-6 w-24" />
-                  <Skeleton className="h-5 w-14 rounded-full" />
                 </div>
               </CardHeader>
               <CardContent>
@@ -176,11 +177,9 @@ export default function CarStats() {
       lastYear: calculateTotalDistance(refuelingPeriods.lastYear)?.toDecimalPlaces(2).toNumber(),
       total: calculateTotalDistance(refuelings)?.toDecimalPlaces(2).toNumber(),
     },
-    fuelEconomy: {
-      last: calculateFuelEconomy(refuelings.at(-1), refuelings.at(-2))
-        ?.toDecimalPlaces(2)
-        .toNumber(),
-      avg: calculateAvgFuelEconomy(refuelings)?.toDecimalPlaces(2).toNumber(),
+    fuelConsumption: {
+      last: calculateFuelConsumption(refuelings.at(-1), refuelings.at(-2)),
+      avg: calculateAvgFuelConsumption(refuelings),
       pricePerDistance: calculatePricePerDistance(refuelings)?.toNumber(),
     },
   };
@@ -230,7 +229,7 @@ export default function CarStats() {
                 {`${stats.distance.average ? numberFormatter.format(stats.distance.average) : "-"} km`}
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-1">
+            <CardContent>
               {!!stats.distance.thisYear && !!stats.distance.lastYear && (
                 <>
                   <p className="text-xs text-muted-foreground">
@@ -250,21 +249,45 @@ export default function CarStats() {
           </div>
           <div>
             <CardHeader className="pb-2">
-              <CardDescription>Last fuel economy</CardDescription>
-              <CardTitle>
-                {stats.fuelEconomy.last ? numberFormatter.format(stats.fuelEconomy.last) : "-"} km/l
-              </CardTitle>
+              <CardDescription className="relative">
+                Last fuel consumption
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="absolute right-0 top-0 text-foreground"
+                  onClick={() =>
+                    setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
+                  }
+                >
+                  <Calculator className="h-4 w-4" />
+                </Button>
+              </CardDescription>
+              {stats.fuelConsumption.last && (
+                <CardTitle>
+                  {fuelConsumptionFormat === "km/L" &&
+                    `${numberFormatter.format(stats.fuelConsumption.last["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
+                  {fuelConsumptionFormat === "L/100km" &&
+                    `${numberFormatter.format(stats.fuelConsumption.last["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
+                </CardTitle>
+              )}
+              {!stats.fuelConsumption.last && "-"}
             </CardHeader>
             <CardContent>
-              {stats.fuelEconomy.avg && (
+              {stats.fuelConsumption.avg && (
                 <p className="text-xs text-muted-foreground">
-                  All-time average is {numberFormatter.format(stats.fuelEconomy.avg)} km/l
+                  <span>All-time average is </span>
+                  <span>
+                    {fuelConsumptionFormat === "km/L" &&
+                      `${numberFormatter.format(stats.fuelConsumption.avg["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
+                    {fuelConsumptionFormat === "L/100km" &&
+                      `${numberFormatter.format(stats.fuelConsumption.avg["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
+                  </span>
                 </p>
               )}
-              {!!stats.fuelEconomy.pricePerDistance && (
+              {!!stats.fuelConsumption.pricePerDistance && (
                 <p className="text-xs text-muted-foreground">
-                  Price/Distance ratio is{" "}
-                  {`${numberFormatter.format(stats.fuelEconomy.pricePerDistance)} €/km`}
+                  <span>Price/Distance ratio is </span>
+                  <span>{`${numberFormatter.format(stats.fuelConsumption.pricePerDistance)} €/km`}</span>
                 </p>
               )}
             </CardContent>
