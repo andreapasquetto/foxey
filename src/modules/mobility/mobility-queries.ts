@@ -26,14 +26,14 @@ export function useCarsGetByIdQuery(id: string) {
   });
 }
 
-export function useRefuelingsGetAllQuery(carId?: string) {
+export function useRefuelingsGetAllQuery(carId: string) {
   return useQuery({
     queryKey: ["refuelings", { carId }],
     queryFn: () => refuelingsGetAll(carId),
   });
 }
 
-export function useRefuelingsGetPaginatedQuery(carId?: string) {
+export function useRefuelingsGetPaginatedQuery(carId: string) {
   return usePaginatedQuery({
     queryKey: ["refuelings", { carId }],
     queryFn: (paginate) => refuelingsGetPaginated({ paginate, carId }),
@@ -41,14 +41,14 @@ export function useRefuelingsGetPaginatedQuery(carId?: string) {
   });
 }
 
-export function useServicesGetAllQuery(carId?: string) {
+export function useServicesGetAllQuery(carId: string) {
   return useQuery({
     queryKey: ["services", { carId }],
     queryFn: () => servicesGetAll(carId),
   });
 }
 
-export function useServicesGetPaginatedQuery(carId?: string) {
+export function useServicesGetPaginatedQuery(carId: string) {
   return usePaginatedQuery({
     queryKey: ["services", { carId }],
     queryFn: (paginate) => servicesGetPaginated({ paginate, carId }),
@@ -56,7 +56,7 @@ export function useServicesGetPaginatedQuery(carId?: string) {
   });
 }
 
-export function useHighwayTripsGetPaginatedQuery(carId?: string) {
+export function useHighwayTripsGetPaginatedQuery(carId: string) {
   return usePaginatedQuery({
     queryKey: ["highway-trips", { carId }],
     queryFn: (paginate) => highwayTripsGetPaginated({ paginate, carId }),
@@ -64,14 +64,14 @@ export function useHighwayTripsGetPaginatedQuery(carId?: string) {
   });
 }
 
-export function useInspectionsGetAllQuery(carId?: string) {
+export function useInspectionsGetAllQuery(carId: string) {
   return useQuery({
     queryKey: ["inspections", { carId }],
     queryFn: () => inspectionsGetAll(carId),
   });
 }
 
-export function useInspectionsGetPaginatedQuery(carId?: string) {
+export function useInspectionsGetPaginatedQuery(carId: string) {
   return usePaginatedQuery({
     queryKey: ["inspections", { carId }],
     queryFn: (paginate) => inspectionsGetPaginated({ paginate, carId }),

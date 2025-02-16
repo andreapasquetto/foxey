@@ -22,7 +22,7 @@ export default function CarPage() {
   const car = carQuery.data;
 
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 pb-20">
       <Heading1>
         {car.make} {car.model}
       </Heading1>

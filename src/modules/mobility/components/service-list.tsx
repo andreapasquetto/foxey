@@ -28,7 +28,6 @@ interface ServiceListProps {
   carId: string;
 }
 
-// TODO: show what has been changed on the single service
 export function ServiceList(props: ServiceListProps) {
   const query = useServicesGetPaginatedQuery(props.carId);
 
@@ -39,7 +38,7 @@ export function ServiceList(props: ServiceListProps) {
   const services = query.data.records;
 
   if (!services.length) {
-    <ComponentEmptyState />;
+    return <ComponentEmptyState />;
   }
 
   return (
@@ -54,7 +53,6 @@ export function ServiceList(props: ServiceListProps) {
               <TableCell>
                 <code>{format(service.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
-              {!props.carId && <TableCell>{`${service.car.make} ${service.car.model}`}</TableCell>}
               <TableCell>
                 <code>{service.odometer}</code>
               </TableCell>
@@ -79,7 +77,7 @@ export function ServiceList(props: ServiceListProps) {
                             <DialogHeader>
                               <DialogTitle>Service notes</DialogTitle>
                               <DialogDescription>
-                                {`${service.car.make} ${service.car.model} • ${format(service.datetime, "ccc y-MM-dd HH:mm")}`}
+                                {format(service.datetime, "ccc y-MM-dd HH:mm")}
                               </DialogDescription>
                             </DialogHeader>
                             <pre className="max-w-full text-wrap">{service.notes}</pre>

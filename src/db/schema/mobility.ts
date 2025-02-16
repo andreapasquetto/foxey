@@ -12,6 +12,7 @@ import {
 
 export const cars = pgTable("cars", {
   id: uuid("id").defaultRandom().primaryKey(),
+  userId: varchar("user_id").notNull(),
   year: integer("year").notNull(),
   make: varchar("make").notNull(),
   model: varchar("model").notNull(),

@@ -1,6 +1,7 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { transactions } from "@/db/schema/accounting";
 import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schema/mobility";
@@ -9,41 +10,44 @@ import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { HighwayTripRead } from "@/modules/mobility/schemas/highway-trip-read-schema";
 import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";
-import { InspectionRead } from "@/modules/mobility/schemas/inspection-read-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
 import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
-import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
-import { desc, eq } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 
 export async function carsGetAll() {
-  return await db.select().from(cars);
+  const userId = await getCurrentUserId();
+  return await db.select().from(cars).where(eq(cars.userId, userId));
 }
 
 export async function carsGetById(id: string) {
-  return (await db.select().from(cars).where(eq(cars.id, id)))[0];
+  const userId = await getCurrentUserId();
+
+  return (
+    await db
+      .select()
+      .from(cars)
+      .where(and(eq(cars.userId, userId), eq(cars.id, id)))
+  )[0];
 }
 
 export async function carCreate(car: CarCreateForm) {
-  await db.insert(cars).values(car);
+  const userId = await getCurrentUserId();
+  await db.insert(cars).values({ ...car, userId });
 }
 
-export async function refuelingsGetAll(carId?: string) {
-  const cars = await carsGetAll();
-
+export async function refuelingsGetAll(carId: string) {
   const records = await db
     .select()
     .from(refuelings)
     .innerJoin(transactions, eq(refuelings.transactionId, transactions.id))
-    .where(carId ? eq(refuelings.carId, carId) : undefined)
+    .where(eq(refuelings.carId, carId))
     .orderBy(transactions.datetime);
 
   const result: RefuelingRead[] = [];
   for (const record of records) {
-    const car = cars.find((c) => c.id === record.car_refuelings.carId)!;
     const transaction = await transactionGetById(record.transactions.id);
     result.push({
       ...record.car_refuelings,
-      car,
       transaction,
     });
   }
@@ -51,28 +55,24 @@ export async function refuelingsGetAll(carId?: string) {
   return result;
 }
 
-export async function refuelingsGetPaginated(options: { paginate: Paginate; carId?: string }) {
+export async function refuelingsGetPaginated(options: { paginate: Paginate; carId: string }) {
   const total = await countTotalRefuelings(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
-
-  const cars = await carsGetAll();
 
   const records = await db
     .select()
     .from(refuelings)
     .innerJoin(transactions, eq(refuelings.transactionId, transactions.id))
-    .where(options.carId ? eq(refuelings.carId, options.carId) : undefined)
+    .where(eq(refuelings.carId, options.carId))
     .limit(limit)
     .offset(offset)
     .orderBy(desc(transactions.datetime));
 
   const result: RefuelingRead[] = [];
   for (const record of records) {
-    const car = cars.find((c) => c.id === record.car_refuelings.carId)!;
     const transaction = await transactionGetById(record.transactions.id);
     result.push({
       ...record.car_refuelings,
-      car,
       transaction,
     });
   }
@@ -81,6 +81,8 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
 }
 
 export async function refuelingCreate(refueling: RefuelingCreateForm) {
+  const car = await carsGetById(refueling.carId);
+
   await db.transaction(async (tx) => {
     const newTransactionRecord = (
       await tx
@@ -108,28 +110,24 @@ export async function refuelingCreate(refueling: RefuelingCreateForm) {
   });
 }
 
-export async function highwayTripsGetPaginated(options: { paginate: Paginate; carId?: string }) {
+export async function highwayTripsGetPaginated(options: { paginate: Paginate; carId: string }) {
   const total = await countTotalHighwayTrips(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
-
-  const cars = await carsGetAll();
 
   const records = await db
     .select()
     .from(highwayTrips)
     .innerJoin(transactions, eq(highwayTrips.transactionId, transactions.id))
-    .where(options.carId ? eq(highwayTrips.carId, options.carId) : undefined)
+    .where(eq(highwayTrips.carId, options.carId))
     .limit(limit)
     .offset(offset)
     .orderBy(desc(transactions.datetime));
 
   const result: HighwayTripRead[] = [];
   for (const record of records) {
-    const car = cars.find((c) => c.id === record.car_highway_trips.carId)!;
     const transaction = await transactionGetById(record.transactions.id);
     result.push({
       ...record.car_highway_trips,
-      car,
       transaction,
     });
   }
@@ -163,44 +161,27 @@ export async function highwayTripCreate(trip: HighwayTripCreateForm) {
   });
 }
 
-export async function servicesGetAll(carId?: string) {
-  const cars = await carsGetAll();
-  const records = await db
+export async function servicesGetAll(carId: string) {
+  return await db
     .select()
     .from(services)
     .where(carId ? eq(services.carId, carId) : undefined)
     .orderBy(services.datetime);
-
-  const result: ServiceRead[] = [];
-  for (const record of records) {
-    const car = cars.find((c) => c.id === record.carId)!;
-    result.push({ ...record, car });
-  }
-
-  return result;
 }
 
-export async function servicesGetPaginated(options: { paginate: Paginate; carId?: string }) {
+export async function servicesGetPaginated(options: { paginate: Paginate; carId: string }) {
   const total = await countTotalServices(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
-
-  const cars = await carsGetAll();
 
   const records = await db
     .select()
     .from(services)
-    .where(options.carId ? eq(services.carId, options.carId) : undefined)
+    .where(eq(services.carId, options.carId))
     .limit(limit)
     .offset(offset)
     .orderBy(desc(services.datetime));
 
-  const result: ServiceRead[] = [];
-  for (const record of records) {
-    const car = cars.find((c) => c.id === record.carId)!;
-    result.push({ ...record, car });
-  }
-
-  return toPaginated(result, total);
+  return toPaginated(records, total);
 }
 
 export async function inspectionsCreate(inspection: InspectionCreateForm) {
@@ -212,47 +193,30 @@ export async function inspectionsCreate(inspection: InspectionCreateForm) {
   });
 }
 
-export async function inspectionsGetAll(carId?: string) {
-  const cars = await carsGetAll();
-  const records = await db
+export async function inspectionsGetAll(carId: string) {
+  return await db
     .select()
     .from(inspections)
-    .where(carId ? eq(inspections.carId, carId) : undefined)
+    .where(eq(inspections.carId, carId))
     .orderBy(inspections.datetime);
-
-  const result: InspectionRead[] = [];
-  for (const record of records) {
-    const car = cars.find((c) => c.id === record.carId)!;
-    result.push({ ...record, car });
-  }
-
-  return result;
 }
 
-export async function inspectionsGetPaginated(options: { paginate: Paginate; carId?: string }) {
+export async function inspectionsGetPaginated(options: { paginate: Paginate; carId: string }) {
   const total = await countTotalInspections(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
 
-  const cars = await carsGetAll();
-
   const records = await db
     .select()
     .from(inspections)
-    .where(options.carId ? eq(inspections.carId, options.carId) : undefined)
+    .where(eq(inspections.carId, options.carId))
     .limit(limit)
     .offset(offset)
     .orderBy(desc(inspections.datetime));
 
-  const result: InspectionRead[] = [];
-  for (const record of records) {
-    const car = cars.find((c) => c.id === record.carId)!;
-    result.push({ ...record, car });
-  }
-
-  return toPaginated(result, total);
+  return toPaginated(records, total);
 }
 
-async function countTotalRefuelings(carId?: string) {
+async function countTotalRefuelings(carId: string) {
   const totalRecordsQB = db.select().from(refuelings);
   if (carId) {
     totalRecordsQB.where(eq(refuelings.carId, carId));
@@ -260,7 +224,7 @@ async function countTotalRefuelings(carId?: string) {
   return (await totalRecordsQB).length;
 }
 
-async function countTotalServices(carId?: string) {
+async function countTotalServices(carId: string) {
   const totalRecordsQB = db.select().from(services);
   if (carId) {
     totalRecordsQB.where(eq(services.carId, carId));
@@ -268,7 +232,7 @@ async function countTotalServices(carId?: string) {
   return (await totalRecordsQB).length;
 }
 
-async function countTotalHighwayTrips(carId?: string) {
+async function countTotalHighwayTrips(carId: string) {
   const totalRecordsQB = db.select().from(highwayTrips);
   if (carId) {
     totalRecordsQB.where(eq(highwayTrips.carId, carId));
@@ -276,7 +240,7 @@ async function countTotalHighwayTrips(carId?: string) {
   return (await totalRecordsQB).length;
 }
 
-async function countTotalInspections(carId?: string) {
+async function countTotalInspections(carId: string) {
   const totalRecordsQB = db.select().from(inspections);
   if (carId) {
     totalRecordsQB.where(eq(inspections.carId, carId));
