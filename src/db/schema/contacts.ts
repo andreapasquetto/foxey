@@ -3,6 +3,7 @@ import { boolean, date, pgTable, uuid, varchar } from "drizzle-orm/pg-core";
 
 export const contacts = pgTable("contacts", {
   id: uuid("id").defaultRandom().primaryKey(),
+  userId: varchar("user_id").notNull(),
   isArchived: boolean("is_archived").notNull().default(false),
   isBusiness: boolean("is_business").notNull().default(false),
   fullName: varchar("full_name").notNull(),
@@ -32,27 +33,27 @@ export const contactAddresses = pgTable("contact_addresses", {
 });
 
 export const contactRelations = relations(contacts, ({ many }) => ({
-  contactPhoneNumbers: many(contactPhoneNumbers),
-  contactEmails: many(contactEmails),
-  contactAddresses: many(contactAddresses),
+  phoneNumbers: many(contactPhoneNumbers),
+  emails: many(contactEmails),
+  addresses: many(contactAddresses),
 }));
 
-export const contactPhoneNumbersRelations = relations(contactPhoneNumbers, ({ one }) => ({
-  contacts: one(contacts, {
+export const contactPhoneNumberRelations = relations(contactPhoneNumbers, ({ one }) => ({
+  contact: one(contacts, {
     fields: [contactPhoneNumbers.contactId],
     references: [contacts.id],
   }),
 }));
 
-export const contactEmailsRelations = relations(contactEmails, ({ one }) => ({
-  contacts: one(contacts, {
+export const contactEmailRelations = relations(contactEmails, ({ one }) => ({
+  contact: one(contacts, {
     fields: [contactEmails.contactId],
     references: [contacts.id],
   }),
 }));
 
-export const contactAddressesRelations = relations(contactAddresses, ({ one }) => ({
-  contacts: one(contacts, {
+export const contactAddressRelations = relations(contactAddresses, ({ one }) => ({
+  contact: one(contacts, {
     fields: [contactAddresses.contactId],
     references: [contacts.id],
   }),

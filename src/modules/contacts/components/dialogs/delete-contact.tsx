@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useContactDeleteMutation } from "@/modules/contacts/contacts-mutations";
+import { useContactsDeleteMutation } from "@/modules/contacts/contacts-mutations";
 import { ContactRead } from "@/modules/contacts/schemas/contact-read-schema";
 import { Trash } from "lucide-react";
 import { useState } from "react";
@@ -19,7 +19,7 @@ interface DeleteContactProps {
 export function DeleteContact(props: DeleteContactProps) {
   const [showDialog, setShowDialog] = useState(false);
 
-  const mutation = useContactDeleteMutation(props.contact.id);
+  const mutation = useContactsDeleteMutation(props.contact.id);
 
   function deleteAndCloseDialog() {
     mutation.mutate(props.contact.id, {

@@ -2,6 +2,7 @@
 
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
+import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,8 +12,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { XInput } from "@/components/form/x-input";
-import { useContactCreateMutation } from "@/modules/contacts/contacts-mutations";
+import { useContactsCreateMutation } from "@/modules/contacts/contacts-mutations";
 import {
   type ContactCreateForm,
   contactCreateFormSchema,
@@ -38,7 +38,7 @@ export function ContactCreateForm(props: ContactCreateFormProps) {
     },
   });
 
-  const mutation = useContactCreateMutation();
+  const mutation = useContactsCreateMutation();
 
   function onValidSubmit(values: ContactCreateForm) {
     mutation.mutate(values, {

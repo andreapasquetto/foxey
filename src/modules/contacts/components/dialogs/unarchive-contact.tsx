@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useContactUnarchiveMutation } from "@/modules/contacts/contacts-mutations";
+import { useContactsUnarchiveMutation } from "@/modules/contacts/contacts-mutations";
 import { ContactRead } from "@/modules/contacts/schemas/contact-read-schema";
 import { ArchiveRestore } from "lucide-react";
 import { useState } from "react";
@@ -19,7 +19,7 @@ interface UnarchiveContactProps {
 export function UnarchiveContact(props: UnarchiveContactProps) {
   const [showDialog, setShowDialog] = useState(false);
 
-  const mutation = useContactUnarchiveMutation(props.contact.id);
+  const mutation = useContactsUnarchiveMutation(props.contact.id);
 
   function unarchiveAndCloseDialog() {
     mutation.mutate(props.contact.id, {

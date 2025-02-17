@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-contact";
 import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
 import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
-import { useContactsPaginatedQuery } from "@/modules/contacts/contacts-queries";
+import { useContactsGetPaginatedQuery } from "@/modules/contacts/contacts-queries";
 import { Building, MoreHorizontal, User } from "lucide-react";
 
 interface ContactListProps {
@@ -30,7 +30,7 @@ interface ContactListProps {
 }
 
 export function ContactList(props: ContactListProps) {
-  const query = useContactsPaginatedQuery({
+  const query = useContactsGetPaginatedQuery({
     searchFilter: props.searchFilter,
     onlyArchived: props.onlyArchived,
   });
