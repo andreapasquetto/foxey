@@ -1,82 +1,57 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
-import { IdNameParentUsages } from "@/common/types";
+import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { placeCategories, places } from "@/db/schema/places";
 import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-schema";
-import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 import { PlaceUpdateForm } from "@/modules/places/schemas/place-update-form-schema";
 import { and, eq, ilike } from "drizzle-orm";
-import { alias } from "drizzle-orm/pg-core";
+
+export async function placeCategoriesGetAll() {
+  const userId = await getCurrentUserId();
+  return await db.query.placeCategories.findMany({
+    where: eq(placeCategories.userId, userId),
+    orderBy: [placeCategories.name],
+  });
+}
 
 export async function placeCategoriesGetPaginated(params: {
   paginate: Paginate;
   searchFilter?: string;
 }) {
-  const total = await placeCategoriesCountTotal(params);
+  const userId = await getCurrentUserId();
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
-
-  const parent = alias(placeCategories, "parent");
-  const records = await db
-    .select({
-      id: placeCategories.id,
-      name: placeCategories.name,
-      parent: {
-        id: parent.id,
-        name: parent.name,
-      },
-    })
-    .from(placeCategories)
-    .leftJoin(parent, eq(parent.id, placeCategories.parentId))
-    .where(
+  const total = await countTotalPlaceCategories(params);
+  const records = await db.query.placeCategories.findMany({
+    where: and(
+      eq(placeCategories.userId, userId),
       params.searchFilter ? ilike(placeCategories.name, `%${params.searchFilter}%`) : undefined,
-    )
-    .limit(limit)
-    .offset(offset)
-    .orderBy(parent.name, placeCategories.name);
+    ),
+    limit,
+    offset,
+    orderBy: [placeCategories.name],
+  });
 
-  const result: IdNameParentUsages[] = [];
-  for (const record of records) {
-    const usages = await placeCategoryCountUsages(record.id);
-    result.push({ ...record, usages });
-  }
-
-  return toPaginated(result, total);
-}
-
-export async function placeCategoriesGetAll() {
-  const parent = alias(placeCategories, "parent");
-  return await db
-    .select({
-      id: placeCategories.id,
-      name: placeCategories.name,
-      parent: {
-        id: parent.id,
-        name: parent.name,
-      },
-    })
-    .from(placeCategories)
-    .leftJoin(parent, eq(parent.id, placeCategories.parentId))
-    .orderBy(parent.name, placeCategories.name);
+  return toPaginated(records, total);
 }
 
 export async function placeCategoryGetById(id: string) {
-  const parent = alias(placeCategories, "parent");
-  return (
-    await db
-      .select({
-        id: placeCategories.id,
-        name: placeCategories.name,
-        parent: {
-          id: parent.id,
-          name: parent.name,
-        },
-      })
-      .from(placeCategories)
-      .leftJoin(parent, eq(parent.id, placeCategories.parentId))
-      .where(eq(placeCategories.id, id))
-  )[0];
+  const userId = await getCurrentUserId();
+  return await db.query.placeCategories.findFirst({
+    where: and(eq(placeCategories.userId, userId), eq(placeCategories.id, id)),
+  });
+}
+
+export async function placesGetAll() {
+  const userId = await getCurrentUserId();
+  return await db.query.places.findMany({
+    with: {
+      category: true,
+    },
+    where: eq(places.userId, userId),
+    orderBy: [places.name],
+  });
 }
 
 export async function placesGetPaginated(params: {
@@ -85,54 +60,49 @@ export async function placesGetPaginated(params: {
   categoryId?: string;
   onlyVisited?: boolean;
 }) {
-  const categories = await placeCategoriesGetAll();
-
-  const total = await placesCountTotal(params);
+  const userId = await getCurrentUserId();
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
-  const records = await db
-    .select()
-    .from(places)
-    .where(
-      and(
-        params.searchFilter ? ilike(places.name, `%${params.searchFilter}%`) : undefined,
-        params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
-        params.onlyVisited ? eq(places.isVisited, true) : undefined,
-      ),
-    )
-    .limit(limit)
-    .offset(offset)
-    .orderBy(places.categoryId, places.name);
+  const total = await countTotalPlaces(params);
+  const records = await db.query.places.findMany({
+    with: {
+      category: true,
+    },
+    where: and(
+      eq(places.userId, userId),
+      params.searchFilter ? ilike(places.name, `%${params.searchFilter}%`) : undefined,
+      params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
+      params.onlyVisited ? eq(places.isVisited, true) : undefined,
+    ),
+    limit,
+    offset,
+    orderBy: [places.name],
+  });
 
-  const result: PlaceRead[] = [];
-  for (const record of records) {
-    const category = categories.find((c) => c.id === record.categoryId) ?? null;
-    result.push({ ...record, category });
+  return toPaginated(records, total);
+}
+
+export async function placesGetById(id: string) {
+  const userId = await getCurrentUserId();
+  const record = await db.query.places.findFirst({
+    with: {
+      category: true,
+    },
+    where: and(eq(places.userId, userId), eq(places.id, id)),
+  });
+
+  if (!record) {
+    // TODO: return "error result" instead of throwing
+    throw new Error("Not Found");
   }
-  return toPaginated(result, total);
+
+  return record;
 }
 
-export async function placesGetAll() {
-  const categories = await placeCategoriesGetAll();
-  const records = await db.select().from(places).orderBy(places.categoryId, places.name);
-
-  const result: PlaceRead[] = [];
-  for (const record of records) {
-    const category = categories.find((c) => c.id === record.categoryId) ?? null;
-    result.push({ ...record, category });
-  }
-
-  return result;
-}
-
-export async function placeGetById(id: string) {
-  const record = (await db.select().from(places).where(eq(places.id, id)))[0];
-  const category = record.categoryId ? await placeCategoryGetById(record.categoryId) : null;
-  return { ...record, category };
-}
-
-export async function placeCreate(place: PlaceCreateForm) {
+export async function placesCreate(place: PlaceCreateForm) {
+  const userId = await getCurrentUserId();
   // TODO: pass coordinates
   await db.insert(places).values({
+    userId,
     categoryId: place.categoryId,
     name: place.name,
     address: place.address,
@@ -140,7 +110,7 @@ export async function placeCreate(place: PlaceCreateForm) {
   });
 }
 
-export async function placeUpdate(place: PlaceUpdateForm) {
+export async function placesUpdate(place: PlaceUpdateForm) {
   await db
     .update(places)
     .set({
@@ -152,39 +122,38 @@ export async function placeUpdate(place: PlaceUpdateForm) {
     .where(eq(places.id, place.id));
 }
 
-export async function placeDelete(id: string) {
+export async function placesDelete(id: string) {
   await db.delete(places).where(eq(places.id, id));
 }
 
-async function placeCategoriesCountTotal(params: { searchFilter?: string }) {
-  const records = await db
-    .select({ id: placeCategories.id })
-    .from(placeCategories)
-    .where(
-      params.searchFilter ? ilike(placeCategories.name, `%${params.searchFilter}%`) : undefined,
-    );
-  return records.length;
+async function countTotalPlaceCategories(params: { searchFilter?: string }) {
+  return (
+    await db
+      .select({ id: placeCategories.id })
+      .from(placeCategories)
+      .where(
+        params.searchFilter ? ilike(placeCategories.name, `%${params.searchFilter}%`) : undefined,
+      )
+  ).length;
 }
 
-async function placesCountTotal(params: {
+async function countTotalPlaces(params: {
   searchFilter?: string;
   categoryId?: string;
   onlyVisited?: boolean;
 }) {
-  const records = await db
-    .select({ id: places.id })
-    .from(places)
-    .where(
-      and(
-        params.searchFilter ? ilike(places.name, `%${params.searchFilter}%`) : undefined,
-        params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
-        params.onlyVisited ? eq(places.isVisited, true) : undefined,
-      ),
-    );
-  return records.length;
-}
-
-async function placeCategoryCountUsages(id: string) {
-  const records = await db.select({ id: places.id }).from(places).where(eq(places.categoryId, id));
-  return records.length;
+  const userId = await getCurrentUserId();
+  return (
+    await db
+      .select({ id: places.id })
+      .from(places)
+      .where(
+        and(
+          eq(places.userId, userId),
+          params.searchFilter ? ilike(places.name, `%${params.searchFilter}%`) : undefined,
+          params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
+          params.onlyVisited ? eq(places.isVisited, true) : undefined,
+        ),
+      )
+  ).length;
 }

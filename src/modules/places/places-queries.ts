@@ -2,11 +2,18 @@ import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   placeCategoriesGetAll,
   placeCategoriesGetPaginated,
-  placeGetById,
   placesGetAll,
+  placesGetById,
   placesGetPaginated,
 } from "@/modules/places/places-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
+
+export function usePlaceCategoriesGetAllQuery() {
+  return useQuery({
+    queryKey: ["place-categories"],
+    queryFn: () => placeCategoriesGetAll(),
+  });
+}
 
 export function usePlaceCategoriesGetPaginatedQuery(params: { searchFilter?: string }) {
   return usePaginatedQuery({
@@ -20,14 +27,14 @@ export function usePlaceCategoriesGetPaginatedQuery(params: { searchFilter?: str
   });
 }
 
-export function usePlaceCategoriesGetAllQuery() {
+export function usePlacesGetAllQuery() {
   return useQuery({
-    queryKey: ["place-categories"],
-    queryFn: () => placeCategoriesGetAll(),
+    queryKey: ["places"],
+    queryFn: () => placesGetAll(),
   });
 }
 
-export function usePlacesPaginatedQuery(
+export function usePlacesGetPaginatedQuery(
   params: { searchFilter?: string; categoryId?: string; onlyVisited?: boolean } = {},
 ) {
   return usePaginatedQuery({
@@ -43,16 +50,9 @@ export function usePlacesPaginatedQuery(
   });
 }
 
-export function usePlacesGetAllQuery() {
-  return useQuery({
-    queryKey: ["places"],
-    queryFn: () => placesGetAll(),
-  });
-}
-
-export function usePlaceGetByIdQuery(id: string) {
+export function usePlacesGetByIdQuery(id: string) {
   return useQuery({
     queryKey: ["places", id],
-    queryFn: () => placeGetById(id),
+    queryFn: () => placesGetById(id),
   });
 }

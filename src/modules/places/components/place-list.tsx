@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { usePlacesPaginatedQuery } from "@/modules/places/places-queries";
+import { usePlacesGetPaginatedQuery } from "@/modules/places/places-queries";
 import { CheckIcon, Edit, MoreHorizontal, XIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -29,7 +29,7 @@ interface PlaceListProps {
 }
 
 export function PlaceList(props: PlaceListProps) {
-  const query = usePlacesPaginatedQuery({
+  const query = usePlacesGetPaginatedQuery({
     searchFilter: props.searchFilter,
     categoryId: props.categoryId,
     onlyVisited: props.onlyVisited,

@@ -40,9 +40,7 @@ export function PlaceCategoryList(props: PlaceCategoryListProps) {
         <TableBody>
           {categories.map((category) => (
             <TableRow key={category.id}>
-              <TableCell className="text-muted-foreground">{category.parent?.name}</TableCell>
               <TableCell>{category.name}</TableCell>
-              <TableCell>{category.usages}</TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -55,9 +53,7 @@ export function PlaceCategoryList(props: PlaceCategoryListProps) {
 function TableHeaderRow() {
   return (
     <TableRow>
-      <TableHead>Parent</TableHead>
       <TableHead>Name</TableHead>
-      <TableHead>Usages</TableHead>
     </TableRow>
   );
 }
@@ -66,13 +62,7 @@ function TableRowsSkeleton() {
   return Array.from({ length: 3 }).map((_, i) => (
     <TableRow key={i}>
       <TableCell>
-        <Skeleton className="h-4 w-32" />
-      </TableCell>
-      <TableCell>
         <Skeleton className="h-4 w-52" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-5 w-5" />
       </TableCell>
     </TableRow>
   ));

@@ -24,7 +24,7 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { PlaceFormSkeleton } from "@/modules/places/components/skeletons/place-form-skeleton";
-import { usePlaceCreateMutation } from "@/modules/places/places-mutations";
+import { usePlacesCreateMutation } from "@/modules/places/places-mutations";
 import { usePlaceCategoriesGetAllQuery } from "@/modules/places/places-queries";
 import {
   type PlaceCreateForm,
@@ -45,7 +45,7 @@ export function PlaceCreateForm() {
     },
   });
 
-  const mutation = usePlaceCreateMutation();
+  const mutation = usePlacesCreateMutation();
 
   const { data: categories, isFetching } = usePlaceCategoriesGetAllQuery();
 
@@ -97,24 +97,13 @@ export function PlaceCreateForm() {
                         <CommandGroup>
                           {categories.map((category) => (
                             <CommandItem
-                              value={
-                                category.parent
-                                  ? `${category.parent.name}-${category.name}`
-                                  : category.name
-                              }
+                              value={category.name}
                               key={category.id}
                               onSelect={() => {
                                 form.setValue("categoryId", category.id);
                               }}
                             >
-                              {!category.parent && <div>{category.name}</div>}
-                              {category.parent && (
-                                <div>
-                                  <span>{category.parent.name}</span>
-                                  <span className="mx-1">•</span>
-                                  <span className="text-muted-foreground">{category.name}</span>
-                                </div>
-                              )}
+                              <div>{category.name}</div>
                               <Check
                                 className={cn(
                                   "ml-auto",

@@ -16,7 +16,7 @@ import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-s
 import { TransactionUpdateForm } from "@/modules/accounting/schemas/transaction-update-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/accounting/schemas/wallet-update-form-schema";
-import { placeGetById, placesGetAll } from "@/modules/places/places-actions";
+import { placesGetAll, placesGetById } from "@/modules/places/places-actions";
 import Decimal from "decimal.js";
 import { and, between, desc, eq, ilike, isNull, or } from "drizzle-orm";
 import { alias } from "drizzle-orm/pg-core";
@@ -261,7 +261,7 @@ export async function transactionGetById(id: string) {
 
   const fromWallet = record.fromWalletId ? await walletGetById(record.fromWalletId) : null;
   const toWallet = record.toWalletId ? await walletGetById(record.toWalletId) : null;
-  const place = record.placeId ? await placeGetById(record.placeId) : null;
+  const place = record.placeId ? await placesGetById(record.placeId) : null;
   const category = record.categoryId ? await transactionCategoryGetById(record.categoryId) : null;
 
   const txTags = await db

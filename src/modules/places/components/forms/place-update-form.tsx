@@ -24,10 +24,10 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { PlaceFormSkeleton } from "@/modules/places/components/skeletons/place-form-skeleton";
-import { usePlaceUpdateMutation } from "@/modules/places/places-mutations";
+import { usePlacesUpdateMutation } from "@/modules/places/places-mutations";
 import {
   usePlaceCategoriesGetAllQuery,
-  usePlaceGetByIdQuery,
+  usePlacesGetByIdQuery,
 } from "@/modules/places/places-queries";
 import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 import {
@@ -45,7 +45,7 @@ interface PlaceUpdateFormProps {
 
 export function PlaceUpdateForm(props: PlaceUpdateFormProps) {
   const router = useRouter();
-  const query = usePlaceGetByIdQuery(props.id);
+  const query = usePlacesGetByIdQuery(props.id);
 
   if (!query.data) {
     return <PlaceFormSkeleton />;
@@ -78,7 +78,7 @@ function ComponentForm(props: UpdateFormProps) {
     },
   });
 
-  const mutation = usePlaceUpdateMutation(props.place.id);
+  const mutation = usePlacesUpdateMutation(props.place.id);
 
   const { data: categories } = usePlaceCategoriesGetAllQuery();
 
@@ -130,24 +130,13 @@ function ComponentForm(props: UpdateFormProps) {
                         <CommandGroup>
                           {categories.map((category) => (
                             <CommandItem
-                              value={
-                                category.parent
-                                  ? `${category.parent.name}-${category.name}`
-                                  : category.name
-                              }
+                              value={category.name}
                               key={category.id}
                               onSelect={() => {
                                 form.setValue("categoryId", category.id);
                               }}
                             >
-                              {!category.parent && <div>{category.name}</div>}
-                              {category.parent && (
-                                <div>
-                                  <span>{category.parent.name}</span>
-                                  <span className="mx-1">•</span>
-                                  <span className="text-muted-foreground">{category.name}</span>
-                                </div>
-                              )}
+                              <div>{category.name}</div>
                               <Check
                                 className={cn(
                                   "ml-auto",
