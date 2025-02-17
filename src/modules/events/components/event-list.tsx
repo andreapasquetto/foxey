@@ -10,16 +10,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { useEventsQuery } from "@/modules/events/events-queries";
+import { useEventsGetAllQuery } from "@/modules/events/events-queries";
 import { format, isBefore, startOfToday } from "date-fns";
 import { CheckIcon, XIcon } from "lucide-react";
 
 export function EventList() {
-  const { data: events, isFetching } = useEventsQuery();
+  const eventsQuery = useEventsGetAllQuery();
 
-  const today = startOfToday();
+  if (!eventsQuery.data) return <CircularSpinner className="mx-auto" />;
 
-  if (!events || isFetching) return <CircularSpinner className="mx-auto" />;
+  const events = eventsQuery.data;
 
   if (!events.length) {
     return (
@@ -28,6 +28,8 @@ export function EventList() {
       </div>
     );
   }
+
+  const today = startOfToday();
 
   return (
     <Table>

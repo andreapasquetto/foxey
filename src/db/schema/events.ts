@@ -3,11 +3,17 @@ import { boolean, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core"
 
 export const eventCategories = pgTable("event_categories", {
   id: uuid("id").defaultRandom().primaryKey(),
+  userId: varchar("user_id").notNull(),
   name: varchar("name").notNull(),
 });
 
 export const events = pgTable("events", {
   id: uuid("id").defaultRandom().primaryKey(),
+
+  // ! this creates redundancy, it could be dropped in favor of categoryId
+  // ! however, to keep the code simple, it has been added here to avoid some joins
+  userId: varchar("user_id").notNull(),
+
   categoryId: uuid("category_id").references(() => eventCategories.id),
   isCanceled: boolean("is_canceled").default(false),
   isAllDay: boolean("is_all_day").notNull(),
@@ -22,7 +28,7 @@ export const eventCategoryRelations = relations(eventCategories, ({ many }) => (
 }));
 
 export const eventRelations = relations(events, ({ one }) => ({
-  eventCategories: one(eventCategories, {
+  category: one(eventCategories, {
     fields: [events.categoryId],
     references: [eventCategories.id],
   }),

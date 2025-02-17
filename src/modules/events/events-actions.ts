@@ -1,9 +1,17 @@
 "use server";
 
+import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { events } from "@/db/schema/events";
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
-export async function getEvents() {
-  return await db.select().from(events).orderBy(desc(events.startDatetime));
+export async function eventsGetAll() {
+  const userId = await getCurrentUserId();
+  return await db.query.events.findMany({
+    with: {
+      category: true,
+    },
+    where: eq(events.userId, userId),
+    orderBy: desc(events.startDatetime),
+  });
 }
