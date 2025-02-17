@@ -1,7 +1,7 @@
 "use client";
 
 import { thisMonthToDateRange } from "@/common/dates";
-import { IdNameParent } from "@/common/types";
+import { IdName } from "@/common/types";
 import { ChipCombobox } from "@/components/form/chip-combobox";
 import { RangeDatePicker } from "@/components/form/range-date-picker";
 import { Input } from "@/components/ui/input";
@@ -22,7 +22,7 @@ export function Transactions() {
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(thisMonthToDateRange());
   const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
-  const [selectedCategory, setSelectedCategory] = useState<IdNameParent | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<IdName | undefined>(undefined);
   const [selectedPlace, setSelectedPlace] = useState<PlaceRead | undefined>(undefined);
 
   const walletsQuery = useWalletsGetAllQuery();
@@ -72,21 +72,8 @@ export function Transactions() {
               selectedValue={selectedCategory}
               onSelectValue={setSelectedCategory}
               options={categoriesQuery.data}
-              optionIndexer={(option) =>
-                option.parent ? `${option.parent.name}-${option.name}` : option.name
-              }
-              optionFormatter={(option) => (
-                <>
-                  {!option.parent && <div>{option.name}</div>}
-                  {option.parent && (
-                    <div>
-                      <span className="text-muted-foreground">{option.parent.name}</span>
-                      <span className="mx-1">•</span>
-                      <span>{option.name}</span>
-                    </div>
-                  )}
-                </>
-              )}
+              optionIndexer={(option) => option.name}
+              optionFormatter={(option) => <div>{option.name}</div>}
               withSearch
             />
           </div>

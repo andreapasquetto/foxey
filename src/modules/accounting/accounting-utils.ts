@@ -14,15 +14,17 @@ import {
 import { Decimal } from "decimal.js";
 
 export function getTransactionsWithoutTransfers(transactions: TransactionRead[]) {
-  return transactions.filter((tx) => !(tx.fromWallet && tx.toWallet));
+  return transactions.filter(
+    (transaction) => !(transaction.fromWalletId && transaction.toWalletId),
+  );
 }
 
 export function getIncomingTransactions(transactions: TransactionRead[]) {
-  return transactions.filter((tx) => tx.toWallet);
+  return transactions.filter((transaction) => transaction.toWalletId);
 }
 
 export function getOutgoingTransactions(transactions: TransactionRead[]) {
-  return transactions.filter((tx) => tx.fromWallet);
+  return transactions.filter((transaction) => transaction.fromWalletId);
 }
 
 export function calculateTransactionsAmount(transactions: TransactionRead[]) {
@@ -30,7 +32,7 @@ export function calculateTransactionsAmount(transactions: TransactionRead[]) {
 }
 
 export function groupTransactionsByCategoryName(transactions: TransactionRead[]) {
-  return Object.groupBy(transactions, (tx) => tx.category?.name ?? "NONE");
+  return Object.groupBy(transactions, (transaction) => transaction.category?.name ?? "NONE");
 }
 
 export function generateThisMonthExpensesPerDayChartData(transactions: TransactionRead[]) {
@@ -72,10 +74,12 @@ export function generateThisMonthExpensesChartData(transactions: TransactionRead
   const expensesGroupedByCategoryName = groupTransactionsByCategoryName(expenses);
 
   return Object.entries(expensesGroupedByCategoryName)
-    .map(([categoryName, txs]) => {
+    .map(([categoryName, transactions]) => {
       return {
         category: categoryName,
-        total: txs?.reduce((prev, curr) => prev.add(curr.amount), new Decimal(0)).toNumber(),
+        total: transactions
+          ?.reduce((prev, curr) => prev.add(curr.amount), new Decimal(0))
+          .toNumber(),
       };
     })
     .toSorted((a, b) => (a.total ?? 0) - (b.total ?? 0));
@@ -135,24 +139,24 @@ export function generateThisMonthTrendChartData(transactions: TransactionRead[])
         datetime: Date;
         amount: Decimal;
       }>
-    >((acc, tx) => {
+    >((acc, transaction) => {
       let amountChange = new Decimal(0);
 
-      const isTransfer = !!tx.fromWallet && !!tx.toWallet;
+      const isTransfer = !!transaction.fromWalletId && !!transaction.toWalletId;
       if (!isTransfer) {
-        if (tx.fromWallet?.id) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWallet?.id) amountChange = amountChange.add(tx.amount);
+        if (transaction.fromWalletId) amountChange = amountChange.sub(transaction.amount);
+        if (transaction.toWalletId) amountChange = amountChange.add(transaction.amount);
       }
 
       acc.push({
-        datetime: tx.datetime,
+        datetime: transaction.datetime,
         amount: acc.length ? acc[acc.length - 1].amount.add(amountChange) : amountChange,
       });
 
       return acc;
     }, [])
-    .filter((tx) =>
-      isWithinInterval(tx.datetime, {
+    .filter((transaction) =>
+      isWithinInterval(transaction.datetime, {
         start: monthToDate.from!,
         end: monthToDate.to!,
       }),
@@ -169,24 +173,24 @@ export function generateThisYearTrendChartData(transactions: TransactionRead[]) 
         datetime: Date;
         amount: Decimal;
       }>
-    >((acc, tx) => {
+    >((acc, transaction) => {
       let amountChange = new Decimal(0);
 
-      const isTransfer = !!tx.fromWallet && !!tx.toWallet;
+      const isTransfer = !!transaction.fromWalletId && !!transaction.toWalletId;
       if (!isTransfer) {
-        if (tx.fromWallet?.id) amountChange = amountChange.sub(tx.amount);
-        if (tx.toWallet?.id) amountChange = amountChange.add(tx.amount);
+        if (transaction.fromWalletId) amountChange = amountChange.sub(transaction.amount);
+        if (transaction.toWalletId) amountChange = amountChange.add(transaction.amount);
       }
 
       acc.push({
-        datetime: tx.datetime,
+        datetime: transaction.datetime,
         amount: acc.length ? acc[acc.length - 1].amount.add(amountChange) : amountChange,
       });
 
       return acc;
     }, [])
-    .filter((tx) =>
-      isWithinInterval(tx.datetime, {
+    .filter((transaction) =>
+      isWithinInterval(transaction.datetime, {
         start: thisYear.from!,
         end: thisYear.to!,
       }),
@@ -248,7 +252,9 @@ export function generateThisYearIncomeExpensesChartData(transactions: Transactio
   if (!months.length) return [];
 
   return months.map((month) => {
-    const monthTransactions = transactions.filter((tx) => isSameMonth(tx.datetime, month));
+    const monthTransactions = transactions.filter((transaction) =>
+      isSameMonth(transaction.datetime, month),
+    );
     return {
       month: format(month, "MMM"),
       income: calculateTransactionsAmount(

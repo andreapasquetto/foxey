@@ -1,10 +1,10 @@
 import {
-  transactionCategoryCreate,
-  transactionCreate,
-  transactionDelete,
-  transactionUpdate,
-  walletCreate,
-  walletUpdate,
+  transactionCategoriesCreate,
+  transactionsCreate,
+  transactionsDelete,
+  transactionsUpdate,
+  walletsCreate,
+  walletsUpdate,
 } from "@/modules/accounting/accounting-actions";
 import { TransactionCategoryCreateForm } from "@/modules/accounting/schemas/transaction-category-create-form-schema";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
@@ -13,44 +13,44 @@ import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-for
 import { WalletUpdateForm } from "@/modules/accounting/schemas/wallet-update-form-schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useWalletCreateMutation() {
+export function useWalletsCreateMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["wallets", "create"],
-    mutationFn: (wallet: WalletCreateForm) => walletCreate(wallet),
+    mutationFn: (wallet: WalletCreateForm) => walletsCreate(wallet),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
     },
   });
 }
 
-export function useWalletUpdateMutation(id: string) {
+export function useWalletsUpdateMutation(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["wallets", id, "update"],
-    mutationFn: (wallet: WalletUpdateForm) => walletUpdate(wallet),
+    mutationFn: (wallet: WalletUpdateForm) => walletsUpdate(wallet),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
     },
   });
 }
 
-export function useTransactionCategoryCreateMutation() {
+export function useTransactionCategoriesCreateMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["transaction-categories", "create"],
-    mutationFn: (category: TransactionCategoryCreateForm) => transactionCategoryCreate(category),
+    mutationFn: (category: TransactionCategoryCreateForm) => transactionCategoriesCreate(category),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transaction-categories"] });
     },
   });
 }
 
-export function useTransactionCreateMutation() {
+export function useTransactionsCreateMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["transactions", "create"],
-    mutationFn: (transaction: TransactionCreateForm) => transactionCreate(transaction),
+    mutationFn: (transaction: TransactionCreateForm) => transactionsCreate(transaction),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
@@ -58,11 +58,11 @@ export function useTransactionCreateMutation() {
   });
 }
 
-export function useTransactionUpdateMutation(id: string) {
+export function useTransactionsUpdateMutation(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["transactions", id, "update"],
-    mutationFn: (transaction: TransactionUpdateForm) => transactionUpdate(transaction),
+    mutationFn: (transaction: TransactionUpdateForm) => transactionsUpdate(transaction),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["wallets"] });
@@ -70,11 +70,11 @@ export function useTransactionUpdateMutation(id: string) {
   });
 }
 
-export function useTransactionDeleteMutation(id: string) {
+export function useTransactionsDeleteMutation(id: string) {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["transactions", id, "delete"],
-    mutationFn: (id: string) => transactionDelete(id),
+    mutationFn: (id: string) => transactionsDelete(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["wallets"] });

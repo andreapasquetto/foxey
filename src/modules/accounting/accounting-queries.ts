@@ -1,13 +1,12 @@
 import { usePaginatedQuery } from "@/common/hooks/use-paginated-query";
 import {
   transactionCategoriesGetAll,
-  transactionCategoriesGetAllWithoutParent,
   transactionCategoriesGetPaginated,
-  transactionGetById,
   transactionsGetAll,
+  transactionsGetById,
   transactionsGetPaginated,
-  walletGetById,
   walletsGetAll,
+  walletsGetById,
 } from "@/modules/accounting/accounting-actions";
 import { keepPreviousData, useQuery } from "@tanstack/react-query";
 import { DateRange } from "react-day-picker";
@@ -19,11 +18,18 @@ export function useWalletsGetAllQuery() {
   });
 }
 
-export function useWalletGetByIdQuery(id: string) {
+export function useWalletsGetByIdQuery(id: string) {
   return useQuery({
     queryKey: ["wallets", id],
-    queryFn: () => walletGetById(id),
+    queryFn: () => walletsGetById(id),
     enabled: true,
+  });
+}
+
+export function useTransactionCategoriesGetAllQuery() {
+  return useQuery({
+    queryKey: ["transaction-categories"],
+    queryFn: () => transactionCategoriesGetAll(),
   });
 }
 
@@ -36,17 +42,13 @@ export function useTransactionCategoriesGetPaginatedQuery(params: { searchFilter
   });
 }
 
-export function useTransactionCategoriesGetAllQuery() {
+export function useTransactionsGetAllQuery(
+  params: { enabled?: boolean; walletId?: string; dateRange?: DateRange } = {},
+) {
   return useQuery({
-    queryKey: ["transaction-categories"],
-    queryFn: () => transactionCategoriesGetAll(),
-  });
-}
-
-export function useTransactionCategoriesGetAllWithoutParentQuery() {
-  return useQuery({
-    queryKey: ["transaction-categories", "no-parent"],
-    queryFn: () => transactionCategoriesGetAllWithoutParent(),
+    queryKey: ["transactions", { walletId: params.walletId, dateRange: params.dateRange }],
+    queryFn: () => transactionsGetAll(params),
+    enabled: params.enabled ?? true,
   });
 }
 
@@ -74,20 +76,10 @@ export function useTransactionsGetPaginatedQuery(
   });
 }
 
-export function useTransactionsGetAllQuery(
-  params: { enabled?: boolean; walletId?: string; dateRange?: DateRange } = {},
-) {
-  return useQuery({
-    queryKey: ["transactions", { walletId: params.walletId, dateRange: params.dateRange }],
-    queryFn: () => transactionsGetAll(params),
-    enabled: params.enabled ?? true,
-  });
-}
-
-export function useTransactionGetByIdQuery(id: string) {
+export function useTransactionsGetByIdQuery(id: string) {
   return useQuery({
     queryKey: ["transactions", id],
-    queryFn: () => transactionGetById(id),
+    queryFn: () => transactionsGetById(id),
     enabled: true,
   });
 }

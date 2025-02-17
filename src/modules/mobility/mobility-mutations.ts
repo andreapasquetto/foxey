@@ -1,8 +1,8 @@
 import {
-  carCreate,
-  highwayTripCreate,
+  carsCreate,
+  highwayTripsCreate,
   inspectionsCreate,
-  refuelingCreate,
+  refuelingsCreate,
 } from "@/modules/mobility/mobility-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
@@ -10,22 +10,22 @@ import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-crea
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function useCarCreateMutation() {
+export function useCarsCreateMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["cars", "create"],
-    mutationFn: (car: CarCreateForm) => carCreate(car),
+    mutationFn: (car: CarCreateForm) => carsCreate(car),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["cars"] });
     },
   });
 }
 
-export function useRefuelingCreateMutation() {
+export function useRefuelingsCreateMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["refuelings", "create"],
-    mutationFn: (refueling: RefuelingCreateForm) => refuelingCreate(refueling),
+    mutationFn: (refueling: RefuelingCreateForm) => refuelingsCreate(refueling),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["refuelings"] });
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
@@ -33,11 +33,11 @@ export function useRefuelingCreateMutation() {
   });
 }
 
-export function useHighwayTripCreateMutation() {
+export function useHighwayTripsCreateMutation() {
   const queryClient = useQueryClient();
   return useMutation({
     mutationKey: ["highway-trips", "create"],
-    mutationFn: (trip: HighwayTripCreateForm) => highwayTripCreate(trip),
+    mutationFn: (trip: HighwayTripCreateForm) => highwayTripsCreate(trip),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["highway-trips"] });
     },

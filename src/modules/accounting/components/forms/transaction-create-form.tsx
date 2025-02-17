@@ -24,7 +24,7 @@ import {
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useTransactionCreateMutation } from "@/modules/accounting/accounting-mutations";
+import { useTransactionsCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   useTransactionCategoriesGetAllQuery,
   useWalletsGetAllQuery,
@@ -51,7 +51,7 @@ export function TransactionCreateForm() {
     },
   });
 
-  const mutation = useTransactionCreateMutation();
+  const mutation = useTransactionsCreateMutation();
 
   const { data: wallets } = useWalletsGetAllQuery();
   const { data: categories } = useTransactionCategoriesGetAllQuery();
@@ -134,24 +134,13 @@ export function TransactionCreateForm() {
                         <CommandGroup>
                           {categories.map((category) => (
                             <CommandItem
-                              value={
-                                category.parent
-                                  ? `${category.parent.name}-${category.name}`
-                                  : category.name
-                              }
+                              value={category.name}
                               key={category.id}
                               onSelect={() => {
                                 form.setValue("categoryId", category.id);
                               }}
                             >
-                              {!category.parent && <div>{category.name}</div>}
-                              {category.parent && (
-                                <div>
-                                  <span>{category.parent.name}</span>
-                                  <span className="mx-1">•</span>
-                                  <span className="text-muted-foreground">{category.name}</span>
-                                </div>
-                              )}
+                              <div>{category.name}</div>
                               <Check
                                 className={cn(
                                   "ml-auto",

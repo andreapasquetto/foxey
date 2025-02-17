@@ -5,7 +5,7 @@ import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useCarCreateMutation } from "@/modules/mobility/mobility-mutations";
+import { useCarsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
   type CarCreateForm,
   carCreateFormSchema,
@@ -23,7 +23,7 @@ export function CarCreateForm() {
     },
   });
 
-  const mutation = useCarCreateMutation();
+  const mutation = useCarsCreateMutation();
 
   function onValidSubmit(values: CarCreateForm) {
     mutation.mutate(values, {

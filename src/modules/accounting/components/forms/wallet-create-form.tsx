@@ -5,7 +5,7 @@ import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
-import { useWalletCreateMutation } from "@/modules/accounting/accounting-mutations";
+import { useWalletsCreateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   type WalletCreateForm,
   walletCreateFormSchema,
@@ -20,7 +20,7 @@ export function WalletCreateForm() {
     resolver: zodResolver(walletCreateFormSchema),
   });
 
-  const mutation = useWalletCreateMutation();
+  const mutation = useWalletsCreateMutation();
 
   function onValidSubmit(values: WalletCreateForm) {
     mutation.mutate(values, {

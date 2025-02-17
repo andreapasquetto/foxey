@@ -25,10 +25,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { useTransactionUpdateMutation } from "@/modules/accounting/accounting-mutations";
+import { useTransactionsUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import {
   useTransactionCategoriesGetAllQuery,
-  useTransactionGetByIdQuery,
+  useTransactionsGetByIdQuery,
 } from "@/modules/accounting/accounting-queries";
 import { TransactionFormSkeleton } from "@/modules/accounting/components/skeletons/transaction-form-skeleton";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
@@ -48,7 +48,7 @@ interface TransactionUpdateFormProps {
 
 export function TransactionUpdateForm(props: TransactionUpdateFormProps) {
   const router = useRouter();
-  const query = useTransactionGetByIdQuery(props.id);
+  const query = useTransactionsGetByIdQuery(props.id);
 
   if (!query.data) {
     return <TransactionFormSkeleton />;
@@ -82,7 +82,7 @@ function UpdateForm(props: UpdateFormProps) {
     },
   });
 
-  const mutation = useTransactionUpdateMutation(props.transaction.id);
+  const mutation = useTransactionsUpdateMutation(props.transaction.id);
 
   const { data: categories } = useTransactionCategoriesGetAllQuery();
   const { data: places } = usePlacesGetAllQuery();
@@ -118,12 +118,12 @@ function UpdateForm(props: UpdateFormProps) {
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="fromWalletId">From</Label>
-            <Input id="fromWalletId" disabled readOnly value={props.transaction.fromWallet?.name} />
+            <Input id="fromWalletId" disabled readOnly value={props.transaction.from?.name} />
           </div>
 
           <div className="space-y-2">
             <Label htmlFor="toWalletId">To</Label>
-            <Input id="toWalletId" disabled readOnly value={props.transaction.toWallet?.name} />
+            <Input id="toWalletId" disabled readOnly value={props.transaction.to?.name} />
           </div>
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
@@ -159,24 +159,13 @@ function UpdateForm(props: UpdateFormProps) {
                         <CommandGroup>
                           {categories.map((category) => (
                             <CommandItem
-                              value={
-                                category.parent
-                                  ? `${category.parent.name}-${category.name}`
-                                  : category.name
-                              }
+                              value={category.name}
                               key={category.id}
                               onSelect={() => {
                                 form.setValue("categoryId", category.id);
                               }}
                             >
-                              {!category.parent && <div>{category.name}</div>}
-                              {category.parent && (
-                                <div>
-                                  <span>{category.parent.name}</span>
-                                  <span className="mx-1">•</span>
-                                  <span className="text-muted-foreground">{category.name}</span>
-                                </div>
-                              )}
+                              <div>{category.name}</div>
                               <Check
                                 className={cn(
                                   "ml-auto",

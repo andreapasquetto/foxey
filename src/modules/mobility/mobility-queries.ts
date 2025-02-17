@@ -41,6 +41,14 @@ export function useRefuelingsGetPaginatedQuery(carId: string) {
   });
 }
 
+export function useHighwayTripsGetPaginatedQuery(carId: string) {
+  return usePaginatedQuery({
+    queryKey: ["highway-trips", { carId }],
+    queryFn: (paginate) => highwayTripsGetPaginated({ paginate, carId }),
+    placeholderData: keepPreviousData,
+  });
+}
+
 export function useServicesGetAllQuery(carId: string) {
   return useQuery({
     queryKey: ["services", { carId }],
@@ -52,14 +60,6 @@ export function useServicesGetPaginatedQuery(carId: string) {
   return usePaginatedQuery({
     queryKey: ["services", { carId }],
     queryFn: (paginate) => servicesGetPaginated({ paginate, carId }),
-    placeholderData: keepPreviousData,
-  });
-}
-
-export function useHighwayTripsGetPaginatedQuery(carId: string) {
-  return usePaginatedQuery({
-    queryKey: ["highway-trips", { carId }],
-    queryFn: (paginate) => highwayTripsGetPaginated({ paginate, carId }),
     placeholderData: keepPreviousData,
   });
 }

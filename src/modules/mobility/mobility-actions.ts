@@ -5,7 +5,7 @@ import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { transactions } from "@/db/schema/accounting";
 import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schema/mobility";
-import { transactionGetById } from "@/modules/accounting/accounting-actions";
+import { transactionsGetById } from "@/modules/accounting/accounting-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { HighwayTripRead } from "@/modules/mobility/schemas/highway-trip-read-schema";
@@ -14,25 +14,62 @@ import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create
 import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
 import { and, desc, eq } from "drizzle-orm";
 
+export async function carsCreate(car: CarCreateForm) {
+  const userId = await getCurrentUserId();
+  await db.insert(cars).values({ ...car, userId });
+}
+
 export async function carsGetAll() {
   const userId = await getCurrentUserId();
-  return await db.select().from(cars).where(eq(cars.userId, userId));
+  return await db.query.cars.findMany({
+    where: eq(cars.userId, userId),
+  });
 }
 
 export async function carsGetById(id: string) {
   const userId = await getCurrentUserId();
+  const record = await db.query.cars.findFirst({
+    where: and(eq(cars.userId, userId), eq(cars.id, id)),
+  });
 
-  return (
-    await db
-      .select()
-      .from(cars)
-      .where(and(eq(cars.userId, userId), eq(cars.id, id)))
-  )[0];
+  if (!record) {
+    // TODO: return "error result" instead of throwing
+    throw new Error("Not Found");
+  }
+
+  return record;
 }
 
-export async function carCreate(car: CarCreateForm) {
+export async function refuelingsCreate(refueling: RefuelingCreateForm) {
   const userId = await getCurrentUserId();
-  await db.insert(cars).values({ ...car, userId });
+  await db.transaction(async (tx) => {
+    const newTransactionRecord = (
+      await tx
+        .insert(transactions)
+        .values({
+          userId,
+          datetime: refueling.datetime,
+          fromWalletId: refueling.walletId,
+          placeId: refueling.placeId,
+          amount: refueling.cost.toString(),
+          description: refueling.description,
+        })
+        .returning({ id: transactions.id })
+    )[0];
+
+    // TODO: update wallets
+
+    await tx.insert(refuelings).values({
+      carId: refueling.carId,
+      transactionId: newTransactionRecord.id,
+      price: String(refueling.price),
+      quantity: String(refueling.quantity),
+      isFull: refueling.isFull,
+      isNecessary: refueling.isNecessary,
+      trip: refueling.trip ? String(refueling.trip) : undefined,
+      odometer: String(refueling.odometer),
+    });
+  });
 }
 
 export async function refuelingsGetAll(carId: string) {
@@ -45,9 +82,9 @@ export async function refuelingsGetAll(carId: string) {
 
   const result: RefuelingRead[] = [];
   for (const record of records) {
-    const transaction = await transactionGetById(record.transactions.id);
+    const transaction = await transactionsGetById(record.transactions.id);
     result.push({
-      ...record.car_refuelings,
+      ...record.mobility_refuelings,
       transaction,
     });
   }
@@ -70,9 +107,9 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
 
   const result: RefuelingRead[] = [];
   for (const record of records) {
-    const transaction = await transactionGetById(record.transactions.id);
+    const transaction = await transactionsGetById(record.transactions.id);
     result.push({
-      ...record.car_refuelings,
+      ...record.mobility_refuelings,
       transaction,
     });
   }
@@ -80,32 +117,32 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
   return toPaginated(result, total);
 }
 
-export async function refuelingCreate(refueling: RefuelingCreateForm) {
-  const car = await carsGetById(refueling.carId);
-
+export async function highwayTripsCreate(trip: HighwayTripCreateForm) {
+  const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
     const newTransactionRecord = (
       await tx
         .insert(transactions)
         .values({
-          datetime: refueling.datetime,
-          fromWalletId: refueling.walletId,
-          placeId: refueling.placeId,
-          amount: refueling.cost.toString(),
-          description: refueling.description,
+          userId,
+          datetime: trip.datetime,
+          fromWalletId: trip.walletId,
+          amount: trip.cost.toString(),
+          placeId: trip.placeId,
+          description: trip.description ?? `${trip.startingToll} - ${trip.endingToll}`,
         })
         .returning({ id: transactions.id })
     )[0];
 
-    await tx.insert(refuelings).values({
-      carId: refueling.carId,
+    // TODO: update wallets
+
+    await tx.insert(highwayTrips).values({
+      carId: trip.carId,
       transactionId: newTransactionRecord.id,
-      price: String(refueling.price),
-      quantity: String(refueling.quantity),
-      isFull: refueling.isFull,
-      isNecessary: refueling.isNecessary,
-      trip: refueling.trip ? String(refueling.trip) : undefined,
-      odometer: String(refueling.odometer),
+      startingToll: trip.startingToll,
+      endingToll: trip.endingToll,
+      distance: String(trip.distance),
+      avgSpeed: String(trip.avgSpeed),
     });
   });
 }
@@ -125,9 +162,9 @@ export async function highwayTripsGetPaginated(options: { paginate: Paginate; ca
 
   const result: HighwayTripRead[] = [];
   for (const record of records) {
-    const transaction = await transactionGetById(record.transactions.id);
+    const transaction = await transactionsGetById(record.transactions.id);
     result.push({
-      ...record.car_highway_trips,
+      ...record.mobility_highway_trips,
       transaction,
     });
   }
@@ -135,51 +172,29 @@ export async function highwayTripsGetPaginated(options: { paginate: Paginate; ca
   return toPaginated(result, total);
 }
 
-export async function highwayTripCreate(trip: HighwayTripCreateForm) {
-  await db.transaction(async (tx) => {
-    const newTransactionRecord = (
-      await tx
-        .insert(transactions)
-        .values({
-          datetime: trip.datetime,
-          fromWalletId: trip.walletId,
-          amount: trip.cost.toString(),
-          placeId: trip.placeId,
-          description: trip.description ?? `${trip.startingToll} - ${trip.endingToll}`,
-        })
-        .returning({ id: transactions.id })
-    )[0];
-
-    await tx.insert(highwayTrips).values({
-      carId: trip.carId,
-      transactionId: newTransactionRecord.id,
-      startingToll: trip.startingToll,
-      endingToll: trip.endingToll,
-      distance: String(trip.distance),
-      avgSpeed: String(trip.avgSpeed),
-    });
+export async function servicesGetAll(carId: string) {
+  return await db.query.services.findMany({
+    with: {
+      car: true,
+    },
+    where: eq(services.carId, carId),
+    orderBy: [services.datetime],
   });
 }
 
-export async function servicesGetAll(carId: string) {
-  return await db
-    .select()
-    .from(services)
-    .where(carId ? eq(services.carId, carId) : undefined)
-    .orderBy(services.datetime);
-}
-
 export async function servicesGetPaginated(options: { paginate: Paginate; carId: string }) {
-  const total = await countTotalServices(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
 
-  const records = await db
-    .select()
-    .from(services)
-    .where(eq(services.carId, options.carId))
-    .limit(limit)
-    .offset(offset)
-    .orderBy(desc(services.datetime));
+  const total = await countTotalServices(options.carId);
+  const records = await db.query.services.findMany({
+    with: {
+      car: true,
+    },
+    where: eq(services.carId, options.carId),
+    limit,
+    offset,
+    orderBy: [desc(services.datetime)],
+  });
 
   return toPaginated(records, total);
 }
@@ -194,56 +209,51 @@ export async function inspectionsCreate(inspection: InspectionCreateForm) {
 }
 
 export async function inspectionsGetAll(carId: string) {
-  return await db
-    .select()
-    .from(inspections)
-    .where(eq(inspections.carId, carId))
-    .orderBy(inspections.datetime);
+  return await db.query.inspections.findMany({
+    with: {
+      car: true,
+    },
+    where: eq(inspections.carId, carId),
+    orderBy: [inspections.datetime],
+  });
 }
 
 export async function inspectionsGetPaginated(options: { paginate: Paginate; carId: string }) {
-  const total = await countTotalInspections(options.carId);
   const { limit, offset } = paginateToLimitAndOffset(options.paginate);
 
-  const records = await db
-    .select()
-    .from(inspections)
-    .where(eq(inspections.carId, options.carId))
-    .limit(limit)
-    .offset(offset)
-    .orderBy(desc(inspections.datetime));
+  const total = await countTotalInspections(options.carId);
+  const records = await db.query.inspections.findMany({
+    with: {
+      car: true,
+    },
+    where: eq(inspections.carId, options.carId),
+    limit,
+    offset,
+    orderBy: desc(inspections.datetime),
+  });
 
   return toPaginated(records, total);
 }
 
 async function countTotalRefuelings(carId: string) {
-  const totalRecordsQB = db.select().from(refuelings);
-  if (carId) {
-    totalRecordsQB.where(eq(refuelings.carId, carId));
-  }
-  return (await totalRecordsQB).length;
-}
-
-async function countTotalServices(carId: string) {
-  const totalRecordsQB = db.select().from(services);
-  if (carId) {
-    totalRecordsQB.where(eq(services.carId, carId));
-  }
-  return (await totalRecordsQB).length;
+  return (
+    await db.select({ id: refuelings.id }).from(refuelings).where(eq(refuelings.carId, carId))
+  ).length;
 }
 
 async function countTotalHighwayTrips(carId: string) {
-  const totalRecordsQB = db.select().from(highwayTrips);
-  if (carId) {
-    totalRecordsQB.where(eq(highwayTrips.carId, carId));
-  }
-  return (await totalRecordsQB).length;
+  return (
+    await db.select({ id: highwayTrips.id }).from(highwayTrips).where(eq(highwayTrips.carId, carId))
+  ).length;
+}
+
+async function countTotalServices(carId: string) {
+  return (await db.select({ id: services.id }).from(services).where(eq(services.carId, carId)))
+    .length;
 }
 
 async function countTotalInspections(carId: string) {
-  const totalRecordsQB = db.select().from(inspections);
-  if (carId) {
-    totalRecordsQB.where(eq(inspections.carId, carId));
-  }
-  return (await totalRecordsQB).length;
+  return (
+    await db.select({ id: inspections.id }).from(inspections).where(eq(inspections.carId, carId))
+  ).length;
 }

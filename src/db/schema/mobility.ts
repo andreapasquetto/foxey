@@ -1,4 +1,5 @@
 import { transactions } from "@/db/schema/accounting";
+import { relations } from "drizzle-orm";
 import {
   boolean,
   integer,
@@ -10,7 +11,7 @@ import {
   varchar,
 } from "drizzle-orm/pg-core";
 
-export const cars = pgTable("cars", {
+export const cars = pgTable("mobility_cars", {
   id: uuid("id").defaultRandom().primaryKey(),
   userId: varchar("user_id").notNull(),
   year: integer("year").notNull(),
@@ -18,7 +19,7 @@ export const cars = pgTable("cars", {
   model: varchar("model").notNull(),
 });
 
-export const refuelings = pgTable("car_refuelings", {
+export const refuelings = pgTable("mobility_refuelings", {
   id: uuid("id").defaultRandom().primaryKey(),
   transactionId: uuid("transaction_id")
     .notNull()
@@ -35,7 +36,7 @@ export const refuelings = pgTable("car_refuelings", {
   odometer: numeric("odometer").notNull(),
 });
 
-export const highwayTrips = pgTable("car_highway_trips", {
+export const highwayTrips = pgTable("mobility_highway_trips", {
   id: uuid("id").defaultRandom().primaryKey(),
   transactionId: uuid("transaction_id").references(() => transactions.id),
   carId: uuid("car_id")
@@ -47,7 +48,7 @@ export const highwayTrips = pgTable("car_highway_trips", {
   avgSpeed: numeric("avg_speed"),
 });
 
-export const services = pgTable("car_services", {
+export const services = pgTable("mobility_services", {
   id: uuid("id").defaultRandom().primaryKey(),
   carId: uuid("car_id")
     .notNull()
@@ -57,7 +58,7 @@ export const services = pgTable("car_services", {
   notes: text("notes"),
 });
 
-export const inspections = pgTable("car_inspections", {
+export const inspections = pgTable("mobility_inspections", {
   id: uuid("id").defaultRandom().primaryKey(),
   carId: uuid("car_id")
     .notNull()
@@ -66,3 +67,46 @@ export const inspections = pgTable("car_inspections", {
   odometer: numeric("odometer").notNull(),
   isSuccessful: boolean("is_successful").notNull().default(true),
 });
+
+export const carRelations = relations(cars, ({ many }) => ({
+  refuelings: many(refuelings),
+  highwayTrips: many(highwayTrips),
+  services: many(services),
+  inspections: many(inspections),
+}));
+
+export const refuelingRelations = relations(refuelings, ({ one }) => ({
+  car: one(cars, {
+    fields: [refuelings.carId],
+    references: [cars.id],
+  }),
+  transaction: one(transactions, {
+    fields: [refuelings.transactionId],
+    references: [transactions.id],
+  }),
+}));
+
+export const highwayTripRelations = relations(highwayTrips, ({ one }) => ({
+  car: one(cars, {
+    fields: [highwayTrips.carId],
+    references: [cars.id],
+  }),
+  transaction: one(transactions, {
+    fields: [highwayTrips.transactionId],
+    references: [transactions.id],
+  }),
+}));
+
+export const serviceRelations = relations(services, ({ one }) => ({
+  car: one(cars, {
+    fields: [services.carId],
+    references: [cars.id],
+  }),
+}));
+
+export const inspectionRelations = relations(inspections, ({ one }) => ({
+  car: one(cars, {
+    fields: [inspections.carId],
+    references: [cars.id],
+  }),
+}));

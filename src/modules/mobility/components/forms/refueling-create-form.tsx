@@ -29,7 +29,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
-import { useRefuelingCreateMutation } from "@/modules/mobility/mobility-mutations";
+import { useRefuelingsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
   type RefuelingCreateForm,
@@ -52,7 +52,7 @@ export function RefuelingCreateForm() {
     },
   });
 
-  const mutation = useRefuelingCreateMutation();
+  const mutation = useRefuelingsCreateMutation();
 
   const { data: cars } = useCarsGetAllQuery();
   const { data: wallets } = useWalletsGetAllQuery();

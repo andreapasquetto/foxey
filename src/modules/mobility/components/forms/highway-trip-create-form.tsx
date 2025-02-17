@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
-import { useHighwayTripCreateMutation } from "@/modules/mobility/mobility-mutations";
+import { useHighwayTripsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
   type HighwayTripCreateForm,
@@ -38,7 +38,7 @@ export function HighwayTripCreateForm() {
     },
   });
 
-  const mutation = useHighwayTripCreateMutation();
+  const mutation = useHighwayTripsCreateMutation();
 
   const { data: cars } = useCarsGetAllQuery();
   const { data: wallets } = useWalletsGetAllQuery();

@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useTransactionDeleteMutation } from "@/modules/accounting/accounting-mutations";
+import { useTransactionsDeleteMutation } from "@/modules/accounting/accounting-mutations";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { format } from "date-fns";
 import { Trash } from "lucide-react";
@@ -20,7 +20,7 @@ interface DeleteTransactionProps {
 export function DeleteTransaction(props: DeleteTransactionProps) {
   const [showDialog, setShowDialog] = useState(false);
 
-  const mutation = useTransactionDeleteMutation(props.transaction.id);
+  const mutation = useTransactionsDeleteMutation(props.transaction.id);
 
   function deleteAndCloseDialog() {
     mutation.mutate(props.transaction.id, {

@@ -68,29 +68,23 @@ export function TransactionList(props: RecentTransactionsProps) {
               <TableCell>
                 <div>
                   <div className="space-x-2 text-sm text-muted-foreground">
-                    {transaction.fromWallet && <span>{transaction.fromWallet.name}</span>}
-                    {transaction.fromWallet && transaction.toWallet && (
+                    {transaction.from && <span>{transaction.from.name}</span>}
+                    {transaction.from && transaction.to && (
                       <ChevronsRight
                         className={cn("inline-block h-5 w-5", {
-                          "text-red-500 dark:text-red-400":
-                            props.walletId === transaction.fromWallet.id,
+                          "text-red-500 dark:text-red-400": props.walletId === transaction.from.id,
                           "text-green-500 dark:text-green-400":
-                            props.walletId === transaction.toWallet.id,
+                            props.walletId === transaction.to.id,
                         })}
                       />
                     )}
-                    {transaction.toWallet && <span>{transaction.toWallet.name}</span>}
+                    {transaction.to && <span>{transaction.to.name}</span>}
                   </div>
                 </div>
               </TableCell>
               <TableCell>
                 <div>
                   <div>{transaction.category?.name}</div>
-                  {transaction.category?.parent && (
-                    <div className="space-x-2 text-sm text-muted-foreground">
-                      <span>{transaction.category.parent.name}</span>
-                    </div>
-                  )}
                 </div>
               </TableCell>
               <TableCell>
@@ -106,7 +100,7 @@ export function TransactionList(props: RecentTransactionsProps) {
               <TableCell>
                 <div className="flex items-center gap-1">
                   {transaction.tags.map((tag) => (
-                    <Badge key={tag.id}>{tag.name}</Badge>
+                    <Badge key={tag.tagId}>{tag.tag.name}</Badge>
                   ))}
                 </div>
               </TableCell>
@@ -115,11 +109,9 @@ export function TransactionList(props: RecentTransactionsProps) {
                 {
                   <code
                     className={cn({
-                      "text-green-500 dark:text-green-400":
-                        transaction.toWallet && !transaction.fromWallet,
-                      "text-red-500 dark:text-red-400":
-                        transaction.fromWallet && !transaction.toWallet,
-                      "text-muted-foreground": transaction.fromWallet && transaction.toWallet,
+                      "text-green-500 dark:text-green-400": transaction.to && !transaction.from,
+                      "text-red-500 dark:text-red-400": transaction.from && !transaction.to,
+                      "text-muted-foreground": transaction.from && transaction.to,
                     })}
                   >
                     {rawCurrencyFormatter.format(parseFloat(transaction.amount))}
