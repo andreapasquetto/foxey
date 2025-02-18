@@ -102,8 +102,9 @@ function IncomeCard(props: { thisYear: number; lastYear: number }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">
-          {currencyFormatter.format(props.lastYear)} last year
+        <p className="text-sm text-muted-foreground">
+          <span className="text-foreground">{currencyFormatter.format(props.lastYear)}</span> last
+          year
         </p>
       </CardContent>
     </div>
@@ -136,8 +137,9 @@ function ExpensesCard(props: { thisYear: number; lastYear: number }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">
-          {currencyFormatter.format(props.lastYear)} last year
+        <p className="text-sm text-muted-foreground">
+          <span className="text-foreground">{currencyFormatter.format(props.lastYear)}</span> last
+          year
         </p>
       </CardContent>
     </div>
@@ -170,8 +172,9 @@ function SavingCard(props: { thisYear: number; lastYear: number }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">
-          {currencyFormatter.format(props.lastYear)} last year
+        <p className="text-sm text-muted-foreground">
+          <span className="text-foreground">{currencyFormatter.format(props.lastYear)}</span> last
+          year
         </p>
       </CardContent>
     </div>

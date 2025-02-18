@@ -106,8 +106,9 @@ function IncomeCard(props: { thisMonth: number; lastMonth: number }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">
-          {currencyFormatter.format(props.lastMonth)} last month
+        <p className="text-sm text-muted-foreground">
+          <span className="text-foreground">{currencyFormatter.format(props.lastMonth)}</span> last
+          month
         </p>
       </CardContent>
     </div>
@@ -140,8 +141,9 @@ function ExpensesCard(props: { thisMonth: number; lastMonth: number }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">
-          {currencyFormatter.format(props.lastMonth)} last month
+        <p className="text-sm text-muted-foreground">
+          <span className="text-foreground">{currencyFormatter.format(props.lastMonth)}</span> last
+          month
         </p>
       </CardContent>
     </div>
@@ -174,8 +176,9 @@ function SavingCard(props: { thisMonth: number; lastMonth: number }) {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <p className="text-xs text-muted-foreground">
-          {currencyFormatter.format(props.lastMonth)} last month
+        <p className="text-sm text-muted-foreground">
+          <span className="text-foreground">{currencyFormatter.format(props.lastMonth)}</span> last
+          month
         </p>
       </CardContent>
     </div>
