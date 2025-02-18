@@ -49,7 +49,7 @@ export function ThisMonthExpensesPerDayChart() {
   return (
     <div className="space-y-3">
       <CardTitle>Expenses per day</CardTitle>
-      <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+      <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
         <BarChart accessibilityLayer data={chartData}>
           <CartesianGrid vertical={false} />
           <XAxis dataKey="day" tickLine={false} axisLine={false} />
@@ -71,7 +71,7 @@ function ComponentSkeleton() {
   return (
     <div className="space-y-3">
       <CardTitle>Expenses per day</CardTitle>
-      <Skeleton className="h-[350px] w-full" />
+      <Skeleton className="h-[380px] w-full" />
     </div>
   );
 }
@@ -82,13 +82,13 @@ function ComponentPlaceholder(props: { onGenerateChart: () => void }) {
   return (
     <div className="space-y-3">
       <CardTitle>Expenses per day</CardTitle>
-      <div className="relative h-[350px]">
+      <div className="relative h-[380px]">
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
           <Button variant="outline" onClick={props.onGenerateChart}>
             Generate Chart
           </Button>
         </div>
-        <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+        <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis dataKey="day" tickLine={false} axisLine={false} />
@@ -106,7 +106,7 @@ function NotEnoughDataSkeleton() {
   return (
     <div className="space-y-3">
       <CardTitle>Expenses per day</CardTitle>
-      <div className="relative h-[350px] overflow-hidden rounded-md border border-dashed">
+      <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
         <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
           <p className="text-sm text-muted-foreground">Not enough data.</p>
         </div>

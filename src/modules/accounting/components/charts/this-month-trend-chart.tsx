@@ -45,7 +45,7 @@ export function ThisMonthTrendChart() {
   return (
     <div className="space-y-3">
       <CardTitle>Trend</CardTitle>
-      <ChartContainer config={chartConfig}>
+      <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
         <LineChart accessibilityLayer data={chartData} margin={{ left: 25 }}>
           <CartesianGrid vertical={false} />
           <XAxis

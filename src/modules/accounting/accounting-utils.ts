@@ -1,4 +1,5 @@
 import { thisMonthRange, thisMonthToDateRange, thisYearRange } from "@/common/dates";
+import { groupBy } from "@/common/utils/arrays";
 import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import {
   eachDayOfInterval,
@@ -27,12 +28,27 @@ export function getOutgoingTransactions(transactions: TransactionRead[]) {
   return transactions.filter((transaction) => transaction.fromWalletId);
 }
 
-export function calculateTransactionsAmount(transactions: TransactionRead[]) {
+export function calculateTotal(transactions: TransactionRead[]) {
   return transactions.reduce((acc, curr) => acc.add(new Decimal(curr.amount)), new Decimal(0));
 }
 
-export function groupTransactionsByCategoryName(transactions: TransactionRead[]) {
-  return Object.groupBy(transactions, (transaction) => transaction.category?.name ?? "NONE");
+export function calculatePercentagesByCategory(transactions: TransactionRead[]) {
+  const transactionsGroupedByCategory = groupBy(
+    transactions,
+    (transaction) => transaction.category?.name ?? "NONE",
+  );
+  const transactionsTotal = calculateTotal(transactions);
+
+  return Object.entries(transactionsGroupedByCategory)
+    .map(([categoryName, transactions]) => {
+      const categoryTotal = calculateTotal(transactions);
+      return {
+        category: categoryName,
+        total: categoryTotal,
+        percentage: categoryTotal.div(transactionsTotal),
+      };
+    })
+    .toSorted((a, b) => b.total.toNumber() - a.total.toNumber());
 }
 
 export function generateThisMonthExpensesPerDayChartData(transactions: TransactionRead[]) {
@@ -49,7 +65,7 @@ export function generateThisMonthExpensesPerDayChartData(transactions: Transacti
     return {
       day: format(day, "dd"),
       amount: dayTransactions.length
-        ? calculateTransactionsAmount(
+        ? calculateTotal(
             getTransactionsWithoutTransfers(getOutgoingTransactions(dayTransactions)),
           ).toNumber()
         : 0,
@@ -67,22 +83,6 @@ export function generateThisMonthExpensesPerDayPlaceholderData() {
     day: format(day, "dd"),
     amount: Math.trunc(Math.random() * 100),
   }));
-}
-
-export function generateThisMonthExpensesChartData(transactions: TransactionRead[]) {
-  const expenses = getOutgoingTransactions(getTransactionsWithoutTransfers(transactions));
-  const expensesGroupedByCategoryName = groupTransactionsByCategoryName(expenses);
-
-  return Object.entries(expensesGroupedByCategoryName)
-    .map(([categoryName, transactions]) => {
-      return {
-        category: categoryName,
-        total: transactions
-          ?.reduce((prev, curr) => prev.add(curr.amount), new Decimal(0))
-          .toNumber(),
-      };
-    })
-    .toSorted((a, b) => (a.total ?? 0) - (b.total ?? 0));
 }
 
 export function generateThisMonthExpensesChartPlaceholderData() {
@@ -257,10 +257,10 @@ export function generateThisYearIncomeExpensesChartData(transactions: Transactio
     );
     return {
       month: format(month, "MMM"),
-      income: calculateTransactionsAmount(
+      income: calculateTotal(
         getTransactionsWithoutTransfers(getIncomingTransactions(monthTransactions)),
       ).toNumber(),
-      expenses: calculateTransactionsAmount(
+      expenses: calculateTotal(
         getTransactionsWithoutTransfers(getOutgoingTransactions(monthTransactions)),
       ).toNumber(),
     };

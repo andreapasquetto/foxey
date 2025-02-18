@@ -9,7 +9,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useTransactionsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import {
-  calculateTransactionsAmount,
+  calculateTotal,
   getIncomingTransactions,
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
@@ -47,12 +47,12 @@ export function ThisYearStats() {
 
   const totalAmounts = {
     thisYear: {
-      incoming: calculateTransactionsAmount(transactions.thisYear.incoming),
-      outgoing: calculateTransactionsAmount(transactions.thisYear.outgoing),
+      incoming: calculateTotal(transactions.thisYear.incoming),
+      outgoing: calculateTotal(transactions.thisYear.outgoing),
     },
     lastYear: {
-      incoming: calculateTransactionsAmount(transactions.lastYear.incoming),
-      outgoing: calculateTransactionsAmount(transactions.lastYear.outgoing),
+      incoming: calculateTotal(transactions.lastYear.incoming),
+      outgoing: calculateTotal(transactions.lastYear.outgoing),
     },
   };
 

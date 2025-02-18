@@ -16,3 +16,10 @@ export const percentageFormatter = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 0,
   maximumFractionDigits: 1,
 });
+
+export const unsignedPercentageFormatter = new Intl.NumberFormat("en-US", {
+  style: "percent",
+  signDisplay: "never",
+  minimumFractionDigits: 0,
+  maximumFractionDigits: 1,
+});

@@ -45,7 +45,7 @@ export function ThisYearTrendChart() {
   return (
     <div className="space-y-3">
       <CardTitle>Trend</CardTitle>
-      <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+      <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
         <LineChart accessibilityLayer data={chartData} margin={{ left: 25 }}>
           <CartesianGrid vertical={false} />
           <XAxis
@@ -78,7 +78,7 @@ function ComponentSkeleton() {
   return (
     <div className="space-y-3">
       <CardTitle>Trend</CardTitle>
-      <Skeleton className="aspect-auto h-[350px] w-full" />
+      <Skeleton className="aspect-auto h-[380px] w-full" />
     </div>
   );
 }
@@ -95,7 +95,7 @@ function ComponentPlaceholder(props: { onGenerateChart: () => void }) {
             Generate Chart
           </Button>
         </div>
-        <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+        <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
           <LineChart accessibilityLayer data={chartData} margin={{ left: 25 }}>
             <CartesianGrid vertical={false} />
             <XAxis

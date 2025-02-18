@@ -7,8 +7,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { ThisMonthExpensesChart } from "@/modules/accounting/components/charts/this-month-expenses-chart";
 import { ThisMonthExpensesPerDayChart } from "@/modules/accounting/components/charts/this-month-expenses-per-day-chart";
+import { ThisMonthExpensesTable } from "@/modules/accounting/components/charts/this-month-expenses-table";
+import { ThisMonthIncomeTable } from "@/modules/accounting/components/charts/this-month-income-table";
 import { ThisMonthTrendChart } from "@/modules/accounting/components/charts/this-month-trend-chart";
 import { ThisYearIncomeExpensesChart } from "@/modules/accounting/components/charts/this-year-income-expenses-chart";
 import { ThisYearTrendChart } from "@/modules/accounting/components/charts/this-year-trend-chart";
@@ -74,10 +75,13 @@ export default function AccountingPage() {
       <section className="space-y-6">
         <Heading2>This month</Heading2>
         <ThisMonthStats />
-        <ThisMonthExpensesPerDayChart />
+        <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+          <ThisMonthIncomeTable />
+          <ThisMonthExpensesTable />
+        </div>
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
           <ThisMonthTrendChart />
-          <ThisMonthExpensesChart />
+          <ThisMonthExpensesPerDayChart />
         </div>
       </section>
       <section className="space-y-6">
