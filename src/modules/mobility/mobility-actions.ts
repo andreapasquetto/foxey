@@ -5,13 +5,11 @@ import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { transactions } from "@/db/schema/accounting";
 import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schema/mobility";
-import { transactionsGetById } from "@/modules/accounting/accounting-actions";
+import { transactionsGetByIdsMap } from "@/modules/accounting/accounting-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
-import { HighwayTripRead } from "@/modules/mobility/schemas/highway-trip-read-schema";
 import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
-import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
 import { and, desc, eq } from "drizzle-orm";
 
 export async function carsCreate(car: CarCreateForm) {
@@ -80,14 +78,13 @@ export async function refuelingsGetAll(carId: string) {
     .where(eq(refuelings.carId, carId))
     .orderBy(transactions.datetime);
 
-  const result: RefuelingRead[] = [];
-  for (const record of records) {
-    const transaction = await transactionsGetById(record.transactions.id);
-    result.push({
-      ...record.mobility_refuelings,
-      transaction,
-    });
-  }
+  const transactionIds = records.map((it) => it.transactions.id);
+  const txs = await transactionsGetByIdsMap(transactionIds);
+
+  const result = records.map((record) => ({
+    ...record.mobility_refuelings,
+    transaction: txs.get(record.transactions.id)!,
+  }));
 
   return result;
 }
@@ -105,14 +102,13 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
     .offset(offset)
     .orderBy(desc(transactions.datetime));
 
-  const result: RefuelingRead[] = [];
-  for (const record of records) {
-    const transaction = await transactionsGetById(record.transactions.id);
-    result.push({
-      ...record.mobility_refuelings,
-      transaction,
-    });
-  }
+  const transactionIds = records.map((record) => record.transactions.id);
+  const txs = await transactionsGetByIdsMap(transactionIds);
+
+  const result = records.map((record) => ({
+    ...record.mobility_refuelings,
+    transaction: txs.get(record.transactions.id)!,
+  }));
 
   return toPaginated(result, total);
 }
@@ -160,14 +156,13 @@ export async function highwayTripsGetPaginated(options: { paginate: Paginate; ca
     .offset(offset)
     .orderBy(desc(transactions.datetime));
 
-  const result: HighwayTripRead[] = [];
-  for (const record of records) {
-    const transaction = await transactionsGetById(record.transactions.id);
-    result.push({
-      ...record.mobility_highway_trips,
-      transaction,
-    });
-  }
+  const transactionIds = records.map((it) => it.transactions.id);
+  const txs = await transactionsGetByIdsMap(transactionIds);
+
+  const result = records.map((record) => ({
+    ...record.mobility_highway_trips,
+    transaction: txs.get(record.transactions.id)!,
+  }));
 
   return toPaginated(result, total);
 }

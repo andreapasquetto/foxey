@@ -10,7 +10,7 @@ import { TransactionUpdateForm } from "@/modules/accounting/schemas/transaction-
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/accounting/schemas/wallet-update-form-schema";
 import Decimal from "decimal.js";
-import { and, between, desc, eq, ilike, or } from "drizzle-orm";
+import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { DateRange } from "react-day-picker";
 
 export async function walletsCreate(wallet: WalletCreateForm) {
@@ -242,6 +242,30 @@ export async function transactionsGetById(id: string) {
   }
 
   return record;
+}
+
+export async function transactionsGetByIdsMap(ids: string[]) {
+  const userId = await getCurrentUserId();
+  const records = await db.query.transactions.findMany({
+    with: {
+      category: true,
+      from: true,
+      to: true,
+      place: {
+        with: {
+          category: true,
+        },
+      },
+      tags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
+    where: and(eq(transactions.userId, userId), inArray(transactions.id, ids)),
+  });
+
+  return new Map(records.map((record) => [record.id, record]));
 }
 
 export async function transactionsUpdate(transaction: TransactionUpdateForm) {
