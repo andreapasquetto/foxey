@@ -4,19 +4,49 @@ A little Next.js project that speeds up the tracking process of various parts of
 
 ## Development
 
+### How to run the project
+
+Create a `.env` file and populate it following the structure of [`.env.example`](.env.example)
+
+| Command              | Action                   |
+| -------------------- | ------------------------ |
+| `npm run db:push`    | Update the DB schema     |
+| `npm run db:explore` | Browse the DB            |
+| `npm run dev`        | Start development server |
+
+See [package.json](./package.json) for all the available scripts.
+
+### Auth
+
+At the moment I'm using Clerk. To create a set of API keys, see [clerk.com](https://clerk.com).
+
 ### Database
 
-This project is still a work in progress. At the moment I'm running a PostgreSQL container using Docker:
+At the moment I'm running a PostgreSQL container using Docker:
 
 ```sh
 docker run -d \
--p ${YOUR_PORT}:5432 \
--e POSTGRES_DB="${YOUR_DB_NAME}" \
--e POSTGRES_PASSWORD="${YOUR_PASSWORD}" \
+-p ${POSTGRES_PORT}:5432 \
+-e POSTGRES_USER="${POSTGRES_USER}" \
+-e POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" \
+-e POSTGRES_DB="${POSTGRES_DBNAME}" \
+--name="foxey" \
 postgres
 ```
 
-Create a `.env` file following the structure of [`.env.example`](.env.example).
+To export data:
 
-Run `npm run db:push` to update the DB schema.\
-Run `npm run db:explore` to browse the DB and execute basic CRUD operations onto it.
+```sh
+docker exec foxey pg_dump \
+--username="${POSTGRES_USER}" \
+--dbname="${POSTGRES_DBNAME}" \
+--data-only > "$HOME/foxey-$(date +'%Y%m%d_%H%M%S')-dump.sql"
+```
+
+To restore data from a previous export:
+
+```sh
+docker exec -i foxey psql \
+--username="${POSTGRES_USER}" \
+--dbname="${POSTGRES_DBNAME}" < /path/to/export.sql
+```
