@@ -22,7 +22,7 @@ export function CarList() {
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {cars.map((car) => (
-        <Link key={car.id} href={carRoute(car.id)}>
+        <Link key={car.id} href={carRoute(car.id)} prefetch>
           <Card>
             <CardHeader>
               <CardTitle>

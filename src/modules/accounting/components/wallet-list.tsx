@@ -3,12 +3,6 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { walletRoute } from "@/common/routes";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -20,7 +14,7 @@ import {
 } from "@/components/ui/table";
 import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
 import { format } from "date-fns";
-import { Edit, MoreHorizontal } from "lucide-react";
+import { Edit } from "lucide-react";
 import Link from "next/link";
 
 export function WalletList() {
@@ -56,23 +50,11 @@ export function WalletList() {
                 <code>{rawCurrencyFormatter.format(parseFloat(wallet.amount))}</code>
               </TableCell>
               <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[250px]">
-                    <DropdownMenuItem asChild>
-                      <Link
-                        href={walletRoute(wallet.id)}
-                        className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                      >
-                        Edit <Edit className="h-5 w-5" />
-                      </Link>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+                <Button variant="ghost" size="sm" asChild>
+                  <Link href={walletRoute(wallet.id)} prefetch>
+                    <Edit className="h-5 w-5" />
+                  </Link>
+                </Button>
               </TableCell>
             </TableRow>
           ))}

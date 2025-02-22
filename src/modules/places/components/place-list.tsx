@@ -85,6 +85,7 @@ export function PlaceList(props: PlaceListProps) {
                       <Link
                         href={placeRoute(place.id)}
                         className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                        prefetch
                       >
                         Edit <Edit className="h-5 w-5" />
                       </Link>
