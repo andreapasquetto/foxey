@@ -1,7 +1,7 @@
 "use client";
 
-import { thisMonthToDateRange } from "@/common/dates";
 import { IdName } from "@/common/types";
+import { thisMonthToDateRange } from "@/common/utils/dates";
 import { ChipCombobox } from "@/components/form/chip-combobox";
 import { RangeDatePicker } from "@/components/form/range-date-picker";
 import { Input } from "@/components/ui/input";

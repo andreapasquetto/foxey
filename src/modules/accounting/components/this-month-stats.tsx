@@ -1,8 +1,8 @@
 "use client";
 
-import { lastMonthRange, thisMonthToDateRange } from "@/common/dates";
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
-import { calculatePercentageChange } from "@/common/math";
+import { lastMonthRange, thisMonthToDateRange } from "@/common/utils/dates";
+import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";

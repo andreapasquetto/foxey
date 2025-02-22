@@ -1,7 +1,7 @@
 "use client";
 
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
-import { calculatePercentageChange } from "@/common/math";
+import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

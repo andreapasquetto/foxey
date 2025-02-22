@@ -1,7 +1,7 @@
 "use client";
 
-import { thisMonthToDateRange } from "@/common/dates";
 import { currencyFormatter } from "@/common/formatters";
+import { thisMonthToDateRange } from "@/common/utils/dates";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import {

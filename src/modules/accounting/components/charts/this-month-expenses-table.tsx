@@ -1,7 +1,7 @@
 "use client";
 
-import { thisMonthToDateRange } from "@/common/dates";
 import { currencyFormatter, unsignedPercentageFormatter } from "@/common/formatters";
+import { thisMonthToDateRange } from "@/common/utils/dates";
 import { CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {

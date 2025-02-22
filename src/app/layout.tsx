@@ -1,5 +1,5 @@
-import QueryProvider from "@/common/query-provider";
-import { ThemeProvider } from "@/common/theme-provider";
+import { QueryProvider } from "@/common/providers/query-provider";
+import { ThemeProvider } from "@/common/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
