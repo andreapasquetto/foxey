@@ -2,7 +2,7 @@
 
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
-import { events } from "@/db/schema/events";
+import { events } from "@/db/schemas/events";
 import { desc, eq } from "drizzle-orm";
 
 export async function eventsGetAll() {

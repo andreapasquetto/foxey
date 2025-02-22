@@ -5,10 +5,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
+import { Inspection, Refueling, Service } from "@/db/types/mobility";
 import { generateOdometerChartData } from "@/modules/mobility/mobility-utils";
-import { InspectionRead } from "@/modules/mobility/schemas/inspection-read-schema";
-import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
-import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
 import { format } from "date-fns";
 import { CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
@@ -25,9 +23,9 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface OdometerChartProps {
-  refuelings: RefuelingRead[];
-  services: ServiceRead[];
-  inspections: InspectionRead[];
+  refuelings: Refueling[];
+  services: Service[];
+  inspections: Inspection[];
 }
 
 export function OdometerChart(props: OdometerChartProps) {

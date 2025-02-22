@@ -9,9 +9,9 @@ import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Wallet } from "@/db/types/accounting";
 import { useWalletsUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import { useWalletsGetByIdQuery } from "@/modules/accounting/accounting-queries";
-import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import {
   type WalletUpdateForm,
   walletUpdateFormSchema,
@@ -43,7 +43,7 @@ export function WalletUpdateForm(props: WalletUpdateFormProps) {
 }
 
 interface UpdateFormProps {
-  wallet: WalletRead;
+  wallet: Wallet;
   onUpdate: () => void;
 }
 

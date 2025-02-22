@@ -1,6 +1,6 @@
 import { groupBy } from "@/common/utils/arrays";
 import { thisMonthRange, thisMonthToDateRange, thisYearRange } from "@/common/utils/dates";
-import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
+import { Transaction } from "@/db/types/accounting";
 import {
   eachDayOfInterval,
   eachMonthOfInterval,
@@ -14,25 +14,25 @@ import {
 } from "date-fns";
 import { Decimal } from "decimal.js";
 
-export function getTransactionsWithoutTransfers(transactions: TransactionRead[]) {
+export function getTransactionsWithoutTransfers(transactions: Transaction[]) {
   return transactions.filter(
     (transaction) => !(transaction.fromWalletId && transaction.toWalletId),
   );
 }
 
-export function getIncomingTransactions(transactions: TransactionRead[]) {
+export function getIncomingTransactions(transactions: Transaction[]) {
   return transactions.filter((transaction) => transaction.toWalletId);
 }
 
-export function getOutgoingTransactions(transactions: TransactionRead[]) {
+export function getOutgoingTransactions(transactions: Transaction[]) {
   return transactions.filter((transaction) => transaction.fromWalletId);
 }
 
-export function calculateTotal(transactions: TransactionRead[]) {
+export function calculateTotal(transactions: Transaction[]) {
   return transactions.reduce((acc, curr) => acc.add(new Decimal(curr.amount)), new Decimal(0));
 }
 
-export function calculatePercentagesByCategory(transactions: TransactionRead[]) {
+export function calculatePercentagesByCategory(transactions: Transaction[]) {
   const transactionsGroupedByCategory = groupBy(
     transactions,
     (transaction) => transaction.category?.name ?? "NONE",
@@ -51,7 +51,7 @@ export function calculatePercentagesByCategory(transactions: TransactionRead[]) 
     .toSorted((a, b) => b.total.toNumber() - a.total.toNumber());
 }
 
-export function generateThisMonthExpensesPerDayChartData(transactions: TransactionRead[]) {
+export function generateThisMonthExpensesPerDayChartData(transactions: Transaction[]) {
   if (!transactions.length) return [];
 
   const thisMonth = thisMonthRange();
@@ -130,7 +130,7 @@ export function generateThisMonthExpensesChartPlaceholderData() {
   ];
 }
 
-export function generateThisMonthTrendChartData(transactions: TransactionRead[]) {
+export function generateThisMonthTrendChartData(transactions: Transaction[]) {
   const monthToDate = thisMonthToDateRange();
 
   return transactions
@@ -164,7 +164,7 @@ export function generateThisMonthTrendChartData(transactions: TransactionRead[])
     .map((item) => ({ ...item, amount: item.amount.toNumber() }));
 }
 
-export function generateThisYearTrendChartData(transactions: TransactionRead[]) {
+export function generateThisYearTrendChartData(transactions: Transaction[]) {
   const thisYear = thisYearRange();
 
   return transactions
@@ -243,7 +243,7 @@ export function generateGenericTrendChartPlaceholderData() {
   ].map((it) => ({ datetime: new Date(it.datetime), amount: it.amount }));
 }
 
-export function generateThisYearIncomeExpensesChartData(transactions: TransactionRead[]) {
+export function generateThisYearIncomeExpensesChartData(transactions: Transaction[]) {
   if (!transactions.length) return [];
 
   const thisYear = thisYearRange();

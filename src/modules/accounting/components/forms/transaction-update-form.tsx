@@ -24,6 +24,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Transaction } from "@/db/types/accounting";
 import { cn } from "@/lib/utils";
 import { useTransactionsUpdateMutation } from "@/modules/accounting/accounting-mutations";
 import {
@@ -31,7 +32,6 @@ import {
   useTransactionsGetByIdQuery,
 } from "@/modules/accounting/accounting-queries";
 import { TransactionFormSkeleton } from "@/modules/accounting/components/skeletons/transaction-form-skeleton";
-import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import {
   type TransactionUpdateForm,
   transactionUpdateFormSchema,
@@ -65,7 +65,7 @@ export function TransactionUpdateForm(props: TransactionUpdateFormProps) {
 }
 
 interface UpdateFormProps {
-  transaction: TransactionRead;
+  transaction: Transaction;
   onUpdate: () => void;
 }
 

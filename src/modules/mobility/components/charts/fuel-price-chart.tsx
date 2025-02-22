@@ -5,7 +5,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
+import { Refueling } from "@/db/types/mobility";
 import { format } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
@@ -16,7 +16,7 @@ const chartConfig = {
 } satisfies ChartConfig;
 
 interface FuelPriceChartProps {
-  refuelings: RefuelingRead[];
+  refuelings: Refueling[];
 }
 
 export function FuelPriceChart(props: FuelPriceChartProps) {

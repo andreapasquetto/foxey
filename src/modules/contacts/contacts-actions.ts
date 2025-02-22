@@ -3,7 +3,7 @@
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
-import { contacts } from "@/db/schema/contacts";
+import { contacts } from "@/db/schemas/contacts";
 import { ContactCreateForm } from "@/modules/contacts/schemas/contact-create-form-schema";
 import { formatISO } from "date-fns";
 import { and, eq, ilike } from "drizzle-orm";

@@ -1,4 +1,4 @@
-import { transactions } from "@/db/schema/accounting";
+import { transactions } from "@/db/schemas/accounting";
 import { relations } from "drizzle-orm";
 import {
   boolean,

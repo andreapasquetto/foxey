@@ -7,14 +7,14 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Transaction } from "@/db/types/accounting";
 import { useTransactionsDeleteMutation } from "@/modules/accounting/accounting-mutations";
-import { TransactionRead } from "@/modules/accounting/schemas/transaction-read-schema";
 import { format } from "date-fns";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 
 interface DeleteTransactionProps {
-  transaction: TransactionRead;
+  transaction: Transaction;
 }
 
 export function DeleteTransaction(props: DeleteTransactionProps) {

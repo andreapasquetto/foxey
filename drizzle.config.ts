@@ -10,7 +10,7 @@ const config = defineConfig({
     database: env.database.dbName,
   },
   dialect: "postgresql",
-  schema: "./src/db/schema/*",
+  schema: "./src/db/schemas/*",
   verbose: true,
 });
 

@@ -1,17 +1,17 @@
 "use client";
 
-import { IdName } from "@/common/types";
 import { ChipCombobox } from "@/components/form/chip-combobox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
+import { PlaceCategory } from "@/db/types/places";
 import { PlaceList } from "@/modules/places/components/place-list";
 import { usePlaceCategoriesGetAllQuery } from "@/modules/places/places-queries";
 import { useState } from "react";
 
 export function PlaceListWithFilters() {
   const [searchFilter, setSearchFilter] = useState<string>("");
-  const [selectedCategory, setSelectedCategory] = useState<IdName | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<PlaceCategory | undefined>(undefined);
   const [onlyVisited, setOnlyVisited] = useState(false);
 
   const categoriesQuery = usePlaceCategoriesGetAllQuery();

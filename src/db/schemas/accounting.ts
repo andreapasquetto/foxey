@@ -1,4 +1,4 @@
-import { places } from "@/db/schema/places";
+import { places } from "@/db/schemas/places";
 import { relations } from "drizzle-orm";
 import { numeric, pgTable, primaryKey, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 

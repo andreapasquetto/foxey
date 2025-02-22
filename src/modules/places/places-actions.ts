@@ -3,7 +3,7 @@
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
-import { placeCategories, places } from "@/db/schema/places";
+import { placeCategories, places } from "@/db/schemas/places";
 import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-schema";
 import { PlaceUpdateForm } from "@/modules/places/schemas/place-update-form-schema";
 import { and, eq, ilike } from "drizzle-orm";

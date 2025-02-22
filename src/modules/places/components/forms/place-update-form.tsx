@@ -22,6 +22,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { PlaceFormSkeleton } from "@/modules/places/components/skeletons/place-form-skeleton";
 import { usePlacesUpdateMutation } from "@/modules/places/places-mutations";
@@ -29,7 +30,6 @@ import {
   usePlaceCategoriesGetAllQuery,
   usePlacesGetByIdQuery,
 } from "@/modules/places/places-queries";
-import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 import {
   placeUpdateFormSchema,
   type PlaceUpdateForm,
@@ -62,7 +62,7 @@ export function PlaceUpdateForm(props: PlaceUpdateFormProps) {
 }
 
 interface UpdateFormProps {
-  place: PlaceRead;
+  place: Place;
   onUpdate: () => void;
 }
 

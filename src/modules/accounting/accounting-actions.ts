@@ -3,7 +3,7 @@
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
-import { transactionCategories, transactions, wallets } from "@/db/schema/accounting";
+import { transactionCategories, transactions, wallets } from "@/db/schemas/accounting";
 import { TransactionCategoryCreateForm } from "@/modules/accounting/schemas/transaction-category-create-form-schema";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { TransactionUpdateForm } from "@/modules/accounting/schemas/transaction-update-form-schema";

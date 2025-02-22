@@ -1,6 +1,4 @@
-import { InspectionRead } from "@/modules/mobility/schemas/inspection-read-schema";
-import { RefuelingRead } from "@/modules/mobility/schemas/refueling-read-schema";
-import { ServiceRead } from "@/modules/mobility/schemas/service-read-schema";
+import { Inspection, Refueling, Service } from "@/db/types/mobility";
 import {
   isBefore,
   isSameMonth,
@@ -12,7 +10,7 @@ import {
 } from "date-fns";
 import { Decimal } from "decimal.js";
 
-export function extractRefuelingPeriods(refuelings: RefuelingRead[]) {
+export function extractRefuelingPeriods(refuelings: Refueling[]) {
   const today = startOfToday();
   const startOfLastMonth = startOfMonth(sub(today, { months: 1 }));
   const startOfLastYear = startOfYear(sub(today, { years: 1 }));
@@ -29,15 +27,15 @@ export function extractRefuelingPeriods(refuelings: RefuelingRead[]) {
   };
 }
 
-export function getEligibleRefuelings(refuelings: RefuelingRead[]) {
+export function getEligibleRefuelings(refuelings: Refueling[]) {
   return refuelings.filter((refueling) => refueling.trip !== null);
 }
 
-export function calculateTotalCost(refuelings: RefuelingRead[]) {
+export function calculateTotalCost(refuelings: Refueling[]) {
   return refuelings.reduce((prev, curr) => prev.add(curr.transaction.amount), new Decimal(0));
 }
 
-export function calculateTotalDistance(refuelings: RefuelingRead[]) {
+export function calculateTotalDistance(refuelings: Refueling[]) {
   if (!refuelings.length) {
     return null;
   }
@@ -48,7 +46,7 @@ export function calculateTotalDistance(refuelings: RefuelingRead[]) {
   return last.sub(first);
 }
 
-export function calculateAvgDistance(refuelings: RefuelingRead[]) {
+export function calculateAvgDistance(refuelings: Refueling[]) {
   const numberOfTrips = getEligibleRefuelings(refuelings).length;
   if (numberOfTrips < 2) return null;
 
@@ -59,8 +57,8 @@ export function calculateAvgDistance(refuelings: RefuelingRead[]) {
 }
 
 export function calculateFuelConsumption(
-  refuelingA: RefuelingRead | undefined,
-  refuelingB: RefuelingRead | undefined,
+  refuelingA: Refueling | undefined,
+  refuelingB: Refueling | undefined,
 ) {
   if (!refuelingA || !refuelingB || refuelingA.trip === null) {
     return null;
@@ -75,7 +73,7 @@ export function calculateFuelConsumption(
 }
 
 // TODO: result is not reliable because calculations DO NOT handle non-necessary refuelings differently
-export function calculateAvgFuelConsumption(refuelings: RefuelingRead[]) {
+export function calculateAvgFuelConsumption(refuelings: Refueling[]) {
   if (refuelings.length < 2) {
     return null;
   }
@@ -101,7 +99,7 @@ export function calculateAvgFuelConsumption(refuelings: RefuelingRead[]) {
   };
 }
 
-export function calculatePricePerDistance(refuelings: RefuelingRead[]) {
+export function calculatePricePerDistance(refuelings: Refueling[]) {
   const distance = calculateTotalDistance(refuelings);
   if (!distance?.toNumber()) {
     return null;
@@ -110,9 +108,9 @@ export function calculatePricePerDistance(refuelings: RefuelingRead[]) {
 }
 
 export function generateOdometerChartData(params: {
-  refuelings: RefuelingRead[];
-  services: ServiceRead[];
-  inspections: InspectionRead[];
+  refuelings: Refueling[];
+  services: Service[];
+  inspections: Inspection[];
 }) {
   return [
     ...params.refuelings.map((refueling) => ({

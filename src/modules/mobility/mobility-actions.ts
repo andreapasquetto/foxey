@@ -3,8 +3,8 @@
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
-import { transactions } from "@/db/schema/accounting";
-import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schema/mobility";
+import { transactions } from "@/db/schemas/accounting";
+import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schemas/mobility";
 import { transactionsGetByIdsMap } from "@/modules/accounting/accounting-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";

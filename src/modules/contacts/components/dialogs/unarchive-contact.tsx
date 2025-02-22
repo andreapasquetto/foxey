@@ -7,13 +7,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Contact } from "@/db/types/contacts";
 import { useContactsUnarchiveMutation } from "@/modules/contacts/contacts-mutations";
-import { ContactRead } from "@/modules/contacts/schemas/contact-read-schema";
 import { ArchiveRestore } from "lucide-react";
 import { useState } from "react";
 
 interface UnarchiveContactProps {
-  contact: ContactRead;
+  contact: Contact;
 }
 
 export function UnarchiveContact(props: UnarchiveContactProps) {

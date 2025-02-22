@@ -1,18 +1,17 @@
 "use client";
 
-import { IdName } from "@/common/types";
 import { thisMonthToDateRange } from "@/common/utils/dates";
 import { ChipCombobox } from "@/components/form/chip-combobox";
 import { RangeDatePicker } from "@/components/form/range-date-picker";
 import { Input } from "@/components/ui/input";
+import { TransactionCategory, Wallet } from "@/db/types/accounting";
+import { Place } from "@/db/types/places";
 import {
   useTransactionCategoriesGetAllQuery,
   useWalletsGetAllQuery,
 } from "@/modules/accounting/accounting-queries";
 import { TransactionList } from "@/modules/accounting/components/transaction-list";
-import { WalletRead } from "@/modules/accounting/schemas/wallet-read-schema";
 import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
-import { PlaceRead } from "@/modules/places/schemas/place-read-schema";
 import { useState } from "react";
 import { DateRange } from "react-day-picker";
 
@@ -21,9 +20,11 @@ export function Transactions() {
   const [searchFilter, setSearchFilter] = useState<string>("");
 
   const [dateRange, setDateRange] = useState<DateRange | undefined>(thisMonthToDateRange());
-  const [selectedWallet, setSelectedWallet] = useState<WalletRead | undefined>(undefined);
-  const [selectedCategory, setSelectedCategory] = useState<IdName | undefined>(undefined);
-  const [selectedPlace, setSelectedPlace] = useState<PlaceRead | undefined>(undefined);
+  const [selectedWallet, setSelectedWallet] = useState<Wallet | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState<TransactionCategory | undefined>(
+    undefined,
+  );
+  const [selectedPlace, setSelectedPlace] = useState<Place | undefined>(undefined);
 
   const walletsQuery = useWalletsGetAllQuery();
   const placesQuery = usePlacesGetAllQuery();
