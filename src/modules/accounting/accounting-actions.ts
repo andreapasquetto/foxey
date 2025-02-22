@@ -262,7 +262,10 @@ export async function transactionsGetByIdsMap(ids: string[]) {
         },
       },
     },
-    where: and(eq(transactions.userId, userId), inArray(transactions.id, ids)),
+    where: and(
+      eq(transactions.userId, userId),
+      ids.length ? inArray(transactions.id, ids) : undefined,
+    ),
   });
 
   return new Map(records.map((record) => [record.id, record]));
