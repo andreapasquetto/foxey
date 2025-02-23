@@ -15,12 +15,12 @@ import {
   useServicesGetAllQuery,
 } from "@/modules/mobility/mobility-queries";
 import {
-  calculateAvgDistance,
+  calculateAvgDistanceBeforeRefueling,
   calculateAvgFuelConsumption,
+  calculateCumulativeDistance,
   calculateFuelConsumption,
+  calculateFuelCost,
   calculatePricePerDistance,
-  calculateTotalCost,
-  calculateTotalDistance,
   extractRefuelingPeriods,
 } from "@/modules/mobility/mobility-utils";
 import { Calculator } from "lucide-react";
@@ -37,32 +37,32 @@ export function CarStats(props: CarStatsProps) {
   const servicesQuery = useServicesGetAllQuery(props.carId);
   const inspectionsQuery = useInspectionsGetAllQuery(props.carId);
 
-  const isFetching =
-    refuelingsQuery.isFetching || servicesQuery.isFetching || inspectionsQuery.isFetching;
-  if (isFetching) {
+  if (!refuelingsQuery.data || !servicesQuery.data || !inspectionsQuery.data) {
     return <ComponentSkeleton />;
   }
 
-  const refuelings = refuelingsQuery.data ?? [];
-  const services = servicesQuery.data ?? [];
-  const inspections = inspectionsQuery.data ?? [];
-
-  if (!refuelings.length) {
-    return <ComponentEmptyState />;
-  }
+  const refuelings = refuelingsQuery.data;
+  const services = servicesQuery.data;
+  const inspections = inspectionsQuery.data;
 
   const refuelingPeriods = extractRefuelingPeriods(refuelings);
 
   const stats = {
-    fuelCosts: {
-      thisMonth: calculateTotalCost(refuelingPeriods.thisMonth).toDecimalPlaces(2).toNumber(),
-      lastMonth: calculateTotalCost(refuelingPeriods.lastMonth).toDecimalPlaces(2).toNumber(),
+    fuelCost: {
+      thisMonth: calculateFuelCost(refuelingPeriods.thisMonth).toDecimalPlaces(2).toNumber(),
+      lastMonth: calculateFuelCost(refuelingPeriods.lastMonth).toDecimalPlaces(2).toNumber(),
+      thisYear: calculateFuelCost(refuelingPeriods.thisYear).toDecimalPlaces(2).toNumber(),
+      total: calculateFuelCost(refuelings).toDecimalPlaces(2).toNumber(),
     },
     distance: {
-      average: calculateAvgDistance(refuelings)?.toDecimalPlaces(2).toNumber(),
-      thisYear: calculateTotalDistance(refuelingPeriods.thisYear)?.toDecimalPlaces(2).toNumber(),
-      lastYear: calculateTotalDistance(refuelingPeriods.lastYear)?.toDecimalPlaces(2).toNumber(),
-      total: calculateTotalDistance(refuelings)?.toDecimalPlaces(2).toNumber(),
+      average: calculateAvgDistanceBeforeRefueling(refuelings)?.toDecimalPlaces(2).toNumber(),
+      thisYear: calculateCumulativeDistance(refuelingPeriods.thisYear)
+        ?.toDecimalPlaces(2)
+        .toNumber(),
+      lastYear: calculateCumulativeDistance(refuelingPeriods.lastYear)
+        ?.toDecimalPlaces(2)
+        .toNumber(),
+      total: calculateCumulativeDistance(refuelings)?.toDecimalPlaces(2).toNumber(),
     },
     fuelConsumption: {
       last: calculateFuelConsumption(refuelings.at(-1), refuelings.at(-2)),
@@ -72,8 +72,8 @@ export function CarStats(props: CarStatsProps) {
   };
 
   const fuelCostPercentageFromLastMonth = calculatePercentageChange(
-    stats.fuelCosts.lastMonth,
-    stats.fuelCosts.thisMonth,
+    stats.fuelCost.lastMonth,
+    stats.fuelCost.thisMonth,
   ).toNumber();
 
   return (
@@ -83,8 +83,8 @@ export function CarStats(props: CarStatsProps) {
           <CardHeader className="pb-2">
             <CardDescription>Monthly fuel costs</CardDescription>
             <CardTitle className="flex items-center gap-2">
-              {currencyFormatter.format(stats.fuelCosts.thisMonth)}
-              {stats.fuelCosts.lastMonth > 0 && !isNaN(fuelCostPercentageFromLastMonth) && (
+              {currencyFormatter.format(stats.fuelCost.thisMonth)}
+              {stats.fuelCost.lastMonth > 0 && !isNaN(fuelCostPercentageFromLastMonth) && (
                 <Badge
                   variant="outline"
                   className={cn({
@@ -100,9 +100,21 @@ export function CarStats(props: CarStatsProps) {
           <CardContent>
             <p className="text-sm text-muted-foreground">
               <span className="text-foreground">
-                {currencyFormatter.format(stats.fuelCosts.lastMonth)}
+                {currencyFormatter.format(stats.fuelCost.lastMonth)}
               </span>{" "}
               last month
+            </p>
+            <p className="text-sm text-muted-foreground">
+              <span className="text-foreground">
+                {currencyFormatter.format(stats.fuelCost.thisYear)}
+              </span>{" "}
+              this year
+            </p>
+            <p className="text-sm text-muted-foreground">
+              <span className="text-foreground">
+                {currencyFormatter.format(stats.fuelCost.total)}
+              </span>{" "}
+              in total
             </p>
           </CardContent>
         </div>
@@ -110,32 +122,32 @@ export function CarStats(props: CarStatsProps) {
           <CardHeader className="pb-2">
             <CardDescription>Average distance before refueling</CardDescription>
             <CardTitle>
-              {`${stats.distance.average ? numberFormatter.format(stats.distance.average) : "-"} km`}
+              {stats.distance.average ? numberFormatter.format(stats.distance.average) : "-"} km
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {!!stats.distance.thisYear && !!stats.distance.lastYear && (
-              <>
-                <p className="text-sm text-muted-foreground">
-                  <span className="text-foreground">
-                    {numberFormatter.format(stats.distance.thisYear)} km{" "}
-                  </span>{" "}
-                  driven so far this year
-                </p>
-                <p className="text-sm text-muted-foreground">
-                  <span className="text-foreground">
-                    {numberFormatter.format(stats.distance.lastYear)} km
-                  </span>{" "}
-                  last year
-                </p>
-              </>
+            {stats.distance.thisYear && (
+              <p className="text-sm text-muted-foreground">
+                <span className="text-foreground">
+                  {numberFormatter.format(stats.distance.thisYear)} km{" "}
+                </span>{" "}
+                driven this year
+              </p>
             )}
-            {!!stats.distance.total && (
+            {stats.distance.lastYear && (
+              <p className="text-sm text-muted-foreground">
+                <span className="text-foreground">
+                  {numberFormatter.format(stats.distance.lastYear)} km
+                </span>{" "}
+                driven last year
+              </p>
+            )}
+            {stats.distance.total && (
               <p className="text-sm text-muted-foreground">
                 <span className="text-foreground">
                   {numberFormatter.format(stats.distance.total)} km
                 </span>{" "}
-                in total
+                driven in total
               </p>
             )}
           </CardContent>
@@ -155,15 +167,12 @@ export function CarStats(props: CarStatsProps) {
                 <Calculator className="h-4 w-4" />
               </Button>
             </CardDescription>
-            {stats.fuelConsumption.last && (
-              <CardTitle>
-                {fuelConsumptionFormat === "km/L" &&
-                  `${numberFormatter.format(stats.fuelConsumption.last["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
-                {fuelConsumptionFormat === "L/100km" &&
-                  `${numberFormatter.format(stats.fuelConsumption.last["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
-              </CardTitle>
-            )}
-            {!stats.fuelConsumption.last && "-"}
+            <CardTitle>
+              {fuelConsumptionFormat === "km/L" &&
+                `${stats.fuelConsumption.last ? numberFormatter.format(stats.fuelConsumption.last["km/L"].toDecimalPlaces(2).toNumber()) : "-"} km/L`}
+              {fuelConsumptionFormat === "L/100km" &&
+                `${stats.fuelConsumption.last ? numberFormatter.format(stats.fuelConsumption.last["L/100km"].toDecimalPlaces(2).toNumber()) : "-"} L/100km`}
+            </CardTitle>
           </CardHeader>
           <CardContent>
             {stats.fuelConsumption.avg && (
@@ -177,10 +186,12 @@ export function CarStats(props: CarStatsProps) {
                 </span>
               </p>
             )}
-            {!!stats.fuelConsumption.pricePerDistance && (
+            {stats.fuelConsumption.pricePerDistance && (
               <p className="text-sm text-muted-foreground">
                 Price/Distance ratio is{" "}
-                <span className="text-foreground">{`${numberFormatter.format(stats.fuelConsumption.pricePerDistance)} €/km`}</span>
+                <span className="text-foreground">
+                  {numberFormatter.format(stats.fuelConsumption.pricePerDistance)} €/km
+                </span>
               </p>
             )}
           </CardContent>
@@ -206,8 +217,10 @@ function ComponentSkeleton() {
               <Skeleton className="h-5 w-14 rounded-full" />
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-1">
             <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-36" />
           </CardContent>
         </div>
         <div>
@@ -219,6 +232,8 @@ function ComponentSkeleton() {
           </CardHeader>
           <CardContent className="space-y-1">
             <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-4 w-36" />
           </CardContent>
         </div>
         <div>
@@ -228,8 +243,9 @@ function ComponentSkeleton() {
               <Skeleton className="h-6 w-24" />
             </div>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-1">
             <Skeleton className="h-4 w-28" />
+            <Skeleton className="h-4 w-32" />
           </CardContent>
         </div>
       </div>
@@ -241,48 +257,6 @@ function ComponentSkeleton() {
         <div className="space-y-3">
           <Skeleton className="h-6 w-24" />
           <Skeleton className="h-[380px] w-full" />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-            <p className="text-sm text-muted-foreground">Not enough data.</p>
-          </div>
-        </div>
-        <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-            <p className="text-sm text-muted-foreground">Not enough data.</p>
-          </div>
-        </div>
-        <div className="relative h-[125px] overflow-hidden rounded-md border border-dashed">
-          <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-            <p className="text-sm text-muted-foreground">Not enough data.</p>
-          </div>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <div className="space-y-3">
-          <CardTitle>Fuel price</CardTitle>
-          <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-              <p className="text-sm text-muted-foreground">Not enough data.</p>
-            </div>
-          </div>
-        </div>
-        <div className="space-y-3">
-          <CardTitle>Odometer</CardTitle>
-          <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-            <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-              <p className="text-sm text-muted-foreground">Not enough data.</p>
-            </div>
-          </div>
         </div>
       </div>
     </div>

@@ -31,12 +31,12 @@ export function getEligibleRefuelings(refuelings: Refueling[]) {
   return refuelings.filter((refueling) => refueling.trip !== null);
 }
 
-export function calculateTotalCost(refuelings: Refueling[]) {
+export function calculateFuelCost(refuelings: Refueling[]) {
   return refuelings.reduce((prev, curr) => prev.add(curr.transaction.amount), new Decimal(0));
 }
 
-export function calculateTotalDistance(refuelings: Refueling[]) {
-  if (!refuelings.length) {
+export function calculateCumulativeDistance(refuelings: Refueling[]) {
+  if (!refuelings.length || refuelings.length < 2) {
     return null;
   }
 
@@ -46,25 +46,29 @@ export function calculateTotalDistance(refuelings: Refueling[]) {
   return last.sub(first);
 }
 
-export function calculateAvgDistance(refuelings: Refueling[]) {
-  const numberOfTrips = getEligibleRefuelings(refuelings).length;
-  if (numberOfTrips < 2) return null;
-
-  const distance = calculateTotalDistance(refuelings);
-  if (distance === null) return null;
-
-  return distance.div(numberOfTrips);
-}
-
-export function calculateFuelConsumption(
-  refuelingA: Refueling | undefined,
-  refuelingB: Refueling | undefined,
-) {
-  if (!refuelingA || !refuelingB || refuelingA.trip === null) {
+export function calculateAvgDistanceBeforeRefueling(refuelings: Refueling[]) {
+  const distance = calculateCumulativeDistance(refuelings);
+  if (distance === null) {
     return null;
   }
 
-  const kmPerL = new Decimal(refuelingA.trip).div(refuelingB.quantity);
+  const numberOfRefuelings = getEligibleRefuelings(refuelings).length;
+  if (numberOfRefuelings < 2) {
+    return null;
+  }
+
+  return distance.div(numberOfRefuelings);
+}
+
+export function calculateFuelConsumption(
+  last: Refueling | undefined,
+  secondLast: Refueling | undefined,
+) {
+  if (!last || !secondLast || last.trip === null) {
+    return null;
+  }
+
+  const kmPerL = new Decimal(last.trip).div(secondLast.quantity);
 
   return {
     "km/L": kmPerL,
@@ -100,11 +104,11 @@ export function calculateAvgFuelConsumption(refuelings: Refueling[]) {
 }
 
 export function calculatePricePerDistance(refuelings: Refueling[]) {
-  const distance = calculateTotalDistance(refuelings);
+  const distance = calculateCumulativeDistance(refuelings);
   if (!distance?.toNumber()) {
     return null;
   }
-  return calculateTotalCost(refuelings).div(distance);
+  return calculateFuelCost(refuelings).div(distance);
 }
 
 export function generateOdometerChartData(params: {
