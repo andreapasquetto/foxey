@@ -18,3 +18,5 @@ export const db = drizzle(connection, {
     ...placesSchema,
   },
 });
+
+export type DBTransaction = typeof db;

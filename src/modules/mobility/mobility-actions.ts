@@ -5,11 +5,15 @@ import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { transactions } from "@/db/schemas/accounting";
 import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schemas/mobility";
-import { transactionsGetByIdsMap } from "@/modules/accounting/accounting-actions";
+import {
+  transactionsGetByIdsMap,
+  walletsUpdateAmount,
+} from "@/modules/accounting/accounting-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
+import { Decimal } from "decimal.js";
 import { and, desc, eq } from "drizzle-orm";
 
 export async function carsCreate(car: CarCreateForm) {
@@ -41,7 +45,7 @@ export async function carsGetById(id: string) {
 export async function refuelingsCreate(refueling: RefuelingCreateForm) {
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
-    const newTransactionRecord = (
+    const newTransaction = (
       await tx
         .insert(transactions)
         .values({
@@ -50,16 +54,21 @@ export async function refuelingsCreate(refueling: RefuelingCreateForm) {
           fromWalletId: refueling.walletId,
           placeId: refueling.placeId,
           amount: refueling.cost.toString(),
-          description: refueling.description,
+          description: refueling.description ?? "Refueling",
         })
         .returning({ id: transactions.id })
     )[0];
 
-    // TODO: update wallets
+    if (refueling.walletId) {
+      await walletsUpdateAmount(tx, {
+        walletId: refueling.walletId,
+        sub: new Decimal(refueling.cost),
+      });
+    }
 
     await tx.insert(refuelings).values({
       carId: refueling.carId,
-      transactionId: newTransactionRecord.id,
+      transactionId: newTransaction.id,
       price: String(refueling.price),
       quantity: String(refueling.quantity),
       isFull: refueling.isFull,
@@ -116,7 +125,7 @@ export async function refuelingsGetPaginated(options: { paginate: Paginate; carI
 export async function highwayTripsCreate(trip: HighwayTripCreateForm) {
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
-    const newTransactionRecord = (
+    const newTransaction = (
       await tx
         .insert(transactions)
         .values({
@@ -125,16 +134,21 @@ export async function highwayTripsCreate(trip: HighwayTripCreateForm) {
           fromWalletId: trip.walletId,
           amount: trip.cost.toString(),
           placeId: trip.placeId,
-          description: trip.description ?? `${trip.startingToll} - ${trip.endingToll}`,
+          description: trip.description ?? `Trip: ${trip.startingToll} - ${trip.endingToll}`,
         })
         .returning({ id: transactions.id })
     )[0];
 
-    // TODO: update wallets
+    if (trip.walletId) {
+      await walletsUpdateAmount(tx, {
+        walletId: trip.walletId,
+        sub: new Decimal(trip.cost),
+      });
+    }
 
     await tx.insert(highwayTrips).values({
       carId: trip.carId,
-      transactionId: newTransactionRecord.id,
+      transactionId: newTransaction.id,
       startingToll: trip.startingToll,
       endingToll: trip.endingToll,
       distance: String(trip.distance),

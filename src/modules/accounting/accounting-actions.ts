@@ -2,14 +2,14 @@
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { getCurrentUserId } from "@/common/utils/auth";
-import { db } from "@/db/db";
+import { db, DBTransaction } from "@/db/db";
 import { transactionCategories, transactions, wallets } from "@/db/schemas/accounting";
 import { TransactionCategoryCreateForm } from "@/modules/accounting/schemas/transaction-category-create-form-schema";
 import { TransactionCreateForm } from "@/modules/accounting/schemas/transaction-create-form-schema";
 import { TransactionUpdateForm } from "@/modules/accounting/schemas/transaction-update-form-schema";
 import { WalletCreateForm } from "@/modules/accounting/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/accounting/schemas/wallet-update-form-schema";
-import Decimal from "decimal.js";
+import { Decimal } from "decimal.js";
 import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { DateRange } from "react-day-picker";
 
@@ -18,7 +18,7 @@ export async function walletsCreate(wallet: WalletCreateForm) {
   await db.insert(wallets).values({
     userId,
     name: wallet.name,
-    initialAmount: wallet.initialAmount.toString(),
+    initialAmount: (wallet.initialAmount ?? 0).toString(),
     amount: (wallet.initialAmount ?? 0).toString(),
   });
 }
@@ -52,6 +52,34 @@ export async function walletsUpdate(wallet: WalletUpdateForm) {
       name: wallet.name,
     })
     .where(eq(wallets.id, wallet.id));
+}
+
+export async function walletsUpdateAmount(
+  tx: DBTransaction,
+  params: {
+    walletId: string;
+    add?: Decimal;
+    sub?: Decimal;
+  },
+) {
+  const wallet = await tx.query.wallets.findFirst({
+    columns: {
+      id: true,
+      amount: true,
+    },
+    where: eq(wallets.id, params.walletId),
+  });
+  if (!wallet) {
+    // TODO: return "error result" instead of throwing
+    throw new Error("Not Found");
+  }
+
+  const amount = new Decimal(wallet.amount)
+    .add(params.add ?? 0)
+    .sub(params.sub ?? 0)
+    .toString();
+
+  await tx.update(wallets).set({ amount }).where(eq(wallets.id, params.walletId));
 }
 
 export async function transactionCategoriesCreate(category: TransactionCategoryCreateForm) {
@@ -107,24 +135,17 @@ export async function transactionsCreate(transaction: TransactionCreateForm) {
     });
 
     if (transaction.fromWalletId) {
-      const wallet = await walletsGetById(transaction.fromWalletId);
-
-      const walletAmount = new Decimal(wallet.amount);
-      const amountToUpdate = walletAmount.sub(transaction.amount);
-      await tx
-        .update(wallets)
-        .set({ amount: amountToUpdate.toString() })
-        .where(eq(wallets.id, wallet.id));
+      await walletsUpdateAmount(tx, {
+        walletId: transaction.fromWalletId,
+        sub: new Decimal(transaction.amount),
+      });
     }
 
     if (transaction.toWalletId) {
-      const wallet = await walletsGetById(transaction.toWalletId);
-      const walletAmount = new Decimal(wallet.amount);
-      const amountToUpdate = walletAmount.add(transaction.amount);
-      await tx
-        .update(wallets)
-        .set({ amount: amountToUpdate.toString() })
-        .where(eq(wallets.id, wallet.id));
+      await walletsUpdateAmount(tx, {
+        walletId: transaction.toWalletId,
+        add: new Decimal(transaction.amount),
+      });
     }
   });
 }
@@ -292,29 +313,18 @@ export async function transactionsUpdate(transaction: TransactionUpdateForm) {
 
     if (!existingTransactionAmount.equals(transactionAmount)) {
       if (existingTransaction.fromWalletId) {
-        const wallet = await walletsGetById(existingTransaction.fromWalletId);
-        const walletAmount = new Decimal(wallet.amount);
-        const amountToUpdate = walletAmount
-          .add(existingTransactionAmount)
-          .sub(transactionAmount)
-          .toString();
-        await tx
-          .update(wallets)
-          .set({ amount: amountToUpdate.toString() })
-          .where(eq(wallets.id, wallet.id));
+        await walletsUpdateAmount(tx, {
+          walletId: existingTransaction.fromWalletId,
+          add: existingTransactionAmount,
+          sub: transactionAmount,
+        });
       }
-
       if (existingTransaction.toWalletId) {
-        const wallet = await walletsGetById(existingTransaction.toWalletId);
-        const walletAmount = new Decimal(wallet.amount);
-        const amountToUpdate = walletAmount
-          .sub(existingTransactionAmount)
-          .add(transactionAmount)
-          .toString();
-        await tx
-          .update(wallets)
-          .set({ amount: amountToUpdate.toString() })
-          .where(eq(wallets.id, wallet.id));
+        await walletsUpdateAmount(tx, {
+          walletId: existingTransaction.toWalletId,
+          add: transactionAmount,
+          sub: existingTransactionAmount,
+        });
       }
     }
   });
