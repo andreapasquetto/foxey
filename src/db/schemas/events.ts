@@ -1,3 +1,4 @@
+import { places } from "@/db/schemas/places";
 import { relations } from "drizzle-orm";
 import { boolean, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
 
@@ -15,10 +16,10 @@ export const events = pgTable("events", {
   userId: varchar("user_id").notNull(),
 
   categoryId: uuid("category_id").references(() => eventCategories.id),
+  placeId: uuid("place_id").references(() => places.id),
   isCanceled: boolean("is_canceled").default(false),
-  isAllDay: boolean("is_all_day").notNull(),
-  startDatetime: timestamp("start_datetime").notNull(),
-  endDatetime: timestamp("end_datetime"),
+  isAllDay: boolean("is_all_day").default(false),
+  datetime: timestamp("datetime", { withTimezone: true }).notNull(),
   title: varchar("title").notNull(),
   description: varchar("description"),
 });
@@ -31,5 +32,9 @@ export const eventRelations = relations(events, ({ one }) => ({
   category: one(eventCategories, {
     fields: [events.categoryId],
     references: [eventCategories.id],
+  }),
+  place: one(places, {
+    fields: [events.placeId],
+    references: [places.id],
   }),
 }));
