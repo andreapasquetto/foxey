@@ -12,11 +12,20 @@ export async function eventCategoriesCreate(values: EventCategoryCreateForm) {
   await db.insert(eventCategories).values({ userId, name: values.name });
 }
 
+export async function eventCategoriesGetAll() {
+  const userId = await getCurrentUserId();
+  return await db.query.eventCategories.findMany({
+    where: eq(eventCategories.userId, userId),
+    orderBy: [eventCategories.name],
+  });
+}
+
 export async function eventsCreate(values: EventCreateForm) {
   const userId = await getCurrentUserId();
   await db.insert(events).values({
     userId,
     categoryId: values.categoryId,
+    placeId: values.placeId,
     title: values.title,
     description: values.description,
     isAllDay: values.isAllDay,

@@ -2,7 +2,9 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
 import { useEventsGetAllQuery } from "@/modules/events/events-queries";
 import {
   add,
@@ -25,6 +27,7 @@ import {
   ChevronsLeft,
   ChevronsRight,
   MapPin,
+  Plus,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -32,6 +35,7 @@ export function MonthCalendar() {
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(today);
+  const [showCreateSheet, setShowCreateSheet] = useState(false);
 
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(selectedMonth), { weekStartsOn: 1 }),
@@ -77,76 +81,80 @@ export function MonthCalendar() {
               {format(selectedMonth, "MMMM yyyy")}
             </time>
           </div>
-          <div className="flex items-center gap-0.5 rounded-md md:items-stretch">
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="rounded-r-none"
-              onClick={() => goToPreviousYear()}
-            >
-              <ChevronsLeft className="h-5 w-5" />
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="rounded-none"
-              onClick={() => goToPreviousMonth()}
-            >
-              <ChevronLeft className="h-5 w-5" />
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              className="hidden rounded-none md:inline-flex"
-              onClick={() => goToCurrentMonthOrSelectToday()}
-            >
-              Today
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="rounded-none"
-              onClick={() => goToNextMonth()}
-            >
-              <ChevronRight className="h-5 w-5" />
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              className="rounded-l-none"
-              onClick={() => goToNextYear()}
-            >
-              <ChevronsRight className="h-5 w-5" />
-            </Button>
+          <div className="flex items-center gap-2">
+            <div className="flex items-center gap-0.5">
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="rounded-r-none"
+                onClick={() => goToPreviousYear()}
+              >
+                <ChevronsLeft className="h-5 w-5" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="rounded-none"
+                onClick={() => goToPreviousMonth()}
+              >
+                <ChevronLeft className="h-5 w-5" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="hidden rounded-none md:inline-flex"
+                onClick={() => goToCurrentMonthOrSelectToday()}
+              >
+                Today
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="rounded-none"
+                onClick={() => goToNextMonth()}
+              >
+                <ChevronRight className="h-5 w-5" />
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                className="rounded-l-none"
+                onClick={() => goToNextYear()}
+              >
+                <ChevronsRight className="h-5 w-5" />
+              </Button>
+            </div>
+            <Sheet open={showCreateSheet} onOpenChange={setShowCreateSheet}>
+              <SheetTrigger asChild>
+                <Button size="icon">
+                  <Plus className="h-5 w-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent>
+                <SheetHeader>
+                  <SheetTitle>Create Event</SheetTitle>
+                </SheetHeader>
+                <EventCreateForm
+                  selectedDay={selectedDay}
+                  onSubmitSuccess={() => setShowCreateSheet(false)}
+                />
+              </SheetContent>
+            </Sheet>
           </div>
         </header>
         <div className="rounded-md border lg:flex lg:flex-auto lg:flex-col">
-          <div className="grid grid-cols-7 gap-px text-center text-xs/6 font-semibold lg:flex-none">
-            <div className="py-2">
-              M<span className="sr-only sm:not-sr-only">ON</span>
-            </div>
-            <div className="py-2">
-              T<span className="sr-only sm:not-sr-only">UE</span>
-            </div>
-            <div className="py-2">
-              W<span className="sr-only sm:not-sr-only">ED</span>
-            </div>
-            <div className="py-2">
-              T<span className="sr-only sm:not-sr-only">HU</span>
-            </div>
-            <div className="py-2">
-              F<span className="sr-only sm:not-sr-only">RI</span>
-            </div>
-            <div className="py-2">
-              S<span className="sr-only sm:not-sr-only">AT</span>
-            </div>
-            <div className="py-2">
-              S<span className="sr-only sm:not-sr-only">UN</span>
-            </div>
+          <div className="grid grid-cols-7 gap-0.5 text-center text-xs/6 font-semibold lg:flex-none">
+            <div className="py-2">MON</div>
+            <div className="py-2">TUE</div>
+            <div className="py-2">WED</div>
+            <div className="py-2">THU</div>
+            <div className="py-2">FRI</div>
+            <div className="py-2">SAT</div>
+            <div className="py-2">SUN</div>
           </div>
           <div className="isolate grid w-full grid-cols-7 grid-rows-6 gap-0.5 p-0.5 text-xs/6">
             {days.map((day) => {
@@ -157,26 +165,26 @@ export function MonthCalendar() {
                   type="button"
                   className={cn(
                     "flex h-10 flex-col items-center justify-center rounded-md hover:bg-foreground/10 focus:z-10 dark:hover:bg-foreground/10 sm:h-20 sm:items-start sm:justify-normal sm:p-1.5 lg:h-24",
-                    {
-                      "bg-muted dark:bg-muted/40": isSameMonth(selectedMonth, day),
-                      "opacity-25": !isSameMonth(selectedMonth, day),
-                      "text-red-500 dark:text-red-600":
-                        !isSameDay(day, selectedDay) && isToday(day),
-                    },
+                    isSameMonth(selectedMonth, day) ? "bg-muted dark:bg-muted/40" : "opacity-25",
+                    !isSameDay(day, selectedDay) &&
+                      isToday(day) &&
+                      "text-red-500 dark:text-red-600",
                   )}
                   onClick={() => setSelectedDay(day)}
                 >
                   <time
                     dateTime={format(day, "y-MM-dd")}
-                    className={cn("leading-none sm:ml-auto", {
-                      "flex size-6 items-center justify-center rounded-md": isSameDay(
-                        day,
-                        selectedDay,
-                      ),
-                      "bg-red-500 font-semibold text-background dark:bg-red-600 dark:text-foreground":
-                        isSameDay(day, selectedDay) && isToday(day),
-                      "bg-foreground text-background": isSameDay(day, selectedDay) && !isToday(day),
-                    })}
+                    className={cn(
+                      "leading-none sm:ml-auto",
+                      isSameDay(day, selectedDay) &&
+                        "flex size-6 items-center justify-center rounded-md",
+                      isSameDay(day, selectedDay) &&
+                        isToday(day) &&
+                        "bg-red-500 font-semibold text-background dark:bg-red-600 dark:text-foreground",
+                      isSameDay(day, selectedDay) &&
+                        !isToday(day) &&
+                        "bg-foreground text-background",
+                    )}
                   >
                     {format(day, "dd")}
                   </time>
@@ -194,9 +202,10 @@ export function MonthCalendar() {
                           <li key={event.id}>
                             <div className="flex justify-between gap-3">
                               <p
-                                className={cn("truncate font-medium text-muted-foreground", {
-                                  "line-through": event.isCanceled,
-                                })}
+                                className={cn(
+                                  "truncate font-medium text-muted-foreground",
+                                  event.isCanceled && "line-through",
+                                )}
                               >
                                 {event.title}
                               </p>
@@ -239,9 +248,10 @@ export function MonthCalendar() {
                   <div className="flex items-center">
                     <div className="flex items-center gap-2">
                       <div
-                        className={cn("text-lg font-semibold tracking-tight", {
-                          "line-through": event.isCanceled,
-                        })}
+                        className={cn(
+                          "text-lg font-semibold tracking-tight",
+                          event.isCanceled && "line-through",
+                        )}
                       >
                         {event.title}
                       </div>
