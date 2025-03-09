@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserButton } from "@clerk/nextjs";
-import { Calendar, Car, Contact, Landmark, Map, Menu, PocketKnife, Triangle } from "lucide-react";
+import { Calendar, Car, Contact, Landmark, Map, Menu, PocketKnife } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -56,10 +56,12 @@ export default function PrivateLayout({
   return (
     <div className="min-h-screen w-full bg-background sm:space-y-6">
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b px-4 backdrop-blur supports-[backdrop-filter]:bg-background/50 sm:px-6">
-        <Link href={privateRoute}>
-          <PocketKnife className="h-5 w-5" />
-        </Link>
         <div className="flex items-center gap-3">
+          <Button size="icon" variant="ghost" asChild>
+            <Link href={privateRoute}>
+              <PocketKnife className="h-5 w-5" />
+            </Link>
+          </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" variant="outline">
@@ -67,7 +69,7 @@ export default function PrivateLayout({
                 <span className="sr-only">Toggle Menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent side="bottom" className="w-[250px]">
+            <DropdownMenuContent side="bottom" className="ml-2 w-[250px]">
               {navigationItems.map((item) => (
                 <DropdownMenuItem key={item.href} asChild>
                   <Link
@@ -81,6 +83,8 @@ export default function PrivateLayout({
               ))}
             </DropdownMenuContent>
           </DropdownMenu>
+        </div>
+        <div className="flex items-center gap-3">
           <ThemeToggle />
           <UserButton
             appearance={{
