@@ -1,5 +1,6 @@
 "use client";
 
+import { numberFormatter, rawCurrencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -52,7 +53,7 @@ export function RefuelingList(props: RefuelingListProps) {
                 <code>{refueling.ron}</code>
               </TableCell>
               <TableCell>
-                <code>{refueling.transaction.amount}</code>
+                <code>{rawCurrencyFormatter.format(Number(refueling.transaction.amount))}</code>
               </TableCell>
               <TableCell>
                 <code>{refueling.quantity}</code>
@@ -78,7 +79,7 @@ export function RefuelingList(props: RefuelingListProps) {
                 <code>{refueling.trip}</code>
               </TableCell>
               <TableCell>
-                <code>{refueling.odometer}</code>
+                <code>{numberFormatter.format(Number(refueling.odometer))}</code>
               </TableCell>
               <TableCell>
                 <div className="flex items-center justify-end gap-1">

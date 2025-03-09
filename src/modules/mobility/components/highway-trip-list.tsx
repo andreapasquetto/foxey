@@ -1,5 +1,6 @@
 "use client";
 
+import { rawCurrencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -53,7 +54,7 @@ export function HighwayTripList(props: HighwayTripsProps) {
                 <code>{trip.distance}</code>
               </TableCell>
               <TableCell>
-                <code>{trip.transaction.amount}</code>
+                <code>{rawCurrencyFormatter.format(Number(trip.transaction.amount))}</code>
               </TableCell>
               <TableCell>
                 <code>{trip.avgSpeed}</code>

@@ -1,5 +1,6 @@
 "use client";
 
+import { numberFormatter } from "@/common/formatters";
 import { QueryPagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -54,7 +55,7 @@ export function ServiceList(props: ServiceListProps) {
                 <code>{format(service.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
               <TableCell>
-                <code>{service.odometer}</code>
+                <code>{numberFormatter.format(Number(service.odometer))}</code>
               </TableCell>
               <TableCell>
                 <div className="flex items-center justify-end gap-1">

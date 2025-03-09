@@ -1,3 +1,4 @@
+import { numberFormatter } from "@/common/formatters";
 import { CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -48,7 +49,10 @@ export function OdometerChart(props: OdometerChartProps) {
             axisLine={false}
             tickFormatter={(value) => format(value, "MMM y")}
           />
-          <YAxis domain={["auto", "auto"]} />
+          <YAxis
+            domain={["auto", "auto"]}
+            tickFormatter={(value) => numberFormatter.format(Number(value))}
+          />
           <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}

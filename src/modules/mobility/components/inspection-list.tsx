@@ -1,5 +1,6 @@
 "use client";
 
+import { numberFormatter } from "@/common/formatters";
 import { QueryPagination } from "@/components/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -43,7 +44,7 @@ export function InspectionList(props: InspectionListProps) {
                 <code>{format(inspection.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
               <TableCell>
-                <code>{inspection.odometer}</code>
+                <code>{numberFormatter.format(Number(inspection.odometer))}</code>
               </TableCell>
               <TableCell></TableCell>
             </TableRow>

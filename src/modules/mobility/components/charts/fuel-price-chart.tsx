@@ -1,3 +1,4 @@
+import { currencyFormatter } from "@/common/formatters";
 import { CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -37,7 +38,10 @@ export function FuelPriceChart(props: FuelPriceChartProps) {
             axisLine={false}
             tickFormatter={(value) => format(value, "MMM y")}
           />
-          <YAxis domain={["auto", "auto"]} />
+          <YAxis
+            domain={["auto", "auto"]}
+            tickFormatter={(value) => currencyFormatter.format(Number(value))}
+          />
           <ChartTooltip
             cursor={false}
             content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}
