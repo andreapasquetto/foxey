@@ -3,12 +3,9 @@
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
-import { transactions } from "@/db/schemas/accounting";
+import { transactions } from "@/db/schemas/finance";
 import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schemas/mobility";
-import {
-  transactionsGetByIdsMap,
-  walletsUpdateAmount,
-} from "@/modules/accounting/accounting-actions";
+import { transactionsGetByIdsMap, walletsUpdateAmount } from "@/modules/finance/finance-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";

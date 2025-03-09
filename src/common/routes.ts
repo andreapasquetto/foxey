@@ -1,16 +1,16 @@
 export const privateRoute = "/private";
 
-export const accountingRoute = `${privateRoute}/accounting`;
-export const transactionCategoriesRoute = `${accountingRoute}/categories`;
-export const newTransactionCategoryRoute = `${accountingRoute}/categories/new`;
-export const newTransactionRoute = `${accountingRoute}/transactions/new`;
-export const newWalletRoute = `${accountingRoute}/wallets/new`;
+export const financeRoute = `${privateRoute}/finance`;
+export const transactionCategoriesRoute = `${financeRoute}/categories`;
+export const newTransactionCategoryRoute = `${financeRoute}/categories/new`;
+export const newTransactionRoute = `${financeRoute}/transactions/new`;
+export const newWalletRoute = `${financeRoute}/wallets/new`;
 
 export function transactionRoute(id: string) {
-  return `${accountingRoute}/transactions/${id}`;
+  return `${financeRoute}/transactions/${id}`;
 }
 export function walletRoute(id: string) {
-  return `${accountingRoute}/wallets/${id}`;
+  return `${financeRoute}/wallets/${id}`;
 }
 
 export const contactsRoute = `${privateRoute}/contacts`;

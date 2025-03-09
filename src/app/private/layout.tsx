@@ -1,5 +1,5 @@
 import {
-  accountingRoute,
+  financeRoute,
   contactsRoute,
   eventsRoute,
   mobilityRoute,
@@ -22,14 +22,14 @@ import { ReactNode } from "react";
 
 const navigationItems = [
   {
-    href: accountingRoute,
-    icon: <Landmark className="h-5 w-5" />,
-    title: "Accounting",
-  },
-  {
     href: mobilityRoute,
     icon: <Car className="h-5 w-5" />,
     title: "Mobility",
+  },
+  {
+    href: financeRoute,
+    icon: <Landmark className="h-5 w-5" />,
+    title: "Finance",
   },
   {
     href: contactsRoute,

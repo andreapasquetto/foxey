@@ -16,7 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useWalletsGetAllQuery } from "@/modules/accounting/accounting-queries";
+import { useWalletsGetAllQuery } from "@/modules/finance/finance-queries";
 import { useHighwayTripsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
