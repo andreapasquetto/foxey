@@ -10,11 +10,13 @@ import {
 import { DateRange } from "react-day-picker";
 
 export function thisMonthToDateRange(): DateRange {
-  return { from: startOfMonth(startOfToday()), to: endOfDay(startOfToday()) };
+  const today = startOfToday();
+  return { from: startOfMonth(today), to: endOfDay(today) };
 }
 
 export function thisMonthRange(): DateRange {
-  return { from: startOfMonth(startOfToday()), to: endOfMonth(startOfToday()) };
+  const today = startOfToday();
+  return { from: startOfMonth(today), to: endOfMonth(today) };
 }
 
 export function lastMonthRange(): DateRange {
@@ -25,19 +27,35 @@ export function lastMonthRange(): DateRange {
   };
 }
 
-export function lastThreeMonthsRange(): DateRange {
+export function last30DaysRange(): DateRange {
+  const today = startOfToday();
+  return { from: sub(today, { days: 30 }), to: endOfDay(today) };
+}
+
+export function last90DaysRange(): DateRange {
+  const today = startOfToday();
   return {
-    from: startOfMonth(sub(startOfToday(), { months: 3 })),
-    to: endOfDay(startOfToday()),
+    from: sub(today, { months: 3 }),
+    to: endOfDay(today),
+  };
+}
+
+export function last365DaysRange(): DateRange {
+  const today = startOfToday();
+  return {
+    from: sub(today, { years: 1 }),
+    to: endOfDay(today),
   };
 }
 
 export function thisYearToDateRange(): DateRange {
-  return { from: startOfYear(startOfToday()), to: endOfDay(startOfToday()) };
+  const today = startOfToday();
+  return { from: startOfYear(today), to: endOfDay(today) };
 }
 
 export function thisYearRange(): DateRange {
-  return { from: startOfYear(startOfToday()), to: endOfYear(startOfToday()) };
+  const today = startOfToday();
+  return { from: startOfYear(today), to: endOfYear(today) };
 }
 
 export function lastYearRange(): DateRange {
@@ -49,26 +67,23 @@ export function lastYearRange(): DateRange {
 }
 
 export type DateRangePresetCode =
-  | "this-month-to-date"
+  | "mtd"
   | "last-month"
-  | "last-3-months"
-  | "this-year-to-date"
-  | "this-year"
+  | "last-90-days"
+  | "ytd"
   | "last-year"
   | "all-time";
 
 export function getDateRangeFromCode(code: DateRangePresetCode): DateRange {
   switch (code) {
-    case "this-month-to-date":
+    case "mtd":
       return thisMonthToDateRange();
     case "last-month":
       return lastMonthRange();
-    case "last-3-months":
-      return lastThreeMonthsRange();
-    case "this-year-to-date":
+    case "last-90-days":
+      return last90DaysRange();
+    case "ytd":
       return thisYearToDateRange();
-    case "this-year":
-      return thisYearRange();
     case "last-year":
       return lastYearRange();
     case "all-time":

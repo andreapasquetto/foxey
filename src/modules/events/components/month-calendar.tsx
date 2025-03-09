@@ -19,6 +19,7 @@ import {
   startOfMonth,
   startOfToday,
   startOfWeek,
+  sub,
 } from "date-fns";
 import {
   Check,
@@ -49,11 +50,11 @@ export function MonthCalendar() {
   const eventsForSelectedDay = events.filter((event) => isSameDay(selectedDay, event.datetime));
 
   function goToPreviousMonth() {
-    setSelectedMonth(add(selectedMonth, { months: -1 }));
+    setSelectedMonth(sub(selectedMonth, { months: 1 }));
   }
 
   function goToPreviousYear() {
-    setSelectedMonth(add(selectedMonth, { years: -1 }));
+    setSelectedMonth(sub(selectedMonth, { years: 1 }));
   }
 
   function goToNextMonth() {

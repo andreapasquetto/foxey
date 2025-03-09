@@ -1,5 +1,10 @@
 import { groupBy } from "@/common/utils/arrays";
-import { thisMonthRange, thisMonthToDateRange, thisYearRange } from "@/common/utils/dates";
+import {
+  last30DaysRange,
+  last365DaysRange,
+  thisMonthRange,
+  thisYearRange,
+} from "@/common/utils/dates";
 import { Transaction } from "@/db/types/accounting";
 import {
   eachDayOfInterval,
@@ -129,9 +134,8 @@ export function generateThisMonthExpensesChartPlaceholderData() {
     },
   ];
 }
-
 export function generateThisMonthTrendChartData(transactions: Transaction[]) {
-  const monthToDate = thisMonthToDateRange();
+  const last30Days = last30DaysRange();
 
   return transactions
     .reduce<
@@ -157,15 +161,15 @@ export function generateThisMonthTrendChartData(transactions: Transaction[]) {
     }, [])
     .filter((transaction) =>
       isWithinInterval(transaction.datetime, {
-        start: monthToDate.from!,
-        end: monthToDate.to!,
+        start: last30Days.from!,
+        end: last30Days.to!,
       }),
     )
     .map((item) => ({ ...item, amount: item.amount.toNumber() }));
 }
 
 export function generateThisYearTrendChartData(transactions: Transaction[]) {
-  const thisYear = thisYearRange();
+  const last365Days = last365DaysRange();
 
   return transactions
     .reduce<
@@ -191,8 +195,8 @@ export function generateThisYearTrendChartData(transactions: Transaction[]) {
     }, [])
     .filter((transaction) =>
       isWithinInterval(transaction.datetime, {
-        start: thisYear.from!,
-        end: thisYear.to!,
+        start: last365Days.from!,
+        end: last365Days.to!,
       }),
     )
     .map((item) => ({ ...item, amount: item.amount.toNumber() }));
