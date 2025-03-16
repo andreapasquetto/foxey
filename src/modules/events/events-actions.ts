@@ -5,7 +5,8 @@ import { db } from "@/db/db";
 import { eventCategories, events } from "@/db/schemas/events";
 import { EventCategoryCreateForm } from "@/modules/events/schemas/event-category-create-form-schema";
 import { EventCreateForm } from "@/modules/events/schemas/event-create-form-schema";
-import { eq } from "drizzle-orm";
+import { startOfDay } from "date-fns";
+import { and, eq } from "drizzle-orm";
 
 export async function eventCategoriesCreate(values: EventCategoryCreateForm) {
   const userId = await getCurrentUserId();
@@ -29,7 +30,7 @@ export async function eventsCreate(values: EventCreateForm) {
     title: values.title,
     description: values.description,
     isAllDay: values.isAllDay,
-    datetime: values.datetime,
+    datetime: values.isAllDay ? startOfDay(values.datetime) : values.datetime,
   });
 }
 
@@ -44,4 +45,26 @@ export async function eventsGetAll() {
     where: eq(events.userId, userId),
     orderBy: [events.datetime],
   });
+}
+
+export async function eventsToggleCancel(id: string) {
+  const userId = await getCurrentUserId();
+  const record = await db.query.events.findFirst({
+    where: and(eq(events.userId, userId), eq(events.id, id)),
+  });
+
+  if (!record) {
+    // TODO: return "error result" instead of throwing
+    throw new Error("Not Found");
+  }
+
+  await db
+    .update(events)
+    .set({ isCanceled: !record.isCanceled })
+    .where(and(eq(events.userId, userId), eq(events.id, id)));
+}
+
+export async function eventsDelete(id: string) {
+  const userId = await getCurrentUserId();
+  await db.delete(events).where(and(eq(events.userId, userId), eq(events.id, id)));
 }

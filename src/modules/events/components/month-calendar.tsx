@@ -4,7 +4,9 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { DeleteEventDialog } from "@/modules/events/components/dialogs/delete-event-dialog";
 import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
+import { useEventsToggleCancelMutation } from "@/modules/events/events-mutations";
 import { useEventsGetAllQuery } from "@/modules/events/events-queries";
 import {
   add,
@@ -27,8 +29,10 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Eraser,
   MapPin,
   Plus,
+  RotateCw,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -72,6 +76,8 @@ export function MonthCalendar() {
       setSelectedMonth(startOfMonth(today));
     }
   }
+
+  const toggleMutation = useEventsToggleCancelMutation();
 
   return (
     <div className="lg:grid lg:grid-cols-3 lg:gap-2">
@@ -243,7 +249,7 @@ export function MonthCalendar() {
             {eventsForSelectedDay.map((event) => (
               <li
                 key={event.id}
-                className="space-y-2 rounded-lg border p-3 text-left transition-all"
+                className="space-y-4 rounded-lg border p-3 text-left transition-all"
               >
                 <div className="flex w-full flex-col gap-1">
                   <div className="flex items-center">
@@ -254,6 +260,9 @@ export function MonthCalendar() {
                           event.isCanceled && "line-through",
                         )}
                       >
+                        {!event.isCanceled && isBefore(selectedDay, today) && (
+                          <Check className="mr-1 inline-block h-4 w-4 text-green-500 dark:text-green-400" />
+                        )}
                         {event.title}
                       </div>
                     </div>
@@ -263,23 +272,28 @@ export function MonthCalendar() {
                   </div>
                 </div>
                 {event.description && (
-                  <div className="line-clamp-2 text-xs text-muted-foreground">
-                    {event.description}
-                  </div>
+                  <div className="text-xs text-muted-foreground">{event.description}</div>
                 )}
                 {event.place && (
                   <div className="flex items-center gap-1 text-muted-foreground">
                     <MapPin className="h-4 w-4" />
-                    <span className="line-clamp-2 text-xs leading-none">{event.place.name}</span>
+                    <span className="text-xs leading-none">{event.place.name}</span>
                   </div>
                 )}
-                <div className="flex items-center">
+                <div className="flex items-center justify-between">
                   {event.category && <Badge>{event.category.name}</Badge>}
-                  {isBefore(selectedDay, today) && (
-                    <div className="ml-auto">
-                      <Check className="h-4 w-4 text-green-500 dark:text-green-400" />
-                    </div>
-                  )}
+                  <div className="ml-auto flex items-center gap-1">
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => toggleMutation.mutate(event.id)}
+                      disabled={toggleMutation.isPending}
+                    >
+                      {event.isCanceled && <RotateCw className="h-4 w-4" />}
+                      {!event.isCanceled && <Eraser className="h-4 w-4" />}
+                    </Button>
+                    <DeleteEventDialog event={event} />
+                  </div>
                 </div>
               </li>
             ))}
