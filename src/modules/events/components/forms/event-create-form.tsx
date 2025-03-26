@@ -20,6 +20,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { Event } from "@/db/types/events";
 import { cn } from "@/lib/utils";
 import { useEventsCreateMutation } from "@/modules/events/events-mutations";
 import { useEventCategoriesGetAllQuery } from "@/modules/events/events-queries";
@@ -36,7 +37,8 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 interface EventCreateFormProps {
-  selectedDay: Date;
+  selectedDay?: Date;
+  event?: Event;
   onSubmitSuccess: () => void;
 }
 
@@ -47,7 +49,12 @@ export function EventCreateForm(props: EventCreateFormProps) {
   const form = useForm<EventCreateForm>({
     resolver: zodResolver(eventCreateFormSchema),
     defaultValues: {
-      datetime: add(props.selectedDay, { hours: 12 }),
+      datetime: props.selectedDay ? add(props.selectedDay, { hours: 12 }) : undefined,
+      title: props.event?.title,
+      categoryId: props.event?.categoryId ?? undefined,
+      placeId: props.event?.placeId ?? undefined,
+      description: props.event?.description ?? undefined,
+      isAllDay: props.event?.isAllDay,
     },
   });
 
@@ -62,7 +69,9 @@ export function EventCreateForm(props: EventCreateFormProps) {
   }
 
   useEffect(() => {
-    form.setValue("datetime", add(props.selectedDay, { hours: 12 }));
+    if (props.selectedDay) {
+      form.setValue("datetime", add(props.selectedDay, { hours: 12 }));
+    }
   }, [props.selectedDay, form]);
 
   const categories = categoriesQuery.data ?? [];

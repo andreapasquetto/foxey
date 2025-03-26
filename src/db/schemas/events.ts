@@ -17,8 +17,8 @@ export const events = pgTable("events", {
 
   categoryId: uuid("category_id").references(() => eventCategories.id),
   placeId: uuid("place_id").references(() => places.id),
-  isCanceled: boolean("is_canceled").default(false),
-  isAllDay: boolean("is_all_day").default(false),
+  isCanceled: boolean("is_canceled").notNull().default(false),
+  isAllDay: boolean("is_all_day").notNull().default(false),
   datetime: timestamp("datetime", { withTimezone: true }).notNull(),
   title: varchar("title").notNull(),
   description: varchar("description"),

@@ -1,7 +1,7 @@
 import {
-  financeRoute,
   contactsRoute,
   eventsRoute,
+  financeRoute,
   mobilityRoute,
   placesRoute,
   privateRoute,
@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { UserButton } from "@clerk/nextjs";
-import { Calendar, Car, Contact, Landmark, Map, Menu, PocketKnife } from "lucide-react";
+import { Calendar, Car, CircleDollarSign, Contact, Map, Menu, PocketKnife } from "lucide-react";
 import Link from "next/link";
 import { ReactNode } from "react";
 
@@ -28,7 +28,7 @@ const navigationItems = [
   },
   {
     href: financeRoute,
-    icon: <Landmark className="h-5 w-5" />,
+    icon: <CircleDollarSign className="h-5 w-5" />,
     title: "Finance",
   },
   {

@@ -29,6 +29,7 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
+  Copy,
   Eraser,
   MapPin,
   Plus,
@@ -41,6 +42,7 @@ export function MonthCalendar() {
   const [selectedDay, setSelectedDay] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(today);
   const [showCreateSheet, setShowCreateSheet] = useState(false);
+  const [showDuplicateSheet, setShowDuplicateSheet] = useState(false);
 
   const days = eachDayOfInterval({
     start: startOfWeek(startOfMonth(selectedMonth), { weekStartsOn: 1 }),
@@ -283,6 +285,22 @@ export function MonthCalendar() {
                 <div className="flex items-center justify-between">
                   {event.category && <Badge>{event.category.name}</Badge>}
                   <div className="ml-auto flex items-center gap-1">
+                    <Sheet open={showDuplicateSheet} onOpenChange={setShowDuplicateSheet}>
+                      <SheetTrigger asChild>
+                        <Button variant="outline" size="icon">
+                          <Copy className="h-4 w-4" />
+                        </Button>
+                      </SheetTrigger>
+                      <SheetContent>
+                        <SheetHeader>
+                          <SheetTitle>Duplicate Event</SheetTitle>
+                        </SheetHeader>
+                        <EventCreateForm
+                          event={event}
+                          onSubmitSuccess={() => setShowDuplicateSheet(false)}
+                        />
+                      </SheetContent>
+                    </Sheet>
                     <Button
                       variant="outline"
                       size="icon"
