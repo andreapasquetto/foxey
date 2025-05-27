@@ -51,7 +51,7 @@ export async function refuelingsCreate(refueling: RefuelingCreateForm) {
           fromWalletId: refueling.walletId,
           placeId: refueling.placeId,
           amount: refueling.cost.toString(),
-          description: refueling.description ?? "Refueling",
+          description: refueling.description,
         })
         .returning({ id: transactions.id })
     )[0];
@@ -131,7 +131,7 @@ export async function highwayTripsCreate(trip: HighwayTripCreateForm) {
           fromWalletId: trip.walletId,
           amount: trip.cost.toString(),
           placeId: trip.placeId,
-          description: trip.description ?? `Trip: ${trip.startingToll} - ${trip.endingToll}`,
+          description: trip.description,
         })
         .returning({ id: transactions.id })
     )[0];

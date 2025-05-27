@@ -60,7 +60,7 @@ export function generateThisMonthExpensesPerDayChartData(transactions: Transacti
   if (!transactions.length) return [];
 
   const thisMonth = thisMonthRange();
-  const days = eachDayOfInterval({ start: thisMonth.from!, end: thisMonth.to! });
+  const days = eachDayOfInterval({ start: thisMonth.from, end: thisMonth.to });
 
   const result = days.map((day) => {
     const dayTransactions = transactions.filter((transaction) =>
@@ -161,8 +161,8 @@ export function generateThisMonthTrendChartData(transactions: Transaction[]) {
     }, [])
     .filter((transaction) =>
       isWithinInterval(transaction.datetime, {
-        start: last30Days.from!,
-        end: last30Days.to!,
+        start: last30Days.from,
+        end: last30Days.to,
       }),
     )
     .map((item) => ({ ...item, amount: item.amount.toNumber() }));
@@ -195,8 +195,8 @@ export function generateThisYearTrendChartData(transactions: Transaction[]) {
     }, [])
     .filter((transaction) =>
       isWithinInterval(transaction.datetime, {
-        start: last365Days.from!,
-        end: last365Days.to!,
+        start: last365Days.from,
+        end: last365Days.to,
       }),
     )
     .map((item) => ({ ...item, amount: item.amount.toNumber() }));
@@ -251,7 +251,7 @@ export function generateThisYearIncomeExpensesChartData(transactions: Transactio
   if (!transactions.length) return [];
 
   const thisYear = thisYearRange();
-  const months = eachMonthOfInterval({ start: thisYear.from!, end: thisYear.to! });
+  const months = eachMonthOfInterval({ start: thisYear.from, end: thisYear.to });
 
   if (!months.length) return [];
 

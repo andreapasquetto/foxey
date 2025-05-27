@@ -7,7 +7,11 @@ import {
   startOfYear,
   sub,
 } from "date-fns";
-import { DateRange } from "react-day-picker";
+
+interface DateRange {
+  from: Date;
+  to: Date;
+}
 
 export function thisMonthToDateRange(): DateRange {
   const today = startOfToday();
@@ -74,7 +78,7 @@ export type DateRangePresetCode =
   | "last-year"
   | "all-time";
 
-export function getDateRangeFromCode(code: DateRangePresetCode): DateRange {
+export function getDateRangeFromCode(code: DateRangePresetCode): { from: undefined } | DateRange {
   switch (code) {
     case "mtd":
       return thisMonthToDateRange();
