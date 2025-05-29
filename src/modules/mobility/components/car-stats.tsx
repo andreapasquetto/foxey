@@ -2,7 +2,6 @@
 
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/utils/math";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -49,32 +48,28 @@ export function CarStats(props: CarStatsProps) {
 
   const stats = {
     fuelCost: {
-      thisMonth: calculateFuelCost(refuelingPeriods.thisMonth).toDecimalPlaces(2).toNumber(),
-      lastMonth: calculateFuelCost(refuelingPeriods.lastMonth).toDecimalPlaces(2).toNumber(),
-      thisYear: calculateFuelCost(refuelingPeriods.thisYear).toDecimalPlaces(2).toNumber(),
-      total: calculateFuelCost(refuelings).toDecimalPlaces(2).toNumber(),
+      thisMonth: calculateFuelCost(refuelingPeriods.thisMonth).toDecimalPlaces(2),
+      lastMonth: calculateFuelCost(refuelingPeriods.lastMonth).toDecimalPlaces(2),
+      thisYear: calculateFuelCost(refuelingPeriods.thisYear).toDecimalPlaces(2),
+      total: calculateFuelCost(refuelings).toDecimalPlaces(2),
     },
     distance: {
-      average: calculateAvgDistanceBeforeRefueling(refuelings)?.toDecimalPlaces(2).toNumber(),
-      thisYear: calculateCumulativeDistance(refuelingPeriods.thisYear)
-        ?.toDecimalPlaces(2)
-        .toNumber(),
-      lastYear: calculateCumulativeDistance(refuelingPeriods.lastYear)
-        ?.toDecimalPlaces(2)
-        .toNumber(),
-      total: calculateCumulativeDistance(refuelings)?.toDecimalPlaces(2).toNumber(),
+      average: calculateAvgDistanceBeforeRefueling(refuelings)?.toDecimalPlaces(2),
+      thisYear: calculateCumulativeDistance(refuelingPeriods.thisYear)?.toDecimalPlaces(2),
+      lastYear: calculateCumulativeDistance(refuelingPeriods.lastYear)?.toDecimalPlaces(2),
+      total: calculateCumulativeDistance(refuelings)?.toDecimalPlaces(2),
     },
     fuelConsumption: {
       last: calculateFuelConsumption(refuelings.at(-1), refuelings.at(-2)),
       avg: calculateAvgFuelConsumption(refuelings),
-      pricePerDistance: calculatePricePerDistance(refuelings)?.toNumber(),
+      pricePerDistance: calculatePricePerDistance(refuelings),
     },
   };
 
   const fuelCostPercentageFromLastMonth = calculatePercentageChange(
     stats.fuelCost.lastMonth,
     stats.fuelCost.thisMonth,
-  ).toNumber();
+  );
 
   return (
     <div className="space-y-6">
@@ -83,36 +78,38 @@ export function CarStats(props: CarStatsProps) {
           <CardHeader className="pb-2">
             <CardDescription>Monthly fuel costs</CardDescription>
             <CardTitle className="flex items-center gap-2">
-              {currencyFormatter.format(stats.fuelCost.thisMonth)}
-              {stats.fuelCost.lastMonth > 0 && !isNaN(fuelCostPercentageFromLastMonth) && (
-                <Badge
-                  variant="outline"
-                  className={cn({
-                    "border-red-500": fuelCostPercentageFromLastMonth > 0,
-                    "border-green-500": fuelCostPercentageFromLastMonth < 0,
-                  })}
-                >
-                  {percentageFormatter.format(fuelCostPercentageFromLastMonth)}
-                </Badge>
-              )}
+              {currencyFormatter.format(stats.fuelCost.thisMonth.toNumber())}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
               <span className="text-foreground">
-                {currencyFormatter.format(stats.fuelCost.lastMonth)}
+                {currencyFormatter.format(stats.fuelCost.lastMonth.toNumber())}
               </span>{" "}
               last month
+              {!stats.fuelCost.lastMonth.isZero() && (
+                <>
+                  ,{" "}
+                  <span
+                    className={cn({
+                      "text-red-500": fuelCostPercentageFromLastMonth.greaterThan(0),
+                      "text-green-500": fuelCostPercentageFromLastMonth.lessThan(0),
+                    })}
+                  >
+                    {percentageFormatter.format(fuelCostPercentageFromLastMonth.toNumber())}
+                  </span>
+                </>
+              )}
             </p>
             <p className="text-sm text-muted-foreground">
               <span className="text-foreground">
-                {currencyFormatter.format(stats.fuelCost.thisYear)}
+                {currencyFormatter.format(stats.fuelCost.thisYear.toNumber())}
               </span>{" "}
               this year
             </p>
             <p className="text-sm text-muted-foreground">
               <span className="text-foreground">
-                {currencyFormatter.format(stats.fuelCost.total)}
+                {currencyFormatter.format(stats.fuelCost.total.toNumber())}
               </span>{" "}
               in total
             </p>
@@ -122,14 +119,17 @@ export function CarStats(props: CarStatsProps) {
           <CardHeader className="pb-2">
             <CardDescription>Average distance before refueling</CardDescription>
             <CardTitle>
-              {stats.distance.average ? numberFormatter.format(stats.distance.average) : "-"} km
+              {stats.distance.average
+                ? numberFormatter.format(stats.distance.average.toNumber())
+                : "-"}{" "}
+              km
             </CardTitle>
           </CardHeader>
           <CardContent>
             {stats.distance.thisYear && (
               <p className="text-sm text-muted-foreground">
                 <span className="text-foreground">
-                  {numberFormatter.format(stats.distance.thisYear)} km{" "}
+                  {numberFormatter.format(stats.distance.thisYear.toNumber())} km{" "}
                 </span>{" "}
                 driven this year
               </p>
@@ -137,7 +137,7 @@ export function CarStats(props: CarStatsProps) {
             {stats.distance.lastYear && (
               <p className="text-sm text-muted-foreground">
                 <span className="text-foreground">
-                  {numberFormatter.format(stats.distance.lastYear)} km
+                  {numberFormatter.format(stats.distance.lastYear.toNumber())} km
                 </span>{" "}
                 driven last year
               </p>
@@ -145,7 +145,7 @@ export function CarStats(props: CarStatsProps) {
             {stats.distance.total && (
               <p className="text-sm text-muted-foreground">
                 <span className="text-foreground">
-                  {numberFormatter.format(stats.distance.total)} km
+                  {numberFormatter.format(stats.distance.total.toNumber())} km
                 </span>{" "}
                 driven in total
               </p>
@@ -168,10 +168,9 @@ export function CarStats(props: CarStatsProps) {
               </Button>
             </CardDescription>
             <CardTitle>
-              {fuelConsumptionFormat === "km/L" &&
-                `${stats.fuelConsumption.last ? numberFormatter.format(stats.fuelConsumption.last["km/L"].toDecimalPlaces(2).toNumber()) : "-"} km/L`}
-              {fuelConsumptionFormat === "L/100km" &&
-                `${stats.fuelConsumption.last ? numberFormatter.format(stats.fuelConsumption.last["L/100km"].toDecimalPlaces(2).toNumber()) : "-"} L/100km`}
+              {stats.fuelConsumption.last
+                ? `${numberFormatter.format(stats.fuelConsumption.last[fuelConsumptionFormat].toDecimalPlaces(2).toNumber())} ${fuelConsumptionFormat}`
+                : "-"}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -179,10 +178,10 @@ export function CarStats(props: CarStatsProps) {
               <p className="text-sm text-muted-foreground">
                 All-time average is{" "}
                 <span className="text-foreground">
-                  {fuelConsumptionFormat === "km/L" &&
-                    `${numberFormatter.format(stats.fuelConsumption.avg["km/L"].toDecimalPlaces(2).toNumber())} km/L`}
-                  {fuelConsumptionFormat === "L/100km" &&
-                    `${numberFormatter.format(stats.fuelConsumption.avg["L/100km"].toDecimalPlaces(2).toNumber())} L/100km`}
+                  {numberFormatter.format(
+                    stats.fuelConsumption.avg[fuelConsumptionFormat].toDecimalPlaces(2).toNumber(),
+                  )}{" "}
+                  {fuelConsumptionFormat}
                 </span>
               </p>
             )}
@@ -190,7 +189,7 @@ export function CarStats(props: CarStatsProps) {
               <p className="text-sm text-muted-foreground">
                 Price/Distance ratio is{" "}
                 <span className="text-foreground">
-                  {numberFormatter.format(stats.fuelConsumption.pricePerDistance)} €/km
+                  {numberFormatter.format(stats.fuelConsumption.pricePerDistance.toNumber())} €/km
                 </span>
               </p>
             )}

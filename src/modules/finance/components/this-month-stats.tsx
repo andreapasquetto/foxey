@@ -14,6 +14,7 @@ import {
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/finance/finance-utils";
+import { Decimal } from "decimal.js";
 
 export function ThisMonthStats() {
   const transactionsMonthToDateQuery = useTransactionsGetAllQuery({
@@ -65,120 +66,143 @@ export function ThisMonthStats() {
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
       <IncomeCard
-        thisMonth={totalAmounts.thisMonth.incoming.toNumber()}
-        lastMonth={totalAmounts.lastMonth.incoming.toNumber()}
+        thisMonth={totalAmounts.thisMonth.incoming}
+        lastMonth={totalAmounts.lastMonth.incoming}
       />
       <ExpensesCard
-        thisMonth={totalAmounts.thisMonth.outgoing.toNumber()}
-        lastMonth={totalAmounts.lastMonth.outgoing.toNumber()}
+        thisMonth={totalAmounts.thisMonth.outgoing}
+        lastMonth={totalAmounts.lastMonth.outgoing}
       />
       <SavingCard
-        thisMonth={savings.thisMonth.toNumber()}
-        lastMonth={savings.lastMonth.toNumber()}
+        thisMonthIncome={totalAmounts.thisMonth.incoming}
+        thisMonthSavings={savings.thisMonth}
+        lastMonthSavings={savings.lastMonth}
       />
     </div>
   );
 }
 
-function IncomeCard(props: { thisMonth: number; lastMonth: number }) {
-  const percentageFromLastMonth = calculatePercentageChange(
-    props.lastMonth,
-    props.thisMonth,
-  ).toNumber();
+function IncomeCard(props: { thisMonth: Decimal; lastMonth: Decimal }) {
+  const percentageFromLastMonth = calculatePercentageChange(props.lastMonth, props.thisMonth);
 
   return (
     <div>
       <CardHeader className="pb-2">
         <CardDescription>Income</CardDescription>
         <CardTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.thisMonth)}
-          {props.lastMonth > 0 && !isNaN(percentageFromLastMonth) && (
-            <Badge
-              variant="outline"
-              className={cn({
-                "border-red-500": percentageFromLastMonth < 0,
-                "border-green-500": percentageFromLastMonth > 0,
-              })}
-            >
-              {percentageFormatter.format(percentageFromLastMonth)}
-            </Badge>
-          )}
+          {currencyFormatter.format(props.thisMonth.toNumber())}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          <span className="text-foreground">{currencyFormatter.format(props.lastMonth)}</span> last
-          month
+          <span className="text-foreground">
+            {currencyFormatter.format(props.lastMonth.toNumber())}
+          </span>{" "}
+          last month
+          {!props.lastMonth.isZero() && (
+            <>
+              ,{" "}
+              <span
+                className={cn({
+                  "text-red-500": percentageFromLastMonth.lessThan(0),
+                  "text-green-500": percentageFromLastMonth.greaterThan(0),
+                })}
+              >
+                {percentageFormatter.format(percentageFromLastMonth.toNumber())}
+              </span>
+            </>
+          )}
         </p>
       </CardContent>
     </div>
   );
 }
 
-function ExpensesCard(props: { thisMonth: number; lastMonth: number }) {
-  const percentageFromLastMonth = calculatePercentageChange(
-    props.lastMonth,
-    props.thisMonth,
-  ).toNumber();
+function ExpensesCard(props: { thisMonth: Decimal; lastMonth: Decimal }) {
+  const percentageFromLastMonth = calculatePercentageChange(props.lastMonth, props.thisMonth);
 
   return (
     <div>
       <CardHeader className="pb-2">
         <CardDescription>Expenses</CardDescription>
         <CardTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.thisMonth)}
-          {props.lastMonth > 0 && !isNaN(percentageFromLastMonth) && (
-            <Badge
-              variant="outline"
-              className={cn({
-                "border-red-500": percentageFromLastMonth > 0,
-                "border-green-500": percentageFromLastMonth < 0,
-              })}
-            >
-              {percentageFormatter.format(percentageFromLastMonth)}
-            </Badge>
-          )}
+          {currencyFormatter.format(props.thisMonth.toNumber())}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          <span className="text-foreground">{currencyFormatter.format(props.lastMonth)}</span> last
-          month
+          <span className="text-foreground">
+            {currencyFormatter.format(props.lastMonth.toNumber())}
+          </span>{" "}
+          last month
+          {!props.lastMonth.isZero() && (
+            <>
+              ,{" "}
+              <span
+                className={cn({
+                  "text-red-500": percentageFromLastMonth.greaterThan(0),
+                  "text-green-500": percentageFromLastMonth.lessThan(0),
+                })}
+              >
+                {percentageFormatter.format(percentageFromLastMonth.toNumber())}
+              </span>
+            </>
+          )}
         </p>
       </CardContent>
     </div>
   );
 }
 
-function SavingCard(props: { thisMonth: number; lastMonth: number }) {
-  const percentageFromLastMonth = calculatePercentageChange(
-    props.lastMonth,
-    props.thisMonth,
-  ).toNumber();
+function SavingCard(props: {
+  thisMonthIncome: Decimal;
+  thisMonthSavings: Decimal;
+  lastMonthSavings: Decimal;
+}) {
+  const thisMonthPercentage = props.thisMonthSavings.div(props.thisMonthIncome);
+  const percentageChange = calculatePercentageChange(
+    props.lastMonthSavings,
+    props.thisMonthSavings,
+  );
 
   return (
     <div>
       <CardHeader className="pb-2">
         <CardDescription>Saved</CardDescription>
         <CardTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.thisMonth)}
-          {props.lastMonth !== 0 && !isNaN(percentageFromLastMonth) && (
+          {currencyFormatter.format(props.thisMonthSavings.toNumber())}
+          {!props.thisMonthIncome.isZero() && (
             <Badge
               variant="outline"
               className={cn({
-                "border-red-500": percentageFromLastMonth < 0,
-                "border-green-500": percentageFromLastMonth > 0,
+                "border-red-500": thisMonthPercentage.lessThan(0),
+                "border-green-500": thisMonthPercentage.greaterThan(0),
               })}
             >
-              {percentageFormatter.format(percentageFromLastMonth)}
+              {percentageFormatter.format(thisMonthPercentage.toNumber())}
             </Badge>
           )}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
-          <span className="text-foreground">{currencyFormatter.format(props.lastMonth)}</span> last
-          month
+          <span className="text-foreground">
+            {currencyFormatter.format(props.lastMonthSavings.toNumber())}
+          </span>{" "}
+          last month
+          {!props.lastMonthSavings.isZero() && (
+            <>
+              ,{" "}
+              <span
+                className={cn({
+                  "text-red-500": percentageChange.lessThan(0),
+                  "text-green-500": percentageChange.greaterThan(0),
+                })}
+              >
+                {percentageFormatter.format(percentageChange.toNumber())}
+              </span>
+            </>
+          )}
         </p>
       </CardContent>
     </div>
