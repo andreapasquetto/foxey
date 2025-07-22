@@ -21,6 +21,20 @@ export async function contactsCreate(contact: ContactCreateForm) {
   });
 }
 
+export async function contactsGetAllQuery(
+  params: {
+    discardArchived?: boolean;
+  } = {},
+) {
+  const userId = await getCurrentUserId();
+  return await db.query.contacts.findMany({
+    where: and(
+      eq(contacts.userId, userId),
+      params.discardArchived ? eq(contacts.isArchived, false) : undefined,
+    ),
+  });
+}
+
 export async function contactsGetPaginated(params: {
   paginate: Paginate;
   searchFilter?: string;
