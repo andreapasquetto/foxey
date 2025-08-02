@@ -1,7 +1,3 @@
-"use client";
-
-import { QueryPagination } from "@/components/pagination";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -10,72 +6,30 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { usePlaceCategoriesGetPaginatedQuery } from "@/modules/places/places-queries";
+import { placeCategoriesGetAll } from "@/modules/places/places-actions";
 
-interface PlaceCategoryListProps {
-  searchFilter?: string;
-}
-
-export function PlaceCategoryList(props: PlaceCategoryListProps) {
-  const query = usePlaceCategoriesGetPaginatedQuery({
-    searchFilter: props.searchFilter,
+export async function PlaceCategoryList(props: { query?: string }) {
+  const categories = await placeCategoriesGetAll({
+    query: props.query,
   });
-
-  if (!query.data) {
-    return <ComponentSkeleton />;
-  }
-
-  const categories = query.data.records;
 
   if (!categories.length) {
     return <ComponentEmptyState />;
   }
 
   return (
-    <div>
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          {categories.map((category) => (
-            <TableRow key={category.id}>
-              <TableCell>{category.name}</TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <QueryPagination query={query} />
-    </div>
-  );
-}
-
-function TableHeaderRow() {
-  return (
-    <TableRow>
-      <TableHead>Name</TableHead>
-    </TableRow>
-  );
-}
-
-function TableRowsSkeleton() {
-  return Array.from({ length: 3 }).map((_, i) => (
-    <TableRow key={i}>
-      <TableCell>
-        <Skeleton className="h-4 w-52" />
-      </TableCell>
-    </TableRow>
-  ));
-}
-
-function ComponentSkeleton() {
-  return (
     <Table>
       <TableHeader>
-        <TableHeaderRow />
+        <TableRow>
+          <TableHead>Name</TableHead>
+        </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRowsSkeleton />
+        {categories.slice(0, 10).map((category) => (
+          <TableRow key={category.id}>
+            <TableCell>{category.name}</TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

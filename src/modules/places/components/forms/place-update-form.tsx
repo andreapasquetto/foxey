@@ -1,6 +1,5 @@
 "use client";
 
-import { placesRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
@@ -22,76 +21,34 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Place } from "@/db/types/places";
+import { Place, PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
-import { PlaceFormSkeleton } from "@/modules/places/components/skeletons/place-form-skeleton";
 import { usePlacesUpdateMutation } from "@/modules/places/places-mutations";
-import {
-  usePlaceCategoriesGetAllQuery,
-  usePlacesGetByIdQuery,
-} from "@/modules/places/places-queries";
 import {
   placeUpdateFormSchema,
   type PlaceUpdateForm,
 } from "@/modules/places/schemas/place-update-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-interface PlaceUpdateFormProps {
-  id: string;
-}
-
-export function PlaceUpdateForm(props: PlaceUpdateFormProps) {
-  const router = useRouter();
-  const query = usePlacesGetByIdQuery(props.id);
-
-  if (!query.data) {
-    return <PlaceFormSkeleton />;
-  }
-
-  return (
-    <ComponentForm
-      place={query.data}
-      onUpdate={() => {
-        router.push(placesRoute);
-      }}
-    />
-  );
-}
-
-interface UpdateFormProps {
-  place: Place;
-  onUpdate: () => void;
-}
-
-function ComponentForm(props: UpdateFormProps) {
+export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Place }) {
+  const { categories, place } = props;
   const form = useForm<PlaceUpdateForm>({
     resolver: zodResolver(placeUpdateFormSchema),
     defaultValues: {
-      id: props.place.id,
-      name: props.place.name,
-      categoryId: props.place.category?.id,
-      address: props.place.address ?? undefined,
-      isVisited: props.place.isVisited,
+      id: place.id,
+      name: place.name,
+      categoryId: place.category?.id,
+      address: place.address ?? undefined,
+      isVisited: place.isVisited,
     },
   });
 
   const mutation = usePlacesUpdateMutation(props.place.id);
 
-  const { data: categories } = usePlaceCategoriesGetAllQuery();
-
-  if (!categories) {
-    return <PlaceFormSkeleton />;
-  }
-
   function onValidSubmit(values: PlaceUpdateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        props.onUpdate();
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (

@@ -1,6 +1,5 @@
 "use client";
 
-import { placesRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
@@ -22,22 +21,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
-import { PlaceFormSkeleton } from "@/modules/places/components/skeletons/place-form-skeleton";
 import { usePlacesCreateMutation } from "@/modules/places/places-mutations";
-import { usePlaceCategoriesGetAllQuery } from "@/modules/places/places-queries";
 import {
   type PlaceCreateForm,
   placeCreateFormSchema,
 } from "@/modules/places/schemas/place-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export function PlaceCreateForm() {
-  const router = useRouter();
-
+export function PlaceCreateForm(props: { categories: PlaceCategory[] }) {
+  const { categories } = props;
   const form = useForm<PlaceCreateForm>({
     resolver: zodResolver(placeCreateFormSchema),
     defaultValues: {
@@ -47,18 +43,8 @@ export function PlaceCreateForm() {
 
   const mutation = usePlacesCreateMutation();
 
-  const { data: categories, isFetching } = usePlaceCategoriesGetAllQuery();
-
-  if (!categories || isFetching) {
-    return <PlaceFormSkeleton />;
-  }
-
   function onValidSubmit(values: PlaceCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(placesRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (
