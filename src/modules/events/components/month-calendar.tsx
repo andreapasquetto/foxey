@@ -4,11 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Contact } from "@/db/types/contacts";
+import { Event } from "@/db/types/events";
+import { Place, PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
-import { DeleteEventDialog } from "@/modules/events/components/dialogs/delete-event-dialog";
+import { DeleteEvent } from "@/modules/events/components/dialogs/delete-event";
 import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
-import { useEventsToggleCancelMutation } from "@/modules/events/events-mutations";
-import { useEventsGetAllQuery } from "@/modules/events/events-queries";
+import { eventsToggleCancel } from "@/modules/events/events-actions";
 import {
   add,
   differenceInYears,
@@ -40,8 +41,13 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export function MonthCalendar(props: { contacts: Contact[] }) {
-  const { contacts } = props;
+export function MonthCalendar(props: {
+  categories: PlaceCategory[];
+  places: Place[];
+  contacts: Contact[];
+  events: Event[];
+}) {
+  const { categories, places, contacts, events } = props;
 
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
@@ -52,9 +58,6 @@ export function MonthCalendar(props: { contacts: Contact[] }) {
     start: startOfWeek(startOfMonth(selectedMonth), { weekStartsOn: 1 }),
     end: endOfWeek(endOfMonth(selectedMonth), { weekStartsOn: 1 }),
   });
-
-  const eventsQuery = useEventsGetAllQuery();
-  const events = eventsQuery.data ?? [];
 
   const selectedDayEvents = events.filter((event) => isSameDay(selectedDay, event.datetime));
   const contactsWithDobs = contacts
@@ -89,8 +92,6 @@ export function MonthCalendar(props: { contacts: Contact[] }) {
       setSelectedMonth(startOfMonth(today));
     }
   }
-
-  const toggleMutation = useEventsToggleCancelMutation();
 
   return (
     <div className="lg:grid lg:grid-cols-3 lg:gap-2">
@@ -159,8 +160,9 @@ export function MonthCalendar(props: { contacts: Contact[] }) {
                   <SheetTitle>Create Event</SheetTitle>
                 </SheetHeader>
                 <EventCreateForm
+                  categories={categories}
+                  places={places}
                   selectedDay={selectedDay}
-                  onSubmitSuccess={() => setShowCreateSheet(false)}
                 />
               </SheetContent>
             </Sheet>
@@ -342,18 +344,14 @@ export function MonthCalendar(props: { contacts: Contact[] }) {
                   )}
                   <div className="flex items-center justify-between">
                     {event.category && <Badge>{event.category.name}</Badge>}
-                    <div className="ml-auto flex items-center gap-1">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={() => toggleMutation.mutate(event.id)}
-                        disabled={toggleMutation.isPending}
-                      >
+                    <form action={eventsToggleCancel} className="ml-auto flex items-center gap-1">
+                      <input type="hidden" name="id" value={event.id} />
+                      <Button type="submit" variant="outline" size="icon">
                         {event.isCanceled && <RotateCw className="h-4 w-4" />}
                         {!event.isCanceled && <Eraser className="h-4 w-4" />}
                       </Button>
-                      <DeleteEventDialog event={event} />
-                    </div>
+                      <DeleteEvent event={event} />
+                    </form>
                   </div>
                 </li>
               ))}

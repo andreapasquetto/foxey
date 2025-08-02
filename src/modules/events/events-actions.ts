@@ -1,17 +1,14 @@
 "use server";
 
+import { eventsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { eventCategories, events } from "@/db/schemas/events";
-import { EventCategoryCreateForm } from "@/modules/events/schemas/event-category-create-form-schema";
 import { EventCreateForm } from "@/modules/events/schemas/event-create-form-schema";
 import { startOfDay } from "date-fns";
 import { and, eq } from "drizzle-orm";
-
-export async function eventCategoriesCreate(values: EventCategoryCreateForm) {
-  const userId = await getCurrentUserId();
-  await db.insert(eventCategories).values({ userId, name: values.name });
-}
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
 
 export async function eventCategoriesGetAll() {
   const userId = await getCurrentUserId();
@@ -32,6 +29,7 @@ export async function eventsCreate(values: EventCreateForm) {
     isAllDay: values.isAllDay,
     datetime: values.isAllDay ? startOfDay(values.datetime) : values.datetime,
   });
+  revalidatePath(eventsRoute);
 }
 
 // TODO: add dateRange filter
@@ -47,24 +45,26 @@ export async function eventsGetAll() {
   });
 }
 
-export async function eventsToggleCancel(id: string) {
+export async function eventsToggleCancel(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   const record = await db.query.events.findFirst({
     where: and(eq(events.userId, userId), eq(events.id, id)),
   });
-
   if (!record) {
     // TODO: return "error result" instead of throwing
     throw new Error("Not Found");
   }
-
   await db
     .update(events)
     .set({ isCanceled: !record.isCanceled })
     .where(and(eq(events.userId, userId), eq(events.id, id)));
+  revalidatePath(eventsRoute);
 }
 
-export async function eventsDelete(id: string) {
+export async function eventsDelete(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db.delete(events).where(and(eq(events.userId, userId), eq(events.id, id)));
+  revalidatePath(eventsRoute);
 }

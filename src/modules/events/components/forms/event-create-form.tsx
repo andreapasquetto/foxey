@@ -20,15 +20,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import { Event } from "@/db/types/events";
+import { EventCategory } from "@/db/types/events";
+import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useEventsCreateMutation } from "@/modules/events/events-mutations";
-import { useEventCategoriesGetAllQuery } from "@/modules/events/events-queries";
 import {
   type EventCreateForm,
   eventCreateFormSchema,
 } from "@/modules/events/schemas/event-create-form-schema";
-import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { add } from "date-fns";
@@ -36,36 +35,25 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 
-interface EventCreateFormProps {
+export function EventCreateForm(props: {
+  categories: EventCategory[];
+  places: Place[];
   selectedDay?: Date;
-  event?: Event;
-  onSubmitSuccess: () => void;
-}
-
-export function EventCreateForm(props: EventCreateFormProps) {
-  const categoriesQuery = useEventCategoriesGetAllQuery();
-  const placesQuery = usePlacesGetAllQuery();
+}) {
+  const { categories, places } = props;
 
   const form = useForm<EventCreateForm>({
     resolver: zodResolver(eventCreateFormSchema),
     defaultValues: {
       datetime: props.selectedDay ? add(props.selectedDay, { hours: 12 }) : undefined,
-      title: props.event?.title,
-      categoryId: props.event?.categoryId ?? undefined,
-      placeId: props.event?.placeId ?? undefined,
-      description: props.event?.description ?? undefined,
-      isAllDay: props.event?.isAllDay,
+      isAllDay: false,
     },
   });
 
   const mutation = useEventsCreateMutation();
 
   function onValidSubmit(values: EventCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        props.onSubmitSuccess();
-      },
-    });
+    mutation.mutate(values);
   }
 
   useEffect(() => {
@@ -73,9 +61,6 @@ export function EventCreateForm(props: EventCreateFormProps) {
       form.setValue("datetime", add(props.selectedDay, { hours: 12 }));
     }
   }, [props.selectedDay, form]);
-
-  const categories = categoriesQuery.data ?? [];
-  const places = placesQuery.data ?? [];
 
   return (
     <Form {...form}>
