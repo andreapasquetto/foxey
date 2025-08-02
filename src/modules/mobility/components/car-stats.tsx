@@ -4,15 +4,10 @@ import { currencyFormatter, numberFormatter, percentageFormatter } from "@/commo
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Inspection, Refueling, Service } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
 import { OdometerChart } from "@/modules/mobility/components/charts/odometer-chart";
-import {
-  useInspectionsGetAllQuery,
-  useRefuelingsGetAllQuery,
-  useServicesGetAllQuery,
-} from "@/modules/mobility/mobility-queries";
 import {
   calculateAvgDistanceBeforeRefueling,
   calculateAvgFuelConsumption,
@@ -25,24 +20,13 @@ import {
 import { Calculator } from "lucide-react";
 import { useState } from "react";
 
-interface CarStatsProps {
-  carId: string;
-}
-
-export function CarStats(props: CarStatsProps) {
+export function CarStats(props: {
+  refuelings: Refueling[];
+  services: Service[];
+  inspections: Inspection[];
+}) {
+  const { refuelings, services, inspections } = props;
   const [fuelConsumptionFormat, setFuelConsumptionFormat] = useState<"km/L" | "L/100km">("km/L");
-
-  const refuelingsQuery = useRefuelingsGetAllQuery(props.carId);
-  const servicesQuery = useServicesGetAllQuery(props.carId);
-  const inspectionsQuery = useInspectionsGetAllQuery(props.carId);
-
-  if (!refuelingsQuery.data || !servicesQuery.data || !inspectionsQuery.data) {
-    return <ComponentSkeleton />;
-  }
-
-  const refuelings = refuelingsQuery.data;
-  const services = servicesQuery.data;
-  const inspections = inspectionsQuery.data;
 
   const refuelingPeriods = extractRefuelingPeriods(refuelings);
 
@@ -199,64 +183,6 @@ export function CarStats(props: CarStatsProps) {
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <FuelPriceChart refuelings={refuelings} />
         <OdometerChart refuelings={refuelings} services={services} inspections={inspections} />
-      </div>
-    </div>
-  );
-}
-
-function ComponentSkeleton() {
-  return (
-    <div className="space-y-6">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div>
-          <CardHeader className="pb-2">
-            <CardDescription>Monthly fuel costs</CardDescription>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-              <Skeleton className="h-5 w-14 rounded-full" />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-1">
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-36" />
-          </CardContent>
-        </div>
-        <div>
-          <CardHeader className="pb-2">
-            <CardDescription>Average distance before refueling</CardDescription>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-1">
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-32" />
-            <Skeleton className="h-4 w-36" />
-          </CardContent>
-        </div>
-        <div>
-          <CardHeader className="pb-2">
-            <CardDescription>Last fuel consumption</CardDescription>
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-6 w-24" />
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-1">
-            <Skeleton className="h-4 w-28" />
-            <Skeleton className="h-4 w-32" />
-          </CardContent>
-        </div>
-      </div>
-      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <div className="space-y-3">
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-[380px] w-full" />
-        </div>
-        <div className="space-y-3">
-          <Skeleton className="h-6 w-24" />
-          <Skeleton className="h-[380px] w-full" />
-        </div>
       </div>
     </div>
   );

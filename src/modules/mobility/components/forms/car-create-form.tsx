@@ -1,6 +1,5 @@
 "use client";
 
-import { mobilityRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
@@ -11,11 +10,9 @@ import {
   carCreateFormSchema,
 } from "@/modules/mobility/schemas/car-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export function CarCreateForm() {
-  const router = useRouter();
   const form = useForm<CarCreateForm>({
     resolver: zodResolver(carCreateFormSchema),
     defaultValues: {
@@ -26,11 +23,7 @@ export function CarCreateForm() {
   const mutation = useCarsCreateMutation();
 
   function onValidSubmit(values: CarCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(mobilityRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (

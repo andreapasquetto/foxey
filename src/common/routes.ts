@@ -21,10 +21,15 @@ export const eventsRoute = `${privateRoute}/events`;
 export const mobilityRoute = `${privateRoute}/mobility`;
 export const newCarRoute = `${mobilityRoute}/cars/new`;
 
-// TODO: make these routes car-specific (/mobility/cars/:carId/...)
-export const newHighwayTripRoute = `${mobilityRoute}/highway-trips/new`;
-export const newRefuelingRoute = `${mobilityRoute}/refuelings/new`;
-export const newInspectionRoute = `${mobilityRoute}/inspections/new`;
+export function newHighwayTripRoute(carId: string) {
+  return `${mobilityRoute}/cars/${carId}/highway-trips/new`;
+}
+export function newRefuelingRoute(carId: string) {
+  return `${mobilityRoute}/cars/${carId}/refuelings/new`;
+}
+export function newInspectionRoute(carId: string) {
+  return `${mobilityRoute}/cars/${carId}/inspections/new`;
+}
 
 export function carRoute(id: string) {
   return `${mobilityRoute}/cars/${id}`;

@@ -1,13 +1,10 @@
 "use client";
 
-import { mobilityRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
 import { XSelect, XSelectOption } from "@/components/form/x-select";
-import { CheckboxSkeleton } from "@/components/skeleton/checkbox-skeleton";
-import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -26,54 +23,57 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Wallet } from "@/db/types/finance";
+import { Car } from "@/db/types/mobility";
+import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
-import { useWalletsGetAllQuery } from "@/modules/finance/finance-queries";
 import { useRefuelingsCreateMutation } from "@/modules/mobility/mobility-mutations";
-import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
   type RefuelingCreateForm,
   refuelingCreateFormSchema,
 } from "@/modules/mobility/schemas/refueling-create-form-schema";
-import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export function RefuelingCreateForm() {
-  const router = useRouter();
-
+export function RefuelingCreateForm(props: {
+  cars: Car[];
+  wallets: Wallet[];
+  places: Place[];
+  carId: string;
+}) {
+  const { cars, wallets, places, carId } = props;
   const form = useForm<RefuelingCreateForm>({
     resolver: zodResolver(refuelingCreateFormSchema),
     defaultValues: {
+      carId,
       datetime: startOfMinute(new Date()),
     },
   });
 
-  const mutation = useRefuelingsCreateMutation();
-
-  const { data: cars } = useCarsGetAllQuery();
-  const { data: wallets } = useWalletsGetAllQuery();
-  const { data: places } = usePlacesGetAllQuery();
-
-  if (!cars || !wallets || !places) {
-    return <ComponentSkeleton />;
-  }
+  const mutation = useRefuelingsCreateMutation(carId);
 
   function onValidSubmit(values: RefuelingCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(mobilityRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <XSelect control={form.control} name="carId" label="Car" disabled>
+            {cars.map((car) => (
+              <XSelectOption key={car.id} value={car.id}>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <div>
+                    {car.make} {car.model}
+                  </div>
+                </div>
+              </XSelectOption>
+            ))}
+          </XSelect>
           <FormField
             control={form.control}
             name="datetime"
@@ -145,18 +145,6 @@ export function RefuelingCreateForm() {
               </FormItem>
             )}
           />
-          <XSelect control={form.control} name="carId" label="Car">
-            {cars.map((car) => (
-              <XSelectOption key={car.id} value={car.id}>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
-                  <div>
-                    {car.make} {car.model}
-                  </div>
-                </div>
-              </XSelectOption>
-            ))}
-          </XSelect>
           <XSelect control={form.control} name="walletId" label="Wallet">
             {wallets.map((w) => (
               <XSelectOption key={w.id} value={w.id}>
@@ -222,35 +210,5 @@ export function RefuelingCreateForm() {
         </div>
       </form>
     </Form>
-  );
-}
-
-function ComponentSkeleton() {
-  return (
-    <div className="space-y-4 py-2 pb-4">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <CheckboxSkeleton />
-        <CheckboxSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <InputSkeleton />
-      <div className="flex items-center justify-end gap-3">
-        <Skeleton className="h-10 w-20 text-right" />
-      </div>
-    </div>
   );
 }

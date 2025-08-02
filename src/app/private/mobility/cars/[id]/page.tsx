@@ -1,5 +1,3 @@
-"use client";
-
 import { newHighwayTripRoute, newInspectionRoute, newRefuelingRoute } from "@/common/routes";
 import { Heading1, Heading2 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
@@ -9,27 +7,27 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CarStats } from "@/modules/mobility/components/car-stats";
 import { HighwayTripList } from "@/modules/mobility/components/highway-trip-list";
 import { InspectionList } from "@/modules/mobility/components/inspection-list";
 import { RefuelingList } from "@/modules/mobility/components/refueling-list";
 import { ServiceList } from "@/modules/mobility/components/service-list";
-import { useCarsGetByIdQuery } from "@/modules/mobility/mobility-queries";
+import {
+  carsGetById,
+  inspectionsGetAll,
+  refuelingsGetAll,
+  servicesGetAll,
+} from "@/modules/mobility/mobility-actions";
 import { BookOpenCheck, Fuel, Gauge, Plus } from "lucide-react";
 import Link from "next/link";
-import { useParams } from "next/navigation";
 
-export default function CarPage() {
-  const params = useParams<{ id: string }>();
+export default async function CarPage(props: { params: Promise<{ id: string }> }) {
+  const id = (await props.params).id;
+  const car = await carsGetById(id);
 
-  const carQuery = useCarsGetByIdQuery(params.id);
-
-  if (!carQuery.data) {
-    return <Skeleton className="h-12 w-96" />;
-  }
-
-  const car = carQuery.data;
+  const refuelings = await refuelingsGetAll(id);
+  const services = await servicesGetAll(id);
+  const inspections = await inspectionsGetAll(id);
 
   return (
     <div className="space-y-12 pb-20">
@@ -46,7 +44,7 @@ export default function CarPage() {
           <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
             <DropdownMenuItem asChild>
               <Link
-                href={newRefuelingRoute}
+                href={newRefuelingRoute(car.id)}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
                 prefetch
               >
@@ -55,7 +53,7 @@ export default function CarPage() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href={newHighwayTripRoute}
+                href={newHighwayTripRoute(car.id)}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
                 prefetch
               >
@@ -64,7 +62,7 @@ export default function CarPage() {
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
-                href={newInspectionRoute}
+                href={newInspectionRoute(car.id)}
                 className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
                 prefetch
               >
@@ -76,23 +74,23 @@ export default function CarPage() {
       </div>
       <section className="space-y-6">
         <Heading2>Stats</Heading2>
-        <CarStats carId={params.id} />
+        <CarStats refuelings={refuelings} services={services} inspections={inspections} />
       </section>
       <section className="space-y-6">
         <Heading2>Refuelings</Heading2>
-        <RefuelingList carId={params.id} />
+        <RefuelingList refuelings={refuelings} />
       </section>
       <section className="space-y-6">
         <Heading2>Highway trips</Heading2>
-        <HighwayTripList carId={params.id} />
+        <HighwayTripList carId={id} />
       </section>
       <section className="space-y-6">
         <Heading2>Services</Heading2>
-        <ServiceList carId={params.id} />
+        <ServiceList services={services} />
       </section>
       <section className="space-y-6">
         <Heading2>Inspections</Heading2>
-        <InspectionList carId={params.id} />
+        <InspectionList inspections={inspections} />
       </section>
     </div>
   );

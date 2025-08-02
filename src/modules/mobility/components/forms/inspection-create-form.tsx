@@ -1,13 +1,10 @@
 "use client";
 
-import { mobilityRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
 import { XSelect, XSelectOption } from "@/components/form/x-select";
-import { CheckboxSkeleton } from "@/components/skeleton/checkbox-skeleton";
-import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -17,49 +14,50 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Skeleton } from "@/components/ui/skeleton";
+import { Car } from "@/db/types/mobility";
 import { useInspectionsCreateMutation } from "@/modules/mobility/mobility-mutations";
-import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
   type InspectionCreateForm,
   inspectionCreateFormSchema,
 } from "@/modules/mobility/schemas/inspection-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export function InspectionCreateForm() {
-  const router = useRouter();
+export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
+  const { cars, carId } = props;
 
   const form = useForm<InspectionCreateForm>({
     resolver: zodResolver(inspectionCreateFormSchema),
     defaultValues: {
+      carId,
       datetime: startOfMinute(new Date()),
       isSuccessful: true,
     },
   });
 
-  const mutation = useInspectionsCreateMutation();
-
-  const { data: cars } = useCarsGetAllQuery();
-
-  if (!cars) {
-    return <ComponentSkeleton />;
-  }
+  const mutation = useInspectionsCreateMutation(carId);
 
   function onValidSubmit(values: InspectionCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(mobilityRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <XSelect control={form.control} name="carId" label="Car" disabled>
+            {cars.map((car) => (
+              <XSelectOption key={car.id} value={car.id}>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <div>
+                    {car.make} {car.model}
+                  </div>
+                </div>
+              </XSelectOption>
+            ))}
+          </XSelect>
           <FormField
             control={form.control}
             name="datetime"
@@ -73,18 +71,7 @@ export function InspectionCreateForm() {
               </FormItem>
             )}
           />
-          <XSelect control={form.control} name="carId" label="Car">
-            {cars.map((car) => (
-              <XSelectOption key={car.id} value={car.id}>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
-                  <div>
-                    {car.make} {car.model}
-                  </div>
-                </div>
-              </XSelectOption>
-            ))}
-          </XSelect>
+
           <XInput
             type="number"
             control={form.control}
@@ -105,35 +92,5 @@ export function InspectionCreateForm() {
         </div>
       </form>
     </Form>
-  );
-}
-
-function ComponentSkeleton() {
-  return (
-    <div className="space-y-4 py-2 pb-4">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <CheckboxSkeleton />
-        <CheckboxSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <InputSkeleton />
-      <div className="flex items-center justify-end gap-3">
-        <Skeleton className="h-10 w-20 text-right" />
-      </div>
-    </div>
   );
 }

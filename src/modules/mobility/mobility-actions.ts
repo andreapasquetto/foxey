@@ -1,6 +1,6 @@
 "use server";
 
-import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { carRoute, mobilityRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { transactions } from "@/db/schemas/finance";
@@ -12,16 +12,21 @@ import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-crea
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
 import { Decimal } from "decimal.js";
 import { and, desc, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function carsCreate(car: CarCreateForm) {
   const userId = await getCurrentUserId();
   await db.insert(cars).values({ ...car, userId });
+  revalidatePath(mobilityRoute);
+  redirect(mobilityRoute);
 }
 
 export async function carsGetAll() {
   const userId = await getCurrentUserId();
   return await db.query.cars.findMany({
     where: eq(cars.userId, userId),
+    orderBy: [desc(cars.year)],
   });
 }
 
@@ -39,7 +44,8 @@ export async function carsGetById(id: string) {
   return record;
 }
 
-export async function refuelingsCreate(refueling: RefuelingCreateForm) {
+export async function refuelingsCreate(params: { carId: string; refueling: RefuelingCreateForm }) {
+  const { carId, refueling } = params;
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
     const newTransaction = (
@@ -74,6 +80,8 @@ export async function refuelingsCreate(refueling: RefuelingCreateForm) {
       odometer: String(refueling.odometer),
     });
   });
+  revalidatePath(carRoute(carId));
+  redirect(carRoute(carId));
 }
 
 export async function refuelingsGetAll(carId: string) {
@@ -95,31 +103,8 @@ export async function refuelingsGetAll(carId: string) {
   return result;
 }
 
-export async function refuelingsGetPaginated(options: { paginate: Paginate; carId: string }) {
-  const total = await countTotalRefuelings(options.carId);
-  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
-
-  const records = await db
-    .select()
-    .from(refuelings)
-    .innerJoin(transactions, eq(refuelings.transactionId, transactions.id))
-    .where(eq(refuelings.carId, options.carId))
-    .limit(limit)
-    .offset(offset)
-    .orderBy(desc(transactions.datetime));
-
-  const transactionIds = records.map((record) => record.transactions.id);
-  const txs = await transactionsGetByIdsMap(transactionIds);
-
-  const result = records.map((record) => ({
-    ...record.mobility_refuelings,
-    transaction: txs.get(record.transactions.id)!,
-  }));
-
-  return toPaginated(result, total);
-}
-
-export async function highwayTripsCreate(trip: HighwayTripCreateForm) {
+export async function highwayTripsCreate(params: { carId: string; trip: HighwayTripCreateForm }) {
+  const { carId, trip } = params;
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
     const newTransaction = (
@@ -152,30 +137,25 @@ export async function highwayTripsCreate(trip: HighwayTripCreateForm) {
       avgSpeed: String(trip.avgSpeed),
     });
   });
+  revalidatePath(carRoute(carId));
+  redirect(carRoute(carId));
 }
 
-export async function highwayTripsGetPaginated(options: { paginate: Paginate; carId: string }) {
-  const total = await countTotalHighwayTrips(options.carId);
-  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
-
+export async function highwayTripsGetAll(carId: string) {
   const records = await db
     .select()
     .from(highwayTrips)
     .innerJoin(transactions, eq(highwayTrips.transactionId, transactions.id))
-    .where(eq(highwayTrips.carId, options.carId))
-    .limit(limit)
-    .offset(offset)
+    .where(eq(highwayTrips.carId, carId))
     .orderBy(desc(transactions.datetime));
 
   const transactionIds = records.map((it) => it.transactions.id);
   const txs = await transactionsGetByIdsMap(transactionIds);
 
-  const result = records.map((record) => ({
+  return records.map((record) => ({
     ...record.mobility_highway_trips,
     transaction: txs.get(record.transactions.id)!,
   }));
-
-  return toPaginated(result, total);
 }
 
 export async function servicesGetAll(carId: string) {
@@ -188,30 +168,19 @@ export async function servicesGetAll(carId: string) {
   });
 }
 
-export async function servicesGetPaginated(options: { paginate: Paginate; carId: string }) {
-  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
-
-  const total = await countTotalServices(options.carId);
-  const records = await db.query.services.findMany({
-    with: {
-      car: true,
-    },
-    where: eq(services.carId, options.carId),
-    limit,
-    offset,
-    orderBy: [desc(services.datetime)],
-  });
-
-  return toPaginated(records, total);
-}
-
-export async function inspectionsCreate(inspection: InspectionCreateForm) {
+export async function inspectionsCreate(params: {
+  carId: string;
+  inspection: InspectionCreateForm;
+}) {
+  const { carId, inspection } = params;
   await db.insert(inspections).values({
     datetime: inspection.datetime,
     carId: inspection.carId,
     odometer: String(inspection.odometer),
     isSuccessful: true,
   });
+  revalidatePath(carRoute(carId));
+  redirect(carRoute(carId));
 }
 
 export async function inspectionsGetAll(carId: string) {
@@ -222,44 +191,4 @@ export async function inspectionsGetAll(carId: string) {
     where: eq(inspections.carId, carId),
     orderBy: [inspections.datetime],
   });
-}
-
-export async function inspectionsGetPaginated(options: { paginate: Paginate; carId: string }) {
-  const { limit, offset } = paginateToLimitAndOffset(options.paginate);
-
-  const total = await countTotalInspections(options.carId);
-  const records = await db.query.inspections.findMany({
-    with: {
-      car: true,
-    },
-    where: eq(inspections.carId, options.carId),
-    limit,
-    offset,
-    orderBy: desc(inspections.datetime),
-  });
-
-  return toPaginated(records, total);
-}
-
-async function countTotalRefuelings(carId: string) {
-  return (
-    await db.select({ id: refuelings.id }).from(refuelings).where(eq(refuelings.carId, carId))
-  ).length;
-}
-
-async function countTotalHighwayTrips(carId: string) {
-  return (
-    await db.select({ id: highwayTrips.id }).from(highwayTrips).where(eq(highwayTrips.carId, carId))
-  ).length;
-}
-
-async function countTotalServices(carId: string) {
-  return (await db.select({ id: services.id }).from(services).where(eq(services.carId, carId)))
-    .length;
-}
-
-async function countTotalInspections(carId: string) {
-  return (
-    await db.select({ id: inspections.id }).from(inspections).where(eq(inspections.carId, carId))
-  ).length;
 }

@@ -1,6 +1,5 @@
 "use client";
 
-import { mobilityRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
@@ -16,50 +15,49 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useWalletsGetAllQuery } from "@/modules/finance/finance-queries";
+import { Wallet } from "@/db/types/finance";
+import { Car } from "@/db/types/mobility";
 import { useHighwayTripsCreateMutation } from "@/modules/mobility/mobility-mutations";
-import { useCarsGetAllQuery } from "@/modules/mobility/mobility-queries";
 import {
   type HighwayTripCreateForm,
   highwayTripCreateFormSchema,
 } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
-import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export function HighwayTripCreateForm() {
-  const router = useRouter();
+export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; carId: string }) {
+  const { cars, wallets, carId } = props;
   const form = useForm<HighwayTripCreateForm>({
     resolver: zodResolver(highwayTripCreateFormSchema),
     defaultValues: {
+      carId,
       datetime: startOfMinute(new Date()),
     },
   });
 
-  const mutation = useHighwayTripsCreateMutation();
-
-  const { data: cars } = useCarsGetAllQuery();
-  const { data: wallets } = useWalletsGetAllQuery();
-  const { data: places } = usePlacesGetAllQuery();
-
-  if (!cars || !wallets || !places) {
-    return <ComponentSkeleton />;
-  }
+  const mutation = useHighwayTripsCreateMutation(carId);
 
   function onValidSubmit(values: HighwayTripCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(mobilityRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <XSelect control={form.control} name="carId" label="Car" disabled>
+            {cars.map((car) => (
+              <XSelectOption key={car.id} value={car.id}>
+                <div className="flex items-center gap-2">
+                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <div>
+                    {car.make} {car.model}
+                  </div>
+                </div>
+              </XSelectOption>
+            ))}
+          </XSelect>
           <FormField
             control={form.control}
             name="datetime"
@@ -73,18 +71,7 @@ export function HighwayTripCreateForm() {
               </FormItem>
             )}
           />
-          <XSelect control={form.control} name="carId" label="Car">
-            {cars.map((car) => (
-              <XSelectOption key={car.id} value={car.id}>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
-                  <div>
-                    {car.make} {car.model}
-                  </div>
-                </div>
-              </XSelectOption>
-            ))}
-          </XSelect>
+
           <XSelect control={form.control} name="walletId" label="Wallet">
             {wallets.map((w) => (
               <XSelectOption key={w.id} value={w.id}>
