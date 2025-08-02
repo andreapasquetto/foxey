@@ -1,6 +1,5 @@
 "use client";
 
-import { financeRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
@@ -23,26 +22,25 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { TransactionCategory, Wallet } from "@/db/types/finance";
+import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useTransactionsCreateMutation } from "@/modules/finance/finance-mutations";
-import {
-  useTransactionCategoriesGetAllQuery,
-  useWalletsGetAllQuery,
-} from "@/modules/finance/finance-queries";
-import { TransactionFormSkeleton } from "@/modules/finance/components/skeletons/transaction-form-skeleton";
 import {
   type TransactionCreateForm,
   transactionCreateFormSchema,
 } from "@/modules/finance/schemas/transaction-create-form-schema";
-import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-export function TransactionCreateForm() {
-  const router = useRouter();
+export function TransactionCreateForm(props: {
+  wallets: Wallet[];
+  categories: TransactionCategory[];
+  places: Place[];
+}) {
+  const { wallets, categories, places } = props;
 
   const form = useForm<TransactionCreateForm>({
     resolver: zodResolver(transactionCreateFormSchema),
@@ -53,20 +51,8 @@ export function TransactionCreateForm() {
 
   const mutation = useTransactionsCreateMutation();
 
-  const { data: wallets } = useWalletsGetAllQuery();
-  const { data: categories } = useTransactionCategoriesGetAllQuery();
-  const { data: places } = usePlacesGetAllQuery();
-
-  if (!wallets || !categories || !places) {
-    return <TransactionFormSkeleton />;
-  }
-
   function onSubmit(values: TransactionCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(financeRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (

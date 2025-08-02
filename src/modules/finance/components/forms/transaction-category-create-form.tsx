@@ -1,9 +1,7 @@
 "use client";
 
-import { transactionCategoriesRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
-import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -14,22 +12,16 @@ import {
   transactionCategoryCreateFormSchema,
 } from "@/modules/finance/schemas/transaction-category-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export function TransactionCategoryCreateForm() {
-  const router = useRouter();
   const form = useForm<TransactionCategoryCreateForm>({
     resolver: zodResolver(transactionCategoryCreateFormSchema),
   });
   const mutation = useTransactionCategoriesCreateMutation();
 
   function onValidSubmit(values: TransactionCategoryCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(transactionCategoriesRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (

@@ -1,39 +1,33 @@
 "use client";
 
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
-import { lastMonthRange, thisMonthToDateRange } from "@/common/utils/dates";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
-import { useTransactionsGetAllQuery } from "@/modules/finance/finance-queries";
 import {
   calculateTotal,
   getIncomingTransactions,
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/finance/finance-utils";
+import { add, isSameMonth, startOfToday } from "date-fns";
 import { Decimal } from "decimal.js";
 
-export function ThisMonthStats() {
-  const transactionsMonthToDateQuery = useTransactionsGetAllQuery({
-    dateRange: thisMonthToDateRange(),
-  });
-  const transactionsLastMonthQuery = useTransactionsGetAllQuery({
-    dateRange: lastMonthRange(),
-  });
-
-  const isFetching =
-    transactionsMonthToDateQuery.isFetching || transactionsLastMonthQuery.isFetching;
-
-  if (isFetching) {
-    return <ComponentSkeleton />;
-  }
+export function ThisMonthStats(props: { transactions: Transaction[] }) {
+  const today = startOfToday();
+  const transactionsMonthToDate = props.transactions.filter((tx) =>
+    isSameMonth(today, tx.datetime),
+  );
+  const transactionsLastMonth = props.transactions.filter((tx) =>
+    isSameMonth(add(today, { months: -1 }), tx.datetime),
+  );
 
   const transactionsWithoutTransfers = {
-    thisMonth: getTransactionsWithoutTransfers(transactionsMonthToDateQuery.data ?? []),
-    lastMonth: getTransactionsWithoutTransfers(transactionsLastMonthQuery.data ?? []),
+    thisMonth: getTransactionsWithoutTransfers(transactionsMonthToDate),
+    lastMonth: getTransactionsWithoutTransfers(transactionsLastMonth),
   };
 
   const transactions = {

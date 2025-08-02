@@ -1,6 +1,5 @@
 "use client";
 
-import { financeRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
@@ -24,79 +23,41 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Transaction } from "@/db/types/finance";
+import { Transaction, TransactionCategory } from "@/db/types/finance";
+import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useTransactionsUpdateMutation } from "@/modules/finance/finance-mutations";
-import {
-  useTransactionCategoriesGetAllQuery,
-  useTransactionsGetByIdQuery,
-} from "@/modules/finance/finance-queries";
-import { TransactionFormSkeleton } from "@/modules/finance/components/skeletons/transaction-form-skeleton";
 import {
   type TransactionUpdateForm,
   transactionUpdateFormSchema,
 } from "@/modules/finance/schemas/transaction-update-form-schema";
-import { usePlacesGetAllQuery } from "@/modules/places/places-queries";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-interface TransactionUpdateFormProps {
-  id: string;
-}
-
-export function TransactionUpdateForm(props: TransactionUpdateFormProps) {
-  const router = useRouter();
-  const query = useTransactionsGetByIdQuery(props.id);
-
-  if (!query.data) {
-    return <TransactionFormSkeleton />;
-  }
-
-  return (
-    <UpdateForm
-      transaction={query.data}
-      onUpdate={() => {
-        router.push(financeRoute);
-      }}
-    />
-  );
-}
-
-interface UpdateFormProps {
+export function TransactionUpdateForm(props: {
+  categories: TransactionCategory[];
+  places: Place[];
   transaction: Transaction;
-  onUpdate: () => void;
-}
+}) {
+  const { categories, places, transaction } = props;
 
-function UpdateForm(props: UpdateFormProps) {
   const form = useForm<TransactionUpdateForm>({
     resolver: zodResolver(transactionUpdateFormSchema),
     defaultValues: {
-      id: props.transaction.id,
-      datetime: props.transaction.datetime,
-      categoryId: props.transaction.category?.id,
-      placeId: props.transaction.place?.id,
-      amount: Number(props.transaction.amount),
-      description: props.transaction.description ?? undefined,
+      id: transaction.id,
+      datetime: transaction.datetime,
+      categoryId: transaction.category?.id,
+      placeId: transaction.place?.id,
+      amount: Number(transaction.amount),
+      description: transaction.description ?? undefined,
     },
   });
 
   const mutation = useTransactionsUpdateMutation(props.transaction.id);
 
-  const { data: categories } = useTransactionCategoriesGetAllQuery();
-  const { data: places } = usePlacesGetAllQuery();
-
-  if (!categories || !places) {
-    return <TransactionFormSkeleton />;
-  }
-
   function onSubmit(values: TransactionUpdateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        props.onUpdate();
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (

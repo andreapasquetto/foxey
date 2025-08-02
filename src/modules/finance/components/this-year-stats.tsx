@@ -1,39 +1,39 @@
 "use client";
 
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
-import { lastYearRange, thisYearRange } from "@/common/utils/dates";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
-import { useTransactionsGetAllQuery } from "@/modules/finance/finance-queries";
 import {
   calculateTotal,
   getIncomingTransactions,
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/finance/finance-utils";
-import { eachDayOfInterval, endOfYear, startOfToday, startOfYear, sub } from "date-fns";
+import {
+  add,
+  eachDayOfInterval,
+  endOfYear,
+  isSameYear,
+  startOfToday,
+  startOfYear,
+  sub,
+} from "date-fns";
 import { Decimal } from "decimal.js";
 
-export function ThisYearStats() {
-  const transactionsThisYearQuery = useTransactionsGetAllQuery({
-    dateRange: thisYearRange(),
-  });
-  const transactionsLastYearQuery = useTransactionsGetAllQuery({
-    dateRange: lastYearRange(),
-  });
-
-  const isFetching = transactionsThisYearQuery.isFetching || transactionsLastYearQuery.isFetching;
-
-  if (isFetching) {
-    return <ComponentSkeleton />;
-  }
+export function ThisYearStats(props: { transactions: Transaction[] }) {
+  const today = startOfToday();
+  const transactionsThisYear = props.transactions.filter((tx) => isSameYear(today, tx.datetime));
+  const transactionsLastYear = props.transactions.filter((tx) =>
+    isSameYear(add(today, { years: -1 }), tx.datetime),
+  );
 
   const transactionsWithoutTransfers = {
-    thisYear: getTransactionsWithoutTransfers(transactionsThisYearQuery.data ?? []),
-    lastYear: getTransactionsWithoutTransfers(transactionsLastYearQuery.data ?? []),
+    thisYear: getTransactionsWithoutTransfers(transactionsThisYear),
+    lastYear: getTransactionsWithoutTransfers(transactionsLastYear),
   };
 
   const transactions = {

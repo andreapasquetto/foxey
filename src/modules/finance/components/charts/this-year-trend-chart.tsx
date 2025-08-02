@@ -10,12 +10,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTransactionsGetAllQuery } from "@/modules/finance/finance-queries";
+import { Transaction } from "@/db/types/finance";
 import {
-  generateThisYearTrendChartData,
   generateGenericTrendChartPlaceholderData,
+  generateThisYearTrendChartData,
 } from "@/modules/finance/finance-utils";
-import { format } from "date-fns";
+import { format, isSameYear, startOfToday } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
@@ -24,19 +24,11 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ThisYearTrendChart() {
-  const query = useTransactionsGetAllQuery({ enabled: false });
-
-  if (query.isFetching || query.isRefetching) {
-    return <ComponentSkeleton />;
-  }
-
-  if (!query.data) {
-    return <ComponentPlaceholder onGenerateChart={() => query.refetch()} />;
-  }
-
-  const transactions = query.data;
-  const chartData = generateThisYearTrendChartData(transactions);
+export function ThisYearTrendChart(props: { transactions: Transaction[] }) {
+  const { transactions } = props;
+  const chartData = generateThisYearTrendChartData(
+    transactions.filter((tx) => isSameYear(startOfToday(), tx.datetime)),
+  );
 
   if (chartData.length < 2) {
     return <ComponentEmptyState />;

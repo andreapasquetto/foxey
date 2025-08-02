@@ -1,69 +1,34 @@
 "use client";
 
-import { financeRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
-import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Wallet } from "@/db/types/finance";
 import { useWalletsUpdateMutation } from "@/modules/finance/finance-mutations";
-import { useWalletsGetByIdQuery } from "@/modules/finance/finance-queries";
 import {
   type WalletUpdateForm,
   walletUpdateFormSchema,
 } from "@/modules/finance/schemas/wallet-update-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
-interface WalletUpdateFormProps {
-  id: string;
-}
-
-export function WalletUpdateForm(props: WalletUpdateFormProps) {
-  const router = useRouter();
-  const query = useWalletsGetByIdQuery(props.id);
-
-  if (!query.data) {
-    return <ComponentSkeleton />;
-  }
-
-  return (
-    <ComponentForm
-      wallet={query.data}
-      onUpdate={() => {
-        router.push(financeRoute);
-      }}
-    />
-  );
-}
-
-interface UpdateFormProps {
-  wallet: Wallet;
-  onUpdate: () => void;
-}
-
-function ComponentForm(props: UpdateFormProps) {
+export function WalletUpdateForm(props: { wallet: Wallet }) {
+  const { wallet } = props;
   const form = useForm<WalletUpdateForm>({
     resolver: zodResolver(walletUpdateFormSchema),
     defaultValues: {
-      id: props.wallet.id,
-      name: props.wallet.name,
+      id: wallet.id,
+      name: wallet.name,
     },
   });
 
   const mutation = useWalletsUpdateMutation(props.wallet.id);
 
   function onValidSubmit(values: WalletUpdateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        props.onUpdate();
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (
@@ -92,19 +57,5 @@ function ComponentForm(props: UpdateFormProps) {
         </div>
       </form>
     </Form>
-  );
-}
-
-function ComponentSkeleton() {
-  return (
-    <div className="space-y-4 py-2 pb-4">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <div className="flex items-center justify-end gap-3">
-        <Skeleton className="h-10 w-20 text-right" />
-      </div>
-    </div>
   );
 }

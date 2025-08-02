@@ -1,4 +1,5 @@
-import { CircularSpinner } from "@/components/circular-spinner";
+"use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,7 +9,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Transaction } from "@/db/types/finance";
-import { useTransactionsDeleteMutation } from "@/modules/finance/finance-mutations";
+import { transactionsDelete } from "@/modules/finance/finance-actions";
 import { format } from "date-fns";
 import { Trash } from "lucide-react";
 import { useState } from "react";
@@ -19,14 +20,6 @@ interface DeleteTransactionProps {
 
 export function DeleteTransaction(props: DeleteTransactionProps) {
   const [showDialog, setShowDialog] = useState(false);
-
-  const mutation = useTransactionsDeleteMutation(props.transaction.id);
-
-  function deleteAndCloseDialog() {
-    mutation.mutate(props.transaction.id, {
-      onSuccess: () => setShowDialog(false),
-    });
-  }
 
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
@@ -47,19 +40,15 @@ export function DeleteTransaction(props: DeleteTransactionProps) {
         <p className="text-center sm:text-left">
           Are you sure you want to delete this transaction?
         </p>
-        <div className="flex items-center justify-center gap-3">
-          <Button
-            variant="outline"
-            onClick={() => setShowDialog(false)}
-            disabled={mutation.isPending}
-          >
+        <form action={transactionsDelete} className="flex items-center justify-center gap-3">
+          <input type="hidden" name="id" value={props.transaction.id} />
+          <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
             Cancel
           </Button>
-          <Button onClick={() => deleteAndCloseDialog()} disabled={mutation.isPending}>
+          <Button type="submit" onClick={() => setShowDialog(false)}>
             Confirm
           </Button>
-          {mutation.isPending && <CircularSpinner />}
-        </div>
+        </form>
       </DialogContent>
     </Dialog>
   );

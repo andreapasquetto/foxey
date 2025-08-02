@@ -1,6 +1,5 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
-import { QueryPagination } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -9,7 +8,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -18,49 +16,39 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
-import { useTransactionsGetPaginatedQuery } from "@/modules/finance/finance-queries";
 import { DeleteTransaction } from "@/modules/finance/components/dialogs/delete-transaction";
 import { format } from "date-fns";
 import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { DateRange } from "react-day-picker";
 
-interface RecentTransactionsProps {
-  searchFilter?: string;
-  dateRange?: DateRange;
-  walletId?: string;
-  placeId?: string;
-  categoryId?: string;
-}
-
-export function TransactionList(props: RecentTransactionsProps) {
-  const transactionsQuery = useTransactionsGetPaginatedQuery({
-    searchFilter: props.searchFilter,
-    dateRange: props.dateRange,
-    walletId: props.walletId,
-    placeId: props.placeId,
-    categoryId: props.categoryId,
-  });
-
-  if (!transactionsQuery.data) {
-    return <ComponentSkeleton />;
-  }
-
-  const transactions = transactionsQuery.data.records;
+export async function TransactionList(props: { transactions: Transaction[] }) {
+  const { transactions } = props;
 
   if (!transactions.length) {
     return <ComponentEmptyState />;
   }
 
   return (
-    <div>
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          {transactions.map((transaction) => (
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Date</TableHead>
+          <TableHead>Wallet</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Place</TableHead>
+          <TableHead>Tags</TableHead>
+          <TableHead>Description</TableHead>
+          <TableHead className="text-right">Amount</TableHead>
+          <TableHead></TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {transactions
+          .toReversed()
+          .slice(0, 10)
+          .map((transaction) => (
             <TableRow key={transaction.id}>
               <TableCell>
                 <code>{format(transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
@@ -70,13 +58,7 @@ export function TransactionList(props: RecentTransactionsProps) {
                   <div className="space-x-2 text-sm text-muted-foreground">
                     {transaction.from && <span>{transaction.from.name}</span>}
                     {transaction.from && transaction.to && (
-                      <ChevronsRight
-                        className={cn("inline-block h-5 w-5", {
-                          "text-red-500 dark:text-red-400": props.walletId === transaction.from.id,
-                          "text-green-500 dark:text-green-400":
-                            props.walletId === transaction.to.id,
-                        })}
-                      />
+                      <ChevronsRight className="inline-block h-5 w-5" />
                     )}
                     {transaction.to && <span>{transaction.to.name}</span>}
                   </div>
@@ -143,76 +125,6 @@ export function TransactionList(props: RecentTransactionsProps) {
               </TableCell>
             </TableRow>
           ))}
-        </TableBody>
-      </Table>
-      <QueryPagination query={transactionsQuery} />
-    </div>
-  );
-}
-
-function TableHeaderRow() {
-  return (
-    <TableRow>
-      <TableHead>Date</TableHead>
-      <TableHead>Wallet</TableHead>
-      <TableHead>Category</TableHead>
-      <TableHead>Place</TableHead>
-      <TableHead>Tags</TableHead>
-      <TableHead>Description</TableHead>
-      <TableHead className="text-right">Amount</TableHead>
-      <TableHead></TableHead>
-    </TableRow>
-  );
-}
-
-function TableRowsSkeleton() {
-  return Array.from({ length: 3 }).map((_, i) => (
-    <TableRow key={i}>
-      <TableCell>
-        <Skeleton className="h-4 w-44" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <div className="space-y-1">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-4 w-20" />
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="space-y-1">
-          <Skeleton className="h-4 w-32" />
-          <Skeleton className="h-4 w-24" />
-        </div>
-      </TableCell>
-      <TableCell>
-        <div className="flex items-center gap-1">
-          <Skeleton className="h-5 w-16 rounded-full" />
-          <Skeleton className="h-5 w-16 rounded-full" />
-        </div>
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-40" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="ml-auto h-4 w-12" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="ml-auto h-9 w-11" />
-      </TableCell>
-    </TableRow>
-  ));
-}
-
-function ComponentSkeleton() {
-  return (
-    <Table>
-      <TableHeader>
-        <TableHeaderRow />
-      </TableHeader>
-      <TableBody>
-        <TableRowsSkeleton />
       </TableBody>
     </Table>
   );

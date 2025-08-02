@@ -1,6 +1,5 @@
 "use client";
 
-import { financeRoute } from "@/common/routes";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
@@ -11,11 +10,9 @@ import {
   walletCreateFormSchema,
 } from "@/modules/finance/schemas/wallet-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 export function WalletCreateForm() {
-  const router = useRouter();
   const form = useForm<WalletCreateForm>({
     resolver: zodResolver(walletCreateFormSchema),
   });
@@ -23,11 +20,7 @@ export function WalletCreateForm() {
   const mutation = useWalletsCreateMutation();
 
   function onValidSubmit(values: WalletCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => {
-        router.push(financeRoute);
-      },
-    });
+    mutation.mutate(values);
   }
 
   return (

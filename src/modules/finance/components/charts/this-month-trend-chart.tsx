@@ -10,12 +10,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTransactionsGetAllQuery } from "@/modules/finance/finance-queries";
+import { Transaction } from "@/db/types/finance";
 import {
   generateGenericTrendChartPlaceholderData,
   generateThisMonthTrendChartData,
 } from "@/modules/finance/finance-utils";
-import { format } from "date-fns";
+import { format, isSameMonth, startOfToday } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
@@ -24,19 +24,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ThisMonthTrendChart() {
-  const query = useTransactionsGetAllQuery({ enabled: false });
+export function ThisMonthTrendChart(props: { transactions: Transaction[] }) {
+  const { transactions } = props;
+  const filteredTransactions = transactions.filter((tx) =>
+    isSameMonth(startOfToday(), tx.datetime),
+  );
 
-  if (query.isFetching || query.isRefetching) {
-    return <ComponentSkeleton />;
-  }
-
-  if (!query.data) {
-    return <ComponentPlaceholder onGenerateChart={() => query.refetch()} />;
-  }
-
-  const transactions = query.data;
-  const chartData = generateThisMonthTrendChartData(transactions);
+  const chartData = generateThisMonthTrendChartData(filteredTransactions);
 
   if (chartData.length < 2) {
     return <ComponentEmptyState />;

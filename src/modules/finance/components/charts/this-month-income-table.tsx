@@ -1,7 +1,6 @@
 "use client";
 
 import { currencyFormatter, unsignedPercentageFormatter } from "@/common/formatters";
-import { thisMonthToDateRange } from "@/common/utils/dates";
 import { CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -12,30 +11,27 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useTransactionsGetAllQuery } from "@/modules/finance/finance-queries";
+import { Transaction } from "@/db/types/finance";
 import {
   calculatePercentagesByCategory,
   getIncomingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/finance/finance-utils";
+import { isSameMonth, startOfToday } from "date-fns";
 
-export function ThisMonthIncomeTable() {
-  const query = useTransactionsGetAllQuery({
-    dateRange: thisMonthToDateRange(),
-  });
+export function ThisMonthIncomeTable(props: { transactions: Transaction[] }) {
+  const { transactions } = props;
 
-  if (query.isFetching) {
-    return <ComponentSkeleton />;
-  }
+  const filteredTransactions = transactions.filter((tx) =>
+    isSameMonth(startOfToday(), tx.datetime),
+  );
 
-  const transactions = query.data ?? [];
-
-  if (!transactions.length) {
+  if (!transactions.length || !filteredTransactions.length) {
     return <ComponentEmptyState />;
   }
 
   const chartData = calculatePercentagesByCategory(
-    getIncomingTransactions(getTransactionsWithoutTransfers(transactions)),
+    getIncomingTransactions(getTransactionsWithoutTransfers(filteredTransactions)),
   );
 
   return (

@@ -1,7 +1,6 @@
 "use client";
 
 import { currencyFormatter } from "@/common/formatters";
-import { thisYearToDateRange } from "@/common/utils/dates";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import {
@@ -11,11 +10,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTransactionsGetAllQuery } from "@/modules/finance/finance-queries";
+import { Transaction } from "@/db/types/finance";
 import {
   generateThisYearIncomeExpensesChartData,
   generateThisYearIncomeExpensesChartPlaceholderData,
 } from "@/modules/finance/finance-utils";
+import { isSameYear, startOfToday } from "date-fns";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
@@ -27,27 +27,16 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ThisYearIncomeExpensesChart() {
-  const query = useTransactionsGetAllQuery({
-    enabled: false,
-    dateRange: thisYearToDateRange(),
-  });
-
-  if (query.isFetching || query.isRefetching) {
-    return <ComponentSkeleton />;
-  }
-
-  if (!query.data) {
-    return <ComponentPlaceholder onGenerateChart={() => query.refetch()} />;
-  }
-
-  const transactions = query.data;
+export function ThisYearIncomeExpensesChart(props: { transactions: Transaction[] }) {
+  const { transactions } = props;
 
   if (!transactions.length) {
     return <ComponentEmptyState />;
   }
 
-  const chartData = generateThisYearIncomeExpensesChartData(transactions);
+  const chartData = generateThisYearIncomeExpensesChartData(
+    transactions.filter((tx) => isSameYear(startOfToday(), tx.datetime)),
+  );
 
   return (
     <div className="space-y-3">

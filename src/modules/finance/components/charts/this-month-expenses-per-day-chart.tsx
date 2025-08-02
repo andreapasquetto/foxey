@@ -1,7 +1,6 @@
 "use client";
 
 import { currencyFormatter } from "@/common/formatters";
-import { thisMonthToDateRange } from "@/common/utils/dates";
 import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import {
@@ -11,11 +10,12 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTransactionsGetAllQuery } from "@/modules/finance/finance-queries";
+import { Transaction } from "@/db/types/finance";
 import {
   generateThisMonthExpensesPerDayChartData,
   generateThisMonthExpensesPerDayPlaceholderData,
 } from "@/modules/finance/finance-utils";
+import { isSameMonth, startOfToday } from "date-fns";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
@@ -24,27 +24,17 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ThisMonthExpensesPerDayChart() {
-  const query = useTransactionsGetAllQuery({
-    enabled: false,
-    dateRange: thisMonthToDateRange(),
-  });
+export function ThisMonthExpensesPerDayChart(props: { transactions: Transaction[] }) {
+  const { transactions } = props;
+  const filteredTransactions = transactions.filter((tx) =>
+    isSameMonth(startOfToday(), tx.datetime),
+  );
 
-  if (query.isFetching || query.isRefetching) {
-    return <ComponentSkeleton />;
-  }
-
-  if (!query.data) {
-    return <ComponentPlaceholder onGenerateChart={() => query.refetch()} />;
-  }
-
-  const transactions = query.data;
-
-  if (!transactions.length) {
+  if (!transactions.length || !filteredTransactions.length) {
     return <NotEnoughDataSkeleton />;
   }
 
-  const chartData = generateThisMonthExpensesPerDayChartData(transactions);
+  const chartData = generateThisMonthExpensesPerDayChartData(filteredTransactions);
 
   return (
     <div className="space-y-3">

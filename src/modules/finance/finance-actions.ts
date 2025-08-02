@@ -1,6 +1,6 @@
 "use server";
 
-import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { financeRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db, DBTransaction } from "@/db/db";
 import { transactionCategories, transactions, wallets } from "@/db/schemas/finance";
@@ -10,8 +10,10 @@ import { TransactionUpdateForm } from "@/modules/finance/schemas/transaction-upd
 import { WalletCreateForm } from "@/modules/finance/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/finance/schemas/wallet-update-form-schema";
 import { Decimal } from "decimal.js";
-import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
-import { DateRange } from "react-day-picker";
+import { and, desc, eq, ilike, inArray } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export async function walletsCreate(wallet: WalletCreateForm) {
   const userId = await getCurrentUserId();
@@ -21,6 +23,8 @@ export async function walletsCreate(wallet: WalletCreateForm) {
     initialAmount: (wallet.initialAmount ?? 0).toString(),
     amount: (wallet.initialAmount ?? 0).toString(),
   });
+  revalidatePath(financeRoute);
+  redirect(financeRoute);
 }
 
 export async function walletsGetAll() {
@@ -52,6 +56,8 @@ export async function walletsUpdate(wallet: WalletUpdateForm) {
       name: wallet.name,
     })
     .where(eq(wallets.id, wallet.id));
+  revalidatePath(financeRoute);
+  redirect(financeRoute);
 }
 
 export async function walletsUpdateAmount(
@@ -88,36 +94,23 @@ export async function transactionCategoriesCreate(category: TransactionCategoryC
     userId,
     name: category.name,
   });
+  revalidatePath(financeRoute);
+  redirect(financeRoute);
 }
 
-export async function transactionCategoriesGetAll() {
+export async function transactionCategoriesGetAll(
+  params: {
+    query?: string;
+  } = {},
+) {
   const userId = await getCurrentUserId();
   return await db.query.transactionCategories.findMany({
-    where: eq(transactionCategories.userId, userId),
-    orderBy: [transactionCategories.name],
-  });
-}
-
-export async function transactionCategoriesGetPaginated(params: {
-  paginate: Paginate;
-  searchFilter?: string;
-}) {
-  const userId = await getCurrentUserId();
-  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
-  const total = await countTotalTransactionCategories(params);
-  const records = await db.query.transactionCategories.findMany({
     where: and(
       eq(transactionCategories.userId, userId),
-      params.searchFilter
-        ? ilike(transactionCategories.name, `%${params.searchFilter}%`)
-        : undefined,
+      params.query ? ilike(transactionCategories.name, `%${params.query}%`) : undefined,
     ),
-    limit,
-    offset,
     orderBy: [transactionCategories.name],
   });
-
-  return toPaginated(records, total);
 }
 
 export async function transactionsCreate(transaction: TransactionCreateForm) {
@@ -148,11 +141,11 @@ export async function transactionsCreate(transaction: TransactionCreateForm) {
       });
     }
   });
+  revalidatePath(financeRoute);
+  redirect(financeRoute);
 }
 
-export async function transactionsGetAll(
-  params: { walletId?: string; dateRange?: DateRange } = {},
-) {
+export async function transactionsGetAll(params: { query?: string } = {}) {
   const userId = await getCurrentUserId();
   return await db.query.transactions.findMany({
     with: {
@@ -172,68 +165,10 @@ export async function transactionsGetAll(
     },
     where: and(
       eq(transactions.userId, userId),
-      params.walletId
-        ? or(
-            eq(transactions.fromWalletId, params.walletId),
-            eq(transactions.toWalletId, params.walletId),
-          )
-        : undefined,
-      params.dateRange?.from && params.dateRange.to
-        ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
-        : undefined,
+      params.query ? ilike(transactions.description, `%${params.query}%`) : undefined,
     ),
     orderBy: [transactions.datetime],
   });
-}
-
-export async function transactionsGetPaginated(params: {
-  paginate: Paginate;
-  searchFilter?: string;
-  dateRange?: DateRange;
-  walletId?: string;
-  placeId?: string;
-  categoryId?: string;
-}) {
-  const userId = await getCurrentUserId();
-  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
-  const total = await countTotalTransactions(params);
-  const records = await db.query.transactions.findMany({
-    with: {
-      category: true,
-      from: true,
-      to: true,
-      place: {
-        with: {
-          category: true,
-        },
-      },
-      tags: {
-        with: {
-          tag: true,
-        },
-      },
-    },
-    where: and(
-      eq(transactions.userId, userId),
-      params.searchFilter ? ilike(transactions.description, `%${params.searchFilter}%`) : undefined,
-      params.dateRange?.from && params.dateRange.to
-        ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
-        : undefined,
-      params.walletId
-        ? or(
-            eq(transactions.fromWalletId, params.walletId),
-            eq(transactions.toWalletId, params.walletId),
-          )
-        : undefined,
-      params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
-      params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
-    ),
-    limit,
-    offset,
-    orderBy: [desc(transactions.datetime)],
-  });
-
-  return toPaginated(records, total);
 }
 
 export async function transactionsGetById(id: string) {
@@ -328,9 +263,12 @@ export async function transactionsUpdate(transaction: TransactionUpdateForm) {
       }
     }
   });
+  revalidatePath(financeRoute);
+  redirect(financeRoute);
 }
 
-export async function transactionsDelete(id: string) {
+export async function transactionsDelete(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
   const transaction = await transactionsGetById(id);
 
   await db.transaction(async (tx) => {
@@ -356,53 +294,5 @@ export async function transactionsDelete(id: string) {
 
     await tx.delete(transactions).where(eq(transactions.id, id));
   });
-}
-
-async function countTotalTransactionCategories(params: { searchFilter?: string }) {
-  const userId = await getCurrentUserId();
-  return (
-    await db
-      .select({ id: transactionCategories.id })
-      .from(transactionCategories)
-      .where(
-        and(
-          eq(transactionCategories.userId, userId),
-          params.searchFilter
-            ? ilike(transactionCategories.name, `%${params.searchFilter}%`)
-            : undefined,
-        ),
-      )
-  ).length;
-}
-
-async function countTotalTransactions(params: {
-  searchFilter?: string;
-  dateRange?: DateRange;
-  walletId?: string;
-  placeId?: string;
-  categoryId?: string;
-}) {
-  return (
-    await db
-      .select({ id: transactions.id })
-      .from(transactions)
-      .where(
-        and(
-          params.searchFilter
-            ? ilike(transactions.description, `%${params.searchFilter}%`)
-            : undefined,
-          params.dateRange?.from && params.dateRange.to
-            ? between(transactions.datetime, params.dateRange.from, params.dateRange.to)
-            : undefined,
-          params.walletId
-            ? or(
-                eq(transactions.fromWalletId, params.walletId),
-                eq(transactions.toWalletId, params.walletId),
-              )
-            : undefined,
-          params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
-          params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
-        ),
-      )
-  ).length;
+  revalidatePath(financeRoute);
 }

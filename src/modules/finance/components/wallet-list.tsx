@@ -1,9 +1,6 @@
-"use client";
-
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { walletRoute } from "@/common/routes";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -12,19 +9,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useWalletsGetAllQuery } from "@/modules/finance/finance-queries";
+import { walletsGetAll } from "@/modules/finance/finance-actions";
 import { format } from "date-fns";
 import { Edit } from "lucide-react";
 import Link from "next/link";
 
-export function WalletList() {
-  const walletsQuery = useWalletsGetAllQuery();
-
-  if (!walletsQuery.data) {
-    return <ComponentSkeleton />;
-  }
-
-  const wallets = walletsQuery.data;
+export async function WalletList() {
+  const wallets = await walletsGetAll();
 
   if (!wallets.length) {
     return <ComponentEmptyState />;
@@ -34,7 +25,13 @@ export function WalletList() {
     <div>
       <Table>
         <TableHeader>
-          <TableHeaderRow />
+          <TableRow>
+            <TableHead>Creation date</TableHead>
+            <TableHead>Name</TableHead>
+            <TableHead>Initial amount</TableHead>
+            <TableHead>Current amount</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
         </TableHeader>
         <TableBody>
           {wallets.map((wallet) => (
@@ -61,53 +58,6 @@ export function WalletList() {
         </TableBody>
       </Table>
     </div>
-  );
-}
-
-function TableHeaderRow() {
-  return (
-    <TableRow>
-      <TableHead>Creation date</TableHead>
-      <TableHead>Name</TableHead>
-      <TableHead>Initial amount</TableHead>
-      <TableHead>Current amount</TableHead>
-      <TableHead></TableHead>
-    </TableRow>
-  );
-}
-
-function TableRowsSkeleton() {
-  return Array.from({ length: 3 }).map((_, i) => (
-    <TableRow key={i}>
-      <TableCell>
-        <Skeleton className="h-4 w-44" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-12" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="ml-auto h-9 w-11" />
-      </TableCell>
-    </TableRow>
-  ));
-}
-
-function ComponentSkeleton() {
-  return (
-    <Table>
-      <TableHeader>
-        <TableHeaderRow />
-      </TableHeader>
-      <TableBody>
-        <TableRowsSkeleton />
-      </TableBody>
-    </Table>
   );
 }
 
