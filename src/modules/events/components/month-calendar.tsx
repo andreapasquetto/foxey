@@ -3,8 +3,8 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Contact } from "@/db/types/contacts";
 import { cn } from "@/lib/utils";
-import { useContactsGetAllQuery } from "@/modules/contacts/contacts-queries";
 import { DeleteEventDialog } from "@/modules/events/components/dialogs/delete-event-dialog";
 import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
 import { useEventsToggleCancelMutation } from "@/modules/events/events-mutations";
@@ -40,7 +40,9 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 
-export function MonthCalendar() {
+export function MonthCalendar(props: { contacts: Contact[] }) {
+  const { contacts } = props;
+
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(startOfMonth(today));
@@ -52,10 +54,7 @@ export function MonthCalendar() {
   });
 
   const eventsQuery = useEventsGetAllQuery();
-  const contactsQuery = useContactsGetAllQuery({ discardArchived: true });
-
   const events = eventsQuery.data ?? [];
-  const contacts = contactsQuery.data ?? [];
 
   const selectedDayEvents = events.filter((event) => isSameDay(selectedDay, event.datetime));
   const contactsWithDobs = contacts

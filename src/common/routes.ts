@@ -14,6 +14,7 @@ export function walletRoute(id: string) {
 }
 
 export const contactsRoute = `${privateRoute}/contacts`;
+export const newContactRoute = `${contactsRoute}/new`;
 
 export const eventsRoute = `${privateRoute}/events`;
 

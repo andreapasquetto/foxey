@@ -1,6 +1,3 @@
-"use client";
-
-import { QueryPagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -8,7 +5,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -21,125 +17,70 @@ import { cn } from "@/lib/utils";
 import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-contact";
 import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
 import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
-import { useContactsGetPaginatedQuery } from "@/modules/contacts/contacts-queries";
+import { contactsGetAll } from "@/modules/contacts/contacts-actions";
 import { Building, MoreHorizontal, User } from "lucide-react";
 
-interface ContactListProps {
-  searchFilter?: string;
-  onlyArchived?: boolean;
-}
-
-export function ContactList(props: ContactListProps) {
-  const query = useContactsGetPaginatedQuery({
-    searchFilter: props.searchFilter,
-    onlyArchived: props.onlyArchived,
+export async function ContactList(props: { query?: string }) {
+  const contacts = await contactsGetAll({
+    query: props.query,
   });
-
-  if (!query.data) {
-    return <ComponentSkeleton />;
-  }
-
-  const contacts = query.data.records;
 
   if (!contacts.length) {
     return <ComponentEmptyState />;
   }
 
   return (
-    <div>
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          {contacts.map((contact) => (
-            <TableRow key={contact.id} className={cn({ "opacity-50": contact.isArchived })}>
-              <TableCell>
-                {contact.isBusiness ? (
-                  <Building className="h-5 w-5 text-muted-foreground" />
-                ) : (
-                  <User className="h-5 w-5 text-muted-foreground" />
-                )}
-              </TableCell>
-              <TableCell>
-                {contact.fullName}
-                {contact.subtitle && (
-                  <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
-                )}
-              </TableCell>
-              <TableCell>
-                <code>{contact.dob}</code>
-              </TableCell>
-              <TableCell className="text-right">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal className="h-5 w-5" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[250px]">
-                    <DropdownMenuItem asChild>
-                      {contact.isArchived ? (
-                        <UnarchiveContact contact={contact} />
-                      ) : (
-                        <ArchiveContact contact={contact} />
-                      )}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <DeleteContact contact={contact} />
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <QueryPagination query={query} />
-    </div>
-  );
-}
-
-function TableHeaderRow() {
-  return (
-    <TableRow>
-      <TableHead></TableHead>
-      <TableHead>Full name</TableHead>
-      <TableHead>Date of birth</TableHead>
-      <TableHead></TableHead>
-    </TableRow>
-  );
-}
-
-function TableRowsSkeleton() {
-  return Array.from({ length: 3 }).map((_, i) => (
-    <TableRow key={i}>
-      <TableCell>
-        <div className="flex items-center">
-          <Skeleton className="aspect-square h-5" />
-        </div>
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-60" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-9 w-11" />
-      </TableCell>
-    </TableRow>
-  ));
-}
-
-function ComponentSkeleton() {
-  return (
     <Table>
       <TableHeader>
-        <TableHeaderRow />
+        <TableRow>
+          <TableHead></TableHead>
+          <TableHead>Full name</TableHead>
+          <TableHead>Date of birth</TableHead>
+          <TableHead></TableHead>
+        </TableRow>
       </TableHeader>
       <TableBody>
-        <TableRowsSkeleton />
+        {contacts.map((contact) => (
+          <TableRow key={contact.id} className={cn({ "opacity-50": contact.isArchived })}>
+            <TableCell>
+              {contact.isBusiness ? (
+                <Building className="h-5 w-5 text-muted-foreground" />
+              ) : (
+                <User className="h-5 w-5 text-muted-foreground" />
+              )}
+            </TableCell>
+            <TableCell>
+              {contact.fullName}
+              {contact.subtitle && (
+                <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
+              )}
+            </TableCell>
+            <TableCell>
+              <code>{contact.dob}</code>
+            </TableCell>
+            <TableCell className="text-right">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm">
+                    <MoreHorizontal className="h-5 w-5" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-[250px]">
+                  <DropdownMenuItem asChild>
+                    {contact.isArchived ? (
+                      <UnarchiveContact contact={contact} />
+                    ) : (
+                      <ArchiveContact contact={contact} />
+                    )}
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <DeleteContact contact={contact} />
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </TableCell>
+          </TableRow>
+        ))}
       </TableBody>
     </Table>
   );

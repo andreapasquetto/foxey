@@ -1,12 +1,15 @@
 "use server";
 
-import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { contactsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { contacts } from "@/db/schemas/contacts";
 import { ContactCreateForm } from "@/modules/contacts/schemas/contact-create-form-schema";
 import { formatISO } from "date-fns";
 import { and, eq, ilike } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import { z } from "zod";
 
 export async function contactsCreate(contact: ContactCreateForm) {
   const userId = await getCurrentUserId();
@@ -14,36 +17,23 @@ export async function contactsCreate(contact: ContactCreateForm) {
   await db.insert(contacts).values({
     userId,
     fullName: contact.fullName,
-    dob: formatISO(contact.dob, { representation: "date" }),
+    dob: contact.dob && formatISO(contact.dob, { representation: "date" }),
     isArchived: contact.isArchived,
     isBusiness: contact.isBusiness,
     subtitle: contact.subtitle,
   });
+  revalidatePath(contactsRoute);
+  redirect(contactsRoute);
 }
 
-export async function contactsGetAllQuery(
+export async function contactsGetAll(
   params: {
+    query?: string;
     discardArchived?: boolean;
   } = {},
 ) {
   const userId = await getCurrentUserId();
   return await db.query.contacts.findMany({
-    where: and(
-      eq(contacts.userId, userId),
-      params.discardArchived ? eq(contacts.isArchived, false) : undefined,
-    ),
-  });
-}
-
-export async function contactsGetPaginated(params: {
-  paginate: Paginate;
-  searchFilter?: string;
-  onlyArchived?: boolean;
-}) {
-  const userId = await getCurrentUserId();
-  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
-  const total = await countTotalContacts(params);
-  const records = await db.query.contacts.findMany({
     with: {
       addresses: true,
       emails: true,
@@ -51,51 +41,37 @@ export async function contactsGetPaginated(params: {
     },
     where: and(
       eq(contacts.userId, userId),
-      params.searchFilter ? ilike(contacts.fullName, `%${params.searchFilter}%`) : undefined,
-      params.onlyArchived ? eq(contacts.isArchived, true) : undefined,
+      params.query ? ilike(contacts.fullName, `%${params.query}%`) : undefined,
+      params.discardArchived ? eq(contacts.isArchived, false) : undefined,
     ),
-    limit,
-    offset,
     orderBy: [contacts.isArchived, contacts.isBusiness, contacts.fullName],
   });
-
-  return toPaginated(records, total);
 }
 
-export async function contactsDelete(id: string) {
+export async function contactsDelete(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   // TODO: delete addresses, emails and phoneNumbers
   await db.delete(contacts).where(and(eq(contacts.userId, userId), eq(contacts.id, id)));
+  revalidatePath(contactsRoute);
 }
 
-export async function contactsArchive(id: string) {
+export async function contactsArchive(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db
     .update(contacts)
     .set({ isArchived: true })
     .where(and(eq(contacts.userId, userId), eq(contacts.id, id)));
+  revalidatePath(contactsRoute);
 }
 
-export async function contactsUnarchive(id: string) {
+export async function contactsUnarchive(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db
     .update(contacts)
     .set({ isArchived: false })
     .where(and(eq(contacts.userId, userId), eq(contacts.id, id)));
-}
-
-async function countTotalContacts(params: { searchFilter?: string; onlyArchived?: boolean }) {
-  const userId = await getCurrentUserId();
-  return (
-    await db
-      .select({ id: contacts.id })
-      .from(contacts)
-      .where(
-        and(
-          eq(contacts.userId, userId),
-          params.searchFilter ? ilike(contacts.fullName, `%${params.searchFilter}%`) : undefined,
-          params.onlyArchived ? eq(contacts.isArchived, true) : undefined,
-        ),
-      )
-  ).length;
+  revalidatePath(contactsRoute);
 }

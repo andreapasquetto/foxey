@@ -18,18 +18,12 @@ import {
   contactCreateFormSchema,
 } from "@/modules/contacts/schemas/contact-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfDay } from "date-fns";
 import { useForm } from "react-hook-form";
 
-interface ContactCreateFormProps {
-  onSubmit: () => void;
-}
-
-export function ContactCreateForm(props: ContactCreateFormProps) {
+export function ContactCreateForm() {
   const form = useForm<ContactCreateForm>({
     resolver: zodResolver(contactCreateFormSchema),
     defaultValues: {
-      dob: startOfDay(new Date()),
       isArchived: false,
       isBusiness: false,
       addresses: [],
@@ -41,9 +35,7 @@ export function ContactCreateForm(props: ContactCreateFormProps) {
   const mutation = useContactsCreateMutation();
 
   function onValidSubmit(values: ContactCreateForm) {
-    mutation.mutate(values, {
-      onSuccess: () => props.onSubmit(),
-    });
+    mutation.mutate(values);
   }
 
   return (
