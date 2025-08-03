@@ -42,7 +42,6 @@ export function ContactCreateForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
         <XInput control={form.control} name="fullName" label="Full Name" />
-
         <FormField
           control={form.control}
           name="dob"
@@ -56,8 +55,7 @@ export function ContactCreateForm() {
             </FormItem>
           )}
         />
-
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
           <Button type="submit" disabled={mutation.isPending}>
             Submit
           </Button>

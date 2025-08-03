@@ -1,24 +1,18 @@
 import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-contact";
 import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
 import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
 import { contactsGetAll } from "@/modules/contacts/contacts-actions";
-import { Building, MoreHorizontal, User } from "lucide-react";
+import { differenceInYears, format, startOfToday } from "date-fns";
+import { Cake, Check, MoreHorizontal, X } from "lucide-react";
 
 export async function ContactList(props: { query?: string }) {
   const contacts = await contactsGetAll({
@@ -29,60 +23,61 @@ export async function ContactList(props: { query?: string }) {
     return <ComponentEmptyState />;
   }
 
+  const today = startOfToday();
+
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead></TableHead>
-          <TableHead>Full name</TableHead>
-          <TableHead>Date of birth</TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {contacts.map((contact) => (
-          <TableRow key={contact.id} className={cn({ "opacity-50": contact.isArchived })}>
-            <TableCell>
-              {contact.isBusiness ? (
-                <Building className="h-5 w-5 text-muted-foreground" />
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      {contacts.slice(0, 10).map((contact) => (
+        <Card key={contact.id} className="relative">
+          <div className="absolute right-2 top-2 flex items-center gap-1">
+            <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground">
+              {contact.isArchived ? (
+                <>
+                  <Check className="size-4 text-green-500" />
+                  Archived
+                </>
               ) : (
-                <User className="h-5 w-5 text-muted-foreground" />
+                <>
+                  <X className="size-4 text-red-500" />
+                  Archived
+                </>
               )}
-            </TableCell>
-            <TableCell>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[250px]">
+                <DropdownMenuItem asChild>
+                  {contact.isArchived ? (
+                    <UnarchiveContact contact={contact} />
+                  ) : (
+                    <ArchiveContact contact={contact} />
+                  )}
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <DeleteContact contact={contact} />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <CardHeader>
+            {contact.subtitle && <CardDescription>{contact.subtitle}</CardDescription>}
+            <CardTitle className={cn(contact.isArchived && "text-muted-foreground")}>
               {contact.fullName}
-              {contact.subtitle && (
-                <div className="text-xs text-muted-foreground">{contact.subtitle}</div>
-              )}
-            </TableCell>
-            <TableCell>
-              <code>{contact.dob}</code>
-            </TableCell>
-            <TableCell className="text-right">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <MoreHorizontal className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[250px]">
-                  <DropdownMenuItem asChild>
-                    {contact.isArchived ? (
-                      <UnarchiveContact contact={contact} />
-                    ) : (
-                      <ArchiveContact contact={contact} />
-                    )}
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <DeleteContact contact={contact} />
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+            </CardTitle>
+            {contact.dob && (
+              <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                <Cake className="size-4" />
+                {format(contact.dob, "dd MMMM y")} ({differenceInYears(today, contact.dob)})
+              </div>
+            )}
+          </CardHeader>
+        </Card>
+      ))}
+    </div>
   );
 }
 
