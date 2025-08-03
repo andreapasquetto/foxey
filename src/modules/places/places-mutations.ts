@@ -10,9 +10,9 @@ export function usePlacesCreateMutation() {
   });
 }
 
-export function usePlacesUpdateMutation(id: string) {
+export function usePlacesUpdateMutation() {
   return useMutation({
-    mutationKey: ["places", id, "update"],
+    mutationKey: ["places", "update"],
     mutationFn: (place: PlaceUpdateForm) => placesUpdate(place),
   });
 }

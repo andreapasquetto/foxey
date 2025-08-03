@@ -1,22 +1,15 @@
 import { placeRoute } from "@/common/routes";
 import { Button } from "@/components/ui/button";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { DeletePlace } from "@/modules/places/components/delete-place";
 import { placesGetAll } from "@/modules/places/places-actions";
-import { CheckIcon, Edit, MoreHorizontal, XIcon } from "lucide-react";
+import { Check, Edit, ExternalLink, MoreHorizontal, X } from "lucide-react";
 import Link from "next/link";
 
 export async function PlaceList(props: { query?: string }) {
@@ -29,65 +22,70 @@ export async function PlaceList(props: { query?: string }) {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-          <TableHead>Coordinates</TableHead>
-          <TableHead>Address</TableHead>
-          <TableHead>Visited</TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {places.slice(0, 10).map((place) => (
-          <TableRow key={place.id}>
-            <TableCell>
-              <div>
-                <div>{place.name}</div>
-                {place.category && (
-                  <div className="space-x-2 text-sm text-muted-foreground">
-                    <span>{place.category.name}</span>
-                  </div>
-                )}
-              </div>
-            </TableCell>
-            <TableCell>{place.coordinates?.join(", ")}</TableCell>
-            <TableCell>{place.address}</TableCell>
-            <TableCell>
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      {places.slice(0, 10).map((place) => (
+        <Card key={place.id} className="relative">
+          <div className="absolute right-2 top-2 flex items-center gap-1">
+            <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground">
               {place.isVisited ? (
-                <CheckIcon className="h-5 w-5 text-green-500 dark:text-green-400" />
+                <>
+                  <Check className="size-4 text-green-500" />
+                  Visited
+                </>
               ) : (
-                <XIcon className="h-5 w-5 text-red-500 dark:text-red-400" />
+                <>
+                  <X className="size-4 text-red-500" />
+                  Visited
+                </>
               )}
-            </TableCell>
-            <TableCell className="text-right">
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm">
-                    <MoreHorizontal className="h-5 w-5" />
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[250px]">
-                  <DropdownMenuItem asChild>
-                    <Link
-                      href={placeRoute(place.id)}
-                      className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                      prefetch
-                    >
-                      Edit <Edit className="h-5 w-5" />
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <DeletePlace place={place} />
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+            </div>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal className="h-5 w-5" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[250px]">
+                <DropdownMenuItem asChild>
+                  <Link
+                    href={placeRoute(place.id)}
+                    className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                    prefetch
+                  >
+                    Edit <Edit className="h-5 w-5" />
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <DeletePlace place={place} />
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+          <CardHeader>
+            {place.category && <CardDescription>{place.category.name}</CardDescription>}
+            <CardTitle>{place.name}</CardTitle>
+            {place.address && (
+              <Link
+                href="https://maps.google.com"
+                className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+              >
+                {place.address}
+                <ExternalLink className="size-4" />
+              </Link>
+            )}
+            {place.coordinates && (
+              <Link
+                href="https://maps.google.com"
+                className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+              >
+                Go to coordinates
+                <ExternalLink className="size-4" />
+              </Link>
+            )}
+          </CardHeader>
+        </Card>
+      ))}
+    </div>
   );
 }
 

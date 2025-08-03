@@ -45,7 +45,7 @@ export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Pla
     },
   });
 
-  const mutation = usePlacesUpdateMutation(props.place.id);
+  const mutation = usePlacesUpdateMutation();
 
   function onValidSubmit(values: PlaceUpdateForm) {
     mutation.mutate(values);

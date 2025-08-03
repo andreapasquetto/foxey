@@ -1,11 +1,4 @@
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { placeCategoriesGetAll } from "@/modules/places/places-actions";
 
 export async function PlaceCategoryList(props: { query?: string }) {
@@ -18,20 +11,27 @@ export async function PlaceCategoryList(props: { query?: string }) {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Name</TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {categories.slice(0, 10).map((category) => (
-          <TableRow key={category.id}>
-            <TableCell>{category.name}</TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      {categories.slice(0, 10).map((c) => {
+        const [category, subCategory] = c.name.split("/");
+        return (
+          <Card key={c.id}>
+            <CardHeader>
+              <CardTitle>
+                {subCategory ? (
+                  <>
+                    <span className="text-muted-foreground">{category.trim()}</span> /{" "}
+                    {subCategory.trim()}
+                  </>
+                ) : (
+                  category
+                )}
+              </CardTitle>
+            </CardHeader>
+          </Card>
+        );
+      })}
+    </div>
   );
 }
 
