@@ -4,7 +4,6 @@ import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
 import { XSelect, XSelectOption } from "@/components/form/x-select";
-import { InputSkeleton } from "@/components/skeleton/input-skeleton";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -14,7 +13,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Wallet } from "@/db/types/finance";
 import { Car } from "@/db/types/mobility";
 import { useHighwayTripsCreateMutation } from "@/modules/mobility/mobility-mutations";
@@ -119,30 +117,5 @@ export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; c
         </div>
       </form>
     </Form>
-  );
-}
-
-function ComponentSkeleton() {
-  return (
-    <div className="space-y-4 py-2 pb-4">
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-        <InputSkeleton />
-        <InputSkeleton />
-        <InputSkeleton />
-      </div>
-      <InputSkeleton />
-      <div className="flex items-center justify-end gap-3">
-        <Skeleton className="h-10 w-20 text-right" />
-      </div>
-    </div>
   );
 }

@@ -1,5 +1,6 @@
-import { numberFormatter, rawCurrencyFormatter } from "@/common/formatters";
+import { currencyFormatter, numberFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -12,7 +13,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Refueling } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Check, ExternalLink, X } from "lucide-react";
+import { Banknote, Check, Coins, ExternalLink, Flame, Fuel, X } from "lucide-react";
 import Link from "next/link";
 
 export function RefuelingList(props: { refuelings: Refueling[] }) {
@@ -23,94 +24,88 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="min-w-36">Date</TableHead>
-          <TableHead>Place</TableHead>
-          <TableHead>RON</TableHead>
-          <TableHead>
-            Cost (<code>€</code>)
-          </TableHead>
-          <TableHead>
-            Quantity (<code>L</code>)
-          </TableHead>
-          <TableHead>
-            Price (<code>€/L</code>)
-          </TableHead>
-          <TableHead>Full tank</TableHead>
-          <TableHead>Necessary</TableHead>
-          <TableHead>
-            Trip (<code>km</code>)
-          </TableHead>
-          <TableHead>
-            Odometer (<code>km</code>)
-          </TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {refuelings.slice(0, 10).map((refueling) => (
-          <TableRow key={refueling.id}>
-            <TableCell>
-              <code>{format(refueling.transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
-            </TableCell>
-            <TableCell>{refueling.transaction.place?.name}</TableCell>
-            <TableCell>
-              <code>{refueling.ron}</code>
-            </TableCell>
-            <TableCell>
-              <code>{rawCurrencyFormatter.format(Number(refueling.transaction.amount))}</code>
-            </TableCell>
-            <TableCell>
-              <code>{refueling.quantity}</code>
-            </TableCell>
-            <TableCell>
-              <code>{refueling.price}</code>
-            </TableCell>
-            <TableCell>
-              {refueling.isFull ? (
-                <Check className="h-5 w-5 text-green-500 dark:text-green-400" />
-              ) : (
-                <X className="h-5 w-5 text-red-500 dark:text-red-400" />
-              )}
-            </TableCell>
-            <TableCell>
-              {refueling.isNecessary ? (
-                <Check className="h-5 w-5 text-green-500 dark:text-green-400" />
-              ) : (
-                <X className="h-5 w-5 text-red-500 dark:text-red-400" />
-              )}
-            </TableCell>
-            <TableCell>
-              <code>{refueling.trip}</code>
-            </TableCell>
-            <TableCell>
-              <code>{numberFormatter.format(Number(refueling.odometer))}</code>
-            </TableCell>
-            <TableCell>
-              <div className="flex items-center justify-end gap-1">
+    <>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        {refuelings
+          .toReversed()
+          .slice(0, 10)
+          .map((refueling) => (
+            <Card key={refueling.id} className="relative">
+              <div className="absolute right-2 top-2">
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Link
                       href={transactionRoute(refueling.transaction.id)}
                       target="_blank"
                       className={cn(
-                        "flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-accent",
+                        "flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent",
                       )}
                     >
-                      <ExternalLink className="h-5 w-5" />
+                      <ExternalLink className="size-5" />
                       <span className="sr-only">Related transaction</span>
                     </Link>
                   </TooltipTrigger>
                   <TooltipContent side="top">View related transaction</TooltipContent>
                 </Tooltip>
               </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+              <CardHeader>
+                <CardDescription>
+                  {format(refueling.transaction.datetime, "ccc y-MM-dd HH:mm")}
+                </CardDescription>
+                <CardTitle>{refueling.transaction?.place?.name ?? "-"}</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center sm:gap-x-6">
+                  <div className="flex items-center gap-1">
+                    <Flame className={cn("size-4", refueling.ron > 95 && "text-orange-500")} />
+                    RON {refueling.ron}
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Coins className="size-4" />
+                    <code>{currencyFormatter.format(Number(refueling.transaction.amount))}</code>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Fuel className="size-4" />
+                    <code>{refueling.quantity} L</code>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <Banknote className="size-4" />
+                    <code>{refueling.price} €/L</code>
+                  </div>
+                </div>
+                <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center">
+                  <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
+                    {refueling.isFull ? (
+                      <>
+                        <Check className="size-4 text-green-500 dark:text-green-400" />
+                        Full tank
+                      </>
+                    ) : (
+                      <>
+                        <X className="size-4 text-red-500 dark:text-red-400" />
+                        Full tank
+                      </>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
+                    {refueling.isNecessary ? (
+                      <>
+                        <Check className="size-4 text-green-500 dark:text-green-400" />
+                        Necessary
+                      </>
+                    ) : (
+                      <>
+                        <X className="size-4 text-red-500 dark:text-red-400" />
+                        Necessary
+                      </>
+                    )}
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+      </div>
+    </>
   );
 }
 

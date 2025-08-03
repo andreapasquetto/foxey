@@ -104,9 +104,8 @@ export function CarStats(props: {
             <CardDescription>Average distance before refueling</CardDescription>
             <CardTitle>
               {stats.distance.average
-                ? numberFormatter.format(stats.distance.average.toNumber())
-                : "-"}{" "}
-              km
+                ? `${numberFormatter.format(stats.distance.average.toNumber())} km`
+                : "-"}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -140,16 +139,18 @@ export function CarStats(props: {
           <CardHeader className="pb-2">
             <CardDescription className="relative">
               Last fuel consumption
-              <Button
-                variant="outline"
-                size="sm"
-                className="absolute right-0 top-0 text-foreground"
-                onClick={() =>
-                  setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
-                }
-              >
-                <Calculator className="h-4 w-4" />
-              </Button>
+              {stats.fuelConsumption.last && (
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="absolute right-0 top-0 text-foreground"
+                  onClick={() =>
+                    setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
+                  }
+                >
+                  <Calculator className="h-4 w-4" />
+                </Button>
+              )}
             </CardDescription>
             <CardTitle>
               {stats.fuelConsumption.last

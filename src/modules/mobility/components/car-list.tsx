@@ -1,5 +1,5 @@
 import { carRoute } from "@/common/routes";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { carsGetAll } from "@/modules/mobility/mobility-actions";
 import Link from "next/link";
 
@@ -21,7 +21,6 @@ export async function CarList() {
               </CardTitle>
               <CardDescription>{car.year}</CardDescription>
             </CardHeader>
-            <CardContent></CardContent>
           </Card>
         </Link>
       ))}

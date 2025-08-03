@@ -34,11 +34,11 @@ export function CarCreateForm() {
           <XInput control={form.control} name="make" label="Make" />
           <XInput control={form.control} name="model" label="Model" />
         </div>
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end gap-3">
+          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
             Submit
           </Button>
-          {mutation.isPending && <CircularSpinner />}
         </div>
       </form>
     </Form>

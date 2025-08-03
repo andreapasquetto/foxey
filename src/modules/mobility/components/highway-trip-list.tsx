@@ -1,18 +1,10 @@
-import { rawCurrencyFormatter } from "@/common/formatters";
+import { currencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
 import { format } from "date-fns";
-import { ExternalLink } from "lucide-react";
+import { Coins, ExternalLink, Gauge, Waypoints } from "lucide-react";
 import Link from "next/link";
 
 export async function HighwayTripList(props: { carId: string }) {
@@ -23,64 +15,53 @@ export async function HighwayTripList(props: { carId: string }) {
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead className="min-w-36">Date</TableHead>
-          <TableHead>Starting toll</TableHead>
-          <TableHead>Ending toll</TableHead>
-          <TableHead>
-            Distance (<code>km</code>)
-          </TableHead>
-          <TableHead>
-            Cost (<code>€</code>)
-          </TableHead>
-          <TableHead>
-            Average speed (<code>km/h</code>)
-          </TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {trips.slice(0, 10).map((trip) => (
-          <TableRow key={trip.id}>
-            <TableCell>
-              <code>{format(trip.transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
-            </TableCell>
-            <TableCell>{trip.startingToll}</TableCell>
-            <TableCell>{trip.endingToll}</TableCell>
-            <TableCell>
-              <code>{trip.distance}</code>
-            </TableCell>
-            <TableCell>
-              <code>{rawCurrencyFormatter.format(Number(trip.transaction.amount))}</code>
-            </TableCell>
-            <TableCell>
-              <code>{trip.avgSpeed}</code>
-            </TableCell>
-            <TableCell>
-              <div className="flex items-center justify-end gap-1">
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Link
-                      href={transactionRoute(trip.transaction.id)}
-                      target="_blank"
-                      className={cn(
-                        "flex h-10 w-10 items-center justify-center rounded-lg transition-colors hover:bg-accent",
-                      )}
-                    >
-                      <ExternalLink className="h-5 w-5" />
-                      <span className="sr-only">Related transaction</span>
-                    </Link>
-                  </TooltipTrigger>
-                  <TooltipContent side="top">View related transaction</TooltipContent>
-                </Tooltip>
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      {trips.map((trip) => (
+        <Card key={trip.id} className="relative">
+          <div className="absolute right-2 top-2">
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Link
+                  href={transactionRoute(trip.transaction.id)}
+                  target="_blank"
+                  className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent"
+                >
+                  <ExternalLink className="size-5" />
+                  <span className="sr-only">Related transaction</span>
+                </Link>
+              </TooltipTrigger>
+              <TooltipContent side="top">View related transaction</TooltipContent>
+            </Tooltip>
+          </div>
+          <CardHeader>
+            <CardDescription>
+              <CardDescription>
+                {format(trip.transaction.datetime, "ccc y-MM-dd HH:mm")}
+              </CardDescription>
+            </CardDescription>
+            <CardTitle>
+              {trip.startingToll} - {trip.endingToll}
+            </CardTitle>
+            <CardContent>
+              <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center sm:gap-x-6">
+                <div className="flex items-center gap-1">
+                  <Coins className="size-4" />
+                  <code>{currencyFormatter.format(Number(trip.transaction.amount))}</code>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Waypoints className="size-4" />
+                  <code>{trip.distance} km</code>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Gauge className="size-4" />
+                  <code>{trip.avgSpeed} km/h</code>
+                </div>
               </div>
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+            </CardContent>
+          </CardHeader>
+        </Card>
+      ))}
+    </div>
   );
 }
 
