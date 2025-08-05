@@ -1,4 +1,4 @@
-import { currencyFormatter } from "@/common/formatters";
+import { currencyFormatter, numberFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +6,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { Refueling } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import { Banknote, Check, Coins, ExternalLink, Flame, Fuel, X } from "lucide-react";
+import { Banknote, Check, Coins, ExternalLink, Flame, Fuel, Route, X } from "lucide-react";
 import Link from "next/link";
 
 export function RefuelingList(props: { refuelings: Refueling[] }) {
@@ -55,16 +55,22 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
                   </div>
                   <div className="flex items-center gap-1">
                     <Coins className="size-4" />
-                    <code>{currencyFormatter.format(Number(refueling.transaction.amount))}</code>
+                    {currencyFormatter.format(Number(refueling.transaction.amount))}
                   </div>
                   <div className="flex items-center gap-1">
                     <Fuel className="size-4" />
-                    <code>{refueling.quantity} L</code>
+                    {refueling.quantity} L
                   </div>
                   <div className="flex items-center gap-1">
                     <Banknote className="size-4" />
-                    <code>{refueling.price} €/L</code>
+                    {refueling.price} €/L
                   </div>
+                  {refueling.trip && (
+                    <div className="flex items-center gap-1">
+                      <Route className="size-4" />
+                      {numberFormatter.format(Number(refueling.trip))} km
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center">
                   <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
