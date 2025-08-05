@@ -25,7 +25,7 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
     },
   });
 
-  const mutation = useWalletsUpdateMutation(props.wallet.id);
+  const mutation = useWalletsUpdateMutation();
 
   function onValidSubmit(values: WalletUpdateForm) {
     mutation.mutate(values);
@@ -49,7 +49,7 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
             />
           </div>
         </div>
-        <div className="flex items-center justify-end">
+        <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
             Submit

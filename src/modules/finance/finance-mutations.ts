@@ -19,9 +19,9 @@ export function useWalletsCreateMutation() {
   });
 }
 
-export function useWalletsUpdateMutation(id: string) {
+export function useWalletsUpdateMutation() {
   return useMutation({
-    mutationKey: ["wallets", id, "update"],
+    mutationKey: ["wallets", "update"],
     mutationFn: (wallet: WalletUpdateForm) => walletsUpdate(wallet),
   });
 }
@@ -40,9 +40,9 @@ export function useTransactionsCreateMutation() {
   });
 }
 
-export function useTransactionsUpdateMutation(id: string) {
+export function useTransactionsUpdateMutation() {
   return useMutation({
-    mutationKey: ["transactions", id, "update"],
+    mutationKey: ["transactions", "update"],
     mutationFn: (transaction: TransactionUpdateForm) => transactionsUpdate(transaction),
   });
 }

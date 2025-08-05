@@ -1,16 +1,8 @@
-import { rawCurrencyFormatter } from "@/common/formatters";
+import { currencyFormatter } from "@/common/formatters";
 import { walletRoute } from "@/common/routes";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { walletsGetAll } from "@/modules/finance/finance-actions";
-import { format } from "date-fns";
 import { Edit } from "lucide-react";
 import Link from "next/link";
 
@@ -22,41 +14,24 @@ export async function WalletList() {
   }
 
   return (
-    <div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Creation date</TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Initial amount</TableHead>
-            <TableHead>Current amount</TableHead>
-            <TableHead></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {wallets.map((wallet) => (
-            <TableRow key={wallet.id}>
-              <TableCell>
-                <code>{format(wallet.createdAt, "ccc y-MM-dd HH:mm")}</code>
-              </TableCell>
-              <TableCell>{wallet.name}</TableCell>
-              <TableCell>
-                <code>{rawCurrencyFormatter.format(parseFloat(wallet.initialAmount))}</code>
-              </TableCell>
-              <TableCell>
-                <code>{rawCurrencyFormatter.format(parseFloat(wallet.amount))}</code>
-              </TableCell>
-              <TableCell className="text-right">
-                <Button variant="ghost" size="sm" asChild>
-                  <Link href={walletRoute(wallet.id)} prefetch>
-                    <Edit className="h-5 w-5" />
-                  </Link>
-                </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+      {wallets.map((wallet) => (
+        <Card key={wallet.id} className="relative">
+          <div className="absolute right-2 top-2">
+            <Button variant="ghost" size="sm" asChild>
+              <Link href={walletRoute(wallet.id)} prefetch>
+                <Edit className="size-5" />
+              </Link>
+            </Button>
+          </div>
+          <CardHeader>
+            <CardTitle>{wallet.name}</CardTitle>
+            <CardDescription>
+              <code>{currencyFormatter.format(parseFloat(wallet.amount))}</code>
+            </CardDescription>
+          </CardHeader>
+        </Card>
+      ))}
     </div>
   );
 }

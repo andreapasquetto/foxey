@@ -14,11 +14,7 @@ import { format } from "date-fns";
 import { Trash } from "lucide-react";
 import { useState } from "react";
 
-interface DeleteTransactionProps {
-  transaction: Transaction;
-}
-
-export function DeleteTransaction(props: DeleteTransactionProps) {
+export function DeleteTransaction(props: { transaction: Transaction }) {
   const [showDialog, setShowDialog] = useState(false);
 
   return (

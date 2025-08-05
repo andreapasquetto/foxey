@@ -2,7 +2,6 @@
 
 import { currencyFormatter, unsignedPercentageFormatter } from "@/common/formatters";
 import { CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
   TableBody,
@@ -55,48 +54,6 @@ export function ThisMonthExpensesTable(props: { transactions: Transaction[] }) {
               </TableCell>
             </TableRow>
           ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
-function TableHeaderRow() {
-  return (
-    <TableRow>
-      <TableHead>Category</TableHead>
-      <TableHead>Total</TableHead>
-      <TableHead>%</TableHead>
-    </TableRow>
-  );
-}
-
-function TableRowsSkeleton() {
-  return Array.from({ length: 3 }).map((_, i) => (
-    <TableRow key={i}>
-      <TableCell>
-        <Skeleton className="h-4 w-24" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-20" />
-      </TableCell>
-      <TableCell>
-        <Skeleton className="h-4 w-12" />
-      </TableCell>
-    </TableRow>
-  ));
-}
-
-function ComponentSkeleton() {
-  return (
-    <div className="space-y-3">
-      <CardTitle>Expenses</CardTitle>
-      <Table>
-        <TableHeader>
-          <TableHeaderRow />
-        </TableHeader>
-        <TableBody>
-          <TableRowsSkeleton />
         </TableBody>
       </Table>
     </div>

@@ -54,7 +54,7 @@ export function TransactionUpdateForm(props: {
     },
   });
 
-  const mutation = useTransactionsUpdateMutation(props.transaction.id);
+  const mutation = useTransactionsUpdateMutation();
 
   function onSubmit(values: TransactionUpdateForm) {
     mutation.mutate(values);

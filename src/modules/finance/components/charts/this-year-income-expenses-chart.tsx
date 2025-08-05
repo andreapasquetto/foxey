@@ -1,7 +1,6 @@
 "use client";
 
 import { currencyFormatter } from "@/common/formatters";
-import { Button } from "@/components/ui/button";
 import { CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
@@ -9,12 +8,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Transaction } from "@/db/types/finance";
-import {
-  generateThisYearIncomeExpensesChartData,
-  generateThisYearIncomeExpensesChartPlaceholderData,
-} from "@/modules/finance/finance-utils";
+import { generateThisYearIncomeExpensesChartData } from "@/modules/finance/finance-utils";
 import { isSameYear, startOfToday } from "date-fns";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
@@ -56,42 +51,6 @@ export function ThisYearIncomeExpensesChart(props: { transactions: Transaction[]
           <Bar dataKey="expenses" fill="hsl(var(--chart-accent-1))" radius={2} />
         </BarChart>
       </ChartContainer>
-    </div>
-  );
-}
-
-function ComponentSkeleton() {
-  return (
-    <div className="space-y-3">
-      <CardTitle>Income VS Expenses</CardTitle>
-      <Skeleton className="h-[380px] w-full" />
-    </div>
-  );
-}
-
-function ComponentPlaceholder(props: { onGenerateChart: () => void }) {
-  const chartData = generateThisYearIncomeExpensesChartPlaceholderData();
-
-  return (
-    <div className="space-y-3">
-      <CardTitle>Income VS Expenses</CardTitle>
-      <div className="relative h-[380px]">
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-          <Button variant="outline" onClick={props.onGenerateChart}>
-            Generate Chart
-          </Button>
-        </div>
-        <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
-          <BarChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis dataKey="month" tickLine={false} axisLine={false} />
-            <YAxis tickLine={false} axisLine={false} domain={[0, "dataMax"]} />
-            <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
-            <Bar dataKey="income" fill="hsl(var(--foreground))" radius={2} />
-            <Bar dataKey="expenses" fill="hsl(var(--chart-accent-1))" radius={2} />
-          </BarChart>
-        </ChartContainer>
-      </div>
     </div>
   );
 }

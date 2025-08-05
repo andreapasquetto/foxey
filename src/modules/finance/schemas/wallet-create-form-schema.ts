@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const walletCreateFormSchema = z.object({
   name: z.string().min(1).max(255),
-  initialAmount: z.number(),
+  initialAmount: z.number().optional(),
 });
 
 export type WalletCreateForm = z.infer<typeof walletCreateFormSchema>;
