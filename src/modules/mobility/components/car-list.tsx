@@ -1,4 +1,5 @@
 import { carRoute } from "@/common/routes";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { carsGetAll } from "@/modules/mobility/mobility-actions";
 import Link from "next/link";
@@ -7,7 +8,7 @@ export async function CarList() {
   const cars = await carsGetAll();
 
   if (!cars.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no cars." />;
   }
 
   return (
@@ -24,14 +25,6 @@ export async function CarList() {
           </Card>
         </Link>
       ))}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">There are no cars.</p>
     </div>
   );
 }

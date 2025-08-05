@@ -1,5 +1,6 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,7 +28,7 @@ export async function TransactionList(props: { transactions: Transaction[] }) {
   const { transactions } = props;
 
   if (!transactions.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no transactions." />;
   }
 
   return (
@@ -127,13 +128,5 @@ export async function TransactionList(props: { transactions: Transaction[] }) {
           ))}
       </TableBody>
     </Table>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">There are no transactions.</p>
-    </div>
   );
 }

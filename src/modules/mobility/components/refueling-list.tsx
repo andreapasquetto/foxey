@@ -1,14 +1,7 @@
-import { currencyFormatter, numberFormatter } from "@/common/formatters";
+import { currencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Refueling } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
@@ -20,7 +13,7 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
   const { refuelings } = props;
 
   if (!refuelings.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no refuelings for this car." />;
   }
 
   return (
@@ -88,17 +81,14 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
                     )}
                   </div>
                   <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
-                    {refueling.isNecessary ? (
-                      <>
+                    <>
+                      {refueling.isNecessary ? (
                         <Check className="size-4 text-green-500 dark:text-green-400" />
-                        Necessary
-                      </>
-                    ) : (
-                      <>
+                      ) : (
                         <X className="size-4 text-red-500 dark:text-red-400" />
-                        Necessary
-                      </>
-                    )}
+                      )}
+                      Necessary
+                    </>
                   </div>
                 </div>
               </CardContent>
@@ -106,15 +96,5 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
           ))}
       </div>
     </>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">
-        There are no refuelings for this car.
-      </p>
-    </div>
   );
 }

@@ -1,4 +1,5 @@
 import { numberFormatter } from "@/common/formatters";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -19,7 +20,7 @@ export function ServiceList(props: { services: Service[] }) {
   const { services } = props;
 
   if (!services.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no services for this car." />;
   }
 
   return (
@@ -71,16 +72,6 @@ export function ServiceList(props: { services: Service[] }) {
           </CardHeader>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">
-        There are no services for this car.
-      </p>
     </div>
   );
 }

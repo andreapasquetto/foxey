@@ -1,3 +1,4 @@
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { placeCategoriesGetAll } from "@/modules/places/places-actions";
 
@@ -7,7 +8,7 @@ export async function PlaceCategoryList(props: { query?: string }) {
   });
 
   if (!categories.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no categories." />;
   }
 
   return (
@@ -31,14 +32,6 @@ export async function PlaceCategoryList(props: { query?: string }) {
           </Card>
         );
       })}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">There are no categories.</p>
     </div>
   );
 }

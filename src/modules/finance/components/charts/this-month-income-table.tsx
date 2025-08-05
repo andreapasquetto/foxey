@@ -1,7 +1,7 @@
 "use client";
 
 import { currencyFormatter, unsignedPercentageFormatter } from "@/common/formatters";
-import { CardTitle } from "@/components/ui/card";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import {
   Table,
   TableBody,
@@ -26,7 +26,7 @@ export function ThisMonthIncomeTable(props: { transactions: Transaction[] }) {
   );
 
   if (!transactions.length || !filteredTransactions.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="Not enough data." />;
   }
 
   const chartData = calculatePercentagesByCategory(
@@ -34,39 +34,25 @@ export function ThisMonthIncomeTable(props: { transactions: Transaction[] }) {
   );
 
   return (
-    <div className="space-y-3">
-      <CardTitle>Income</CardTitle>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Category</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>%</TableHead>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead>Category</TableHead>
+          <TableHead>Total</TableHead>
+          <TableHead>%</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {chartData.map((category) => (
+          <TableRow key={category.category}>
+            <TableCell>{category.category}</TableCell>
+            <TableCell>{currencyFormatter.format(category.total.toNumber())}</TableCell>
+            <TableCell className="text-muted-foreground">
+              {unsignedPercentageFormatter.format(category.percentage.toNumber())}
+            </TableCell>
           </TableRow>
-        </TableHeader>
-        <TableBody>
-          {chartData.map((category) => (
-            <TableRow key={category.category}>
-              <TableCell>{category.category}</TableCell>
-              <TableCell>{currencyFormatter.format(category.total.toNumber())}</TableCell>
-              <TableCell className="text-muted-foreground">
-                {unsignedPercentageFormatter.format(category.percentage.toNumber())}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div>
-      <CardTitle>Income</CardTitle>
-      <div className="my-12">
-        <p className="text-center text-sm text-muted-foreground">Not enough data.</p>
-      </div>
-    </div>
+        ))}
+      </TableBody>
+    </Table>
   );
 }

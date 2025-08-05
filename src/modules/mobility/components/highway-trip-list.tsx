@@ -1,5 +1,6 @@
 import { currencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
@@ -11,7 +12,7 @@ export async function HighwayTripList(props: { carId: string }) {
   const trips = await highwayTripsGetAll(props.carId);
 
   if (!trips.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no highway trips for this car." />;
   }
 
   return (
@@ -61,16 +62,6 @@ export async function HighwayTripList(props: { carId: string }) {
           </CardHeader>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">
-        There are no highway trips for this car.
-      </p>
     </div>
   );
 }

@@ -1,4 +1,5 @@
 import { numberFormatter } from "@/common/formatters";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Inspection } from "@/db/types/mobility";
 import { format } from "date-fns";
@@ -8,7 +9,7 @@ export function InspectionList(props: { inspections: Inspection[] }) {
   const { inspections } = props;
 
   if (!inspections.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no inspections for this car." />;
   }
 
   return (
@@ -36,16 +37,6 @@ export function InspectionList(props: { inspections: Inspection[] }) {
           </CardHeader>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">
-        There are no inspections for this car.
-      </p>
     </div>
   );
 }

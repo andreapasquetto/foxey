@@ -1,5 +1,6 @@
 import { SearchFilter } from "@/components/search-filter";
 import { Heading1, Heading2 } from "@/components/typography";
+import { CardTitle } from "@/components/ui/card";
 import { ThisMonthExpensesPerDayChart } from "@/modules/finance/components/charts/this-month-expenses-per-day-chart";
 import { ThisMonthExpensesTable } from "@/modules/finance/components/charts/this-month-expenses-table";
 import { ThisMonthIncomeTable } from "@/modules/finance/components/charts/this-month-income-table";
@@ -39,19 +40,37 @@ export default async function FinancePage(props: {
         <Heading2>This month</Heading2>
         <ThisMonthStats transactions={transactions} />
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <ThisMonthIncomeTable transactions={transactions} />
-          <ThisMonthExpensesTable transactions={transactions} />
+          <div className="space-y-3">
+            <CardTitle>Income</CardTitle>
+            <ThisMonthIncomeTable transactions={transactions} />
+          </div>
+          <div className="space-y-3">
+            <CardTitle>Expenses</CardTitle>
+            <ThisMonthExpensesTable transactions={transactions} />
+          </div>
         </div>
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          <ThisMonthTrendChart transactions={transactions} />
-          <ThisMonthExpensesPerDayChart transactions={transactions} />
+          <div className="space-y-3">
+            <CardTitle>Trend</CardTitle>
+            <ThisMonthTrendChart transactions={transactions} />
+          </div>
+          <div className="space-y-3">
+            <CardTitle>Expenses per day</CardTitle>
+            <ThisMonthExpensesPerDayChart transactions={transactions} />
+          </div>
         </div>
       </section>
       <section className="space-y-6">
         <Heading2>This year</Heading2>
         <ThisYearStats transactions={transactions} />
-        <ThisYearTrendChart transactions={transactions} />
-        <ThisYearIncomeExpensesChart transactions={transactions} />
+        <div className="space-y-3">
+          <CardTitle>Trend</CardTitle>
+          <ThisYearTrendChart transactions={transactions} />
+        </div>
+        <div className="space-y-3">
+          <CardTitle>Income VS Expenses</CardTitle>
+          <ThisYearIncomeExpensesChart transactions={transactions} />
+        </div>
       </section>
       <section className="space-y-6">
         <Heading2>Wallets</Heading2>

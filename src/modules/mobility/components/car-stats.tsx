@@ -182,8 +182,14 @@ export function CarStats(props: {
         </div>
       </div>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        <FuelPriceChart refuelings={refuelings} />
-        <OdometerChart refuelings={refuelings} services={services} inspections={inspections} />
+        <div className="space-y-3">
+          <CardTitle>Fuel price</CardTitle>
+          <FuelPriceChart refuelings={refuelings} />
+        </div>
+        <div className="space-y-3">
+          <CardTitle>Trend</CardTitle>
+          <OdometerChart refuelings={refuelings} services={services} inspections={inspections} />
+        </div>
       </div>
     </div>
   );

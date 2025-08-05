@@ -1,3 +1,4 @@
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -20,7 +21,7 @@ export async function ContactList(props: { query?: string }) {
   });
 
   if (!contacts.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no contacts." />;
   }
 
   const today = startOfToday();
@@ -31,17 +32,14 @@ export async function ContactList(props: { query?: string }) {
         <Card key={contact.id} className="relative">
           <div className="absolute right-2 top-2 flex items-center gap-1">
             <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground">
-              {contact.isArchived ? (
-                <>
+              <>
+                {contact.isArchived ? (
                   <Check className="size-4 text-green-500" />
-                  Archived
-                </>
-              ) : (
-                <>
+                ) : (
                   <X className="size-4 text-red-500" />
-                  Archived
-                </>
-              )}
+                )}
+                Archived
+              </>
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -77,14 +75,6 @@ export async function ContactList(props: { query?: string }) {
           </CardHeader>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">There are no contacts.</p>
     </div>
   );
 }

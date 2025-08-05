@@ -1,5 +1,6 @@
 import { currencyFormatter } from "@/common/formatters";
 import { walletRoute } from "@/common/routes";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { walletsGetAll } from "@/modules/finance/finance-actions";
@@ -10,7 +11,7 @@ export async function WalletList() {
   const wallets = await walletsGetAll();
 
   if (!wallets.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no wallets." />;
   }
 
   return (
@@ -32,14 +33,6 @@ export async function WalletList() {
           </CardHeader>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">There are no wallets.</p>
     </div>
   );
 }

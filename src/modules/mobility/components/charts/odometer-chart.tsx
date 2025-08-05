@@ -1,5 +1,5 @@
 import { numberFormatter } from "@/common/formatters";
-import { CardTitle } from "@/components/ui/card";
+import { ChartEmptyStateMessage } from "@/components/empty-state/chart-empty-state-message";
 import {
   ChartConfig,
   ChartContainer,
@@ -29,7 +29,7 @@ export function OdometerChart(props: {
   inspections: Inspection[];
 }) {
   if (!props.refuelings.length) {
-    return <ComponentEmptyState />;
+    return <ChartEmptyStateMessage />;
   }
 
   // TODO: show less data filtering by year
@@ -40,61 +40,45 @@ export function OdometerChart(props: {
   });
 
   return (
-    <div className="space-y-3">
-      <CardTitle>Odometer</CardTitle>
-      <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
-        <ComposedChart accessibilityLayer data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="datetime"
-            tickLine={false}
-            axisLine={false}
-            tickFormatter={(value) => format(value, "MMM y")}
-          />
-          <YAxis
-            domain={["auto", "auto"]}
-            tickFormatter={(value) => numberFormatter.format(Number(value))}
-          />
-          <ChartTooltip
-            cursor={false}
-            content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}
-          />
-          <Line
-            dataKey="refueling"
-            type="linear"
-            stroke="hsl(var(--foreground))"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            dataKey="service"
-            type="linear"
-            stroke="none"
-            dot={{ fill: "hsl(var(--chart-accent-1))" }}
-            activeDot={{ fill: "hsl(var(--chart-accent-1))", r: 4 }}
-          />
-          <Line
-            dataKey="inspection"
-            type="linear"
-            stroke="none"
-            dot={{ fill: "hsl(var(--chart-accent-2))" }}
-            activeDot={{ fill: "hsl(var(--chart-accent-2))", r: 4 }}
-          />
-        </ComposedChart>
-      </ChartContainer>
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="space-y-3">
-      <CardTitle>Trend</CardTitle>
-      <div className="relative h-[380px] overflow-hidden rounded-md border border-dashed">
-        <div className="absolute inset-0 z-10 flex items-center justify-center bg-gradient-to-b from-neutral-50/95 from-10% to-neutral-50 p-2 dark:from-neutral-950/95 dark:to-neutral-950">
-          <p className="text-sm text-muted-foreground">Not enough data.</p>
-        </div>
-      </div>
-    </div>
+    <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+      <ComposedChart accessibilityLayer data={chartData}>
+        <CartesianGrid strokeDasharray="3 3" />
+        <XAxis
+          dataKey="datetime"
+          tickLine={false}
+          axisLine={false}
+          tickFormatter={(value) => format(value, "MMM y")}
+        />
+        <YAxis
+          domain={["auto", "auto"]}
+          tickFormatter={(value) => numberFormatter.format(Number(value))}
+        />
+        <ChartTooltip
+          cursor={false}
+          content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}
+        />
+        <Line
+          dataKey="refueling"
+          type="linear"
+          stroke="hsl(var(--foreground))"
+          strokeWidth={2}
+          dot={false}
+        />
+        <Line
+          dataKey="service"
+          type="linear"
+          stroke="none"
+          dot={{ fill: "hsl(var(--chart-accent-1))" }}
+          activeDot={{ fill: "hsl(var(--chart-accent-1))", r: 4 }}
+        />
+        <Line
+          dataKey="inspection"
+          type="linear"
+          stroke="none"
+          dot={{ fill: "hsl(var(--chart-accent-2))" }}
+          activeDot={{ fill: "hsl(var(--chart-accent-2))", r: 4 }}
+        />
+      </ComposedChart>
+    </ChartContainer>
   );
 }

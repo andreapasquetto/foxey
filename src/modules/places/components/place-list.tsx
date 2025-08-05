@@ -1,4 +1,5 @@
 import { placeRoute } from "@/common/routes";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -18,7 +19,7 @@ export async function PlaceList(props: { query?: string }) {
   });
 
   if (!places.length) {
-    return <ComponentEmptyState />;
+    return <EmptyStateMessage message="There are no places." />;
   }
 
   return (
@@ -85,14 +86,6 @@ export async function PlaceList(props: { query?: string }) {
           </CardHeader>
         </Card>
       ))}
-    </div>
-  );
-}
-
-function ComponentEmptyState() {
-  return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">There are no places.</p>
     </div>
   );
 }
