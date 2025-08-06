@@ -10,6 +10,7 @@ import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
+import { ServiceCreateForm } from "@/modules/mobility/schemas/service-create-form-schema";
 import { Decimal } from "decimal.js";
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -158,6 +159,17 @@ export async function highwayTripsGetAll(carId: string) {
   }));
 }
 
+export async function servicesCreate(params: { carId: string; service: ServiceCreateForm }) {
+  const { carId, service } = params;
+  await db.insert(services).values({
+    carId: service.carId,
+    datetime: service.datetime,
+    odometer: String(service.odometer),
+    notes: service.notes,
+  });
+  revalidatePath(carRoute(carId));
+  redirect(carRoute(carId));
+}
 export async function servicesGetAll(carId: string) {
   return await db.query.services.findMany({
     with: {

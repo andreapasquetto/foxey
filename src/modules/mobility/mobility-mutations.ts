@@ -3,11 +3,13 @@ import {
   highwayTripsCreate,
   inspectionsCreate,
   refuelingsCreate,
+  servicesCreate,
 } from "@/modules/mobility/mobility-actions";
 import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
 import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
 import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";
 import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
+import { ServiceCreateForm } from "@/modules/mobility/schemas/service-create-form-schema";
 import { useMutation } from "@tanstack/react-query";
 
 export function useCarsCreateMutation() {
@@ -30,6 +32,17 @@ export function useHighwayTripsCreateMutation(carId: string) {
       highwayTripsCreate({
         carId,
         trip,
+      }),
+  });
+}
+
+export function useServicesCreateMutation(carId: string) {
+  return useMutation({
+    mutationKey: ["services", "create"],
+    mutationFn: (service: ServiceCreateForm) =>
+      servicesCreate({
+        carId,
+        service,
       }),
   });
 }

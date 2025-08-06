@@ -20,11 +20,14 @@ export const eventsRoute = `${privateRoute}/events`;
 export const mobilityRoute = `${privateRoute}/mobility`;
 export const newCarRoute = `${mobilityRoute}/cars/new`;
 
+export function newRefuelingRoute(carId: string) {
+  return `${mobilityRoute}/cars/${carId}/refuelings/new`;
+}
 export function newHighwayTripRoute(carId: string) {
   return `${mobilityRoute}/cars/${carId}/highway-trips/new`;
 }
-export function newRefuelingRoute(carId: string) {
-  return `${mobilityRoute}/cars/${carId}/refuelings/new`;
+export function newServiceRoute(carId: string) {
+  return `${mobilityRoute}/cars/${carId}/services/new`;
 }
 export function newInspectionRoute(carId: string) {
   return `${mobilityRoute}/cars/${carId}/inspections/new`;
