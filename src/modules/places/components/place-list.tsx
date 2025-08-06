@@ -13,9 +13,10 @@ import { placesGetAll } from "@/modules/places/places-actions";
 import { Check, Edit, ExternalLink, MoreHorizontal, X } from "lucide-react";
 import Link from "next/link";
 
-export async function PlaceList(props: { query?: string }) {
+export async function PlaceList(props: { query?: string; categoryId?: string }) {
   const places = await placesGetAll({
     query: props.query,
+    categoryId: props.categoryId,
   });
 
   if (!places.length) {

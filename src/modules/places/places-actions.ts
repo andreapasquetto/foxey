@@ -25,6 +25,7 @@ export async function placeCategoriesGetAll(params: { query?: string } = {}) {
 export async function placesGetAll(
   params: {
     query?: string;
+    categoryId?: string;
   } = {},
 ) {
   const userId = await getCurrentUserId();
@@ -35,6 +36,7 @@ export async function placesGetAll(
     where: and(
       eq(places.userId, userId),
       params.query ? ilike(places.name, `%${params.query}%`) : undefined,
+      params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
     ),
     orderBy: [places.name],
   });

@@ -10,7 +10,7 @@ import { TransactionUpdateForm } from "@/modules/finance/schemas/transaction-upd
 import { WalletCreateForm } from "@/modules/finance/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/finance/schemas/wallet-update-form-schema";
 import { Decimal } from "decimal.js";
-import { and, desc, eq, ilike, inArray } from "drizzle-orm";
+import { and, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -145,7 +145,14 @@ export async function transactionsCreate(transaction: TransactionCreateForm) {
   redirect(financeRoute);
 }
 
-export async function transactionsGetAll(params: { query?: string } = {}) {
+export async function transactionsGetAll(
+  params: {
+    query?: string;
+    categoryId?: string;
+    walletId?: string;
+    placeId?: string;
+  } = {},
+) {
   const userId = await getCurrentUserId();
   return await db.query.transactions.findMany({
     with: {
@@ -166,6 +173,14 @@ export async function transactionsGetAll(params: { query?: string } = {}) {
     where: and(
       eq(transactions.userId, userId),
       params.query ? ilike(transactions.description, `%${params.query}%`) : undefined,
+      params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
+      params.walletId
+        ? or(
+            eq(transactions.fromWalletId, params.walletId),
+            eq(transactions.toWalletId, params.walletId),
+          )
+        : undefined,
+      params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
     ),
     orderBy: [transactions.datetime],
   });
