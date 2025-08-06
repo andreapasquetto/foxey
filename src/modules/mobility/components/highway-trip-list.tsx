@@ -47,15 +47,15 @@ export async function HighwayTripList(props: { carId: string }) {
               <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center sm:gap-x-6">
                 <div className="flex items-center gap-1">
                   <Coins className="size-4" />
-                  <code>{currencyFormatter.format(Number(trip.transaction.amount))}</code>
+                  {currencyFormatter.format(Number(trip.transaction.amount))}
                 </div>
                 <div className="flex items-center gap-1">
                   <Waypoints className="size-4" />
-                  <code>{trip.distance} km</code>
+                  {trip.distance} km
                 </div>
                 <div className="flex items-center gap-1">
                   <Gauge className="size-4" />
-                  <code>{trip.avgSpeed} km/h</code>
+                  {trip.avgSpeed} km/h
                 </div>
               </div>
             </CardContent>

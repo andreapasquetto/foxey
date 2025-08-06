@@ -84,14 +84,16 @@ export default async function CarPage(props: { params: Promise<{ id: string }> }
         <Heading2>Highway trips</Heading2>
         <HighwayTripList carId={id} />
       </section>
-      <section className="space-y-6">
-        <Heading2>Services</Heading2>
-        <ServiceList services={services} />
-      </section>
-      <section className="space-y-6">
-        <Heading2>Inspections</Heading2>
-        <InspectionList inspections={inspections} />
-      </section>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <section className="space-y-6">
+          <Heading2>Services</Heading2>
+          <ServiceList services={services} />
+        </section>
+        <section className="space-y-6">
+          <Heading2>Inspections</Heading2>
+          <InspectionList inspections={inspections} />
+        </section>
+      </div>
     </div>
   );
 }

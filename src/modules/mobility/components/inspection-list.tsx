@@ -13,30 +13,33 @@ export function InspectionList(props: { inspections: Inspection[] }) {
   }
 
   return (
-    <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-      {inspections.toReversed().map((inspection) => (
-        <Card key={inspection.id} className="relative">
-          <div className="absolute right-2 top-2">
-            <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
-              {inspection.isSuccessful ? (
-                <>
-                  <Check className="size-4 text-green-500" />
-                  Passed
-                </>
-              ) : (
-                <>
-                  <X className="size-4 text-red-500" />
-                  Passed
-                </>
-              )}
+    <div className="space-y-3">
+      {inspections
+        .toReversed()
+        .slice(0, 3)
+        .map((inspection) => (
+          <Card key={inspection.id} className="relative">
+            <div className="absolute right-2 top-2">
+              <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
+                {inspection.isSuccessful ? (
+                  <>
+                    <Check className="size-4 text-green-500" />
+                    Passed
+                  </>
+                ) : (
+                  <>
+                    <X className="size-4 text-red-500" />
+                    Passed
+                  </>
+                )}
+              </div>
             </div>
-          </div>
-          <CardHeader>
-            <CardDescription>{format(inspection.datetime, "ccc y-MM-dd HH:mm")}</CardDescription>
-            <CardTitle>{numberFormatter.format(Number(inspection.odometer))} km</CardTitle>
-          </CardHeader>
-        </Card>
-      ))}
+            <CardHeader>
+              <CardDescription>{format(inspection.datetime, "ccc y-MM-dd HH:mm")}</CardDescription>
+              <CardTitle>{numberFormatter.format(Number(inspection.odometer))} km</CardTitle>
+            </CardHeader>
+          </Card>
+        ))}
     </div>
   );
 }
