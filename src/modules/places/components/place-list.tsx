@@ -1,4 +1,8 @@
 import { placeRoute } from "@/common/routes";
+import {
+  buildGoogleMapsUrlWithAddress,
+  buildGoogleMapsUrlWithCoordinates,
+} from "@/common/utils/places";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,7 +72,8 @@ export async function PlaceList(props: { query?: string; categoryId?: string }) 
             <CardTitle>{place.name}</CardTitle>
             {place.address && (
               <Link
-                href="https://maps.google.com"
+                href={buildGoogleMapsUrlWithAddress(place.address)}
+                target="_blank"
                 className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
               >
                 {place.address}
@@ -77,7 +82,8 @@ export async function PlaceList(props: { query?: string; categoryId?: string }) 
             )}
             {place.coordinates && (
               <Link
-                href="https://maps.google.com"
+                href={buildGoogleMapsUrlWithCoordinates(place.coordinates)}
+                target="_blank"
                 className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
               >
                 Go to coordinates
