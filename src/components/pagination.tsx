@@ -97,7 +97,7 @@ export function Pagination(props: PaginationProps) {
 }
 
 type QueryPaginationProps = {
-  query: UsePaginatedQueryResult<any>; // Generic type is not important in this component
+  query: UsePaginatedQueryResult<unknown>; // Generic type is not important in this component
 };
 
 export function QueryPagination(props: QueryPaginationProps) {

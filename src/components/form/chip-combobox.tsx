@@ -9,7 +9,6 @@ import {
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { CheckIcon, Plus } from "lucide-react";
-import { ReactNode } from "react";
 
 interface ChipComboboxProps<T extends { id: string; name: string }> {
   label: string;
@@ -17,7 +16,7 @@ interface ChipComboboxProps<T extends { id: string; name: string }> {
   onSelectValue: (value?: T) => void;
   options: T[] | undefined;
   optionIndexer?: (value: T) => string;
-  optionFormatter: (value: T) => ReactNode;
+  optionFormatter: (value: T) => React.ReactNode;
   withSearch?: boolean;
 }
 

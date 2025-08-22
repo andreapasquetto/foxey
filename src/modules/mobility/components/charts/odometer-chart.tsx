@@ -32,7 +32,7 @@ export function OdometerChart(props: {
     return <ChartEmptyStateMessage />;
   }
 
-  // TODO: show less data filtering by year
+  // TODO: show less data by filtering by year
   const chartData = generateOdometerChartData({
     refuelings: props.refuelings,
     services: props.services,
@@ -60,7 +60,7 @@ export function OdometerChart(props: {
         <Line
           dataKey="refueling"
           type="linear"
-          stroke="hsl(var(--foreground))"
+          stroke="var(--foreground)"
           strokeWidth={2}
           dot={false}
         />
@@ -68,15 +68,15 @@ export function OdometerChart(props: {
           dataKey="service"
           type="linear"
           stroke="none"
-          dot={{ fill: "hsl(var(--chart-accent-1))" }}
-          activeDot={{ fill: "hsl(var(--chart-accent-1))", r: 4 }}
+          dot={{ fill: "var(--chart-1)" }}
+          activeDot={{ fill: "var(--chart-1)", r: 4 }}
         />
         <Line
           dataKey="inspection"
           type="linear"
           stroke="none"
-          dot={{ fill: "hsl(var(--chart-accent-2))" }}
-          activeDot={{ fill: "hsl(var(--chart-accent-2))", r: 4 }}
+          dot={{ fill: "var(--chart-2)" }}
+          activeDot={{ fill: "var(--chart-2)", r: 4 }}
         />
       </ComposedChart>
     </ChartContainer>

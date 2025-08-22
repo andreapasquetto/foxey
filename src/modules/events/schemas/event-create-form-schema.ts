@@ -5,8 +5,8 @@ export const eventCreateFormSchema = z.object({
   placeId: z.string().optional(),
   title: z.string(),
   description: z.string().optional(),
-  isAllDay: z.boolean().default(false),
-  datetime: z.coerce.date(),
+  isAllDay: z.boolean(),
+  datetime: z.date(),
 });
 
 export type EventCreateForm = z.infer<typeof eventCreateFormSchema>;

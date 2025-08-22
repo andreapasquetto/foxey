@@ -49,7 +49,7 @@ export function ThisYearTrendChart(props: { transactions: Transaction[] }) {
         <Line
           dataKey="amount"
           type="step"
-          stroke="hsl(var(--foreground))"
+          stroke="var(--foreground)"
           strokeWidth={2}
           dot={false}
         />

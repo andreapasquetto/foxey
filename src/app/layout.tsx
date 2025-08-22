@@ -3,12 +3,19 @@ import { ThemeProvider } from "@/common/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { ReactNode } from "react";
+import { Geist, Geist_Mono } from "next/font/google";
 
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
 
 export const metadata: Metadata = {
   title: "Foxey",
@@ -18,12 +25,12 @@ export const metadata: Metadata = {
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: ReactNode;
+  children: React.ReactNode;
 }>) {
   return (
     <ClerkProvider>
       <html lang="en" suppressHydrationWarning>
-        <body className={inter.className}>
+        <body className={`${geistSans.variable} ${geistMono.variable}`}>
           <QueryProvider>
             <ThemeProvider attribute="class" defaultTheme="system">
               <TooltipProvider>{children}</TooltipProvider>

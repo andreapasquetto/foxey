@@ -3,8 +3,8 @@ import { z } from "zod";
 export const contactCreateFormSchema = z.object({
   fullName: z.string().min(1),
   dob: z.date().optional(),
-  isArchived: z.boolean().default(false),
-  isBusiness: z.boolean().default(false),
+  isArchived: z.boolean(),
+  isBusiness: z.boolean(),
   subtitle: z.string().optional(),
   phoneNumbers: z.array(z.string()),
   emails: z.array(z.string()),

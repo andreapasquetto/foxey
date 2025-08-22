@@ -10,7 +10,6 @@ interface XInputProps<T extends FieldValue<K>, K extends FieldValues>
   label?: string;
 }
 
-// TODO: find a better name
 export function XInput<T extends FieldValue<K>, K extends FieldValues>({
   name,
   control,

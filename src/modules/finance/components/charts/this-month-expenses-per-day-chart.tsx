@@ -43,7 +43,7 @@ export function ThisMonthExpensesPerDayChart(props: { transactions: Transaction[
           tickFormatter={(value) => currencyFormatter.format(value)}
         />
         <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
-        <Bar dataKey="amount" fill="hsl(var(--foreground))" radius={2} />
+        <Bar dataKey="amount" fill="var(--foreground)" radius={2} />
       </BarChart>
     </ChartContainer>
   );

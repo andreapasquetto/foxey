@@ -45,8 +45,8 @@ export function ThisYearIncomeExpensesChart(props: { transactions: Transaction[]
           tickFormatter={(value) => currencyFormatter.format(value)}
         />
         <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
-        <Bar dataKey="income" fill="hsl(var(--foreground))" radius={2} />
-        <Bar dataKey="expenses" fill="hsl(var(--chart-accent-1))" radius={2} />
+        <Bar dataKey="income" fill="var(--foreground)" radius={2} />
+        <Bar dataKey="expenses" fill="var(--chart-1)" radius={2} />
       </BarChart>
     </ChartContainer>
   );

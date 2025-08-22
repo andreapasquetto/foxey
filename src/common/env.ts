@@ -5,7 +5,7 @@ const envSchema = z
     POSTGRES_USER: z.string().min(1),
     POSTGRES_PASSWORD: z.string().min(1),
     POSTGRES_HOST: z.string().min(1),
-    POSTGRES_PORT: z.union([z.string(), z.number()]).pipe(z.coerce.number().int()),
+    POSTGRES_PORT: z.coerce.number().int(),
     POSTGRES_DBNAME: z.string().min(1),
     POSTGRES_CONNECTION_STRING: z.string().min(1),
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),

@@ -1,8 +1,8 @@
 import { cn } from "@/lib/utils";
 
-interface CircularSpinnerProps extends Partial<Pick<HTMLElement, "className">> {}
-
-export function CircularSpinner(props: CircularSpinnerProps) {
+export function CircularSpinner(
+  props: Partial<Pick<HTMLElement, "className">>
+) {
   return (
     <svg
       className={cn("h-5 w-5 animate-spin", props.className)}

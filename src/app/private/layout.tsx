@@ -18,7 +18,6 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { UserButton } from "@clerk/nextjs";
 import { Calendar, Car, CircleDollarSign, Contact, Map, Menu, PocketKnife } from "lucide-react";
 import Link from "next/link";
-import { ReactNode } from "react";
 
 const navigationItems = [
   {
@@ -51,7 +50,7 @@ const navigationItems = [
 export default function PrivateLayout({
   children,
 }: Readonly<{
-  children: ReactNode;
+  children: React.ReactNode;
 }>) {
   return (
     <div className="min-h-screen w-full bg-background sm:space-y-6">
@@ -96,7 +95,7 @@ export default function PrivateLayout({
           />
         </div>
       </header>
-      <main className="container p-4 sm:px-6 sm:py-0">{children}</main>
+      <main className="container mx-auto p-4 sm:px-6 sm:py-0">{children}</main>
     </div>
   );
 }

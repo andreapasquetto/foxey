@@ -27,7 +27,7 @@ export function FuelPriceChart(props: { refuelings: Refueling[] }) {
   }));
 
   return (
-    <ChartContainer config={chartConfig}>
+    <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
       <LineChart accessibilityLayer data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
@@ -47,7 +47,7 @@ export function FuelPriceChart(props: { refuelings: Refueling[] }) {
         <Line
           dataKey="price"
           type="linear"
-          stroke="hsl(var(--foreground))"
+          stroke="var(--foreground)"
           strokeWidth={2}
           dot={false}
         />

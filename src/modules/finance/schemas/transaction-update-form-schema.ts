@@ -1,13 +1,12 @@
-import { coercedOptionalString } from "@/common/schemas";
 import { z } from "zod";
 
 export const transactionUpdateFormSchema = z.object({
   id: z.string(),
-  datetime: z.coerce.date(),
+  datetime: z.date(),
   categoryId: z.string().optional(),
   placeId: z.string().optional(),
   amount: z.number().min(0.01),
-  description: coercedOptionalString,
+  description: z.string().optional(),
 });
 
 export type TransactionUpdateForm = z.infer<typeof transactionUpdateFormSchema>;

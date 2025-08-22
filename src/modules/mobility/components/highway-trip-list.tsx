@@ -1,8 +1,13 @@
 import { currencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
 import { format } from "date-fns";
 import { Coins, ExternalLink, Gauge, Waypoints } from "lucide-react";
@@ -12,7 +17,9 @@ export async function HighwayTripList(props: { carId: string }) {
   const trips = await highwayTripsGetAll(props.carId);
 
   if (!trips.length) {
-    return <EmptyStateMessage message="There are no highway trips for this car." />;
+    return (
+      <EmptyStateMessage message="There are no highway trips for this car." />
+    );
   }
 
   return (
@@ -20,19 +27,14 @@ export async function HighwayTripList(props: { carId: string }) {
       {trips.map((trip) => (
         <Card key={trip.id} className="relative">
           <div className="absolute right-2 top-2">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href={transactionRoute(trip.transaction.id)}
-                  target="_blank"
-                  className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent"
-                >
-                  <ExternalLink className="size-5" />
-                  <span className="sr-only">Related transaction</span>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent side="top">View related transaction</TooltipContent>
-            </Tooltip>
+            <Link
+              href={transactionRoute(trip.transaction.id)}
+              target="_blank"
+              className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent"
+            >
+              <ExternalLink className="size-5" />
+              <span className="sr-only">Related transaction</span>
+            </Link>
           </div>
           <CardHeader>
             <CardDescription>

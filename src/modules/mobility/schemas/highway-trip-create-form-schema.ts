@@ -1,8 +1,7 @@
-import { coercedOptionalString } from "@/common/schemas";
 import { z } from "zod";
 
 export const highwayTripCreateFormSchema = z.object({
-  datetime: z.coerce.date(),
+  datetime: z.date(),
   carId: z.string().min(1).max(255),
   walletId: z.string().optional(),
   placeId: z.string().min(1).max(255).optional(),
@@ -11,7 +10,7 @@ export const highwayTripCreateFormSchema = z.object({
   distance: z.number(),
   cost: z.number().min(0),
   avgSpeed: z.number(),
-  description: coercedOptionalString,
+  description: z.string().optional(),
 });
 
 export type HighwayTripCreateForm = z.infer<typeof highwayTripCreateFormSchema>;

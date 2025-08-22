@@ -2,6 +2,8 @@ import { env } from "@/common/env";
 import { defineConfig } from "drizzle-kit";
 
 const config = defineConfig({
+  schema: "./src/db/schemas/*",
+  dialect: "postgresql",
   dbCredentials: {
     user: env.database.user,
     password: env.database.password,
@@ -9,8 +11,6 @@ const config = defineConfig({
     port: env.database.port,
     database: env.database.dbName,
   },
-  dialect: "postgresql",
-  schema: "./src/db/schemas/*",
   verbose: true,
 });
 
