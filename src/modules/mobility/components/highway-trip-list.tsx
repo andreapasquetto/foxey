@@ -1,13 +1,7 @@
 import { currencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
 import { format } from "date-fns";
 import { Coins, ExternalLink, Gauge, Waypoints } from "lucide-react";
@@ -17,16 +11,14 @@ export async function HighwayTripList(props: { carId: string }) {
   const trips = await highwayTripsGetAll(props.carId);
 
   if (!trips.length) {
-    return (
-      <EmptyStateMessage message="There are no highway trips for this car." />
-    );
+    return <EmptyStateMessage message="There are no highway trips for this car." />;
   }
 
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       {trips.map((trip) => (
         <Card key={trip.id} className="relative">
-          <div className="absolute right-2 top-2">
+          <div className="absolute top-2 right-2">
             <Link
               href={transactionRoute(trip.transaction.id)}
               target="_blank"

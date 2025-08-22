@@ -18,7 +18,7 @@ export async function WalletList() {
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       {wallets.map((wallet) => (
         <Card key={wallet.id} className="relative">
-          <div className="absolute right-2 top-2">
+          <div className="absolute top-2 right-2">
             <Button variant="ghost" size="sm" asChild>
               <Link href={walletRoute(wallet.id)} prefetch>
                 <Edit className="size-5" />

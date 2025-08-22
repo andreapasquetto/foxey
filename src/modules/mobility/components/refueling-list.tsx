@@ -1,35 +1,18 @@
 import { currencyFormatter, numberFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Refueling } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
-import {
-  Banknote,
-  Check,
-  Coins,
-  ExternalLink,
-  Flame,
-  Fuel,
-  Route,
-  X,
-} from "lucide-react";
+import { Banknote, Check, Coins, ExternalLink, Flame, Fuel, Route, X } from "lucide-react";
 import Link from "next/link";
 
 export function RefuelingList(props: { refuelings: Refueling[] }) {
   const { refuelings } = props;
 
   if (!refuelings.length) {
-    return (
-      <EmptyStateMessage message="There are no refuelings for this car." />
-    );
+    return <EmptyStateMessage message="There are no refuelings for this car." />;
   }
 
   return (
@@ -40,12 +23,12 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
           .slice(0, 10)
           .map((refueling) => (
             <Card key={refueling.id} className="relative">
-              <div className="absolute right-2 top-2">
+              <div className="absolute top-2 right-2">
                 <Link
                   href={transactionRoute(refueling.transaction.id)}
                   target="_blank"
                   className={cn(
-                    "flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent"
+                    "flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent",
                   )}
                 >
                   <ExternalLink className="size-5" />
@@ -56,26 +39,17 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
                 <CardDescription>
                   {format(refueling.transaction.datetime, "ccc y-MM-dd HH:mm")}
                 </CardDescription>
-                <CardTitle>
-                  {refueling.transaction?.place?.name ?? "-"}
-                </CardTitle>
+                <CardTitle>{refueling.transaction?.place?.name ?? "-"}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center sm:gap-x-6">
                   <div className="flex items-center gap-1">
-                    <Flame
-                      className={cn(
-                        "size-4",
-                        refueling.ron > 95 && "text-orange-500"
-                      )}
-                    />
+                    <Flame className={cn("size-4", refueling.ron > 95 && "text-orange-500")} />
                     RON {refueling.ron}
                   </div>
                   <div className="flex items-center gap-1">
                     <Coins className="size-4" />
-                    {currencyFormatter.format(
-                      Number(refueling.transaction.amount)
-                    )}
+                    {currencyFormatter.format(Number(refueling.transaction.amount))}
                   </div>
                   <div className="flex items-center gap-1">
                     <Fuel className="size-4" />

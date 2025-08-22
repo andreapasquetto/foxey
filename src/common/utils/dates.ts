@@ -78,7 +78,9 @@ export type DateRangePresetCode =
   | "last-year"
   | "all-time";
 
-export function getDateRangeFromCode(code: DateRangePresetCode): { from: undefined } | InternalDateRange {
+export function getDateRangeFromCode(
+  code: DateRangePresetCode,
+): { from: undefined } | InternalDateRange {
   switch (code) {
     case "mtd":
       return thisMonthToDateRange();

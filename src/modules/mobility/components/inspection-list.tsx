@@ -19,7 +19,7 @@ export function InspectionList(props: { inspections: Inspection[] }) {
         .slice(0, 3)
         .map((inspection) => (
           <Card key={inspection.id} className="relative">
-            <div className="absolute right-2 top-2">
+            <div className="absolute top-2 right-2">
               <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
                 {inspection.isSuccessful ? (
                   <>

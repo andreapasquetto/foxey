@@ -48,13 +48,7 @@ export function ThisMonthTrendChart(props: { transactions: Transaction[] }) {
           tickFormatter={(tick) => currencyFormatter.format(tick)}
         />
         <ChartTooltip content={<ChartTooltipContent className="w-[175px]" hideLabel />} />
-        <Line
-          dataKey="amount"
-          type="step"
-          stroke="var(--foreground)"
-          strokeWidth={2}
-          dot={false}
-        />
+        <Line dataKey="amount" type="step" stroke="var(--foreground)" strokeWidth={2} dot={false} />
       </LineChart>
     </ChartContainer>
   );

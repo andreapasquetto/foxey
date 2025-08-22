@@ -143,7 +143,7 @@ export function CarStats(props: {
                 <Button
                   variant="outline"
                   size="sm"
-                  className="absolute right-0 top-0 text-foreground"
+                  className="absolute top-0 right-0 text-foreground"
                   onClick={() =>
                     setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
                   }

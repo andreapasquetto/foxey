@@ -31,7 +31,7 @@ export async function PlaceList(props: { query?: string; categoryId?: string }) 
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
       {places.slice(0, 10).map((place) => (
         <Card key={place.id} className="relative">
-          <div className="absolute right-2 top-2 flex items-center gap-1">
+          <div className="absolute top-2 right-2 flex items-center gap-1">
             <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground">
               {place.isVisited ? (
                 <>

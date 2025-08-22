@@ -31,7 +31,7 @@ export function XCheckbox<T extends FieldValue<K>, K extends FieldValues>(
           </Label>
         </div>
         {!!fieldState.error?.message && (
-          <div className="pointer-events-none absolute right-0 top-0 z-10 rounded-md border bg-background px-2 py-1 text-xs text-destructive shadow-md">
+          <div className="pointer-events-none absolute top-0 right-0 z-10 rounded-md border bg-background px-2 py-1 text-xs text-destructive shadow-md">
             {fieldState.error?.message}
           </div>
         )}

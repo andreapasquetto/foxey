@@ -191,7 +191,7 @@ export function MonthCalendar(props: {
                   key={day.toLocaleDateString()}
                   type="button"
                   className={cn(
-                    "flex h-10 flex-col items-center justify-center rounded-md hover:bg-foreground/10 focus:z-10 dark:hover:bg-foreground/10 sm:h-20 sm:items-start sm:justify-normal sm:p-1.5 lg:h-24",
+                    "flex h-10 flex-col items-center justify-center rounded-md hover:bg-foreground/10 focus:z-10 sm:h-20 sm:items-start sm:justify-normal sm:p-1.5 lg:h-24 dark:hover:bg-foreground/10",
                     isSameMonth(selectedMonth, day) ? "bg-muted dark:bg-muted/40" : "opacity-25",
                     !isSameDay(day, selectedDay) &&
                       isToday(day) &&

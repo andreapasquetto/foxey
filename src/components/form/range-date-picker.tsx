@@ -79,7 +79,7 @@ export function RangeDatePicker({
             mode="range"
             defaultMonth={dateRange?.from}
             selected={dateRange}
-            onSelect={(setDateRange)}
+            onSelect={setDateRange}
             numberOfMonths={2}
             weekStartsOn={1}
           />

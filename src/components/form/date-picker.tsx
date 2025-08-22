@@ -1,10 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { format, setHours, setMinutes } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
@@ -29,13 +25,7 @@ export function DatePicker(props: DatePickerProps) {
     const [hours, minutes] = time.split(":").map((str) => parseInt(str, 10));
     // @ts-expect-error ---
     props.setValue(
-      new Date(
-        newDate.getFullYear(),
-        newDate.getMonth(),
-        newDate.getDate(),
-        hours,
-        minutes
-      )
+      new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), hours, minutes),
     );
   }
 
@@ -60,7 +50,7 @@ export function DatePicker(props: DatePickerProps) {
           variant={"outline"}
           className={cn(
             "justify-start text-left font-normal",
-            !props.value && "text-muted-foreground"
+            !props.value && "text-muted-foreground",
           )}
         >
           <CalendarIcon className="mr-2 h-4 w-4" />
@@ -87,7 +77,7 @@ export function DatePicker(props: DatePickerProps) {
           <div className="p-3 pt-0 text-center">
             <input
               type="time"
-              className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="h-10 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
               value={time}
               onChange={onTimeChange}
             />
