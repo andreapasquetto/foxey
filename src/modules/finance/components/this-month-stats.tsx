@@ -3,7 +3,7 @@
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import {
@@ -79,12 +79,10 @@ function IncomeCard(props: { thisMonth: Decimal; lastMonth: Decimal }) {
   const percentageFromLastMonth = calculatePercentageChange(props.lastMonth, props.thisMonth);
 
   return (
-    <div>
-      <CardHeader className="pb-2">
+    <Card>
+      <CardHeader>
         <CardDescription>Income</CardDescription>
-        <CardTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.thisMonth.toNumber())}
-        </CardTitle>
+        <CardTitle>{currencyFormatter.format(props.thisMonth.toNumber())}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -107,7 +105,7 @@ function IncomeCard(props: { thisMonth: Decimal; lastMonth: Decimal }) {
           )}
         </p>
       </CardContent>
-    </div>
+    </Card>
   );
 }
 
@@ -115,12 +113,10 @@ function ExpensesCard(props: { thisMonth: Decimal; lastMonth: Decimal }) {
   const percentageFromLastMonth = calculatePercentageChange(props.lastMonth, props.thisMonth);
 
   return (
-    <div>
-      <CardHeader className="pb-2">
+    <Card>
+      <CardHeader>
         <CardDescription>Expenses</CardDescription>
-        <CardTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.thisMonth.toNumber())}
-        </CardTitle>
+        <CardTitle>{currencyFormatter.format(props.thisMonth.toNumber())}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -143,7 +139,7 @@ function ExpensesCard(props: { thisMonth: Decimal; lastMonth: Decimal }) {
           )}
         </p>
       </CardContent>
-    </div>
+    </Card>
   );
 }
 
@@ -159,8 +155,8 @@ function SavingCard(props: {
   );
 
   return (
-    <div>
-      <CardHeader className="pb-2">
+    <Card>
+      <CardHeader>
         <CardDescription>Saved</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisMonthSavings.toNumber())}
@@ -198,6 +194,6 @@ function SavingCard(props: {
           )}
         </p>
       </CardContent>
-    </div>
+    </Card>
   );
 }

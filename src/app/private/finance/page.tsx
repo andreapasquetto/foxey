@@ -102,7 +102,7 @@ export default async function FinancePage(props: {
       </section>
       <section className="space-y-6">
         <Heading2>Categories</Heading2>
-        <div className="w-[250px]">
+        <div className="w-full sm:w-[250px]">
           <SearchFilter paramName="category-query" />
         </div>
         <TransactionCategoryList query={categoryQuery} />

@@ -22,7 +22,7 @@ export default async function ContactsPage(props: { searchParams?: Promise<{ que
         </Link>
       </div>
       <section className="space-y-6">
-        <div className="w-[250px]">
+        <div className="w-full sm:w-[250px]">
           <SearchFilter id="contact-search" />
         </div>
         <ContactList query={query} />

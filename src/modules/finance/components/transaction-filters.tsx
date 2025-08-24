@@ -16,8 +16,8 @@ export function TransactionFilters(props: {
   const searchFilters = useSearchFilters();
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="w-[250px]">
+    <div className="flex flex-wrap items-center gap-3">
+      <div className="w-full sm:w-[250px]">
         <SearchFilter paramName="query" />
       </div>
       <div>

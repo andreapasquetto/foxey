@@ -3,7 +3,7 @@
 import { currencyFormatter, numberFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Button } from "@/components/ui/button";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Inspection, Refueling, Service } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
@@ -58,12 +58,10 @@ export function CarStats(props: {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-        <div>
-          <CardHeader className="pb-2">
+        <Card>
+          <CardHeader>
             <CardDescription>Monthly fuel costs</CardDescription>
-            <CardTitle className="flex items-center gap-2">
-              {currencyFormatter.format(stats.fuelCost.thisMonth.toNumber())}
-            </CardTitle>
+            <CardTitle>{currencyFormatter.format(stats.fuelCost.thisMonth.toNumber())}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground">
@@ -98,9 +96,9 @@ export function CarStats(props: {
               in total
             </p>
           </CardContent>
-        </div>
-        <div>
-          <CardHeader className="pb-2">
+        </Card>
+        <Card>
+          <CardHeader>
             <CardDescription>Average distance before refueling</CardDescription>
             <CardTitle>
               {stats.distance.average
@@ -134,29 +132,27 @@ export function CarStats(props: {
               </p>
             )}
           </CardContent>
-        </div>
-        <div>
-          <CardHeader className="pb-2">
-            <CardDescription className="relative">
-              Last fuel consumption
-              {stats.fuelConsumption.last && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="absolute top-0 right-0 text-foreground"
-                  onClick={() =>
-                    setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
-                  }
-                >
-                  <Calculator className="h-4 w-4" />
-                </Button>
-              )}
-            </CardDescription>
+        </Card>
+        <Card className="relative">
+          <CardHeader>
+            <CardDescription>Last fuel consumption</CardDescription>
             <CardTitle>
               {stats.fuelConsumption.last
                 ? `${numberFormatter.format(stats.fuelConsumption.last[fuelConsumptionFormat].toDecimalPlaces(2).toNumber())} ${fuelConsumptionFormat}`
                 : "-"}
             </CardTitle>
+            {stats.fuelConsumption.last && (
+              <Button
+                variant="outline"
+                size="icon"
+                className="absolute top-6 right-6 text-foreground"
+                onClick={() =>
+                  setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
+                }
+              >
+                <Calculator className="h-4 w-4" />
+              </Button>
+            )}
           </CardHeader>
           <CardContent>
             {stats.fuelConsumption.avg && (
@@ -179,7 +175,7 @@ export function CarStats(props: {
               </p>
             )}
           </CardContent>
-        </div>
+        </Card>
       </div>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <div className="space-y-3">

@@ -21,8 +21,8 @@ export function PlaceFilters(props: { categories: PlaceCategory[] }) {
   }
 
   return (
-    <div className="flex items-center gap-3">
-      <div className="w-[250px]">
+    <div className="flex flex-wrap items-center gap-3">
+      <div className="w-full sm:w-[250px]">
         <SearchFilter id="place-search" />
       </div>
       <div>

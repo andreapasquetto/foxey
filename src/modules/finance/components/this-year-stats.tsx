@@ -3,7 +3,7 @@
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import {
@@ -89,12 +89,10 @@ function IncomeCard(props: { thisYear: Decimal; lastYear: Decimal }) {
   const percentageFromLastYear = calculatePercentageChange(props.lastYear, props.thisYear);
 
   return (
-    <div>
-      <CardHeader className="pb-2">
+    <Card>
+      <CardHeader>
         <CardDescription>Income</CardDescription>
-        <CardTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.thisYear.toNumber())}
-        </CardTitle>
+        <CardTitle>{currencyFormatter.format(props.thisYear.toNumber())}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -117,7 +115,7 @@ function IncomeCard(props: { thisYear: Decimal; lastYear: Decimal }) {
           )}
         </p>
       </CardContent>
-    </div>
+    </Card>
   );
 }
 
@@ -125,12 +123,10 @@ function ExpensesCard(props: { thisYear: Decimal; lastYear: Decimal }) {
   const percentageFromLastYear = calculatePercentageChange(props.lastYear, props.thisYear);
 
   return (
-    <div>
-      <CardHeader className="pb-2">
+    <Card>
+      <CardHeader>
         <CardDescription>Expenses</CardDescription>
-        <CardTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.thisYear.toNumber())}
-        </CardTitle>
+        <CardTitle>{currencyFormatter.format(props.thisYear.toNumber())}</CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -153,7 +149,7 @@ function ExpensesCard(props: { thisYear: Decimal; lastYear: Decimal }) {
           )}
         </p>
       </CardContent>
-    </div>
+    </Card>
   );
 }
 
@@ -166,8 +162,8 @@ function SavingCard(props: {
   const percentageChange = calculatePercentageChange(props.lastYearSavings, props.thisYearSavings);
 
   return (
-    <div>
-      <CardHeader className="pb-2">
+    <Card>
+      <CardHeader>
         <CardDescription>Saved</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.thisYearSavings.toNumber())}
@@ -205,7 +201,7 @@ function SavingCard(props: {
           )}
         </p>
       </CardContent>
-    </div>
+    </Card>
   );
 }
 
@@ -223,8 +219,8 @@ function CostPerDay(props: { thisYearExpenses: Decimal; lastYearExpenses: Decima
   };
 
   return (
-    <div>
-      <CardHeader className="pb-2">
+    <Card>
+      <CardHeader>
         <CardDescription>Cost per day</CardDescription>
         <CardTitle>
           {currencyFormatter.format(props.thisYearExpenses.div(numberOfDays.thisYear).toNumber())}
@@ -238,6 +234,6 @@ function CostPerDay(props: { thisYearExpenses: Decimal; lastYearExpenses: Decima
           last year
         </p>
       </CardContent>
-    </div>
+    </Card>
   );
 }

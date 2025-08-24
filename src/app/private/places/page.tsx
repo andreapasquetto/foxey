@@ -41,7 +41,7 @@ export default async function PlacesPage(props: {
       </section>
       <section className="space-y-6">
         <Heading2>Categories</Heading2>
-        <div className="w-[250px]">
+        <div className="w-full sm:w-[250px]">
           <SearchFilter id="place-category-search" paramName="category-query" />
         </div>
         <PlaceCategoryList query={categoryQuery} />
