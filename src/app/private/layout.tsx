@@ -6,7 +6,6 @@ import {
   placesRoute,
   privateRoute,
 } from "@/common/routes";
-import { ThemeToggle } from "@/components/theme-toggle";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -83,17 +82,14 @@ export default function PrivateLayout({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="flex items-center gap-3">
-          <ThemeToggle />
-          <UserButton
-            appearance={{
-              elements: {
-                userButtonTrigger: "h-10 w-10",
-              },
-            }}
-            fallback={<Skeleton className="h-7 w-7 rounded-full" />}
-          />
-        </div>
+        <UserButton
+          appearance={{
+            elements: {
+              userButtonTrigger: "h-10 w-10",
+            },
+          }}
+          fallback={<Skeleton className="h-7 w-7 rounded-full" />}
+        />
       </header>
       <main className="container mx-auto p-4 sm:px-6 sm:py-0">{children}</main>
     </div>

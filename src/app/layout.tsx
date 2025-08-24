@@ -1,6 +1,7 @@
+import { env } from "@/common/env";
 import { QueryProvider } from "@/common/providers/query-provider";
-import { ThemeProvider } from "@/common/providers/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
@@ -29,12 +30,10 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
+      <html lang="en" className={cn(env.isDarkMode && "dark")}>
         <body className={`${geistSans.variable} ${geistMono.variable}`}>
           <QueryProvider>
-            <ThemeProvider attribute="class" defaultTheme="system">
-              <TooltipProvider>{children}</TooltipProvider>
-            </ThemeProvider>
+            <TooltipProvider>{children}</TooltipProvider>
           </QueryProvider>
         </body>
       </html>

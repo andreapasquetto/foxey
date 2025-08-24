@@ -2,6 +2,7 @@ import { z } from "zod";
 
 const envSchema = z
   .object({
+    DARK_MODE: z.literal(["true", "false"]),
     POSTGRES_USER: z.string().min(1),
     POSTGRES_PASSWORD: z.string().min(1),
     POSTGRES_HOST: z.string().min(1),
@@ -14,6 +15,7 @@ const envSchema = z
     NEXT_PUBLIC_CLERK_SIGN_UP_URL: z.string().min(1),
   })
   .transform((data) => ({
+    isDarkMode: data.DARK_MODE === "true",
     database: {
       user: data.POSTGRES_USER,
       password: data.POSTGRES_PASSWORD,
