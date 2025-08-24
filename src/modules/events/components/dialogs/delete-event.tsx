@@ -18,7 +18,7 @@ export function DeleteEvent(props: { event: Event }) {
   return (
     <Dialog open={showDialog} onOpenChange={setShowDialog}>
       <Button variant="outline" size="icon" onClick={() => setShowDialog(true)}>
-        <Trash className="h-4 w-4 text-destructive" />
+        <Trash className="size-4 text-destructive" />
       </Button>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>

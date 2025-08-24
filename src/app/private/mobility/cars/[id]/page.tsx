@@ -22,7 +22,7 @@ export default async function CarPage(props: { params: Promise<{ id: string }> }
   const inspections = await inspectionsGetAll(id);
 
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-12 pb-24">
       <Heading1>
         {car.make} {car.model}
       </Heading1>

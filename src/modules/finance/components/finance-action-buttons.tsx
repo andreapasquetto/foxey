@@ -11,11 +11,11 @@ import Link from "next/link";
 
 export function FinanceActionButtons() {
   return (
-    <div className="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6">
+    <div className="fixed right-4 bottom-4 z-50 m-0 sm:right-6 sm:bottom-6">
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button className="h-14 w-14 rounded-xl">
-            <Plus className="h-6 w-6" />
+          <Button className="size-14 rounded-xl">
+            <Plus className="size-6" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">

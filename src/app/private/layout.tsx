@@ -21,27 +21,27 @@ import Link from "next/link";
 const navigationItems = [
   {
     href: mobilityRoute,
-    icon: <Car className="h-5 w-5" />,
+    icon: <Car className="size-5" />,
     title: "Mobility",
   },
   {
     href: financeRoute,
-    icon: <CircleDollarSign className="h-5 w-5" />,
+    icon: <CircleDollarSign className="size-5" />,
     title: "Finance",
   },
   {
     href: contactsRoute,
-    icon: <Contact className="h-5 w-5" />,
+    icon: <Contact className="size-5" />,
     title: "Contacts",
   },
   {
     href: eventsRoute,
-    icon: <Calendar className="h-5 w-5" />,
+    icon: <Calendar className="size-5" />,
     title: "Events",
   },
   {
     href: placesRoute,
-    icon: <Map className="h-5 w-5" />,
+    icon: <Map className="size-5" />,
     title: "Places",
   },
 ];
@@ -57,14 +57,15 @@ export default function PrivateLayout({
         <div className="flex items-center gap-3">
           <Button size="icon" variant="ghost" asChild>
             <Link href={privateRoute}>
-              <PocketKnife className="h-5 w-5" />
+              <PocketKnife className="size-5" />
+              <span className="sr-only">homepage</span>
             </Link>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button size="icon" variant="outline">
-                <Menu className="h-5 w-5" />
-                <span className="sr-only">Toggle Menu</span>
+                <Menu className="size-5" />
+                <span className="sr-only">main menu</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent side="bottom" className="ml-2 w-[250px]">
@@ -85,10 +86,10 @@ export default function PrivateLayout({
         <UserButton
           appearance={{
             elements: {
-              userButtonTrigger: "h-10 w-10",
+              userButtonTrigger: "size-10",
             },
           }}
-          fallback={<Skeleton className="h-7 w-7 rounded-full" />}
+          fallback={<Skeleton className="size-7 rounded-full" />}
         />
       </header>
       <main className="container mx-auto p-4 sm:px-6 sm:py-0">{children}</main>

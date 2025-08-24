@@ -24,7 +24,7 @@ export function DeleteTransaction(props: { transaction: Transaction }) {
         className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 px-2 py-1.5 sm:h-10"
         onClick={() => setShowDialog(true)}
       >
-        Delete <Trash className="h-5 w-5 text-destructive" />
+        Delete <Trash className="size-5 text-destructive" />
       </Button>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>

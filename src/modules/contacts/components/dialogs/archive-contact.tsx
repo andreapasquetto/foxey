@@ -23,7 +23,7 @@ export function ArchiveContact(props: { contact: Contact }) {
         className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 px-2 py-1.5 sm:h-10"
         onClick={() => setShowDialog(true)}
       >
-        Archive <Archive className="h-5 w-5" />
+        Archive <Archive className="size-5" />
       </Button>
       <DialogContent aria-describedby={undefined}>
         <DialogHeader>

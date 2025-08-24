@@ -71,7 +71,7 @@ export function PlaceCreateForm(props: { categories: PlaceCategory[] }) {
                         {field.value
                           ? categories.find((category) => category.id === field.value)?.name
                           : "Select an option"}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                        <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
                   </PopoverTrigger>

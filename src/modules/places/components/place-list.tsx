@@ -48,7 +48,7 @@ export async function PlaceList(props: { query?: string; categoryId?: string }) 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm">
-                  <MoreHorizontal className="h-5 w-5" />
+                  <MoreHorizontal className="size-5" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-[250px]">
@@ -58,7 +58,7 @@ export async function PlaceList(props: { query?: string; categoryId?: string }) 
                     className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
                     prefetch
                   >
-                    Edit <Edit className="h-5 w-5" />
+                    Edit <Edit className="size-5" />
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>

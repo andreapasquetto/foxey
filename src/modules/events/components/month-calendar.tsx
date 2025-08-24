@@ -111,7 +111,7 @@ export function MonthCalendar(props: {
                 className="rounded-r-none"
                 onClick={() => goToPreviousYear()}
               >
-                <ChevronsLeft className="h-5 w-5" />
+                <ChevronsLeft className="size-5" />
               </Button>
               <Button
                 type="button"
@@ -120,7 +120,7 @@ export function MonthCalendar(props: {
                 className="rounded-none"
                 onClick={() => goToPreviousMonth()}
               >
-                <ChevronLeft className="h-5 w-5" />
+                <ChevronLeft className="size-5" />
               </Button>
               <Button
                 type="button"
@@ -137,7 +137,7 @@ export function MonthCalendar(props: {
                 className="rounded-none"
                 onClick={() => goToNextMonth()}
               >
-                <ChevronRight className="h-5 w-5" />
+                <ChevronRight className="size-5" />
               </Button>
               <Button
                 type="button"
@@ -146,13 +146,13 @@ export function MonthCalendar(props: {
                 className="rounded-l-none"
                 onClick={() => goToNextYear()}
               >
-                <ChevronsRight className="h-5 w-5" />
+                <ChevronsRight className="size-5" />
               </Button>
             </div>
             <Sheet open={showCreateSheet} onOpenChange={setShowCreateSheet}>
               <SheetTrigger asChild>
                 <Button size="icon">
-                  <Plus className="h-5 w-5" />
+                  <Plus className="size-5" />
                 </Button>
               </SheetTrigger>
               <SheetContent>
@@ -220,10 +220,10 @@ export function MonthCalendar(props: {
                     <>
                       <span className="mt-auto hidden items-center gap-1 sm:flex md:hidden">
                         {!!dayEvents.length && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-foreground"></span>
+                          <span className="size-1.5 rounded-full bg-foreground"></span>
                         )}
                         {!!birthdays.length && (
-                          <span className="h-1.5 w-1.5 rounded-full bg-yellow-500"></span>
+                          <span className="size-1.5 rounded-full bg-yellow-500"></span>
                         )}
                       </span>
                       <ol className="hidden w-full leading-tight md:block">
@@ -323,7 +323,7 @@ export function MonthCalendar(props: {
                           )}
                         >
                           {!event.isCanceled && isBefore(selectedDay, today) && (
-                            <Check className="mr-1 inline-block h-4 w-4 text-green-500 dark:text-green-400" />
+                            <Check className="mr-1 inline-block size-4 text-green-500 dark:text-green-400" />
                           )}
                           {event.title}
                         </div>
@@ -338,7 +338,7 @@ export function MonthCalendar(props: {
                   )}
                   {event.place && (
                     <div className="flex items-center gap-1 text-muted-foreground">
-                      <MapPin className="h-4 w-4" />
+                      <MapPin className="size-4" />
                       <span className="text-xs leading-none">{event.place.name}</span>
                     </div>
                   )}
@@ -347,8 +347,8 @@ export function MonthCalendar(props: {
                     <form action={eventsToggleCancel} className="ml-auto flex items-center gap-1">
                       <input type="hidden" name="id" value={event.id} />
                       <Button type="submit" variant="outline" size="icon">
-                        {event.isCanceled && <RotateCw className="h-4 w-4" />}
-                        {!event.isCanceled && <Eraser className="h-4 w-4" />}
+                        {event.isCanceled && <RotateCw className="size-4" />}
+                        {!event.isCanceled && <Eraser className="size-4" />}
                       </Button>
                       <DeleteEvent event={event} />
                     </form>

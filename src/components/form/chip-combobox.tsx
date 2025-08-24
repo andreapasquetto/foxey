@@ -34,7 +34,7 @@ export function ChipCombobox<T extends { id: string; name: string }>(props: Chip
           )}
         >
           {props.label}
-          {!props.selectedValue && <Plus className="h-4 w-4 shrink-0 opacity-50" />}
+          {!props.selectedValue && <Plus className="size-4 shrink-0 opacity-50" />}
           {props.selectedValue && (
             <span className="text-foreground">{props.selectedValue.name}</span>
           )}
@@ -61,7 +61,7 @@ export function ChipCombobox<T extends { id: string; name: string }>(props: Chip
                 {props.optionFormatter(option)}
                 <CheckIcon
                   className={cn(
-                    "ml-auto h-4 w-4",
+                    "ml-auto size-4",
                     props.selectedValue?.id === option.id ? "opacity-100" : "opacity-0",
                   )}
                 />

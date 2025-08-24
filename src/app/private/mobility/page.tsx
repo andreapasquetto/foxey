@@ -10,15 +10,15 @@ import { Suspense } from "react";
 
 export default function MobilityPage() {
   return (
-    <div className="space-y-12 pb-20">
+    <div className="space-y-12 pb-24">
       <Heading1>Mobility</Heading1>
-      <div className="fixed right-4 bottom-4 z-50 sm:right-6 sm:bottom-6">
+      <div className="fixed right-4 bottom-4 z-50 m-0 sm:right-6 sm:bottom-6">
         <Link
           href={newCarRoute}
-          className={cn(buttonVariants({ variant: "default" }), "h-14 w-14 rounded-xl")}
+          className={cn(buttonVariants({ variant: "default" }), "size-14 rounded-xl")}
           prefetch
         >
-          <Plus className="h-6 w-6" />
+          <Plus className="size-6" />
         </Link>
       </div>
       <section className="space-y-6">

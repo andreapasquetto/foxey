@@ -25,7 +25,7 @@ export async function HighwayTripList(props: { carId: string }) {
               className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent"
             >
               <ExternalLink className="size-5" />
-              <span className="sr-only">Related transaction</span>
+              <span className="sr-only">go to related transaction</span>
             </Link>
           </div>
           <CardHeader>

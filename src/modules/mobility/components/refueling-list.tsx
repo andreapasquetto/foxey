@@ -32,7 +32,7 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
                   )}
                 >
                   <ExternalLink className="size-5" />
-                  <span className="sr-only">Related transaction</span>
+                  <span className="sr-only">go to related transaction</span>
                 </Link>
               </div>
               <CardHeader>

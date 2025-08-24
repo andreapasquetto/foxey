@@ -150,7 +150,7 @@ export function CarStats(props: {
                   setFuelConsumptionFormat(fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L")
                 }
               >
-                <Calculator className="h-4 w-4" />
+                <Calculator className="size-4" />
               </Button>
             )}
           </CardHeader>
