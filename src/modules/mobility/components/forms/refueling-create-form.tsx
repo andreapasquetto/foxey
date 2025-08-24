@@ -49,6 +49,8 @@ export function RefuelingCreateForm(props: {
     defaultValues: {
       carId,
       datetime: startOfMinute(new Date()),
+      isFull: true,
+      isNecessary: true,
     },
   });
 

@@ -31,7 +31,7 @@ import {
   transactionCreateFormSchema,
 } from "@/modules/finance/schemas/transaction-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
+import { startOfHour } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 
@@ -45,7 +45,7 @@ export function TransactionCreateForm(props: {
   const form = useForm<TransactionCreateForm>({
     resolver: zodResolver(transactionCreateFormSchema),
     defaultValues: {
-      datetime: startOfMinute(new Date()),
+      datetime: startOfHour(new Date()),
     },
   });
 
@@ -58,36 +58,20 @@ export function TransactionCreateForm(props: {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2 pb-4">
-        <FormField
-          control={form.control}
-          name="datetime"
-          render={({ field }) => (
-            <FormItem className="flex flex-col">
-              <FormLabel>Date</FormLabel>
-              <FormControl>
-                <DatePicker value={field.value} setValue={field.onChange} includeTime />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <XSelect control={form.control} name="fromWalletId" label="From">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
-          <XSelect control={form.control} name="toWalletId" label="To">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <FormField
+            control={form.control}
+            name="datetime"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date</FormLabel>
+                <FormControl>
+                  <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormField
             control={form.control}
             name="categoryId"
@@ -203,15 +187,35 @@ export function TransactionCreateForm(props: {
             )}
           />
         </div>
-        <XInput
-          type="number"
-          control={form.control}
-          name="amount"
-          step={0.01}
-          label="Amount"
-          placeholder="0.00"
-        />
-        <XInput control={form.control} name="description" label="Description" />
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+          <XSelect control={form.control} name="fromWalletId" label="From">
+            {wallets.map((w) => (
+              <XSelectOption key={w.id} value={w.id}>
+                {w.name}
+              </XSelectOption>
+            ))}
+          </XSelect>
+          <XSelect control={form.control} name="toWalletId" label="To">
+            {wallets.map((w) => (
+              <XSelectOption key={w.id} value={w.id}>
+                {w.name}
+              </XSelectOption>
+            ))}
+          </XSelect>
+        </div>
+        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
+          <XInput
+            type="number"
+            control={form.control}
+            name="amount"
+            step={0.01}
+            label="Amount"
+            placeholder="0.00"
+          />
+          <div className="md:col-span-2">
+            <XInput control={form.control} name="description" label="Description" />
+          </div>
+        </div>
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>

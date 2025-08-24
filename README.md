@@ -10,9 +10,9 @@ Create a `.env` file and populate it following the structure of [`.env.example`]
 
 | Command              | Action                   |
 | -------------------- | ------------------------ |
-| `npm run db:push`    | Update the DB schema     |
-| `npm run db:explore` | Browse the DB            |
-| `npm run dev`        | Start development server |
+| `bun run db:push`    | Update the DB schema     |
+| `bun run db:explore` | Browse the DB            |
+| `bun run dev`        | Start development server |
 
 See [package.json](./package.json) for all the available scripts.
 
