@@ -49,9 +49,7 @@ export const transactionTags = pgTable(
       .notNull()
       .references(() => tags.id),
   },
-  (table) => ({
-    pk: primaryKey({ columns: [table.transactionId, table.tagId] }),
-  }),
+  (table) => [primaryKey({ columns: [table.transactionId, table.tagId] })],
 );
 
 export const transactionRelations = relations(transactions, ({ one, many }) => ({
