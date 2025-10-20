@@ -7,7 +7,7 @@
     "db:explore": "drizzle-kit studio",
     "dev": "next dev --turbopack",
     "format": "prettier --ignore-path .gitignore --write .",
-    "build": "next build --turbopack",
+    "build": "next build",
     "start": "next start",
     "lint": "eslint --fix"
   },
