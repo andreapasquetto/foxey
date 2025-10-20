@@ -24,7 +24,7 @@ import { format } from "date-fns";
 import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
-export async function TransactionList(props: { transactions: Transaction[] }) {
+export function TransactionList(props: { transactions: Transaction[] }) {
   const { transactions } = props;
 
   if (!transactions.length) {

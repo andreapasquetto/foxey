@@ -9,33 +9,42 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Transaction } from "@/db/types/finance";
-import { generateThisMonthExpensesPerDayChartData } from "@/modules/finance/finance-utils";
-import { isSameMonth, startOfToday } from "date-fns";
+import { generateYearIncomeExpensesSavingsChartData } from "@/modules/finance/finance-utils";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
-  amont: {
-    label: "Amount",
+  income: {
+    label: "Income",
+  },
+  expenses: {
+    label: "Expenses",
+  },
+  savings: {
+    label: "Savings",
   },
 } satisfies ChartConfig;
 
-export function ThisMonthExpensesPerDayChart(props: { transactions: Transaction[] }) {
-  const { transactions } = props;
-  const filteredTransactions = transactions.filter((tx) =>
-    isSameMonth(startOfToday(), tx.datetime),
-  );
-
-  if (!transactions.length || !filteredTransactions.length) {
+export function YearlyIncomeExpensesSavingsChart({
+  transactions,
+  selectedYear,
+}: {
+  transactions: Transaction[];
+  selectedYear: Date;
+}) {
+  if (!transactions.length) {
     return <ChartEmptyStateMessage />;
   }
 
-  const chartData = generateThisMonthExpensesPerDayChartData(filteredTransactions);
+  const chartData = generateYearIncomeExpensesSavingsChartData({
+    transactions,
+    year: selectedYear,
+  });
 
   return (
     <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="day" tickLine={false} axisLine={false} />
+        <XAxis dataKey="month" tickLine={false} axisLine={false} />
         <YAxis
           tickLine={false}
           axisLine={false}
@@ -43,7 +52,9 @@ export function ThisMonthExpensesPerDayChart(props: { transactions: Transaction[
           tickFormatter={(value) => currencyFormatter.format(value)}
         />
         <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
-        <Bar dataKey="amount" fill="var(--foreground)" radius={2} />
+        <Bar dataKey="income" fill="var(--chart-3)" radius={2} />
+        <Bar dataKey="expenses" fill="var(--chart-1)" radius={2} />
+        <Bar dataKey="savings" fill="var(--foreground)" radius={2} />
       </BarChart>
     </ChartContainer>
   );

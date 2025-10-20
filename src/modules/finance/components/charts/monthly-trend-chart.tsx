@@ -9,8 +9,8 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Transaction } from "@/db/types/finance";
-import { generateThisYearTrendChartData } from "@/modules/finance/finance-utils";
-import { format, isSameYear, startOfToday } from "date-fns";
+import { generateMonthTrendChartData } from "@/modules/finance/finance-utils";
+import { format } from "date-fns";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
@@ -19,11 +19,14 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function ThisYearTrendChart(props: { transactions: Transaction[] }) {
-  const { transactions } = props;
-  const chartData = generateThisYearTrendChartData(
-    transactions.filter((tx) => isSameYear(startOfToday(), tx.datetime)),
-  );
+export function MonthlyTrendChart({
+  transactions,
+  selectedMonth,
+}: {
+  transactions: Transaction[];
+  selectedMonth: Date;
+}) {
+  const chartData = generateMonthTrendChartData({ transactions, month: selectedMonth });
 
   if (chartData.length < 2) {
     return <ChartEmptyStateMessage />;

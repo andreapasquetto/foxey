@@ -9,35 +9,39 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Transaction } from "@/db/types/finance";
-import { generateThisYearIncomeExpensesChartData } from "@/modules/finance/finance-utils";
-import { isSameYear, startOfToday } from "date-fns";
+import { generateMonthExpensesPerDayChartData } from "@/modules/finance/finance-utils";
+import { isSameMonth } from "date-fns";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
-  income: {
-    label: "Income",
-  },
-  expenses: {
-    label: "Expenses",
+  amont: {
+    label: "Amount",
   },
 } satisfies ChartConfig;
 
-export function ThisYearIncomeExpensesChart(props: { transactions: Transaction[] }) {
-  const { transactions } = props;
+export function MonthlyExpensesPerDayChart({
+  transactions,
+  selectedMonth,
+}: {
+  transactions: Transaction[];
+  selectedMonth: Date;
+}) {
+  const filteredTransactions = transactions.filter((tx) => isSameMonth(tx.datetime, selectedMonth));
 
-  if (!transactions.length) {
+  if (!transactions.length || !filteredTransactions.length) {
     return <ChartEmptyStateMessage />;
   }
 
-  const chartData = generateThisYearIncomeExpensesChartData(
-    transactions.filter((tx) => isSameYear(startOfToday(), tx.datetime)),
-  );
+  const chartData = generateMonthExpensesPerDayChartData({
+    transactions: filteredTransactions,
+    month: selectedMonth,
+  });
 
   return (
     <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
-        <XAxis dataKey="month" tickLine={false} axisLine={false} />
+        <XAxis dataKey="day" tickLine={false} axisLine={false} />
         <YAxis
           tickLine={false}
           axisLine={false}
@@ -45,8 +49,7 @@ export function ThisYearIncomeExpensesChart(props: { transactions: Transaction[]
           tickFormatter={(value) => currencyFormatter.format(value)}
         />
         <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
-        <Bar dataKey="income" fill="var(--foreground)" radius={2} />
-        <Bar dataKey="expenses" fill="var(--chart-1)" radius={2} />
+        <Bar dataKey="amount" fill="var(--foreground)" radius={2} />
       </BarChart>
     </ChartContainer>
   );
