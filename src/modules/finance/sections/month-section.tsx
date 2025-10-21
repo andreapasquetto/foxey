@@ -1,6 +1,5 @@
 "use client";
 
-import { Heading2 } from "@/components/typography";
 import { CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -33,8 +32,7 @@ export function MonthSection({ transactions }: { transactions: Transaction[] }) 
   });
 
   return (
-    <section className="space-y-6">
-      <Heading2>By month</Heading2>
+    <>
       <div className="flex items-center justify-end">
         <div>
           <Select
@@ -69,6 +67,6 @@ export function MonthSection({ transactions }: { transactions: Transaction[] }) 
           <MonthlyExpensesPerDayChart transactions={transactions} selectedMonth={month} />
         </div>
       </div>
-    </section>
+    </>
   );
 }

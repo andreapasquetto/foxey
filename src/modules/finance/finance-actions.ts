@@ -145,6 +145,30 @@ export async function transactionsCreate(transaction: TransactionCreateForm) {
   redirect(financeRoute);
 }
 
+export async function transactionsGetLatest() {
+  const userId = await getCurrentUserId();
+  return await db.query.transactions.findMany({
+    with: {
+      category: true,
+      from: true,
+      to: true,
+      place: {
+        with: {
+          category: true,
+        },
+      },
+      tags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
+    where: eq(transactions.userId, userId),
+    orderBy: [desc(transactions.datetime)],
+    limit: 5,
+  });
+}
+
 export async function transactionsGetAll(
   params: {
     query?: string;
