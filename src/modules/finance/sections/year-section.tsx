@@ -14,14 +14,14 @@ import { YearlyCategoriesTable } from "@/modules/finance/components/charts/yearl
 import { YearlyIncomeExpensesSavingsChart } from "@/modules/finance/components/charts/yearly-income-expenses-savings-chart";
 import { YearlyTrendChart } from "@/modules/finance/components/charts/yearly-trend-chart";
 import { YearlyStats } from "@/modules/finance/components/yearly-stats";
-import { eachYearOfInterval, parse, startOfToday, startOfYear } from "date-fns";
+import { eachYearOfInterval, endOfYear, parse, startOfToday, startOfYear } from "date-fns";
 import { useState } from "react";
 
 export function YearSection({ transactions }: { transactions: Transaction[] }) {
   const [year, setYear] = useState(startOfYear(startOfToday()));
   const yearOptions = eachYearOfInterval({
-    start: transactions.at(0)!.datetime,
-    end: transactions.at(-1)!.datetime,
+    start: transactions.at(0)?.datetime ?? startOfYear(year),
+    end: transactions.at(-1)?.datetime ?? endOfYear(year),
   });
 
   return (
@@ -49,7 +49,7 @@ export function YearSection({ transactions }: { transactions: Transaction[] }) {
       </div>
       <YearlyStats transactions={transactions} selectedYear={year} />
       <div className="space-y-3">
-        <CardTitle>Income & Expenses</CardTitle>
+        <CardTitle>Income & Expenses Categories</CardTitle>
         <YearlyCategoriesTable transactions={transactions} selectedYear={year} />
       </div>
       <div className="space-y-3">
@@ -57,7 +57,7 @@ export function YearSection({ transactions }: { transactions: Transaction[] }) {
         <YearlyTrendChart transactions={transactions} selectedYear={year} />
       </div>
       <div className="space-y-3">
-        <CardTitle>Income VS Expenses</CardTitle>
+        <CardTitle>Income, Expenses & Savings</CardTitle>
         <YearlyIncomeExpensesSavingsChart transactions={transactions} selectedYear={year} />
       </div>
     </section>

@@ -163,7 +163,7 @@ function SavingCard(props: {
   return (
     <Card>
       <CardHeader>
-        <CardDescription>Saved</CardDescription>
+        <CardDescription>Savings</CardDescription>
         <CardTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.currentSavings.toNumber())}
           {!props.currentIncome.isZero() && (

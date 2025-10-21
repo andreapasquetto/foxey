@@ -41,7 +41,7 @@ export function RangeDatePicker({
             variant={"outline"}
             className={cn(
               "shrink justify-start overflow-hidden text-left font-normal",
-              !dateRange && "text-muted-foreground",
+              (!dateRange || (!dateRange.from && !dateRange.to)) && "text-muted-foreground",
             )}
           >
             <CalendarIcon className="mr-2 size-4 shrink-0" />

@@ -1,7 +1,7 @@
 "use client";
 
 import { currencyFormatter, unsignedPercentageFormatter } from "@/common/formatters";
-import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
+import { ChartEmptyStateMessage } from "@/components/empty-state/chart-empty-state-message";
 import {
   Table,
   TableBody,
@@ -29,7 +29,7 @@ export function YearlyCategoriesTable({
   const filteredTransactions = transactions.filter((tx) => isSameYear(tx.datetime, selectedYear));
 
   if (!transactions.length || !filteredTransactions.length) {
-    return <EmptyStateMessage message="Not enough data." />;
+    return <ChartEmptyStateMessage />;
   }
 
   const tableData = {

@@ -56,7 +56,7 @@ export function MonthSection({ transactions }: { transactions: Transaction[] }) 
       </div>
       <MonthlyStats transactions={transactions} selectedMonth={month} />
       <div className="space-y-3">
-        <CardTitle>Income & Expenses</CardTitle>
+        <CardTitle>Income & Expenses Categories</CardTitle>
         <MonthlyCategoriesTable transactions={transactions} selectedMonth={month} />
       </div>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
