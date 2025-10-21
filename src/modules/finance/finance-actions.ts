@@ -1,5 +1,6 @@
 "use server";
 
+import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { financeRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db, DBTransaction } from "@/db/db";
@@ -167,6 +168,72 @@ export async function transactionsGetLatest() {
     orderBy: [desc(transactions.datetime)],
     limit: 5,
   });
+}
+
+export async function transactionsGetPaginated(params: {
+  paginate: Paginate;
+  query?: string;
+  categoryId?: string;
+  walletId?: string;
+  placeId?: string;
+}) {
+  const userId = await getCurrentUserId();
+  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
+
+  const total = (
+    await db
+      .select({ id: transactions.id })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          params.query ? ilike(transactions.description, `%${params.query}%`) : undefined,
+          params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
+          params.walletId
+            ? or(
+                eq(transactions.fromWalletId, params.walletId),
+                eq(transactions.toWalletId, params.walletId),
+              )
+            : undefined,
+          params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
+        ),
+      )
+  ).length;
+
+  const records = await db.query.transactions.findMany({
+    with: {
+      category: true,
+      from: true,
+      to: true,
+      place: {
+        with: {
+          category: true,
+        },
+      },
+      tags: {
+        with: {
+          tag: true,
+        },
+      },
+    },
+    limit,
+    offset,
+    where: and(
+      eq(transactions.userId, userId),
+      params.query ? ilike(transactions.description, `%${params.query}%`) : undefined,
+      params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
+      params.walletId
+        ? or(
+            eq(transactions.fromWalletId, params.walletId),
+            eq(transactions.toWalletId, params.walletId),
+          )
+        : undefined,
+      params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
+    ),
+    orderBy: [desc(transactions.datetime)],
+  });
+
+  return toPaginated(records, total);
 }
 
 export async function transactionsGetAll(

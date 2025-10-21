@@ -26,7 +26,7 @@ export function TransactionFilters(props: {
           selectedValue={props.categories.find(
             (category) => category.id === searchParams.get("category")?.toString(),
           )}
-          onSelectValue={(value) => searchFilters.handleSearch("category", value?.id)}
+          onSelectValue={(value) => searchFilters.handleSearch({ category: value?.id })}
           options={props.categories}
           optionFormatter={(category) => category.name}
           withSearch
@@ -38,7 +38,7 @@ export function TransactionFilters(props: {
           selectedValue={props.places.find(
             (place) => place.id === searchParams.get("place")?.toString(),
           )}
-          onSelectValue={(value) => searchFilters.handleSearch("place", value?.id)}
+          onSelectValue={(value) => searchFilters.handleSearch({ place: value?.id })}
           options={props.places}
           optionFormatter={(place) => place.name}
           withSearch
@@ -50,7 +50,7 @@ export function TransactionFilters(props: {
           selectedValue={props.wallets.find(
             (wallet) => wallet.id === searchParams.get("wallet")?.toString(),
           )}
-          onSelectValue={(value) => searchFilters.handleSearch("wallet", value?.id)}
+          onSelectValue={(value) => searchFilters.handleSearch({ wallet: value?.id })}
           options={props.wallets}
           optionFormatter={(wallet) => wallet.name}
           withSearch

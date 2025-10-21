@@ -1,4 +1,3 @@
-import { UsePaginatedQueryResult } from "@/common/hooks/use-paginated-query";
 import { pageSizeDefaults } from "@/common/pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -94,12 +93,4 @@ export function Pagination(props: PaginationProps) {
       </div>
     </nav>
   );
-}
-
-type QueryPaginationProps = {
-  query: UsePaginatedQueryResult<unknown>; // Generic type is not important in this component
-};
-
-export function QueryPagination(props: QueryPaginationProps) {
-  return <Pagination {...props.query.pagination} />;
 }

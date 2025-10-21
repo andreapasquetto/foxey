@@ -2,7 +2,8 @@ export const privateRoute = "/private";
 
 export const financeRoute = `${privateRoute}/finance`;
 export const newTransactionCategoryRoute = `${financeRoute}/categories/new`;
-export const newTransactionRoute = `${financeRoute}/transactions/new`;
+export const transactionsRoute = `${financeRoute}/transactions`;
+export const newTransactionRoute = `${transactionsRoute}/new`;
 export const newWalletRoute = `${financeRoute}/wallets/new`;
 
 export function transactionRoute(id: string) {

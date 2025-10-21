@@ -18,7 +18,7 @@ export function SearchFilter(props: { paramName?: string; id?: string; placehold
       id={id}
       placeholder={props.placeholder ?? "Search..."}
       defaultValue={searchParams.get(paramName)?.toString()}
-      onChange={(e) => handleSearch(paramName, e.target.value)}
+      onChange={(e) => handleSearch({ [paramName]: e.target.value })}
     />
   );
 }

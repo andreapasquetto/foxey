@@ -1,6 +1,10 @@
+"use client";
+
 import { rawCurrencyFormatter } from "@/common/formatters";
+import { usePagination } from "@/common/hooks/use-pagination";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
+import { Pagination } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -24,32 +28,36 @@ import { format } from "date-fns";
 import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 
-export function TransactionList(props: { transactions: Transaction[] }) {
-  const { transactions } = props;
+export function TransactionList({
+  transactions,
+  total,
+}: {
+  transactions: Transaction[];
+  total: number;
+}) {
+  const pagination = usePagination(total);
 
   if (!transactions.length) {
     return <EmptyStateMessage message="There are no transactions." />;
   }
 
   return (
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHead>Date</TableHead>
-          <TableHead>Wallet</TableHead>
-          <TableHead>Category</TableHead>
-          <TableHead>Place</TableHead>
-          <TableHead>Tags</TableHead>
-          <TableHead>Description</TableHead>
-          <TableHead className="text-right">Amount</TableHead>
-          <TableHead></TableHead>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {transactions
-          .toReversed()
-          .slice(0, 10)
-          .map((transaction) => (
+    <div className="space-y-2">
+      <Table>
+        <TableHeader>
+          <TableRow>
+            <TableHead>Date</TableHead>
+            <TableHead>Wallet</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Place</TableHead>
+            <TableHead>Tags</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead className="text-right">Amount</TableHead>
+            <TableHead></TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {transactions.map((transaction) => (
             <TableRow key={transaction.id}>
               <TableCell>
                 <code>{format(transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
@@ -126,7 +134,9 @@ export function TransactionList(props: { transactions: Transaction[] }) {
               </TableCell>
             </TableRow>
           ))}
-      </TableBody>
-    </Table>
+        </TableBody>
+      </Table>
+      <Pagination {...pagination} />
+    </div>
   );
 }

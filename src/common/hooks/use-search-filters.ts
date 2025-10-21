@@ -5,13 +5,17 @@ export function useSearchFilters() {
   const router = useRouter();
   const pathname = usePathname();
 
-  function handleSearch(paramName: string, query: string | undefined) {
+  function handleSearch(values: Record<string, string | number | undefined>) {
     const params = new URLSearchParams(searchParams);
-    if (query) {
-      params.set(paramName, query);
-    } else {
-      params.delete(paramName);
+
+    for (const [paramName, query] of Object.entries(values)) {
+      if (query === undefined || query === "") {
+        params.delete(paramName);
+      } else {
+        params.set(paramName, String(query));
+      }
     }
+
     router.replace(`${pathname}?${params.toString()}`, { scroll: false });
   }
 
