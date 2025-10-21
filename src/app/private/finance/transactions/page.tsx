@@ -8,6 +8,7 @@ import {
   walletsGetAll,
 } from "@/modules/finance/finance-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
+import { parse } from "date-fns";
 
 export default async function TransactionsPage(props: {
   searchParams?: Promise<{
@@ -17,10 +18,12 @@ export default async function TransactionsPage(props: {
     wallet?: string;
     page?: string;
     size?: string;
+    from?: string;
+    to?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const { query, category, place, wallet, page, size } = searchParams ?? {};
+  const { query, category, place, wallet, page, size, from, to } = searchParams ?? {};
 
   const categories = await transactionCategoriesGetAll();
   const places = await placesGetAll();
@@ -30,6 +33,13 @@ export default async function TransactionsPage(props: {
       page: Number(page ?? paginationDefaults.page),
       pageSize: Number(size ?? paginationDefaults.pageSize),
     },
+    dateRange:
+      from && to
+        ? {
+            from: parse(from, "yyyy-MM-dd", new Date()),
+            to: parse(to, "yyyy-MM-dd", new Date()),
+          }
+        : undefined,
     query,
     categoryId: category,
     placeId: place,

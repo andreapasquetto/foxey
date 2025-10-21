@@ -11,9 +11,10 @@ import { TransactionUpdateForm } from "@/modules/finance/schemas/transaction-upd
 import { WalletCreateForm } from "@/modules/finance/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/finance/schemas/wallet-update-form-schema";
 import { Decimal } from "decimal.js";
-import { and, desc, eq, ilike, inArray, or } from "drizzle-orm";
+import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { DateRange } from "react-day-picker";
 import { z } from "zod";
 
 export async function walletsCreate(wallet: WalletCreateForm) {
@@ -176,6 +177,7 @@ export async function transactionsGetPaginated(params: {
   categoryId?: string;
   walletId?: string;
   placeId?: string;
+  dateRange?: DateRange;
 }) {
   const userId = await getCurrentUserId();
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
@@ -196,6 +198,9 @@ export async function transactionsGetPaginated(params: {
               )
             : undefined,
           params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
+          params.dateRange
+            ? between(transactions.datetime, params.dateRange.from!, params.dateRange.to!)
+            : undefined,
         ),
       )
   ).length;
@@ -229,6 +234,9 @@ export async function transactionsGetPaginated(params: {
           )
         : undefined,
       params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
+      params.dateRange
+        ? between(transactions.datetime, params.dateRange.from!, params.dateRange.to!)
+        : undefined,
     ),
     orderBy: [desc(transactions.datetime)],
   });
