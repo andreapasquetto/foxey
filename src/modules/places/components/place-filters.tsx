@@ -1,24 +1,14 @@
 "use client";
 
+import { useSearchFilters } from "@/common/hooks/use-search-filters";
 import { ChipCombobox } from "@/components/form/chip-combobox";
 import { SearchFilter } from "@/components/search-filter";
 import { PlaceCategory } from "@/db/types/places";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
-export function PlaceFilters(props: { categories: PlaceCategory[] }) {
+export function PlaceFilters({ categories }: { categories: PlaceCategory[] }) {
   const searchParams = useSearchParams();
-  const router = useRouter();
-  const pathname = usePathname();
-
-  function handleCategory(category: PlaceCategory | undefined) {
-    const params = new URLSearchParams(searchParams);
-    if (category) {
-      params.set("category", category.id);
-    } else {
-      params.delete("category");
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-  }
+  const searchFilters = useSearchFilters();
 
   return (
     <div className="flex flex-wrap items-center gap-3">
@@ -28,11 +18,11 @@ export function PlaceFilters(props: { categories: PlaceCategory[] }) {
       <div>
         <ChipCombobox
           label="Category"
-          selectedValue={props.categories.find(
+          selectedValue={categories.find(
             (category) => category.id === searchParams.get("category")?.toString(),
           )}
-          onSelectValue={(value) => handleCategory(value)}
-          options={props.categories}
+          onSelectValue={(value) => searchFilters.handleSearch({ category: value?.id })}
+          options={categories}
           optionFormatter={(place) => place.name}
           withSearch
         />
