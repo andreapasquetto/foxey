@@ -1,6 +1,7 @@
-import { paginationDefaults } from "@/common/pagination";
+import { useSearchFilters } from "@/common/hooks/use-search-filters";
+import { fromUrlToPaginate, paginationDefaults } from "@/common/pagination";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { useSearchFilters } from "./use-search-filters";
 
 export type UsePaginationResult = {
   page: number;
@@ -18,9 +19,16 @@ export type UsePaginationResult = {
 };
 
 export function usePagination(total: number): UsePaginationResult {
+  const searchParams = useSearchParams();
   const searchFilters = useSearchFilters();
-  const [page, setPage] = useState(paginationDefaults.page);
-  const [pageSize, setPageSize] = useState(paginationDefaults.pageSize);
+
+  const initialValues = fromUrlToPaginate({
+    page: searchParams.get("page") ?? undefined,
+    size: searchParams.get("size") ?? undefined,
+  });
+
+  const [page, setPage] = useState(initialValues.page);
+  const [pageSize, setPageSize] = useState(initialValues.pageSize);
 
   const pageStartIndex = page * pageSize;
   const pageEndIndex = Math.min(pageStartIndex + pageSize, total);

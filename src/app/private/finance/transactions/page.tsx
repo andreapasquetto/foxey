@@ -1,4 +1,4 @@
-import { paginationDefaults } from "@/common/pagination";
+import { fromUrlToPaginate } from "@/common/pagination";
 import { Heading1 } from "@/components/typography";
 import { TransactionFilters } from "@/modules/finance/components/transaction-filters";
 import { TransactionList } from "@/modules/finance/components/transaction-list";
@@ -29,10 +29,7 @@ export default async function TransactionsPage(props: {
   const places = await placesGetAll();
   const wallets = await walletsGetAll();
   const { records, total } = await transactionsGetPaginated({
-    paginate: {
-      page: Number(page ?? paginationDefaults.page),
-      pageSize: Number(size ?? paginationDefaults.pageSize),
-    },
+    paginate: fromUrlToPaginate({ page, size }),
     dateRange:
       from && to
         ? {

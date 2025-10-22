@@ -10,7 +10,19 @@ import {
 } from "@/components/ui/select";
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
-interface PaginationProps {
+export function Pagination({
+  pageSize,
+  total,
+  pageStartIndex,
+  pageEndIndex,
+  isPrevPageDisabled,
+  isNextPageDisabled,
+  changePageSize,
+  goFirstPage,
+  goPrevPage,
+  goNextPage,
+  goLastPage,
+}: {
   page: number;
   pageSize: number;
   total: number;
@@ -23,9 +35,7 @@ interface PaginationProps {
   goPrevPage: () => void;
   goNextPage: () => void;
   goLastPage: () => void;
-}
-
-export function Pagination(props: PaginationProps) {
+}) {
   return (
     <nav className="flex items-center justify-end bg-background px-4 py-3 text-muted-foreground sm:px-6">
       <div className="flex h-full items-center justify-end space-x-4">
@@ -33,8 +43,8 @@ export function Pagination(props: PaginationProps) {
           <span>Results per page</span>
         </div>
         <Select
-          onValueChange={(value) => props.changePageSize(parseInt(value))}
-          value={props.pageSize.toString()}
+          onValueChange={(value) => changePageSize(parseInt(value))}
+          value={pageSize.toString()}
         >
           <SelectTrigger className="w-16">
             <SelectValue />
@@ -52,41 +62,21 @@ export function Pagination(props: PaginationProps) {
         <div className="hidden sm:block">
           <p className="text-sm">
             <span className="font-medium">
-              {`${Math.min(props.total, props.pageStartIndex + 1)}-${props.pageEndIndex} of ${props.total}`}
+              {`${Math.min(total, pageStartIndex + 1)}-${pageEndIndex} of ${total}`}
             </span>
           </p>
         </div>
         <div className="flex gap-2">
-          <Button
-            disabled={props.isPrevPageDisabled}
-            onClick={props.goFirstPage}
-            variant="outline"
-            size="icon"
-          >
+          <Button disabled={isPrevPageDisabled} onClick={goFirstPage} variant="outline" size="icon">
             <ChevronsLeft />
           </Button>
-          <Button
-            disabled={props.isPrevPageDisabled}
-            onClick={props.goPrevPage}
-            variant="outline"
-            size="icon"
-          >
+          <Button disabled={isPrevPageDisabled} onClick={goPrevPage} variant="outline" size="icon">
             <ChevronLeft />
           </Button>
-          <Button
-            disabled={props.isNextPageDisabled}
-            onClick={props.goNextPage}
-            variant="outline"
-            size="icon"
-          >
+          <Button disabled={isNextPageDisabled} onClick={goNextPage} variant="outline" size="icon">
             <ChevronRight />
           </Button>
-          <Button
-            disabled={props.isNextPageDisabled}
-            onClick={props.goLastPage}
-            variant="outline"
-            size="icon"
-          >
+          <Button disabled={isNextPageDisabled} onClick={goLastPage} variant="outline" size="icon">
             <ChevronsRight />
           </Button>
         </div>

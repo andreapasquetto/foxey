@@ -20,6 +20,16 @@ export function paginateToLimitAndOffset(paginate: Paginate) {
   return { limit, offset };
 }
 
+export function fromUrlToPaginate(raw: {
+  page: string | undefined;
+  size: string | undefined;
+}): Paginate {
+  return {
+    page: raw.page ? Number(raw.page) : paginationDefaults.page,
+    pageSize: raw.size ? Number(raw.size) : paginationDefaults.pageSize,
+  };
+}
+
 export type Paginated<T> = {
   records: T[];
   total: number;
