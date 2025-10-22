@@ -100,6 +100,35 @@ export async function transactionCategoriesCreate(category: TransactionCategoryC
   redirect(financeRoute);
 }
 
+export async function transactionCategoriesGetPaginated(params: {
+  paginate: Paginate;
+  query?: string;
+}) {
+  const userId = await getCurrentUserId();
+  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
+  const total = (
+    await db
+      .select({ id: transactionCategories.id })
+      .from(transactionCategories)
+      .where(
+        and(
+          eq(transactionCategories.userId, userId),
+          params.query ? ilike(transactionCategories.name, `%${params.query}%`) : undefined,
+        ),
+      )
+  ).length;
+  const records = await db.query.transactionCategories.findMany({
+    limit,
+    offset,
+    where: and(
+      eq(transactionCategories.userId, userId),
+      params.query ? ilike(transactionCategories.name, `%${params.query}%`) : undefined,
+    ),
+    orderBy: [transactionCategories.name],
+  });
+  return toPaginated(records, total);
+}
+
 export async function transactionCategoriesGetAll(
   params: {
     query?: string;
