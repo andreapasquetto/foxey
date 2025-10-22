@@ -44,7 +44,7 @@ import { useState } from "react";
 export function MonthCalendar(props: {
   categories: PlaceCategory[];
   places: Place[];
-  contacts: Contact[];
+  contacts: Pick<Contact, "id" | "fullName" | "dob">[];
   events: Event[];
 }) {
   const { categories, places, contacts, events } = props;

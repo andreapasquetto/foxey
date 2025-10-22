@@ -1,12 +1,13 @@
 "use server";
 
+import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { contactsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { contacts } from "@/db/schemas/contacts";
 import { ContactCreateForm } from "@/modules/contacts/schemas/contact-create-form-schema";
 import { formatISO } from "date-fns";
-import { and, eq, ilike } from "drizzle-orm";
+import { and, eq, ilike, isNotNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -24,6 +25,49 @@ export async function contactsCreate(contact: ContactCreateForm) {
   });
   revalidatePath(contactsRoute);
   redirect(contactsRoute);
+}
+
+export async function contactsGetPaginated(params: { paginate: Paginate; query?: string }) {
+  const userId = await getCurrentUserId();
+  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
+  const total = (
+    await db
+      .select({ id: contacts.id })
+      .from(contacts)
+      .where(
+        and(
+          eq(contacts.userId, userId),
+          params.query ? ilike(contacts.fullName, `%${params.query}%`) : undefined,
+        ),
+      )
+  ).length;
+  const records = await db.query.contacts.findMany({
+    with: {
+      addresses: true,
+      emails: true,
+      phoneNumbers: true,
+    },
+    limit,
+    offset,
+    where: and(
+      eq(contacts.userId, userId),
+      params.query ? ilike(contacts.fullName, `%${params.query}%`) : undefined,
+    ),
+    orderBy: [contacts.isArchived, contacts.isBusiness, contacts.fullName],
+  });
+  return toPaginated(records, total);
+}
+
+export async function contactsGetAllBirthdays() {
+  const userId = await getCurrentUserId();
+  return await db.query.contacts.findMany({
+    columns: {
+      id: true,
+      fullName: true,
+      dob: true,
+    },
+    where: and(eq(contacts.userId, userId), isNotNull(contacts.dob)),
+  });
 }
 
 export async function contactsGetAll(

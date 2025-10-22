@@ -1,5 +1,5 @@
 import { Heading1 } from "@/components/typography";
-import { contactsGetAll } from "@/modules/contacts/contacts-actions";
+import { contactsGetAllBirthdays } from "@/modules/contacts/contacts-actions";
 import { MonthCalendar } from "@/modules/events/components/month-calendar";
 import { eventCategoriesGetAll, eventsGetAll } from "@/modules/events/events-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
@@ -7,7 +7,7 @@ import { placesGetAll } from "@/modules/places/places-actions";
 export default async function EventsPage() {
   const categories = await eventCategoriesGetAll();
   const places = await placesGetAll();
-  const contacts = await contactsGetAll();
+  const contacts = await contactsGetAllBirthdays();
   const events = await eventsGetAll();
 
   return (
