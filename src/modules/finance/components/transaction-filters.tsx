@@ -46,7 +46,7 @@ export function TransactionFilters(props: {
       <div className="w-full sm:w-[250px]">
         <SearchFilter paramName="query" />
       </div>
-      <div>
+      <div className="w-full sm:w-[250px]">
         <RangeDatePicker dateRange={dateRange} setDateRange={handleDateRangeChange} showPresets />
       </div>
       <div>

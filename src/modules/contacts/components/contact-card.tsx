@@ -1,3 +1,4 @@
+import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,6 +21,7 @@ export function ContactCard({ contact, today }: { contact: Contact; today: Date 
     <Card key={contact.id} className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">
         {contact.isArchived && <Badge variant="secondary">Archived</Badge>}
+        <CopyToClipboardButton content={contact.id} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">

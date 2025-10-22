@@ -3,6 +3,7 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { usePagination } from "@/common/hooks/use-pagination";
 import { transactionRoute } from "@/common/routes";
+import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
 import { Badge } from "@/components/ui/badge";
@@ -109,7 +110,8 @@ export function TransactionList({
                   </code>
                 }
               </TableCell>
-              <TableCell className="text-right">
+              <TableCell className="flex items-center justify-end gap-1">
+                <CopyToClipboardButton content={transaction.id} />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">
