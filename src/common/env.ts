@@ -3,11 +3,6 @@ import { z } from "zod";
 const envSchema = z
   .object({
     DARK_MODE: z.literal(["true", "false"]),
-    POSTGRES_USER: z.string().min(1),
-    POSTGRES_PASSWORD: z.string().min(1),
-    POSTGRES_HOST: z.string().min(1),
-    POSTGRES_PORT: z.coerce.number().int(),
-    POSTGRES_DBNAME: z.string().min(1),
     POSTGRES_CONNECTION_STRING: z.string().min(1),
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().min(1),
     CLERK_SECRET_KEY: z.string().min(1),
@@ -17,11 +12,6 @@ const envSchema = z
   .transform((data) => ({
     isDarkMode: data.DARK_MODE === "true",
     database: {
-      user: data.POSTGRES_USER,
-      password: data.POSTGRES_PASSWORD,
-      host: data.POSTGRES_HOST,
-      port: data.POSTGRES_PORT,
-      dbName: data.POSTGRES_DBNAME,
       connectionString: data.POSTGRES_CONNECTION_STRING,
     },
   }));
