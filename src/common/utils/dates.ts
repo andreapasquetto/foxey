@@ -7,23 +7,19 @@ import {
   startOfYear,
   sub,
 } from "date-fns";
+import { DateRange } from "react-day-picker";
 
-interface InternalDateRange {
-  from: Date;
-  to: Date;
-}
-
-export function thisMonthToDateRange(): InternalDateRange {
+export function thisMonthToDateRange(): Required<DateRange> {
   const today = startOfToday();
   return { from: startOfMonth(today), to: endOfDay(today) };
 }
 
-export function thisMonthRange(): InternalDateRange {
+export function thisMonthRange(): Required<DateRange> {
   const today = startOfToday();
   return { from: startOfMonth(today), to: endOfMonth(today) };
 }
 
-export function lastMonthRange(): InternalDateRange {
+export function lastMonthRange(): Required<DateRange> {
   const startOfLastMonth = startOfMonth(sub(startOfToday(), { months: 1 }));
   return {
     from: startOfLastMonth,
@@ -31,12 +27,12 @@ export function lastMonthRange(): InternalDateRange {
   };
 }
 
-export function last30DaysRange(): InternalDateRange {
+export function last30DaysRange(): Required<DateRange> {
   const today = startOfToday();
   return { from: sub(today, { days: 30 }), to: endOfDay(today) };
 }
 
-export function last90DaysRange(): InternalDateRange {
+export function last90DaysRange(): Required<DateRange> {
   const today = startOfToday();
   return {
     from: sub(today, { months: 3 }),
@@ -44,7 +40,7 @@ export function last90DaysRange(): InternalDateRange {
   };
 }
 
-export function last365DaysRange(): InternalDateRange {
+export function last365DaysRange(): Required<DateRange> {
   const today = startOfToday();
   return {
     from: sub(today, { years: 1 }),
@@ -52,17 +48,17 @@ export function last365DaysRange(): InternalDateRange {
   };
 }
 
-export function thisYearToDateRange(): InternalDateRange {
+export function thisYearToDateRange(): Required<DateRange> {
   const today = startOfToday();
   return { from: startOfYear(today), to: endOfDay(today) };
 }
 
-export function thisYearRange(): InternalDateRange {
+export function thisYearRange(): Required<DateRange> {
   const today = startOfToday();
   return { from: startOfYear(today), to: endOfYear(today) };
 }
 
-export function lastYearRange(): InternalDateRange {
+export function lastYearRange(): Required<DateRange> {
   const startOfLastYear = startOfYear(sub(startOfToday(), { years: 1 }));
   return {
     from: startOfLastYear,
@@ -78,9 +74,7 @@ export type DateRangePresetCode =
   | "last-year"
   | "all-time";
 
-export function getDateRangeFromCode(
-  code: DateRangePresetCode,
-): { from: undefined } | InternalDateRange {
+export function getDateRangeFromCode(code: DateRangePresetCode): DateRange {
   switch (code) {
     case "mtd":
       return thisMonthToDateRange();
@@ -93,6 +87,6 @@ export function getDateRangeFromCode(
     case "last-year":
       return lastYearRange();
     case "all-time":
-      return { from: undefined };
+      return { from: undefined, to: undefined };
   }
 }

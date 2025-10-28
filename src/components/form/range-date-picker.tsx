@@ -13,11 +13,11 @@ import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import * as React from "react";
-import { DateRange, OnSelectHandler } from "react-day-picker";
+import { DateRange } from "react-day-picker";
 
 interface RangeDatePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   dateRange: DateRange | undefined;
-  setDateRange: OnSelectHandler<DateRange | undefined>;
+  setDateRange: (value: DateRange | undefined) => void;
   showPresets?: boolean;
 }
 
@@ -28,7 +28,6 @@ export function RangeDatePicker({
   showPresets,
 }: RangeDatePickerProps) {
   function onSelectDateRangePreset(code: DateRangePresetCode) {
-    // @ts-expect-error ---
     setDateRange(getDateRangeFromCode(code));
   }
 
@@ -82,6 +81,7 @@ export function RangeDatePicker({
             onSelect={setDateRange}
             numberOfMonths={2}
             weekStartsOn={1}
+            captionLayout="dropdown"
           />
         </PopoverContent>
       </Popover>

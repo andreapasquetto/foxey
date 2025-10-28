@@ -58,6 +58,7 @@ export async function contactsGetPaginated(params: { paginate: Paginate; query?:
   return toPaginated(records, total);
 }
 
+// TODO: add dateRange filter
 export async function contactsGetAllBirthdays() {
   const userId = await getCurrentUserId();
   return await db.query.contacts.findMany({
@@ -66,7 +67,11 @@ export async function contactsGetAllBirthdays() {
       fullName: true,
       dob: true,
     },
-    where: and(eq(contacts.userId, userId), isNotNull(contacts.dob)),
+    where: and(
+      eq(contacts.userId, userId),
+      eq(contacts.isArchived, false),
+      isNotNull(contacts.dob),
+    ),
   });
 }
 

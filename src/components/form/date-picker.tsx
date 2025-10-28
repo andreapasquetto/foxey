@@ -5,11 +5,10 @@ import { cn } from "@/lib/utils";
 import { format, setHours, setMinutes } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
 import { ChangeEvent, useState } from "react";
-import { OnSelectHandler } from "react-day-picker";
 
 interface DatePickerProps {
   value: Date | undefined;
-  setValue: OnSelectHandler<Date | undefined>;
+  setValue: (value: Date | undefined) => void;
   includeTime?: boolean;
 }
 
@@ -18,12 +17,10 @@ export function DatePicker(props: DatePickerProps) {
 
   function onDateChange(newDate: Date | undefined) {
     if (!newDate || !props.includeTime) {
-      // @ts-expect-error ---
       props.setValue(newDate);
       return;
     }
     const [hours, minutes] = time.split(":").map((str) => parseInt(str, 10));
-    // @ts-expect-error ---
     props.setValue(
       new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), hours, minutes),
     );
@@ -39,7 +36,6 @@ export function DatePicker(props: DatePickerProps) {
 
     const [hours, minutes] = newTime.split(":").map((str) => parseInt(str, 10));
     const newValue = setHours(setMinutes(props.value, minutes), hours);
-    // @ts-expect-error ---
     props.setValue(newValue);
   }
 
@@ -72,6 +68,7 @@ export function DatePicker(props: DatePickerProps) {
           onSelect={onDateChange}
           autoFocus
           weekStartsOn={1}
+          captionLayout="dropdown"
         />
         {props.includeTime && (
           <div className="p-3 pt-0 text-center">
