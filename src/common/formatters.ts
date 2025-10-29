@@ -20,6 +20,6 @@ export const percentageFormatter = new Intl.NumberFormat("en-US", {
 export const unsignedPercentageFormatter = new Intl.NumberFormat("en-US", {
   style: "percent",
   signDisplay: "never",
-  minimumFractionDigits: 0,
+  minimumFractionDigits: 1,
   maximumFractionDigits: 1,
 });

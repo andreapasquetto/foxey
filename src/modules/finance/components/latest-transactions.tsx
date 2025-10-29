@@ -1,7 +1,6 @@
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { transactionsRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -13,8 +12,8 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { transactionsGetLatest } from "@/modules/finance/finance-actions";
-import { format } from "date-fns";
-import { ArrowRight, ChevronsRight } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import { ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export async function LatestTransactions() {
@@ -29,12 +28,8 @@ export async function LatestTransactions() {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Date</TableHead>
-            <TableHead>Wallet</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Place</TableHead>
-            <TableHead>Tags</TableHead>
-            <TableHead>Description</TableHead>
+            <TableHead>When</TableHead>
+            <TableHead>Summary</TableHead>
             <TableHead className="text-right">Amount</TableHead>
           </TableRow>
         </TableHeader>
@@ -42,42 +37,14 @@ export async function LatestTransactions() {
           {transactions.map((transaction) => (
             <TableRow key={transaction.id}>
               <TableCell>
-                <code>{format(transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
+                {formatDistanceToNow(transaction.datetime, { addSuffix: true })}
               </TableCell>
               <TableCell>
-                <div>
-                  <div className="space-x-2 text-sm text-muted-foreground">
-                    {transaction.from && <span>{transaction.from.name}</span>}
-                    {transaction.from && transaction.to && (
-                      <ChevronsRight className="inline-block size-5" />
-                    )}
-                    {transaction.to && <span>{transaction.to.name}</span>}
-                  </div>
-                </div>
+                {transaction.category && <p>{transaction.category.name}</p>}
+                {transaction.description && (
+                  <p className="text-xs text-muted-foreground">{transaction.description}</p>
+                )}
               </TableCell>
-              <TableCell>
-                <div>
-                  <div>{transaction.category?.name}</div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div>
-                  <div>{transaction.place?.name}</div>
-                  {transaction.place?.category && (
-                    <div className="space-x-2 text-sm text-muted-foreground">
-                      <span>{transaction.place.category.name}</span>
-                    </div>
-                  )}
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="flex items-center gap-1">
-                  {transaction.tags.map((tag) => (
-                    <Badge key={tag.tagId}>{tag.tag.name}</Badge>
-                  ))}
-                </div>
-              </TableCell>
-              <TableCell>{transaction.description}</TableCell>
               <TableCell className="text-right">
                 {
                   <code

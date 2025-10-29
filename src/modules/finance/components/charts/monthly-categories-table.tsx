@@ -47,17 +47,19 @@ export function MonthlyCategoriesTable({
         <TableHeader>
           <TableRow>
             <TableHead>Category</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>%</TableHead>
+            <TableHead className="text-right">Total</TableHead>
+            <TableHead className="text-right">%</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {tableData.incoming.map((category) => (
             <TableRow key={category.category}>
               <TableCell>{category.category}</TableCell>
-              <TableCell>{currencyFormatter.format(category.total.toNumber())}</TableCell>
-              <TableCell className="text-muted-foreground">
-                {unsignedPercentageFormatter.format(category.percentage.toNumber())}
+              <TableCell className="text-right">
+                <code>{currencyFormatter.format(category.total.toNumber())}</code>
+              </TableCell>
+              <TableCell className="text-right text-muted-foreground">
+                <code>{unsignedPercentageFormatter.format(category.percentage.toNumber())}</code>
               </TableCell>
             </TableRow>
           ))}
@@ -67,17 +69,19 @@ export function MonthlyCategoriesTable({
         <TableHeader>
           <TableRow>
             <TableHead>Category</TableHead>
-            <TableHead>Total</TableHead>
-            <TableHead>%</TableHead>
+            <TableHead className="text-right">Total</TableHead>
+            <TableHead className="text-right">%</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {tableData.outgoing.map((category) => (
             <TableRow key={category.category}>
               <TableCell>{category.category}</TableCell>
-              <TableCell>{currencyFormatter.format(category.total.toNumber())}</TableCell>
-              <TableCell className="text-muted-foreground">
-                {unsignedPercentageFormatter.format(category.percentage.toNumber())}
+              <TableCell className="text-right">
+                <code>{currencyFormatter.format(category.total.toNumber())}</code>
+              </TableCell>
+              <TableCell className="text-right text-muted-foreground">
+                <code>{unsignedPercentageFormatter.format(category.percentage.toNumber())}</code>
               </TableCell>
             </TableRow>
           ))}
