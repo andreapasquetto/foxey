@@ -1,7 +1,7 @@
 "use server";
 
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
-import { financeRoute } from "@/common/routes";
+import { financeRoute, transactionsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db, DBTransaction } from "@/db/db";
 import { transactionCategories, transactions, wallets } from "@/db/schemas/finance";
@@ -33,7 +33,7 @@ export async function walletsGetAll() {
   const userId = await getCurrentUserId();
   return await db.query.wallets.findMany({
     where: eq(wallets.userId, userId),
-    orderBy: [desc(wallets.amount)],
+    orderBy: [wallets.isArchived, desc(wallets.amount)],
   });
 }
 
@@ -56,6 +56,7 @@ export async function walletsUpdate(wallet: WalletUpdateForm) {
     .update(wallets)
     .set({
       name: wallet.name,
+      isArchived: wallet.isArchived,
     })
     .where(eq(wallets.id, wallet.id));
   revalidatePath(financeRoute);
@@ -407,7 +408,8 @@ export async function transactionsUpdate(transaction: TransactionUpdateForm) {
     }
   });
   revalidatePath(financeRoute);
-  redirect(financeRoute);
+  revalidatePath(transactionsRoute);
+  redirect(transactionsRoute);
 }
 
 export async function transactionsDelete(formData: FormData) {

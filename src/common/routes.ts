@@ -8,35 +8,22 @@ export const newContactRoute = `${contactsRoute}/new`;
 export const eventsRoute = `${privateRoute}/events`;
 
 export const financeRoute = `${privateRoute}/finance`;
+export const walletsRoute = `${financeRoute}/wallets`;
 export const transactionsRoute = `${financeRoute}/transactions`;
-export function transactionRoute(id: string) {
-  return `${transactionsRoute}/${id}`;
-}
+export const transactionRoute = (id: string) => `${transactionsRoute}/${id}`;
 export const transactionCategoriesRoute = `${transactionsRoute}/categories`;
 export const newTransactionCategoryRoute = `${transactionCategoriesRoute}/new`;
 export const newTransactionRoute = `${transactionsRoute}/new`;
-export function walletRoute(id: string) {
-  return `${financeRoute}/wallets/${id}`;
-}
-export const newWalletRoute = `${financeRoute}/wallets/new`;
+export const walletRoute = (id: string) => `${walletsRoute}/${id}`;
+export const newWalletRoute = `${walletsRoute}/new`;
 
 export const mobilityRoute = `${privateRoute}/mobility`;
 export const carsRoute = `${mobilityRoute}/cars`;
-export function carRoute(id: string) {
-  return `${carsRoute}/${id}`;
-}
-export function newHighwayTripRoute(carId: string) {
-  return `${carRoute(carId)}/highway-trips/new`;
-}
-export function newInspectionRoute(carId: string) {
-  return `${carRoute(carId)}/inspections/new`;
-}
-export function newRefuelingRoute(carId: string) {
-  return `${carRoute(carId)}/refuelings/new`;
-}
-export function newServiceRoute(carId: string) {
-  return `${carRoute(carId)}/services/new`;
-}
+export const carRoute = (id: string) => `${carsRoute}/${id}`;
+export const newHighwayTripRoute = (carId: string) => `${carRoute(carId)}/highway-trips/new`;
+export const newInspectionRoute = (carId: string) => `${carRoute(carId)}/inspections/new`;
+export const newRefuelingRoute = (carId: string) => `${carRoute(carId)}/refuelings/new`;
+export const newServiceRoute = (carId: string) => `${carRoute(carId)}/services/new`;
 export const newCarRoute = `${carsRoute}/new`;
 
 export const placesRoute = `${privateRoute}/places`;

@@ -1,6 +1,7 @@
 "use client";
 
 import { CircularSpinner } from "@/components/circular-spinner";
+import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
@@ -22,6 +23,7 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
     defaultValues: {
       id: wallet.id,
       name: wallet.name,
+      isArchived: wallet.isArchived,
     },
   });
 
@@ -41,13 +43,14 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
             <Input
               type="number"
               id="initialAmount"
-              disabled
               placeholder="0.00"
-              readOnly
               step={0.01}
               value={props.wallet.initialAmount}
+              disabled
+              readOnly
             />
           </div>
+          <XCheckbox control={form.control} name="isArchived" label="Archived" />
         </div>
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}

@@ -1,6 +1,14 @@
 import { places } from "@/db/schemas/places";
 import { relations } from "drizzle-orm";
-import { numeric, pgTable, primaryKey, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  numeric,
+  pgTable,
+  primaryKey,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
 
 export const wallets = pgTable("wallets", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -9,6 +17,7 @@ export const wallets = pgTable("wallets", {
   initialAmount: numeric("initial_amount").notNull().default("0"),
   amount: numeric("amount").notNull().default("0"),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  isArchived: boolean("is_archived").notNull().default(false),
 });
 
 export const transactionCategories = pgTable("transaction_categories", {

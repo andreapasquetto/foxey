@@ -1,6 +1,6 @@
-import { transactionCategoriesRoute } from "@/common/routes";
+import { newTransactionRoute, transactionCategoriesRoute } from "@/common/routes";
 import { Button } from "@/components/ui/button";
-import { Shapes } from "lucide-react";
+import { Plus, Shapes } from "lucide-react";
 import Link from "next/link";
 
 export function TransactionsActionButtons() {
@@ -9,6 +9,11 @@ export function TransactionsActionButtons() {
       <Button variant="outline" className="size-14 rounded-xl" asChild>
         <Link href={transactionCategoriesRoute}>
           <Shapes className="size-6" />
+        </Link>
+      </Button>
+      <Button className="size-14 rounded-xl" asChild>
+        <Link href={newTransactionRoute} prefetch>
+          <Plus className="size-6" />
         </Link>
       </Button>
     </div>

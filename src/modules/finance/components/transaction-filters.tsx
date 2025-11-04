@@ -38,6 +38,7 @@ export function TransactionFilters(props: {
     searchFilters.handleSearch({
       from: value?.from ? format(value.from, "yyyy-MM-dd") : undefined,
       to: value?.to ? format(value.to, "yyyy-MM-dd") : undefined,
+      page: undefined,
     });
   }
 
