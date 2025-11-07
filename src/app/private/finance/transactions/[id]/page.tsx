@@ -5,12 +5,13 @@ import {
   transactionsGetById,
 } from "@/modules/finance/finance-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
+import { Metadata } from "next";
 
-interface TransactionUpdatePageProps {
-  params: Promise<{ id: string }>;
-}
+export const metadata: Metadata = {
+  title: "Transaction Details",
+};
 
-export default async function TransactionUpdatePage(props: TransactionUpdatePageProps) {
+export default async function TransactionUpdatePage(props: { params: Promise<{ id: string }> }) {
   const id = (await props.params).id;
 
   const categories = await transactionCategoriesGetAll();

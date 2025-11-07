@@ -10,6 +10,11 @@ import {
 } from "@/modules/finance/finance-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
 import { parse } from "date-fns";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Transactions",
+};
 
 export default async function TransactionsPage(props: {
   searchParams?: Promise<{

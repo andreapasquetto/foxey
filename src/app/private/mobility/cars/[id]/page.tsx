@@ -1,6 +1,5 @@
 import { Heading1, Heading2 } from "@/components/typography";
 import { CarActionButtons } from "@/modules/mobility/components/car-action-buttons";
-
 import { CarStats } from "@/modules/mobility/components/car-stats";
 import { HighwayTripList } from "@/modules/mobility/components/highway-trip-list";
 import { InspectionList } from "@/modules/mobility/components/inspection-list";
@@ -12,6 +11,11 @@ import {
   refuelingsGetAll,
   servicesGetAll,
 } from "@/modules/mobility/mobility-actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Car Details",
+};
 
 export default async function CarPage(props: { params: Promise<{ id: string }> }) {
   const id = (await props.params).id;

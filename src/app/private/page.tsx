@@ -12,6 +12,7 @@ import { cn } from "@/lib/utils";
 import { currentUser } from "@clerk/nextjs/server";
 import { Slot } from "@radix-ui/react-slot";
 import { Calendar, Car, CircleDollarSign, Contact, MapPinned } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
@@ -42,6 +43,10 @@ const navigationItems = [
     title: "Places",
   },
 ];
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+};
 
 export default async function PrivateHome() {
   const user = await currentUser();

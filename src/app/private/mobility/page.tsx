@@ -4,8 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { CarList } from "@/modules/mobility/components/car-list";
 import { Plus } from "lucide-react";
+import { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
+
+export const metadata: Metadata = {
+  title: "Mobility",
+};
 
 export default function MobilityPage() {
   return (

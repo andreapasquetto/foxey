@@ -1,6 +1,11 @@
 import { Heading1 } from "@/components/typography";
 import { InspectionCreateForm } from "@/modules/mobility/components/forms/inspection-create-form";
 import { carsGetAll } from "@/modules/mobility/mobility-actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Inspection",
+};
 
 export default async function InspectionCreatePage(props: { params: Promise<{ id: string }> }) {
   const carId = (await props.params).id;

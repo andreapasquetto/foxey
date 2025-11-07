@@ -1,6 +1,11 @@
 import { Heading1 } from "@/components/typography";
 import { PlaceCreateForm } from "@/modules/places/components/forms/place-create-form";
 import { placeCategoriesGetAll } from "@/modules/places/places-actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Place",
+};
 
 export default async function PlaceCreatePage() {
   const categories = await placeCategoriesGetAll();

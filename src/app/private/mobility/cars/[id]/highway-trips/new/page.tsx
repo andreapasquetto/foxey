@@ -2,6 +2,11 @@ import { Heading1 } from "@/components/typography";
 import { walletsGetAll } from "@/modules/finance/finance-actions";
 import { HighwayTripCreateForm } from "@/modules/mobility/components/forms/highway-trip-create-form";
 import { carsGetAll } from "@/modules/mobility/mobility-actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Highway Trip",
+};
 
 export default async function HighwayTripCreatePage(props: { params: Promise<{ id: string }> }) {
   const carId = (await props.params).id;

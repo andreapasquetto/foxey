@@ -1,5 +1,10 @@
 import { Heading1 } from "@/components/typography";
 import { WalletCreateForm } from "@/modules/finance/components/forms/wallet-create-form";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "New Wallet",
+};
 
 export default function WalletCreatePage() {
   return (

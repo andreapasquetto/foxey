@@ -5,6 +5,11 @@ import { WalletList } from "@/modules/finance/components/wallet-list";
 import { transactionsGetAll } from "@/modules/finance/finance-actions";
 import { MonthSection } from "@/modules/finance/sections/month-section";
 import { YearSection } from "@/modules/finance/sections/year-section";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Finance",
+};
 
 export default async function FinancePage() {
   const transactions = await transactionsGetAll();

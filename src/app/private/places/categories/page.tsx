@@ -3,6 +3,11 @@ import { SearchFilter } from "@/components/search-filter";
 import { Heading1 } from "@/components/typography";
 import { PlaceCategoryList } from "@/modules/places/components/place-category-list";
 import { placeCategoriesGetPaginated } from "@/modules/places/places-actions";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Place Categories",
+};
 
 export default async function PlaceCategoriesPage(props: {
   searchParams: Promise<{ query?: string; page?: string; size?: string }>;
