@@ -9,6 +9,8 @@ import {
 } from "date-fns";
 import { DateRange } from "react-day-picker";
 
+export const IGNORE_DOB_YEAR = 1500;
+
 export function thisMonthToDateRange(): Required<DateRange> {
   const today = startOfToday();
   return { from: startOfMonth(today), to: endOfDay(today) };

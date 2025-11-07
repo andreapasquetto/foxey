@@ -2,6 +2,7 @@
 
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
+import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ export function ContactCreateForm() {
     defaultValues: {
       isArchived: false,
       isBusiness: false,
+      ignoreDobYear: false,
       addresses: [],
       emails: [],
       phoneNumbers: [],
@@ -55,6 +57,7 @@ export function ContactCreateForm() {
             </FormItem>
           )}
         />
+        <XCheckbox control={form.control} name="ignoreDobYear" label="Ignore Year" />
         <div className="flex items-center gap-2">
           <Button type="submit" disabled={mutation.isPending}>
             Submit

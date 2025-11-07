@@ -1,5 +1,6 @@
 "use client";
 
+import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -298,9 +299,11 @@ export function MonthCalendar(props: {
                   <div className="flex items-center text-lg font-semibold tracking-tight">
                     <Cake className="mr-2 size-4" />
                     {contact.fullName}
-                    <span className="ml-1 text-base font-normal">
-                      ({differenceInYears(selectedDay, contact.dob)})
-                    </span>
+                    {contact.dob.getFullYear() !== IGNORE_DOB_YEAR && (
+                      <span className="ml-1 text-base font-normal">
+                        ({differenceInYears(selectedDay, contact.dob)})
+                      </span>
+                    )}
                   </div>
                 </li>
               ))}

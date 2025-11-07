@@ -3,10 +3,11 @@
 import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
 import { contactsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
+import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
 import { db } from "@/db/db";
 import { contacts } from "@/db/schemas/contacts";
 import { ContactCreateForm } from "@/modules/contacts/schemas/contact-create-form-schema";
-import { formatISO } from "date-fns";
+import { formatISO, setYear } from "date-fns";
 import { and, eq, ilike, isNotNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -18,7 +19,11 @@ export async function contactsCreate(contact: ContactCreateForm) {
   await db.insert(contacts).values({
     userId,
     fullName: contact.fullName,
-    dob: contact.dob && formatISO(contact.dob, { representation: "date" }),
+    dob: contact.dob
+      ? formatISO(contact.ignoreDobYear ? setYear(contact.dob, IGNORE_DOB_YEAR) : contact.dob, {
+          representation: "date",
+        })
+      : undefined,
     isArchived: contact.isArchived,
     isBusiness: contact.isBusiness,
     subtitle: contact.subtitle,
