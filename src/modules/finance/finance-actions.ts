@@ -51,6 +51,26 @@ export async function walletsGetById(id: string) {
   return record;
 }
 
+export async function walletsAarchive(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
+  const userId = await getCurrentUserId();
+  await db
+    .update(wallets)
+    .set({ isArchived: true })
+    .where(and(eq(wallets.userId, userId), eq(wallets.id, id)));
+  revalidatePath(financeRoute);
+}
+
+export async function walletsUnarchive(formData: FormData) {
+  const id = z.string().parse(formData.get("id"));
+  const userId = await getCurrentUserId();
+  await db
+    .update(wallets)
+    .set({ isArchived: false })
+    .where(and(eq(wallets.userId, userId), eq(wallets.id, id)));
+  revalidatePath(financeRoute);
+}
+
 export async function walletsUpdate(wallet: WalletUpdateForm) {
   await db
     .update(wallets)
