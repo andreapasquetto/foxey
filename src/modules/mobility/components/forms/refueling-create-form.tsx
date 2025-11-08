@@ -34,6 +34,7 @@ import {
 } from "@/modules/mobility/schemas/refueling-create-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
+import Decimal from "decimal.js";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 
@@ -53,6 +54,12 @@ export function RefuelingCreateForm(props: {
       isNecessary: true,
     },
   });
+
+  const costValue = form.watch("cost");
+  const priceValue = form.watch("price");
+  const quantityPlaceholder = priceValue
+    ? new Decimal(costValue ?? 0).div(priceValue).toDecimalPlaces(2).toString()
+    : "0.00";
 
   const mutation = useRefuelingsCreateMutation(carId);
 
@@ -161,15 +168,7 @@ export function RefuelingCreateForm(props: {
             control={form.control}
             name="cost"
             step={0.01}
-            label="Cost"
-            placeholder="0.00"
-          />
-          <XInput
-            type="number"
-            control={form.control}
-            name="quantity"
-            step={0.01}
-            label="Quantity"
+            label="Cost (€)"
             placeholder="0.00"
           />
           <XInput
@@ -177,8 +176,16 @@ export function RefuelingCreateForm(props: {
             control={form.control}
             name="price"
             step={0.001}
-            label="Price"
+            label="Price (€/L)"
             placeholder="0.000"
+          />
+          <XInput
+            type="number"
+            control={form.control}
+            name="quantity"
+            step={0.01}
+            label="Quantity (L)"
+            placeholder={quantityPlaceholder}
           />
         </div>
         <div className="grid grid-cols-2 gap-3">
@@ -191,7 +198,7 @@ export function RefuelingCreateForm(props: {
             control={form.control}
             name="trip"
             step={0.01}
-            label="Trip"
+            label="Trip (km)"
             placeholder="0.0"
           />
           <XInput
@@ -199,7 +206,7 @@ export function RefuelingCreateForm(props: {
             control={form.control}
             name="odometer"
             step={1}
-            label="Odometer"
+            label="Odometer (km)"
             placeholder="0"
           />
         </div>

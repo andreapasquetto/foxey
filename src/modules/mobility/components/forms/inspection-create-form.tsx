@@ -77,7 +77,7 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
             control={form.control}
             name="odometer"
             step={1}
-            label="Odometer"
+            label="Odometer (km)"
             placeholder="0"
           />
           <div className="md:mb-3 md:self-end">

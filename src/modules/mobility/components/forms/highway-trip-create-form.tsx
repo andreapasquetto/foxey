@@ -88,7 +88,7 @@ export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; c
             control={form.control}
             name="cost"
             step={0.01}
-            label="Cost"
+            label="Cost (€)"
             placeholder="0.00"
           />
           <XInput
@@ -96,7 +96,7 @@ export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; c
             control={form.control}
             name="distance"
             step={0.01}
-            label="Distance"
+            label="Distance (km)"
             placeholder="0.00"
           />
           <XInput
@@ -104,7 +104,7 @@ export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; c
             control={form.control}
             name="avgSpeed"
             step={1}
-            label="Average speed"
+            label="Average speed (km/h)"
             placeholder="0"
           />
         </div>

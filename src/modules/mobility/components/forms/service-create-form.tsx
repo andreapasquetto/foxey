@@ -74,7 +74,7 @@ export function ServiceCreateForm(props: { cars: Car[]; carId: string }) {
             control={form.control}
             name="odometer"
             step={1}
-            label="Odometer"
+            label="Odometer (km)"
             placeholder="0"
           />
         </div>
