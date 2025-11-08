@@ -52,9 +52,9 @@ export function YearlyIncomeExpensesSavingsChart({
           tickFormatter={(value) => currencyFormatter.format(value)}
         />
         <ChartTooltip content={<ChartTooltipContent className="w-[175px]" />} />
-        <Bar dataKey="income" fill="var(--chart-3)" radius={2} />
-        <Bar dataKey="expenses" fill="var(--chart-1)" radius={2} />
-        <Bar dataKey="savings" fill="var(--foreground)" radius={2} />
+        <Bar dataKey="income" fill="var(--chart-2)" radius={2} />
+        <Bar dataKey="expenses" fill="var(--chart-5)" radius={2} />
+        <Bar dataKey="savings" fill="var(--chart-3)" radius={2} />
       </BarChart>
     </ChartContainer>
   );

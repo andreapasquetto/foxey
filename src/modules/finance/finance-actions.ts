@@ -4,7 +4,7 @@ import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagina
 import { financeRoute, transactionsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db, DBTransaction } from "@/db/db";
-import { transactionCategories, transactions, wallets } from "@/db/schemas/finance";
+import { tags, transactionCategories, transactions, wallets } from "@/db/schemas/finance";
 import { TransactionCategoryCreateForm } from "@/modules/finance/schemas/transaction-category-create-form-schema";
 import { TransactionCreateForm } from "@/modules/finance/schemas/transaction-create-form-schema";
 import { TransactionUpdateForm } from "@/modules/finance/schemas/transaction-update-form-schema";
@@ -142,6 +142,20 @@ export async function transactionCategoriesGetAll(
       params.query ? ilike(transactionCategories.name, `%${params.query}%`) : undefined,
     ),
     orderBy: [transactionCategories.name],
+  });
+}
+
+export async function tagsGetAll() {
+  const userId = await getCurrentUserId();
+  return await db.query.tags.findMany({
+    with: {
+      transactionTags: {
+        with: {
+          transaction: true,
+        },
+      },
+    },
+    where: eq(tags.userId, userId),
   });
 }
 
