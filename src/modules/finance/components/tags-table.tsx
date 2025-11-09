@@ -1,4 +1,5 @@
 import { currencyFormatter } from "@/common/formatters";
+import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -36,6 +37,7 @@ export async function TagsTable() {
           <TableHead className="text-right">
             Total <code>-</code>
           </TableHead>
+          <TableHead></TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
@@ -61,6 +63,9 @@ export async function TagsTable() {
                     calculateTotal(getOutgoingTransactions(transactions)).toNumber(),
                   )}
                 </code>
+              </TableCell>
+              <TableCell className="flex items-center justify-end gap-1">
+                <CopyToClipboardButton content={tag.id} />
               </TableCell>
             </TableRow>
           );
