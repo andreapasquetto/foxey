@@ -1,21 +1,39 @@
+import { phoneNumberFormatter } from "@/common/formatters";
 import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
+import { buildGoogleMapsUrlWithAddress } from "@/common/utils/places";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Contact } from "@/db/types/contacts";
+import { Contact, ContactAddress, ContactEmail, ContactPhoneNumber } from "@/db/types/contacts";
 import { cn } from "@/lib/utils";
 import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-contact";
 import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
 import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
 import { differenceInYears, format, parseISO } from "date-fns";
-import { Cake, MoreHorizontal } from "lucide-react";
+import {
+  Building,
+  Cake,
+  CircleUser,
+  ExternalLink,
+  Mail,
+  MapPinHouse,
+  MoreHorizontal,
+  Phone,
+} from "lucide-react";
+import Link from "next/link";
 
 export function ContactCard({ contact, today }: { contact: Contact; today: Date }) {
   const dob = contact.dob ? parseISO(contact.dob) : undefined;
@@ -46,7 +64,10 @@ export function ContactCard({ contact, today }: { contact: Contact; today: Date 
       </div>
       <CardHeader>
         {contact.subtitle && <CardDescription>{contact.subtitle}</CardDescription>}
-        <CardTitle className={cn(contact.isArchived && "text-muted-foreground")}>
+        <CardTitle
+          className={cn("flex items-center gap-2", contact.isArchived && "text-muted-foreground")}
+        >
+          {contact.isBusiness ? <Building className="size-4" /> : <CircleUser className="size-4" />}
           {contact.fullName}
         </CardTitle>
         {dob && (
@@ -61,6 +82,112 @@ export function ContactCard({ contact, today }: { contact: Contact; today: Date 
           </div>
         )}
       </CardHeader>
+      <CardContent>
+        <Accordion type="multiple" className="w-full">
+          <AccordionItem value="phone-numbers" disabled={!contact.phoneNumbers.length}>
+            <AccordionTrigger className="text-muted-foreground hover:cursor-pointer hover:text-foreground hover:no-underline">
+              <div className="flex items-center gap-2">
+                <Phone className="size-4" />
+                Phone numbers ({contact.phoneNumbers.length})
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              {contact.phoneNumbers.map((phoneNumber) => (
+                <PhoneNumberAccordionItem key={phoneNumber.id} phoneNumber={phoneNumber} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="emails" disabled={!contact.emails.length}>
+            <AccordionTrigger className="text-muted-foreground hover:cursor-pointer hover:text-foreground hover:no-underline">
+              <div className="flex items-center gap-2">
+                <Mail className="size-4" />
+                Emails ({contact.emails.length})
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              {contact.emails.map((email) => (
+                <EmailAccordionItem key={email.id} email={email} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+          <AccordionItem value="addresses" disabled={!contact.addresses.length}>
+            <AccordionTrigger className="text-muted-foreground hover:cursor-pointer hover:text-foreground hover:no-underline">
+              <div className="flex items-center gap-2">
+                <MapPinHouse className="size-4" />
+                Addresses ({contact.addresses.length})
+              </div>
+            </AccordionTrigger>
+            <AccordionContent className="flex flex-col gap-4 text-balance">
+              {contact.addresses.map((address) => (
+                <AddressAccordionItem key={address.id} address={address} />
+              ))}
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+      </CardContent>
     </Card>
+  );
+}
+
+function PhoneNumberAccordionItem({ phoneNumber }: { phoneNumber: ContactPhoneNumber }) {
+  const phoneNumberFormatted = phoneNumberFormatter(phoneNumber.value)!.formatInternational();
+  return (
+    <div>
+      {phoneNumber.isArchived && (
+        <p className={cn(phoneNumber.isArchived && "text-muted-foreground line-through")}>
+          {phoneNumberFormatted}
+        </p>
+      )}
+      {!phoneNumber.isArchived && (
+        <Link
+          href={`tel:${phoneNumber.value}`}
+          className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+        >
+          {phoneNumberFormatted}
+        </Link>
+      )}
+    </div>
+  );
+}
+
+function EmailAccordionItem({ email }: { email: ContactEmail }) {
+  return (
+    <div>
+      {email.isArchived && (
+        <p className={cn(email.isArchived && "text-muted-foreground line-through")}>
+          {email.value}
+        </p>
+      )}
+      {!email.isArchived && (
+        <Link
+          href={`mailto:${email.value}`}
+          className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+        >
+          {email.value}
+        </Link>
+      )}
+    </div>
+  );
+}
+
+function AddressAccordionItem({ address }: { address: ContactAddress }) {
+  return (
+    <div>
+      {address.isArchived && (
+        <p className={cn(address.isArchived && "text-muted-foreground line-through")}>
+          {address.value}
+        </p>
+      )}
+      {!address.isArchived && (
+        <Link
+          href={buildGoogleMapsUrlWithAddress(address.value)}
+          target="_blank"
+          className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+        >
+          {address.value}
+          <ExternalLink className="size-4" />
+        </Link>
+      )}
+    </div>
   );
 }

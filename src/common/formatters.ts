@@ -1,3 +1,9 @@
+import { parsePhoneNumberFromString } from "libphonenumber-js";
+
+export function phoneNumberFormatter(value: string) {
+  return parsePhoneNumberFromString(value);
+}
+
 export const currencyFormatter = new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: "EUR",

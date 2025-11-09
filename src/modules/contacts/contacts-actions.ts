@@ -48,9 +48,21 @@ export async function contactsGetPaginated(params: { paginate: Paginate; query?:
   ).length;
   const records = await db.query.contacts.findMany({
     with: {
-      addresses: true,
-      emails: true,
-      phoneNumbers: true,
+      phoneNumbers: {
+        columns: {
+          contactId: false,
+        },
+      },
+      emails: {
+        columns: {
+          contactId: false,
+        },
+      },
+      addresses: {
+        columns: {
+          contactId: false,
+        },
+      },
     },
     limit,
     offset,
@@ -58,7 +70,7 @@ export async function contactsGetPaginated(params: { paginate: Paginate; query?:
       eq(contacts.userId, userId),
       params.query ? ilike(contacts.fullName, `%${params.query}%`) : undefined,
     ),
-    orderBy: [contacts.isArchived, contacts.isBusiness, contacts.fullName],
+    orderBy: [contacts.fullName],
   });
   return toPaginated(records, total);
 }
@@ -89,9 +101,21 @@ export async function contactsGetAll(
   const userId = await getCurrentUserId();
   return await db.query.contacts.findMany({
     with: {
-      addresses: true,
-      emails: true,
-      phoneNumbers: true,
+      addresses: {
+        columns: {
+          contactId: false,
+        },
+      },
+      emails: {
+        columns: {
+          contactId: false,
+        },
+      },
+      phoneNumbers: {
+        columns: {
+          contactId: false,
+        },
+      },
     },
     where: and(
       eq(contacts.userId, userId),
