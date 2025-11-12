@@ -4,9 +4,16 @@ import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagina
 import { financeRoute, transactionsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db, DBTransaction } from "@/db/db";
-import { tags, transactionCategories, transactions, wallets } from "@/db/schemas/finance";
+import {
+  tags,
+  transactionCategories,
+  transactions,
+  transactionTemplates,
+  wallets,
+} from "@/db/schemas/finance";
 import { TransactionCategoryCreateForm } from "@/modules/finance/schemas/transaction-category-create-form-schema";
 import { TransactionCreateForm } from "@/modules/finance/schemas/transaction-create-form-schema";
+import { TransactionTemplateCreateForm } from "@/modules/finance/schemas/transaction-template-create-form-schema";
 import { TransactionUpdateForm } from "@/modules/finance/schemas/transaction-update-form-schema";
 import { WalletCreateForm } from "@/modules/finance/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/finance/schemas/wallet-update-form-schema";
@@ -148,6 +155,21 @@ export async function transactionCategoriesGetPaginated(params: {
     orderBy: [transactionCategories.name],
   });
   return toPaginated(records, total);
+}
+
+export async function transactionTemplatesCreate(template: TransactionTemplateCreateForm) {
+  const userId = await getCurrentUserId();
+  await db.insert(transactionTemplates).values({
+    userId,
+    name: template.name,
+    fromWalletId: template.fromWalletId,
+    toWalletId: template.toWalletId,
+    categoryId: template.categoryId,
+    placeId: template.placeId,
+    amount: template.amount?.toString(),
+  });
+  revalidatePath(transactionsRoute);
+  redirect(transactionsRoute);
 }
 
 export async function transactionCategoriesGetAll(

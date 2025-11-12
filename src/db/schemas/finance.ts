@@ -26,6 +26,21 @@ export const transactionCategories = pgTable("transaction_categories", {
   name: varchar("name").notNull(),
 });
 
+export const transactionTemplates = pgTable("transaction_templates", {
+  id: uuid("id").defaultRandom().primaryKey(),
+
+  // ! this creates redundancy, it could be dropped in favor of fromWalletId and toWalletId
+  // ! however, to keep the code simple, it has been added here to avoid some joins
+  userId: varchar("user_id").notNull(),
+
+  name: varchar("name").notNull(),
+  fromWalletId: uuid("from_wallet_id").references(() => wallets.id),
+  toWalletId: uuid("to_wallet_id").references(() => wallets.id),
+  categoryId: uuid("category_id").references(() => transactionCategories.id),
+  placeId: uuid("place_id").references(() => places.id),
+  amount: numeric("amount"),
+});
+
 export const transactions = pgTable("transactions", {
   id: uuid("id").defaultRandom().primaryKey(),
 
@@ -60,6 +75,27 @@ export const transactionTags = pgTable(
   },
   (table) => [primaryKey({ columns: [table.transactionId, table.tagId] })],
 );
+
+export const transactionTemplateRelations = relations(transactionTemplates, ({ one }) => ({
+  category: one(transactionCategories, {
+    fields: [transactionTemplates.categoryId],
+    references: [transactionCategories.id],
+  }),
+  from: one(wallets, {
+    fields: [transactionTemplates.fromWalletId],
+    references: [wallets.id],
+    relationName: "from",
+  }),
+  to: one(wallets, {
+    fields: [transactionTemplates.toWalletId],
+    references: [wallets.id],
+    relationName: "to",
+  }),
+  place: one(places, {
+    fields: [transactionTemplates.placeId],
+    references: [places.id],
+  }),
+}));
 
 export const transactionRelations = relations(transactions, ({ one, many }) => ({
   category: one(transactionCategories, {

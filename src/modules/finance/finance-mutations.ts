@@ -2,11 +2,13 @@ import {
   transactionCategoriesCreate,
   transactionsCreate,
   transactionsUpdate,
+  transactionTemplatesCreate,
   walletsCreate,
   walletsUpdate,
 } from "@/modules/finance/finance-actions";
 import { TransactionCategoryCreateForm } from "@/modules/finance/schemas/transaction-category-create-form-schema";
 import { TransactionCreateForm } from "@/modules/finance/schemas/transaction-create-form-schema";
+import { TransactionTemplateCreateForm } from "@/modules/finance/schemas/transaction-template-create-form-schema";
 import { TransactionUpdateForm } from "@/modules/finance/schemas/transaction-update-form-schema";
 import { WalletCreateForm } from "@/modules/finance/schemas/wallet-create-form-schema";
 import { WalletUpdateForm } from "@/modules/finance/schemas/wallet-update-form-schema";
@@ -30,6 +32,13 @@ export function useTransactionCategoriesCreateMutation() {
   return useMutation({
     mutationKey: ["transaction-categories", "create"],
     mutationFn: (category: TransactionCategoryCreateForm) => transactionCategoriesCreate(category),
+  });
+}
+
+export function useTransactionTemplatesCreateMutation() {
+  return useMutation({
+    mutationKey: ["transaction-templates", "create"],
+    mutationFn: (template: TransactionTemplateCreateForm) => transactionTemplatesCreate(template),
   });
 }
 

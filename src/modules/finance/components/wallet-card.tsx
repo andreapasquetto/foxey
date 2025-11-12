@@ -14,10 +14,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Wallet } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
+import { ArchiveWallet } from "@/modules/finance/components/dialogs/archive-wallet";
+import { UnarchiveWallet } from "@/modules/finance/components/dialogs/unarchive-wallet";
 import { Edit, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
-import { UnarchiveWallet } from "./dialogs/unarchive-wallet";
-import { ArchiveWallet } from "./dialogs/archive-wallet";
 
 export function WalletCard({ wallet }: { wallet: Wallet }) {
   return (
