@@ -1,23 +1,28 @@
 "use client";
 
+import { Edit, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { currencyFormatter } from "@/common/formatters";
 import { walletRoute } from "@/common/routes";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Wallet } from "@/db/types/finance";
+import type { Wallet } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import { ArchiveWallet } from "@/modules/finance/components/dialogs/archive-wallet";
 import { UnarchiveWallet } from "@/modules/finance/components/dialogs/unarchive-wallet";
-import { Edit, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 
 export function WalletCard({ wallet }: { wallet: Wallet }) {
   return (

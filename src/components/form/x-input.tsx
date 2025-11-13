@@ -1,7 +1,13 @@
+import { type ComponentProps, useId } from "react";
+import {
+  type Control,
+  type FieldValue,
+  type FieldValues,
+  type Path,
+  useController,
+} from "react-hook-form";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ComponentProps, useId } from "react";
-import { Control, FieldValue, FieldValues, Path, useController } from "react-hook-form";
 
 interface XInputProps<T extends FieldValue<K>, K extends FieldValues>
   extends ComponentProps<"input"> {
@@ -30,7 +36,10 @@ export function XInput<T extends FieldValue<K>, K extends FieldValues>({
   return (
     <div className="space-y-2">
       {!!props.label && (
-        <Label htmlFor={id} className={!!fieldState.error?.message ? "text-destructive" : ""}>
+        <Label
+          htmlFor={id}
+          className={fieldState.error?.message ? "text-destructive" : ""}
+        >
           {props.label}
         </Label>
       )}

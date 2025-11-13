@@ -1,5 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfMinute } from "date-fns";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckbox } from "@/components/form/x-checkbox";
@@ -14,15 +17,12 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Car } from "@/db/types/mobility";
+import type { Car } from "@/db/types/mobility";
 import { useInspectionsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
+  type CreateInspectionFormType,
   createInspectionFormSchema,
-  CreateInspectionFormType,
 } from "@/modules/mobility/schemas/create-inspection-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
-import { useForm } from "react-hook-form";
 
 export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
   const { cars, carId } = props;
@@ -44,13 +44,18 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onValidSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XSelect control={form.control} name="carId" label="Car" disabled>
             {cars.map((car) => (
               <XSelectOption key={car.id} value={car.id}>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {car.year}
+                  </span>
                   <div>
                     {car.make} {car.model}
                   </div>
@@ -65,7 +70,11 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
               <FormItem className="flex flex-col justify-end">
                 <FormLabel>Date</FormLabel>
                 <FormControl>
-                  <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                  <DatePicker
+                    value={field.value}
+                    setValue={field.onChange}
+                    includeTime
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -81,7 +90,11 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
             placeholder="0"
           />
           <div className="md:mb-3 md:self-end">
-            <XCheckbox control={form.control} name="isSuccessful" label="Successful" />
+            <XCheckbox
+              control={form.control}
+              name="isSuccessful"
+              label="Successful"
+            />
           </div>
         </div>
         <div className="flex items-center justify-end gap-1">

@@ -1,3 +1,4 @@
+import { CheckIcon, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -6,9 +7,12 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
-import { CheckIcon, Plus } from "lucide-react";
 
 interface ChipComboboxProps<T extends { id: string; name: string }> {
   label: string;
@@ -20,7 +24,9 @@ interface ChipComboboxProps<T extends { id: string; name: string }> {
   withSearch?: boolean;
 }
 
-export function ChipCombobox<T extends { id: string; name: string }>(props: ChipComboboxProps<T>) {
+export function ChipCombobox<T extends { id: string; name: string }>(
+  props: ChipComboboxProps<T>,
+) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -34,7 +40,9 @@ export function ChipCombobox<T extends { id: string; name: string }>(props: Chip
           )}
         >
           {props.label}
-          {!props.selectedValue && <Plus className="size-4 shrink-0 opacity-50" />}
+          {!props.selectedValue && (
+            <Plus className="size-4 shrink-0 opacity-50" />
+          )}
           {props.selectedValue && (
             <span className="text-foreground">{props.selectedValue.name}</span>
           )}
@@ -48,9 +56,16 @@ export function ChipCombobox<T extends { id: string; name: string }>(props: Chip
             {props.options?.map((option) => (
               <CommandItem
                 key={option.id}
-                value={props.optionIndexer ? props.optionIndexer(option) : option.name}
+                value={
+                  props.optionIndexer
+                    ? props.optionIndexer(option)
+                    : option.name
+                }
                 onSelect={() => {
-                  if (props.selectedValue && props.selectedValue.id === option.id) {
+                  if (
+                    props.selectedValue &&
+                    props.selectedValue.id === option.id
+                  ) {
                     props.onSelectValue(undefined);
                   } else {
                     props.onSelectValue(option);
@@ -62,7 +77,9 @@ export function ChipCombobox<T extends { id: string; name: string }>(props: Chip
                 <CheckIcon
                   className={cn(
                     "ml-auto size-4",
-                    props.selectedValue?.id === option.id ? "opacity-100" : "opacity-0",
+                    props.selectedValue?.id === option.id
+                      ? "opacity-100"
+                      : "opacity-0",
                   )}
                 />
               </CommandItem>

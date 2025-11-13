@@ -1,16 +1,5 @@
 "use client";
 
-import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Contact } from "@/db/types/contacts";
-import { Event } from "@/db/types/events";
-import { Place, PlaceCategory } from "@/db/types/places";
-import { cn } from "@/lib/utils";
-import { DeleteEvent } from "@/modules/events/components/dialogs/delete-event";
-import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
-import { eventsToggleCancel } from "@/modules/events/events-actions";
 import {
   add,
   differenceInYears,
@@ -41,6 +30,23 @@ import {
   RotateCw,
 } from "lucide-react";
 import { useState } from "react";
+import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import type { Contact } from "@/db/types/contacts";
+import type { Event } from "@/db/types/events";
+import type { Place, PlaceCategory } from "@/db/types/places";
+import { cn } from "@/lib/utils";
+import { DeleteEvent } from "@/modules/events/components/dialogs/delete-event";
+import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
+import { eventsToggleCancel } from "@/modules/events/events-actions";
 
 export function MonthCalendar(props: {
   categories: PlaceCategory[];
@@ -60,10 +66,15 @@ export function MonthCalendar(props: {
     end: endOfWeek(endOfMonth(selectedMonth), { weekStartsOn: 1 }),
   });
 
-  const selectedDayEvents = events.filter((event) => isSameDay(selectedDay, event.datetime));
+  const selectedDayEvents = events.filter((event) =>
+    isSameDay(selectedDay, event.datetime),
+  );
   const contactsWithDobs = contacts
     .filter((contact) => contact.dob)
-    .map((contact) => ({ ...contact, dob: parse(contact.dob!, "yyyy-MM-dd", new Date()) }));
+    .map((contact) => ({
+      ...contact,
+      dob: parse(contact.dob!, "yyyy-MM-dd", new Date()),
+    }));
   const selectedDayBirthdays = contactsWithDobs.filter(
     (contact) =>
       selectedDay.getMonth() === contact.dob.getMonth() &&
@@ -181,7 +192,9 @@ export function MonthCalendar(props: {
           </div>
           <div className="isolate grid w-full grid-cols-7 grid-rows-6 gap-0.5 p-0.5 text-xs/6">
             {days.map((day) => {
-              const dayEvents = events.filter((event) => isSameDay(day, event.datetime));
+              const dayEvents = events.filter((event) =>
+                isSameDay(day, event.datetime),
+              );
               const birthdays = contactsWithDobs.filter(
                 (contact) =>
                   day.getMonth() === contact.dob.getMonth() &&
@@ -193,7 +206,9 @@ export function MonthCalendar(props: {
                   type="button"
                   className={cn(
                     "flex h-10 flex-col items-center justify-center rounded-md hover:bg-foreground/10 focus:z-10 sm:h-20 sm:items-start sm:justify-normal sm:p-1.5 lg:h-24 dark:hover:bg-foreground/10",
-                    isSameMonth(selectedMonth, day) ? "bg-muted dark:bg-muted/40" : "opacity-25",
+                    isSameMonth(selectedMonth, day)
+                      ? "bg-muted dark:bg-muted/40"
+                      : "opacity-25",
                     !isSameDay(day, selectedDay) &&
                       isToday(day) &&
                       "text-red-500 dark:text-red-600",
@@ -233,7 +248,9 @@ export function MonthCalendar(props: {
                             <li key={contact.id}>
                               <div className="flex items-center gap-1 text-yellow-500">
                                 <Cake className="size-3 shrink-0" />
-                                <p className="truncate font-medium">{contact.fullName}</p>
+                                <p className="truncate font-medium">
+                                  {contact.fullName}
+                                </p>
                               </div>
                             </li>
                           ))}
@@ -325,29 +342,39 @@ export function MonthCalendar(props: {
                             event.isCanceled && "line-through",
                           )}
                         >
-                          {!event.isCanceled && isBefore(selectedDay, today) && (
-                            <Check className="mr-1 inline-block size-4 text-green-500 dark:text-green-400" />
-                          )}
+                          {!event.isCanceled &&
+                            isBefore(selectedDay, today) && (
+                              <Check className="mr-1 inline-block size-4 text-green-500 dark:text-green-400" />
+                            )}
                           {event.title}
                         </div>
                       </div>
                       <div className="ml-auto text-xs text-foreground">
-                        {event.isAllDay ? "ALL DAY" : format(event.datetime, "HH:mm")}
+                        {event.isAllDay
+                          ? "ALL DAY"
+                          : format(event.datetime, "HH:mm")}
                       </div>
                     </div>
                   </div>
                   {event.description && (
-                    <div className="text-xs text-muted-foreground">{event.description}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {event.description}
+                    </div>
                   )}
                   {event.place && (
                     <div className="flex items-center gap-1 text-muted-foreground">
                       <MapPin className="size-4" />
-                      <span className="text-xs leading-none">{event.place.name}</span>
+                      <span className="text-xs leading-none">
+                        {event.place.name}
+                      </span>
                     </div>
                   )}
                   <div className="flex items-center justify-between">
                     {event.category && <Badge>{event.category.name}</Badge>}
-                    <form action={eventsToggleCancel} className="ml-auto flex items-center gap-1">
+                    <form
+                      action={eventsToggleCancel}
+                      className="ml-auto flex items-center gap-1"
+                    >
                       <input type="hidden" name="id" value={event.id} />
                       <Button type="submit" variant="outline" size="icon">
                         {event.isCanceled && <RotateCw className="size-4" />}
@@ -361,7 +388,9 @@ export function MonthCalendar(props: {
             </ul>
           )}
           {!selectedDayEvents.length && (
-            <p className="text-center text-sm text-muted-foreground">There are no events.</p>
+            <p className="text-center text-sm text-muted-foreground">
+              There are no events.
+            </p>
           )}
         </div>
       </section>

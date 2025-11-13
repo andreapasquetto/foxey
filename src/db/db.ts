@@ -1,10 +1,10 @@
+import { drizzle } from "drizzle-orm/node-postgres";
 import { env } from "@/common/env";
 import * as contactsSchema from "@/db/schemas/contacts";
 import * as eventsSchema from "@/db/schemas/events";
 import * as financeSchema from "@/db/schemas/finance";
 import * as mobilitySchema from "@/db/schemas/mobility";
 import * as placesSchema from "@/db/schemas/places";
-import { drizzle } from "drizzle-orm/node-postgres";
 
 export const db = drizzle(env.database.connectionString, {
   schema: {
@@ -16,4 +16,6 @@ export const db = drizzle(env.database.connectionString, {
   },
 });
 
-export type DBTransaction = Parameters<Parameters<(typeof db)["transaction"]>[0]>[0];
+export type DBTransaction = Parameters<
+  Parameters<(typeof db)["transaction"]>[0]
+>[0];

@@ -10,4 +10,6 @@ export const createTransactionFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type CreateTransactionFormType = z.infer<typeof createTransactionFormSchema>;
+export type CreateTransactionFormType = z.infer<
+  typeof createTransactionFormSchema
+>;

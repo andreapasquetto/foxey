@@ -1,17 +1,17 @@
 "use client";
 
+import { isSameMonth } from "date-fns";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { currencyFormatter } from "@/common/formatters";
 import { ChartEmptyStateMessage } from "@/components/empty-state/chart-empty-state-message";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Transaction } from "@/db/types/finance";
+import type { Transaction } from "@/db/types/finance";
 import { generateMonthExpensesPerDayChartData } from "@/modules/finance/finance-utils";
-import { isSameMonth } from "date-fns";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
   amont: {
@@ -26,7 +26,9 @@ export function MonthlyExpensesPerDayChart({
   transactions: Transaction[];
   selectedMonth: Date;
 }) {
-  const filteredTransactions = transactions.filter((tx) => isSameMonth(tx.datetime, selectedMonth));
+  const filteredTransactions = transactions.filter((tx) =>
+    isSameMonth(tx.datetime, selectedMonth),
+  );
 
   if (!transactions.length || !filteredTransactions.length) {
     return <ChartEmptyStateMessage />;
@@ -38,7 +40,10 @@ export function MonthlyExpensesPerDayChart({
   });
 
   return (
-    <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-auto h-[380px] w-full"
+    >
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis dataKey="day" tickLine={false} axisLine={false} />

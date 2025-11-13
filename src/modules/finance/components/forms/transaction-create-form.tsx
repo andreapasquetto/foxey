@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfHour } from "date-fns";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
@@ -20,20 +25,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { TransactionCategory, TransactionTemplate, Wallet } from "@/db/types/finance";
-import { Place } from "@/db/types/places";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import type {
+  TransactionCategory,
+  TransactionTemplate,
+  Wallet,
+} from "@/db/types/finance";
+import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useTransactionsCreateMutation } from "@/modules/finance/finance-mutations";
 import {
+  type CreateTransactionFormType,
   createTransactionFormSchema,
-  CreateTransactionFormType,
 } from "@/modules/finance/schemas/create-transaction-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfHour } from "date-fns";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 
 export function TransactionCreateForm({
   templates,
@@ -53,7 +61,8 @@ export function TransactionCreateForm({
     },
   });
 
-  const [selectedTemplate, setSelectedTemplate] = useState<TransactionTemplate | null>(null);
+  const [selectedTemplate, setSelectedTemplate] =
+    useState<TransactionTemplate | null>(null);
 
   function handleTemplateSelect(id: string) {
     if (id === selectedTemplate?.id) {
@@ -99,7 +108,9 @@ export function TransactionCreateForm({
                     )}
                   >
                     {selectedTemplate
-                      ? templates.find((template) => template.id === selectedTemplate.id)?.name
+                      ? templates.find(
+                          (template) => template.id === selectedTemplate.id,
+                        )?.name
                       : "Select an option"}
                     <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                   </Button>
@@ -123,7 +134,9 @@ export function TransactionCreateForm({
                           <Check
                             className={cn(
                               "ml-auto",
-                              template.id === selectedTemplate?.id ? "opacity-100" : "opacity-0",
+                              template.id === selectedTemplate?.id
+                                ? "opacity-100"
+                                : "opacity-0",
                             )}
                           />
                         </CommandItem>
@@ -137,7 +150,10 @@ export function TransactionCreateForm({
           <FormMessage />
         </FormItem>
       </div>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <FormField
             control={form.control}
@@ -146,7 +162,11 @@ export function TransactionCreateForm({
               <FormItem className="flex flex-col">
                 <FormLabel>Date</FormLabel>
                 <FormControl>
-                  <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                  <DatePicker
+                    value={field.value}
+                    setValue={field.onChange}
+                    includeTime
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -170,7 +190,9 @@ export function TransactionCreateForm({
                         )}
                       >
                         {field.value
-                          ? categories.find((category) => category.id === field.value)?.name
+                          ? categories.find(
+                              (category) => category.id === field.value,
+                            )?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -194,7 +216,9 @@ export function TransactionCreateForm({
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  category.id === field.value ? "opacity-100" : "opacity-0",
+                                  category.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -226,7 +250,8 @@ export function TransactionCreateForm({
                         )}
                       >
                         {field.value
-                          ? places.find((place) => place.id === field.value)?.name
+                          ? places.find((place) => place.id === field.value)
+                              ?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -241,7 +266,9 @@ export function TransactionCreateForm({
                           {places.map((place) => (
                             <CommandItem
                               value={
-                                place.category ? `${place.category.name}-${place.name}` : place.name
+                                place.category
+                                  ? `${place.category.name}-${place.name}`
+                                  : place.name
                               }
                               key={place.id}
                               onSelect={() => {
@@ -252,7 +279,9 @@ export function TransactionCreateForm({
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  place.id === field.value ? "opacity-100" : "opacity-0",
+                                  place.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -286,7 +315,8 @@ export function TransactionCreateForm({
                         )}
                       >
                         {field.value
-                          ? wallets.find((wallet) => wallet.id === field.value)?.name
+                          ? wallets.find((wallet) => wallet.id === field.value)
+                              ?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -306,13 +336,19 @@ export function TransactionCreateForm({
                                 form.setValue("fromWalletId", wallet.id);
                               }}
                             >
-                              <div className={cn(wallet.isArchived && "text-muted-foreground")}>
+                              <div
+                                className={cn(
+                                  wallet.isArchived && "text-muted-foreground",
+                                )}
+                              >
                                 {wallet.name}
                               </div>
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  wallet.id === field.value ? "opacity-100" : "opacity-0",
+                                  wallet.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -344,7 +380,8 @@ export function TransactionCreateForm({
                         )}
                       >
                         {field.value
-                          ? wallets.find((wallet) => wallet.id === field.value)?.name
+                          ? wallets.find((wallet) => wallet.id === field.value)
+                              ?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -364,13 +401,19 @@ export function TransactionCreateForm({
                                 form.setValue("toWalletId", wallet.id);
                               }}
                             >
-                              <div className={cn(wallet.isArchived && "text-muted-foreground")}>
+                              <div
+                                className={cn(
+                                  wallet.isArchived && "text-muted-foreground",
+                                )}
+                              >
                                 {wallet.name}
                               </div>
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  wallet.id === field.value ? "opacity-100" : "opacity-0",
+                                  wallet.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -395,7 +438,11 @@ export function TransactionCreateForm({
             placeholder="0.00"
           />
           <div className="md:col-span-2">
-            <XInput control={form.control} name="description" label="Description" />
+            <XInput
+              control={form.control}
+              name="description"
+              label="Description"
+            />
           </div>
         </div>
         <div className="flex items-center justify-end gap-3">

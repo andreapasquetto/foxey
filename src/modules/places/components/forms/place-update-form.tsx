@@ -1,5 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
@@ -20,19 +23,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Place, PlaceCategory } from "@/db/types/places";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import type { Place, PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { usePlacesUpdateMutation } from "@/modules/places/places-mutations";
 import {
+  type UpdatePlaceFormType,
   updatePlaceFormSchema,
-  UpdatePlaceFormType,
 } from "@/modules/places/schemas/update-place-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useForm } from "react-hook-form";
 
-export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Place }) {
+export function PlaceUpdateForm(props: {
+  categories: PlaceCategory[];
+  place: Place;
+}) {
   const { categories, place } = props;
   const form = useForm<UpdatePlaceFormType>({
     resolver: zodResolver(updatePlaceFormSchema),
@@ -53,7 +60,10 @@ export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Pla
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onValidSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <FormField
             control={form.control}
@@ -73,7 +83,9 @@ export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Pla
                         )}
                       >
                         {field.value
-                          ? categories.find((category) => category.id === field.value)?.name
+                          ? categories.find(
+                              (category) => category.id === field.value,
+                            )?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -97,7 +109,9 @@ export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Pla
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  category.id === field.value ? "opacity-100" : "opacity-0",
+                                  category.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -114,7 +128,11 @@ export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Pla
           <XInput control={form.control} name="name" label="Name" />
           <XInput control={form.control} name="address" label="Address" />
           <div className="md:mb-3 md:self-end">
-            <XCheckbox control={form.control} name="isVisited" label="Visited" />
+            <XCheckbox
+              control={form.control}
+              name="isVisited"
+              label="Visited"
+            />
           </div>
         </div>
         <div className="flex items-center justify-end gap-3">

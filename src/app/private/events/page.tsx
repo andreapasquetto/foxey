@@ -1,9 +1,12 @@
+import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
 import { contactsGetAllBirthdays } from "@/modules/contacts/contacts-actions";
 import { MonthCalendar } from "@/modules/events/components/month-calendar";
-import { eventCategoriesGetAll, eventsGetAll } from "@/modules/events/events-actions";
+import {
+  eventCategoriesGetAll,
+  eventsGetAll,
+} from "@/modules/events/events-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Events",

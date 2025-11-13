@@ -1,16 +1,16 @@
 "use client";
 
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { currencyFormatter } from "@/common/formatters";
 import { ChartEmptyStateMessage } from "@/components/empty-state/chart-empty-state-message";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Transaction } from "@/db/types/finance";
+import type { Transaction } from "@/db/types/finance";
 import { generateYearIncomeExpensesSavingsChartData } from "@/modules/finance/finance-utils";
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
   income: {
@@ -41,7 +41,10 @@ export function YearlyIncomeExpensesSavingsChart({
   });
 
   return (
-    <ChartContainer config={chartConfig} className="aspect-auto h-[380px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-auto h-[380px] w-full"
+    >
       <BarChart accessibilityLayer data={chartData}>
         <CartesianGrid vertical={false} />
         <XAxis dataKey="month" tickLine={false} axisLine={false} />

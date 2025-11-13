@@ -1,4 +1,3 @@
-import { Inspection, Refueling, Service } from "@/db/types/mobility";
 import {
   isBefore,
   isSameMonth,
@@ -9,6 +8,7 @@ import {
   sub,
 } from "date-fns";
 import { Decimal } from "decimal.js";
+import type { Inspection, Refueling, Service } from "@/db/types/mobility";
 
 export function extractRefuelingPeriods(refuelings: Refueling[]) {
   const today = startOfToday();
@@ -16,11 +16,15 @@ export function extractRefuelingPeriods(refuelings: Refueling[]) {
   const startOfLastYear = startOfYear(sub(today, { years: 1 }));
 
   return {
-    thisMonth: refuelings.filter((refueling) => isSameMonth(refueling.transaction.datetime, today)),
+    thisMonth: refuelings.filter((refueling) =>
+      isSameMonth(refueling.transaction.datetime, today),
+    ),
     lastMonth: refuelings.filter((refueling) =>
       isSameMonth(refueling.transaction.datetime, startOfLastMonth),
     ),
-    thisYear: refuelings.filter((refueling) => isSameYear(refueling.transaction.datetime, today)),
+    thisYear: refuelings.filter((refueling) =>
+      isSameYear(refueling.transaction.datetime, today),
+    ),
     lastYear: refuelings?.filter((refueling) =>
       isSameYear(refueling.transaction.datetime, startOfLastYear),
     ),
@@ -32,7 +36,10 @@ export function getEligibleRefuelings(refuelings: Refueling[]) {
 }
 
 export function calculateFuelCost(refuelings: Refueling[]) {
-  return refuelings.reduce((prev, curr) => prev.add(curr.transaction.amount), new Decimal(0));
+  return refuelings.reduce(
+    (prev, curr) => prev.add(curr.transaction.amount),
+    new Decimal(0),
+  );
 }
 
 export function calculateCumulativeDistance(refuelings: Refueling[]) {

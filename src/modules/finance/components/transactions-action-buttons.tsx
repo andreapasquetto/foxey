@@ -1,11 +1,11 @@
+import { Plus, Shapes, TextSelect } from "lucide-react";
+import Link from "next/link";
 import {
   newTransactionRoute,
   newTransactionTemplateRoute,
   transactionCategoriesRoute,
 } from "@/common/routes";
 import { Button } from "@/components/ui/button";
-import { Plus, Shapes, TextSelect } from "lucide-react";
-import Link from "next/link";
 
 export function TransactionsActionButtons() {
   return (

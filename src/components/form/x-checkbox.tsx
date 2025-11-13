@@ -1,7 +1,13 @@
+import { type ComponentProps, useId } from "react";
+import {
+  type Control,
+  type FieldValue,
+  type FieldValues,
+  type Path,
+  useController,
+} from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
-import { ComponentProps, useId } from "react";
-import { Control, FieldValue, FieldValues, Path, useController } from "react-hook-form";
 
 interface XCheckboxProps<T extends FieldValue<K>, K extends FieldValues>
   extends ComponentProps<"input"> {
@@ -25,8 +31,15 @@ export function XCheckbox<T extends FieldValue<K>, K extends FieldValues>(
     <div className="space-y-2">
       <div className="relative">
         <div className="flex items-end gap-3">
-          <Checkbox checked={field.value} onCheckedChange={field.onChange} id={id} />
-          <Label htmlFor={id} className={!!fieldState.error?.message ? "text-destructive" : ""}>
+          <Checkbox
+            checked={field.value}
+            onCheckedChange={field.onChange}
+            id={id}
+          />
+          <Label
+            htmlFor={id}
+            className={fieldState.error?.message ? "text-destructive" : ""}
+          >
             {props.label}
           </Label>
         </div>

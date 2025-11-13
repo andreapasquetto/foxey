@@ -13,4 +13,6 @@ export const createHighwayTripFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type CreateHighwayTripFormType = z.infer<typeof createHighwayTripFormSchema>;
+export type CreateHighwayTripFormType = z.infer<
+  typeof createHighwayTripFormSchema
+>;

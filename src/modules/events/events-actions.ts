@@ -1,14 +1,14 @@
 "use server";
 
-import { eventsRoute } from "@/common/routes";
-import { getCurrentUserId } from "@/common/utils/auth";
-import { db } from "@/db/db";
-import { eventCategories, events } from "@/db/schemas/events";
-import { CreateEventFormType } from "@/modules/events/schemas/create-event-form-schema";
 import { startOfDay } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { eventsRoute } from "@/common/routes";
+import { getCurrentUserId } from "@/common/utils/auth";
+import { db } from "@/db/db";
+import { eventCategories, events } from "@/db/schemas/events";
+import type { CreateEventFormType } from "@/modules/events/schemas/create-event-form-schema";
 
 export async function eventCategoriesGetAll() {
   const userId = await getCurrentUserId();
@@ -65,6 +65,8 @@ export async function eventsToggleCancel(formData: FormData) {
 export async function eventsDelete(formData: FormData) {
   const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
-  await db.delete(events).where(and(eq(events.userId, userId), eq(events.id, id)));
+  await db
+    .delete(events)
+    .where(and(eq(events.userId, userId), eq(events.id, id)));
   revalidatePath(eventsRoute);
 }

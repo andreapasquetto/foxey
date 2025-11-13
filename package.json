@@ -7,7 +7,7 @@
     "db:explore": "drizzle-kit studio",
     "dev": "next dev",
     "format": "biome format --write",
-    "lint": "biome check",
+    "lint": "biome check --write",
     "build": "next build",
     "start": "next start"
   },

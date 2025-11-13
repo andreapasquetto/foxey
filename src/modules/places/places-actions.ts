@@ -1,18 +1,25 @@
 "use server";
 
-import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
-import { placesRoute } from "@/common/routes";
-import { getCurrentUserId } from "@/common/utils/auth";
-import { db } from "@/db/db";
-import { placeCategories, places } from "@/db/schemas/places";
-import { CreatePlaceFormType } from "@/modules/places/schemas/create-place-form-schema";
-import { UpdatePlaceFormType } from "@/modules/places/schemas/update-place-form-schema";
 import { and, eq, ilike } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import {
+  type Paginate,
+  paginateToLimitAndOffset,
+  toPaginated,
+} from "@/common/pagination";
+import { placesRoute } from "@/common/routes";
+import { getCurrentUserId } from "@/common/utils/auth";
+import { db } from "@/db/db";
+import { placeCategories, places } from "@/db/schemas/places";
+import type { CreatePlaceFormType } from "@/modules/places/schemas/create-place-form-schema";
+import type { UpdatePlaceFormType } from "@/modules/places/schemas/update-place-form-schema";
 
-export async function placeCategoriesGetPaginated(params: { paginate: Paginate; query?: string }) {
+export async function placeCategoriesGetPaginated(params: {
+  paginate: Paginate;
+  query?: string;
+}) {
   const userId = await getCurrentUserId();
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
   const total = (
@@ -22,14 +29,18 @@ export async function placeCategoriesGetPaginated(params: { paginate: Paginate; 
       .where(
         and(
           eq(placeCategories.userId, userId),
-          params.query ? ilike(placeCategories.name, `%${params.query}%`) : undefined,
+          params.query
+            ? ilike(placeCategories.name, `%${params.query}%`)
+            : undefined,
         ),
       )
   ).length;
   const records = await db.query.placeCategories.findMany({
     where: and(
       eq(placeCategories.userId, userId),
-      params.query ? ilike(placeCategories.name, `%${params.query}%`) : undefined,
+      params.query
+        ? ilike(placeCategories.name, `%${params.query}%`)
+        : undefined,
     ),
     limit,
     offset,
@@ -43,7 +54,9 @@ export async function placeCategoriesGetAll(params: { query?: string } = {}) {
   return await db.query.placeCategories.findMany({
     where: and(
       eq(placeCategories.userId, userId),
-      params.query ? ilike(placeCategories.name, `%${params.query}%`) : undefined,
+      params.query
+        ? ilike(placeCategories.name, `%${params.query}%`)
+        : undefined,
     ),
     orderBy: [placeCategories.name],
   });
@@ -65,7 +78,9 @@ export async function placesGetPaginated(params: {
         and(
           eq(places.userId, userId),
           params.query ? ilike(places.name, `%${params.query}%`) : undefined,
-          params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
+          params.categoryId
+            ? eq(places.categoryId, params.categoryId)
+            : undefined,
         ),
       )
   ).length;
@@ -88,10 +103,7 @@ export async function placesGetPaginated(params: {
 }
 
 export async function placesGetAll(
-  params: {
-    query?: string;
-    categoryId?: string;
-  } = {},
+  params: { query?: string; categoryId?: string } = {},
 ) {
   const userId = await getCurrentUserId();
   return await db.query.places.findMany({

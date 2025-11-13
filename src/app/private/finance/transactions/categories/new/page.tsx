@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
 import { TransactionCategoryCreateForm } from "@/modules/finance/components/forms/transaction-category-create-form";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "New Transaction Category",

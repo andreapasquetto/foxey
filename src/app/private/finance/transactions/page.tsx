@@ -1,3 +1,5 @@
+import { parse } from "date-fns";
+import type { Metadata } from "next";
 import { fromUrlToPaginate } from "@/common/pagination";
 import { Heading1 } from "@/components/typography";
 import { TransactionFilters } from "@/modules/finance/components/transaction-filters";
@@ -9,8 +11,6 @@ import {
   walletsGetAll,
 } from "@/modules/finance/finance-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
-import { parse } from "date-fns";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Transactions",
@@ -29,7 +29,8 @@ export default async function TransactionsPage(props: {
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const { query, category, place, wallet, page, size, from, to } = searchParams ?? {};
+  const { query, category, place, wallet, page, size, from, to } =
+    searchParams ?? {};
 
   const categories = await transactionCategoriesGetAll();
   const places = await placesGetAll();
@@ -54,7 +55,11 @@ export default async function TransactionsPage(props: {
       <Heading1>Transactions</Heading1>
       <TransactionsActionButtons />
       <div className="space-y-6">
-        <TransactionFilters categories={categories} places={places} wallets={wallets} />
+        <TransactionFilters
+          categories={categories}
+          places={places}
+          wallets={wallets}
+        />
         <TransactionList transactions={records} total={total} />
       </div>
     </div>

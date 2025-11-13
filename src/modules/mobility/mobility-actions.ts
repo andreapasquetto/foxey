@@ -1,20 +1,29 @@
 "use server";
 
-import { carRoute, mobilityRoute } from "@/common/routes";
-import { getCurrentUserId } from "@/common/utils/auth";
-import { db } from "@/db/db";
-import { transactions } from "@/db/schemas/finance";
-import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schemas/mobility";
-import { transactionsGetByIdsMap, walletsUpdateAmount } from "@/modules/finance/finance-actions";
-import { CreateCarFormType } from "@/modules/mobility/schemas/create-car-form-schema";
-import { CreateHighwayTripFormType } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
-import { CreateInspectionFormType } from "@/modules/mobility/schemas/create-inspection-form-schema";
-import { CreateRefuelingFormType } from "@/modules/mobility/schemas/create-refueling-form-schema";
-import { CreateServiceFormType } from "@/modules/mobility/schemas/create-service-form-schema";
 import { Decimal } from "decimal.js";
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { carRoute, mobilityRoute } from "@/common/routes";
+import { getCurrentUserId } from "@/common/utils/auth";
+import { db } from "@/db/db";
+import { transactions } from "@/db/schemas/finance";
+import {
+  cars,
+  highwayTrips,
+  inspections,
+  refuelings,
+  services,
+} from "@/db/schemas/mobility";
+import {
+  transactionsGetByIdsMap,
+  walletsUpdateAmount,
+} from "@/modules/finance/finance-actions";
+import type { CreateCarFormType } from "@/modules/mobility/schemas/create-car-form-schema";
+import type { CreateHighwayTripFormType } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
+import type { CreateInspectionFormType } from "@/modules/mobility/schemas/create-inspection-form-schema";
+import type { CreateRefuelingFormType } from "@/modules/mobility/schemas/create-refueling-form-schema";
+import type { CreateServiceFormType } from "@/modules/mobility/schemas/create-service-form-schema";
 
 export async function carsCreate(car: CreateCarFormType) {
   const userId = await getCurrentUserId();
@@ -165,7 +174,10 @@ export async function highwayTripsGetAll(carId: string) {
   }));
 }
 
-export async function servicesCreate(params: { carId: string; service: CreateServiceFormType }) {
+export async function servicesCreate(params: {
+  carId: string;
+  service: CreateServiceFormType;
+}) {
   const { carId, service } = params;
   await db.insert(services).values({
     carId: service.carId,

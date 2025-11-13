@@ -1,3 +1,9 @@
+import { zodResolver } from "@hookform/resolvers/zod";
+import { PopoverContent } from "@radix-ui/react-popover";
+import { add } from "date-fns";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useEffect } from "react";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckbox } from "@/components/form/x-checkbox";
@@ -20,20 +26,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Popover, PopoverTrigger } from "@/components/ui/popover";
-import { EventCategory } from "@/db/types/events";
-import { Place } from "@/db/types/places";
+import type { EventCategory } from "@/db/types/events";
+import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useEventsCreateMutation } from "@/modules/events/events-mutations";
 import {
+  type CreateEventFormType,
   createEventFormSchema,
-  CreateEventFormType,
 } from "@/modules/events/schemas/create-event-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { PopoverContent } from "@radix-ui/react-popover";
-import { add } from "date-fns";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
 
 export function EventCreateForm(props: {
   categories: EventCategory[];
@@ -45,7 +45,9 @@ export function EventCreateForm(props: {
   const form = useForm<CreateEventFormType>({
     resolver: zodResolver(createEventFormSchema),
     defaultValues: {
-      datetime: props.selectedDay ? add(props.selectedDay, { hours: 12 }) : undefined,
+      datetime: props.selectedDay
+        ? add(props.selectedDay, { hours: 12 })
+        : undefined,
       isAllDay: false,
     },
   });
@@ -64,7 +66,10 @@ export function EventCreateForm(props: {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onValidSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <FormField
           control={form.control}
           name="datetime"
@@ -72,7 +77,11 @@ export function EventCreateForm(props: {
             <FormItem className="flex flex-col">
               <FormLabel>Date</FormLabel>
               <FormControl>
-                <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                <DatePicker
+                  value={field.value}
+                  setValue={field.onChange}
+                  includeTime
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -101,7 +110,9 @@ export function EventCreateForm(props: {
                       )}
                     >
                       {field.value
-                        ? categories.find((category) => category.id === field.value)?.name
+                        ? categories.find(
+                            (category) => category.id === field.value,
+                          )?.name
                         : "Select an option"}
                       <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                     </Button>
@@ -125,7 +136,9 @@ export function EventCreateForm(props: {
                             <Check
                               className={cn(
                                 "ml-auto",
-                                category.id === field.value ? "opacity-100" : "opacity-0",
+                                category.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
                               )}
                             />
                           </CommandItem>
@@ -172,7 +185,9 @@ export function EventCreateForm(props: {
                         {places.map((place) => (
                           <CommandItem
                             value={
-                              place.category ? `${place.category.name}-${place.name}` : place.name
+                              place.category
+                                ? `${place.category.name}-${place.name}`
+                                : place.name
                             }
                             key={place.id}
                             onSelect={() => {
@@ -183,7 +198,9 @@ export function EventCreateForm(props: {
                             <Check
                               className={cn(
                                 "ml-auto",
-                                place.id === field.value ? "opacity-100" : "opacity-0",
+                                place.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
                               )}
                             />
                           </CommandItem>

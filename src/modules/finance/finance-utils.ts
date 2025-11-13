@@ -1,5 +1,3 @@
-import { groupBy } from "@/common/utils/arrays";
-import { Transaction } from "@/db/types/finance";
 import {
   eachDayOfInterval,
   eachMonthOfInterval,
@@ -13,6 +11,8 @@ import {
   startOfYear,
 } from "date-fns";
 import { Decimal } from "decimal.js";
+import { groupBy } from "@/common/utils/arrays";
+import type { Transaction } from "@/db/types/finance";
 
 export function getTransactionsWithoutTransfers(transactions: Transaction[]) {
   return transactions.filter(
@@ -29,7 +29,10 @@ export function getOutgoingTransactions(transactions: Transaction[]) {
 }
 
 export function calculateTotal(transactions: Transaction[]) {
-  return transactions.reduce((acc, curr) => acc.add(new Decimal(curr.amount)), new Decimal(0));
+  return transactions.reduce(
+    (acc, curr) => acc.add(new Decimal(curr.amount)),
+    new Decimal(0),
+  );
 }
 
 export function calculatePercentagesByCategory(transactions: Transaction[]) {
@@ -72,7 +75,9 @@ export function generateMonthExpensesPerDayChartData(params: {
       day: format(day, "dd"),
       amount: dayTransactions.length
         ? calculateTotal(
-            getTransactionsWithoutTransfers(getOutgoingTransactions(dayTransactions)),
+            getTransactionsWithoutTransfers(
+              getOutgoingTransactions(dayTransactions),
+            ),
           ).toNumber()
         : 0,
     };
@@ -81,7 +86,10 @@ export function generateMonthExpensesPerDayChartData(params: {
   return result;
 }
 
-export function generateMonthTrendChartData(params: { transactions: Transaction[]; month: Date }) {
+export function generateMonthTrendChartData(params: {
+  transactions: Transaction[];
+  month: Date;
+}) {
   const { transactions, month } = params;
 
   return transactions
@@ -95,13 +103,17 @@ export function generateMonthTrendChartData(params: { transactions: Transaction[
 
       const isTransfer = !!transaction.fromWalletId && !!transaction.toWalletId;
       if (!isTransfer) {
-        if (transaction.fromWalletId) amountChange = amountChange.sub(transaction.amount);
-        if (transaction.toWalletId) amountChange = amountChange.add(transaction.amount);
+        if (transaction.fromWalletId)
+          amountChange = amountChange.sub(transaction.amount);
+        if (transaction.toWalletId)
+          amountChange = amountChange.add(transaction.amount);
       }
 
       acc.push({
         datetime: transaction.datetime,
-        amount: acc.length ? acc[acc.length - 1].amount.add(amountChange) : amountChange,
+        amount: acc.length
+          ? acc[acc.length - 1].amount.add(amountChange)
+          : amountChange,
       });
 
       return acc;
@@ -110,7 +122,10 @@ export function generateMonthTrendChartData(params: { transactions: Transaction[
     .map((item) => ({ ...item, amount: item.amount.toNumber() }));
 }
 
-export function generateYearTrendChartData(params: { transactions: Transaction[]; year: Date }) {
+export function generateYearTrendChartData(params: {
+  transactions: Transaction[];
+  year: Date;
+}) {
   const { transactions, year } = params;
 
   if (!transactions.length) return [];
@@ -126,13 +141,17 @@ export function generateYearTrendChartData(params: { transactions: Transaction[]
 
       const isTransfer = !!transaction.fromWalletId && !!transaction.toWalletId;
       if (!isTransfer) {
-        if (transaction.fromWalletId) amountChange = amountChange.sub(transaction.amount);
-        if (transaction.toWalletId) amountChange = amountChange.add(transaction.amount);
+        if (transaction.fromWalletId)
+          amountChange = amountChange.sub(transaction.amount);
+        if (transaction.toWalletId)
+          amountChange = amountChange.add(transaction.amount);
       }
 
       acc.push({
         datetime: transaction.datetime,
-        amount: acc.length ? acc[acc.length - 1].amount.add(amountChange) : amountChange,
+        amount: acc.length
+          ? acc[acc.length - 1].amount.add(amountChange)
+          : amountChange,
       });
 
       return acc;
@@ -162,10 +181,14 @@ export function generateYearIncomeExpensesSavingsChartData(params: {
     );
 
     const income = calculateTotal(
-      getTransactionsWithoutTransfers(getIncomingTransactions(monthTransactions)),
+      getTransactionsWithoutTransfers(
+        getIncomingTransactions(monthTransactions),
+      ),
     );
     const expenses = calculateTotal(
-      getTransactionsWithoutTransfers(getOutgoingTransactions(monthTransactions)),
+      getTransactionsWithoutTransfers(
+        getOutgoingTransactions(monthTransactions),
+      ),
     );
 
     return {

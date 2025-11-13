@@ -22,10 +22,14 @@ export const newWalletRoute = `${walletsRoute}/new`;
 export const mobilityRoute = `${privateRoute}/mobility`;
 export const carsRoute = `${mobilityRoute}/cars`;
 export const carRoute = (id: string) => `${carsRoute}/${id}`;
-export const newHighwayTripRoute = (carId: string) => `${carRoute(carId)}/highway-trips/new`;
-export const newInspectionRoute = (carId: string) => `${carRoute(carId)}/inspections/new`;
-export const newRefuelingRoute = (carId: string) => `${carRoute(carId)}/refuelings/new`;
-export const newServiceRoute = (carId: string) => `${carRoute(carId)}/services/new`;
+export const newHighwayTripRoute = (carId: string) =>
+  `${carRoute(carId)}/highway-trips/new`;
+export const newInspectionRoute = (carId: string) =>
+  `${carRoute(carId)}/inspections/new`;
+export const newRefuelingRoute = (carId: string) =>
+  `${carRoute(carId)}/refuelings/new`;
+export const newServiceRoute = (carId: string) =>
+  `${carRoute(carId)}/services/new`;
 export const newCarRoute = `${carsRoute}/new`;
 
 export const placesRoute = `${privateRoute}/places`;

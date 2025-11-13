@@ -1,11 +1,15 @@
 "use client";
 
-import { useSearchFilters } from "@/common/hooks/use-search-filters";
-import { Input } from "@/components/ui/input";
 import { useSearchParams } from "next/navigation";
 import { useId } from "react";
+import { useSearchFilters } from "@/common/hooks/use-search-filters";
+import { Input } from "@/components/ui/input";
 
-export function SearchFilter(props: { paramName?: string; id?: string; placeholder?: string }) {
+export function SearchFilter(props: {
+  paramName?: string;
+  id?: string;
+  placeholder?: string;
+}) {
   const searchParams = useSearchParams();
   const { handleSearch } = useSearchFilters();
 

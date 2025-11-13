@@ -1,7 +1,7 @@
-import { newPlaceRoute, placeCategoriesRoute } from "@/common/routes";
-import { Button } from "@/components/ui/button";
 import { Plus, Shapes } from "lucide-react";
 import Link from "next/link";
+import { newPlaceRoute, placeCategoriesRoute } from "@/common/routes";
+import { Button } from "@/components/ui/button";
 
 export function PlacesActionButtons() {
   return (

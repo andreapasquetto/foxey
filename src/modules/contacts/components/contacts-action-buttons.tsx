@@ -1,7 +1,7 @@
-import { newContactRoute } from "@/common/routes";
-import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import Link from "next/link";
+import { newContactRoute } from "@/common/routes";
+import { Button } from "@/components/ui/button";
 
 export function ContactsActionButtons() {
   return (

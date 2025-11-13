@@ -1,7 +1,15 @@
+import { format } from "date-fns";
+import Decimal from "decimal.js";
+import { Notebook } from "lucide-react";
 import { numberFormatter } from "@/common/formatters";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -10,10 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Service } from "@/db/types/mobility";
-import { format } from "date-fns";
-import Decimal from "decimal.js";
-import { Notebook } from "lucide-react";
+import type { Service } from "@/db/types/mobility";
 
 export function ServiceList(props: { services: Service[] }) {
   const { services } = props;
@@ -51,12 +56,18 @@ export function ServiceList(props: { services: Service[] }) {
               </div>
             )}
             <CardHeader>
-              <CardDescription>{format(service.datetime, "ccc y-MM-dd HH:mm")}</CardDescription>
-              <CardTitle>{numberFormatter.format(Number(service.odometer))} km</CardTitle>
+              <CardDescription>
+                {format(service.datetime, "ccc y-MM-dd HH:mm")}
+              </CardDescription>
+              <CardTitle>
+                {numberFormatter.format(Number(service.odometer))} km
+              </CardTitle>
               {i < services.length - 1 && (
                 <CardDescription>
                   {numberFormatter.format(
-                    new Decimal(service.odometer).sub(services[i + 1].odometer).toNumber(),
+                    new Decimal(service.odometer)
+                      .sub(services[i + 1].odometer)
+                      .toNumber(),
                   )}{" "}
                   km
                 </CardDescription>

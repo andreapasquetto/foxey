@@ -1,6 +1,10 @@
 "use client";
 
-import { currencyFormatter, unsignedPercentageFormatter } from "@/common/formatters";
+import { isSameMonth } from "date-fns";
+import {
+  currencyFormatter,
+  unsignedPercentageFormatter,
+} from "@/common/formatters";
 import { ChartEmptyStateMessage } from "@/components/empty-state/chart-empty-state-message";
 import {
   Accordion,
@@ -16,14 +20,13 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Transaction } from "@/db/types/finance";
+import type { Transaction } from "@/db/types/finance";
 import {
   calculatePercentagesByCategory,
   getIncomingTransactions,
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/finance/finance-utils";
-import { isSameMonth } from "date-fns";
 
 export function MonthlyCategoriesTable({
   transactions,
@@ -32,7 +35,9 @@ export function MonthlyCategoriesTable({
   transactions: Transaction[];
   selectedMonth: Date;
 }) {
-  const filteredTransactions = transactions.filter((tx) => isSameMonth(tx.datetime, selectedMonth));
+  const filteredTransactions = transactions.filter((tx) =>
+    isSameMonth(tx.datetime, selectedMonth),
+  );
 
   if (!transactions.length || !filteredTransactions.length) {
     return <ChartEmptyStateMessage />;
@@ -40,10 +45,14 @@ export function MonthlyCategoriesTable({
 
   const tableData = {
     incoming: calculatePercentagesByCategory(
-      getIncomingTransactions(getTransactionsWithoutTransfers(filteredTransactions)),
+      getIncomingTransactions(
+        getTransactionsWithoutTransfers(filteredTransactions),
+      ),
     ),
     outgoing: calculatePercentagesByCategory(
-      getOutgoingTransactions(getTransactionsWithoutTransfers(filteredTransactions)),
+      getOutgoingTransactions(
+        getTransactionsWithoutTransfers(filteredTransactions),
+      ),
     ),
   };
 
@@ -66,11 +75,15 @@ export function MonthlyCategoriesTable({
                   <TableRow key={category.category}>
                     <TableCell>{category.category}</TableCell>
                     <TableCell className="text-right">
-                      <code>{currencyFormatter.format(category.total.toNumber())}</code>
+                      <code>
+                        {currencyFormatter.format(category.total.toNumber())}
+                      </code>
                     </TableCell>
                     <TableCell className="text-right text-muted-foreground">
                       <code>
-                        {unsignedPercentageFormatter.format(category.percentage.toNumber())}
+                        {unsignedPercentageFormatter.format(
+                          category.percentage.toNumber(),
+                        )}
                       </code>
                     </TableCell>
                   </TableRow>
@@ -97,11 +110,15 @@ export function MonthlyCategoriesTable({
                   <TableRow key={category.category}>
                     <TableCell>{category.category}</TableCell>
                     <TableCell className="text-right">
-                      <code>{currencyFormatter.format(category.total.toNumber())}</code>
+                      <code>
+                        {currencyFormatter.format(category.total.toNumber())}
+                      </code>
                     </TableCell>
                     <TableCell className="text-right text-muted-foreground">
                       <code>
-                        {unsignedPercentageFormatter.format(category.percentage.toNumber())}
+                        {unsignedPercentageFormatter.format(
+                          category.percentage.toNumber(),
+                        )}
                       </code>
                     </TableCell>
                   </TableRow>

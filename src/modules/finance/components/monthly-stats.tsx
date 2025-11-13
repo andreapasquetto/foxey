@@ -1,10 +1,18 @@
 "use client";
 
+import { isSameMonth, sub } from "date-fns";
+import type { Decimal } from "decimal.js";
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Transaction } from "@/db/types/finance";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import type { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import {
   calculateTotal,
@@ -12,8 +20,6 @@ import {
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/finance/finance-utils";
-import { isSameMonth, sub } from "date-fns";
-import { Decimal } from "decimal.js";
 
 export function MonthlyStats({
   transactions,
@@ -22,7 +28,9 @@ export function MonthlyStats({
   transactions: Transaction[];
   selectedMonth: Date;
 }) {
-  const currentTransactions = transactions.filter((tx) => isSameMonth(tx.datetime, selectedMonth));
+  const currentTransactions = transactions.filter((tx) =>
+    isSameMonth(tx.datetime, selectedMonth),
+  );
   const previousTransactions = transactions.filter((tx) =>
     isSameMonth(tx.datetime, sub(selectedMonth, { months: 1 })),
   );
@@ -56,7 +64,9 @@ export function MonthlyStats({
 
   const savings = {
     current: totalAmounts.current.incoming.sub(totalAmounts.current.outgoing),
-    previous: totalAmounts.previous.incoming.sub(totalAmounts.previous.outgoing),
+    previous: totalAmounts.previous.incoming.sub(
+      totalAmounts.previous.outgoing,
+    ),
   };
 
   return (
@@ -79,13 +89,18 @@ export function MonthlyStats({
 }
 
 function IncomeCard(props: { current: Decimal; previous: Decimal }) {
-  const percentageFromPrevious = calculatePercentageChange(props.previous, props.current);
+  const percentageFromPrevious = calculatePercentageChange(
+    props.previous,
+    props.current,
+  );
 
   return (
     <Card>
       <CardHeader>
         <CardDescription>Income</CardDescription>
-        <CardTitle>{currencyFormatter.format(props.current.toNumber())}</CardTitle>
+        <CardTitle>
+          {currencyFormatter.format(props.current.toNumber())}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -113,13 +128,18 @@ function IncomeCard(props: { current: Decimal; previous: Decimal }) {
 }
 
 function ExpensesCard(props: { current: Decimal; previous: Decimal }) {
-  const percentageFromPrevious = calculatePercentageChange(props.previous, props.current);
+  const percentageFromPrevious = calculatePercentageChange(
+    props.previous,
+    props.current,
+  );
 
   return (
     <Card>
       <CardHeader>
         <CardDescription>Expenses</CardDescription>
-        <CardTitle>{currencyFormatter.format(props.current.toNumber())}</CardTitle>
+        <CardTitle>
+          {currencyFormatter.format(props.current.toNumber())}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -152,7 +172,10 @@ function SavingCard(props: {
   previousSavings: Decimal;
 }) {
   const thisMonthPercentage = props.currentSavings.div(props.currentIncome);
-  const percentageChange = calculatePercentageChange(props.previousSavings, props.currentSavings);
+  const percentageChange = calculatePercentageChange(
+    props.previousSavings,
+    props.currentSavings,
+  );
 
   return (
     <Card>

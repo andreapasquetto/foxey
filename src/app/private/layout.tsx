@@ -1,9 +1,9 @@
-import { privateRoute } from "@/common/routes";
-import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { UserButton } from "@clerk/nextjs";
 import { PocketKnife } from "lucide-react";
 import Link from "next/link";
+import { privateRoute } from "@/common/routes";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function PrivateLayout({
   children,

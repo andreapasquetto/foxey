@@ -1,3 +1,15 @@
+import { currentUser } from "@clerk/nextjs/server";
+import { Slot } from "@radix-ui/react-slot";
+import {
+  Calendar,
+  Car,
+  CircleDollarSign,
+  Contact,
+  MapPinned,
+} from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { redirect } from "next/navigation";
 import {
   contactsRoute,
   eventsRoute,
@@ -9,12 +21,6 @@ import {
 import { Heading1 } from "@/components/typography";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import { currentUser } from "@clerk/nextjs/server";
-import { Slot } from "@radix-ui/react-slot";
-import { Calendar, Car, CircleDollarSign, Contact, MapPinned } from "lucide-react";
-import { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
 
 const navigationItems = [
   {
@@ -57,13 +63,18 @@ export default async function PrivateHome() {
 
   return (
     <div className="space-y-12">
-      <Heading1>Hi {user.fullName ?? user.username ?? "Mysterious User"}</Heading1>
+      <Heading1>
+        Hi {user.fullName ?? user.username ?? "Mysterious User"}
+      </Heading1>
       <div className="mx-auto max-w-xl grid-cols-3 space-y-2 sm:grid">
         {navigationItems.map((item, index) => (
           <Link
-            key={index}
+            key={item.href}
             href={item.href}
-            className={cn("col-span-2 block", index % 2 === 0 ? "col-end-3" : "col-start-2")}
+            className={cn(
+              "col-span-2 block",
+              index % 2 === 0 ? "col-end-3" : "col-start-2",
+            )}
           >
             <Card className="group transition-colors hover:border-foreground">
               <CardHeader

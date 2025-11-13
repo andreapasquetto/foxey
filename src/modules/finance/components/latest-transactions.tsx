@@ -1,3 +1,6 @@
+import { formatDistanceToNow } from "date-fns";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { transactionsRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
@@ -12,9 +15,6 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { transactionsGetLatest } from "@/modules/finance/finance-actions";
-import { formatDistanceToNow } from "date-fns";
-import { ArrowRight } from "lucide-react";
-import Link from "next/link";
 
 export async function LatestTransactions() {
   const transactions = await transactionsGetLatest();
@@ -42,19 +42,26 @@ export async function LatestTransactions() {
               <TableCell>
                 {transaction.category && <p>{transaction.category.name}</p>}
                 {transaction.description && (
-                  <p className="text-xs text-muted-foreground">{transaction.description}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {transaction.description}
+                  </p>
                 )}
               </TableCell>
               <TableCell className="text-right">
                 {
                   <code
                     className={cn({
-                      "text-green-500 dark:text-green-400": transaction.to && !transaction.from,
-                      "text-red-500 dark:text-red-400": transaction.from && !transaction.to,
-                      "text-muted-foreground": transaction.from && transaction.to,
+                      "text-green-500 dark:text-green-400":
+                        transaction.to && !transaction.from,
+                      "text-red-500 dark:text-red-400":
+                        transaction.from && !transaction.to,
+                      "text-muted-foreground":
+                        transaction.from && transaction.to,
                     })}
                   >
-                    {rawCurrencyFormatter.format(parseFloat(transaction.amount))}
+                    {rawCurrencyFormatter.format(
+                      parseFloat(transaction.amount),
+                    )}
                   </code>
                 }
               </TableCell>

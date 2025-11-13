@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Transaction } from "@/db/types/finance";
+import type { Transaction } from "@/db/types/finance";
 import { tagsGetAll } from "@/modules/finance/finance-actions";
 import {
   calculateTotal,
@@ -53,14 +53,18 @@ export async function TagsTable() {
               <TableCell className="text-right text-green-500 dark:text-green-400">
                 <code>
                   {currencyFormatter.format(
-                    calculateTotal(getIncomingTransactions(transactions)).toNumber(),
+                    calculateTotal(
+                      getIncomingTransactions(transactions),
+                    ).toNumber(),
                   )}
                 </code>
               </TableCell>
               <TableCell className="text-right text-red-500 dark:text-red-400">
                 <code>
                   {currencyFormatter.format(
-                    calculateTotal(getOutgoingTransactions(transactions)).toNumber(),
+                    calculateTotal(
+                      getOutgoingTransactions(transactions),
+                    ).toNumber(),
                   )}
                 </code>
               </TableCell>

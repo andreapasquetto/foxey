@@ -1,17 +1,25 @@
-import { currencyFormatter } from "@/common/formatters";
-import { transactionRoute } from "@/common/routes";
-import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
 import { format } from "date-fns";
 import { Coins, ExternalLink, Gauge, Waypoints } from "lucide-react";
 import Link from "next/link";
+import { currencyFormatter } from "@/common/formatters";
+import { transactionRoute } from "@/common/routes";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
 
 export async function HighwayTripList(props: { carId: string }) {
   const trips = await highwayTripsGetAll(props.carId);
 
   if (!trips.length) {
-    return <EmptyStateMessage message="There are no highway trips for this car." />;
+    return (
+      <EmptyStateMessage message="There are no highway trips for this car." />
+    );
   }
 
   return (

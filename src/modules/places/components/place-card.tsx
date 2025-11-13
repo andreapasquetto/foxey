@@ -1,3 +1,5 @@
+import { Check, Edit, ExternalLink, MoreHorizontal, X } from "lucide-react";
+import Link from "next/link";
 import { placeRoute } from "@/common/routes";
 import {
   buildGoogleMapsUrlWithAddress,
@@ -5,17 +7,20 @@ import {
 } from "@/common/utils/places";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { Button } from "@/components/ui/button";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Place } from "@/db/types/places";
+import type { Place } from "@/db/types/places";
 import { DeletePlace } from "@/modules/places/components/delete-place";
-import { Check, Edit, ExternalLink, MoreHorizontal, X } from "lucide-react";
-import Link from "next/link";
 
 export function PlaceCard({ place }: { place: Place }) {
   return (
@@ -50,7 +55,9 @@ export function PlaceCard({ place }: { place: Place }) {
         </DropdownMenu>
       </div>
       <CardHeader>
-        {place.category && <CardDescription>{place.category.name}</CardDescription>}
+        {place.category && (
+          <CardDescription>{place.category.name}</CardDescription>
+        )}
         <CardTitle>{place.name}</CardTitle>
         {place.address && (
           <Link

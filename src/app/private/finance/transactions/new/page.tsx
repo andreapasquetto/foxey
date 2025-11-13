@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
 import { TransactionCreateForm } from "@/modules/finance/components/forms/transaction-create-form";
 import {
@@ -6,7 +7,6 @@ import {
   walletsGetAll,
 } from "@/modules/finance/finance-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "New Transaction",

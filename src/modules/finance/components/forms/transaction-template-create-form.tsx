@@ -1,5 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
@@ -19,18 +22,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { TransactionCategory, Wallet } from "@/db/types/finance";
-import { Place } from "@/db/types/places";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import type { TransactionCategory, Wallet } from "@/db/types/finance";
+import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useTransactionTemplatesCreateMutation } from "@/modules/finance/finance-mutations";
 import {
+  type CreateTransactionTemplateFormType,
   createTransactionTemplateFormSchema,
-  CreateTransactionTemplateFormType,
 } from "@/modules/finance/schemas/create-transaction-template-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 export function TransactionTemplateCreateForm({
   wallets,
@@ -53,7 +57,10 @@ export function TransactionTemplateCreateForm({
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <XInput control={form.control} name="name" label="Name" />
           <FormField
@@ -74,7 +81,9 @@ export function TransactionTemplateCreateForm({
                         )}
                       >
                         {field.value
-                          ? categories.find((category) => category.id === field.value)?.name
+                          ? categories.find(
+                              (category) => category.id === field.value,
+                            )?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -98,7 +107,9 @@ export function TransactionTemplateCreateForm({
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  category.id === field.value ? "opacity-100" : "opacity-0",
+                                  category.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -130,7 +141,8 @@ export function TransactionTemplateCreateForm({
                         )}
                       >
                         {field.value
-                          ? places.find((place) => place.id === field.value)?.name
+                          ? places.find((place) => place.id === field.value)
+                              ?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -145,7 +157,9 @@ export function TransactionTemplateCreateForm({
                           {places.map((place) => (
                             <CommandItem
                               value={
-                                place.category ? `${place.category.name}-${place.name}` : place.name
+                                place.category
+                                  ? `${place.category.name}-${place.name}`
+                                  : place.name
                               }
                               key={place.id}
                               onSelect={() => {
@@ -156,7 +170,9 @@ export function TransactionTemplateCreateForm({
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  place.id === field.value ? "opacity-100" : "opacity-0",
+                                  place.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -190,7 +206,8 @@ export function TransactionTemplateCreateForm({
                         )}
                       >
                         {field.value
-                          ? wallets.find((wallet) => wallet.id === field.value)?.name
+                          ? wallets.find((wallet) => wallet.id === field.value)
+                              ?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -210,13 +227,19 @@ export function TransactionTemplateCreateForm({
                                 form.setValue("fromWalletId", wallet.id);
                               }}
                             >
-                              <div className={cn(wallet.isArchived && "text-muted-foreground")}>
+                              <div
+                                className={cn(
+                                  wallet.isArchived && "text-muted-foreground",
+                                )}
+                              >
                                 {wallet.name}
                               </div>
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  wallet.id === field.value ? "opacity-100" : "opacity-0",
+                                  wallet.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -248,7 +271,8 @@ export function TransactionTemplateCreateForm({
                         )}
                       >
                         {field.value
-                          ? wallets.find((wallet) => wallet.id === field.value)?.name
+                          ? wallets.find((wallet) => wallet.id === field.value)
+                              ?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -268,13 +292,19 @@ export function TransactionTemplateCreateForm({
                                 form.setValue("toWalletId", wallet.id);
                               }}
                             >
-                              <div className={cn(wallet.isArchived && "text-muted-foreground")}>
+                              <div
+                                className={cn(
+                                  wallet.isArchived && "text-muted-foreground",
+                                )}
+                              >
                                 {wallet.name}
                               </div>
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  wallet.id === field.value ? "opacity-100" : "opacity-0",
+                                  wallet.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>

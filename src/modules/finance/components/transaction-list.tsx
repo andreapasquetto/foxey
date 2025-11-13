@@ -1,5 +1,8 @@
 "use client";
 
+import { format } from "date-fns";
+import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { usePagination } from "@/common/hooks/use-pagination";
 import { transactionRoute } from "@/common/routes";
@@ -22,12 +25,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Transaction } from "@/db/types/finance";
+import type { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import { DeleteTransaction } from "@/modules/finance/components/dialogs/delete-transaction";
-import { format } from "date-fns";
-import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
-import Link from "next/link";
 
 export function TransactionList({
   transactions,
@@ -101,12 +101,17 @@ export function TransactionList({
                 {
                   <code
                     className={cn({
-                      "text-green-500 dark:text-green-400": transaction.to && !transaction.from,
-                      "text-red-500 dark:text-red-400": transaction.from && !transaction.to,
-                      "text-muted-foreground": transaction.from && transaction.to,
+                      "text-green-500 dark:text-green-400":
+                        transaction.to && !transaction.from,
+                      "text-red-500 dark:text-red-400":
+                        transaction.from && !transaction.to,
+                      "text-muted-foreground":
+                        transaction.from && transaction.to,
                     })}
                   >
-                    {rawCurrencyFormatter.format(parseFloat(transaction.amount))}
+                    {rawCurrencyFormatter.format(
+                      parseFloat(transaction.amount),
+                    )}
                   </code>
                 }
               </TableCell>

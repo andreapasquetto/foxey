@@ -1,5 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfMinute } from "date-fns";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
@@ -13,18 +16,19 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Wallet } from "@/db/types/finance";
-import { Car } from "@/db/types/mobility";
+import type { Wallet } from "@/db/types/finance";
+import type { Car } from "@/db/types/mobility";
 import { useHighwayTripsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
+  type CreateHighwayTripFormType,
   createHighwayTripFormSchema,
-  CreateHighwayTripFormType,
 } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
-import { useForm } from "react-hook-form";
 
-export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; carId: string }) {
+export function HighwayTripCreateForm(props: {
+  cars: Car[];
+  wallets: Wallet[];
+  carId: string;
+}) {
   const { cars, wallets, carId } = props;
   const form = useForm<CreateHighwayTripFormType>({
     resolver: zodResolver(createHighwayTripFormSchema),
@@ -42,13 +46,18 @@ export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; c
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onValidSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <XSelect control={form.control} name="carId" label="Car" disabled>
             {cars.map((car) => (
               <XSelectOption key={car.id} value={car.id}>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {car.year}
+                  </span>
                   <div>
                     {car.make} {car.model}
                   </div>
@@ -63,7 +72,11 @@ export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; c
               <FormItem className="flex flex-col justify-end">
                 <FormLabel>Date</FormLabel>
                 <FormControl>
-                  <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                  <DatePicker
+                    value={field.value}
+                    setValue={field.onChange}
+                    includeTime
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

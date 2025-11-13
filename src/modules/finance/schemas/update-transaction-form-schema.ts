@@ -9,4 +9,6 @@ export const updateTransactionFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type UpdateTransactionFormType = z.infer<typeof updateTransactionFormSchema>;
+export type UpdateTransactionFormType = z.infer<
+  typeof updateTransactionFormSchema
+>;

@@ -1,14 +1,14 @@
+import { format } from "date-fns";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 import { currencyFormatter } from "@/common/formatters";
 import { ChartEmptyStateMessage } from "@/components/empty-state/chart-empty-state-message";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Refueling } from "@/db/types/mobility";
-import { format } from "date-fns";
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import type { Refueling } from "@/db/types/mobility";
 
 const chartConfig = {
   price: {
@@ -27,7 +27,10 @@ export function FuelPriceChart(props: { refuelings: Refueling[] }) {
   }));
 
   return (
-    <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-auto h-[350px] w-full"
+    >
       <LineChart accessibilityLayer data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
@@ -42,7 +45,13 @@ export function FuelPriceChart(props: { refuelings: Refueling[] }) {
         />
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}
+          content={
+            <ChartTooltipContent
+              className="w-[175px]"
+              hideLabel
+              hideIndicator
+            />
+          }
         />
         <Line
           dataKey="price"

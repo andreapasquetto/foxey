@@ -1,13 +1,19 @@
 "use client";
 
+import { startOfToday } from "date-fns";
 import { usePagination } from "@/common/hooks/use-pagination";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
-import { Contact } from "@/db/types/contacts";
+import type { Contact } from "@/db/types/contacts";
 import { ContactCard } from "@/modules/contacts/components/contact-card";
-import { startOfToday } from "date-fns";
 
-export function ContactList({ contacts, total }: { contacts: Contact[]; total: number }) {
+export function ContactList({
+  contacts,
+  total,
+}: {
+  contacts: Contact[];
+  total: number;
+}) {
   const pagination = usePagination(total);
 
   if (!contacts.length) {

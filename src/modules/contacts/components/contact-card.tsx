@@ -1,27 +1,3 @@
-import { phoneNumberFormatter } from "@/common/formatters";
-import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
-import { buildGoogleMapsUrlWithAddress } from "@/common/utils/places";
-import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Contact, ContactAddress, ContactEmail, ContactPhoneNumber } from "@/db/types/contacts";
-import { cn } from "@/lib/utils";
-import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-contact";
-import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
-import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
 import { differenceInYears, format, parseISO } from "date-fns";
 import {
   Building,
@@ -34,8 +10,49 @@ import {
   Phone,
 } from "lucide-react";
 import Link from "next/link";
+import { phoneNumberFormatter } from "@/common/formatters";
+import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
+import { buildGoogleMapsUrlWithAddress } from "@/common/utils/places";
+import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import type {
+  Contact,
+  ContactAddress,
+  ContactEmail,
+  ContactPhoneNumber,
+} from "@/db/types/contacts";
+import { cn } from "@/lib/utils";
+import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-contact";
+import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
+import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
 
-export function ContactCard({ contact, today }: { contact: Contact; today: Date }) {
+export function ContactCard({
+  contact,
+  today,
+}: {
+  contact: Contact;
+  today: Date;
+}) {
   const dob = contact.dob ? parseISO(contact.dob) : undefined;
   return (
     <Card key={contact.id} className="relative">
@@ -63,17 +80,28 @@ export function ContactCard({ contact, today }: { contact: Contact; today: Date 
         </DropdownMenu>
       </div>
       <CardHeader>
-        {contact.subtitle && <CardDescription>{contact.subtitle}</CardDescription>}
+        {contact.subtitle && (
+          <CardDescription>{contact.subtitle}</CardDescription>
+        )}
         <CardTitle
-          className={cn("flex items-center gap-2", contact.isArchived && "text-muted-foreground")}
+          className={cn(
+            "flex items-center gap-2",
+            contact.isArchived && "text-muted-foreground",
+          )}
         >
-          {contact.isBusiness ? <Building className="size-4" /> : <CircleUser className="size-4" />}
+          {contact.isBusiness ? (
+            <Building className="size-4" />
+          ) : (
+            <CircleUser className="size-4" />
+          )}
           {contact.fullName}
         </CardTitle>
         {dob && (
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Cake className="size-4" />
-            {dob.getFullYear() === IGNORE_DOB_YEAR && <span>{format(dob, "dd MMMM")}</span>}
+            {dob.getFullYear() === IGNORE_DOB_YEAR && (
+              <span>{format(dob, "dd MMMM")}</span>
+            )}
             {dob.getFullYear() !== IGNORE_DOB_YEAR && (
               <span>
                 {format(dob, "dd MMMM y")} ({differenceInYears(today, dob)})
@@ -84,7 +112,10 @@ export function ContactCard({ contact, today }: { contact: Contact; today: Date 
       </CardHeader>
       <CardContent>
         <Accordion type="multiple" className="w-full">
-          <AccordionItem value="phone-numbers" disabled={!contact.phoneNumbers.length}>
+          <AccordionItem
+            value="phone-numbers"
+            disabled={!contact.phoneNumbers.length}
+          >
             <AccordionTrigger className="text-muted-foreground hover:cursor-pointer hover:text-foreground hover:no-underline">
               <div className="flex items-center gap-2">
                 <Phone className="size-4" />
@@ -93,7 +124,10 @@ export function ContactCard({ contact, today }: { contact: Contact; today: Date 
             </AccordionTrigger>
             <AccordionContent className="flex flex-col gap-4 text-balance">
               {contact.phoneNumbers.map((phoneNumber) => (
-                <PhoneNumberAccordionItem key={phoneNumber.id} phoneNumber={phoneNumber} />
+                <PhoneNumberAccordionItem
+                  key={phoneNumber.id}
+                  phoneNumber={phoneNumber}
+                />
               ))}
             </AccordionContent>
           </AccordionItem>
@@ -129,12 +163,22 @@ export function ContactCard({ contact, today }: { contact: Contact; today: Date 
   );
 }
 
-function PhoneNumberAccordionItem({ phoneNumber }: { phoneNumber: ContactPhoneNumber }) {
-  const phoneNumberFormatted = phoneNumberFormatter(phoneNumber.value)!.formatInternational();
+function PhoneNumberAccordionItem({
+  phoneNumber,
+}: {
+  phoneNumber: ContactPhoneNumber;
+}) {
+  const phoneNumberFormatted = phoneNumberFormatter(
+    phoneNumber.value,
+  )!.formatInternational();
   return (
     <div>
       {phoneNumber.isArchived && (
-        <p className={cn(phoneNumber.isArchived && "text-muted-foreground line-through")}>
+        <p
+          className={cn(
+            phoneNumber.isArchived && "text-muted-foreground line-through",
+          )}
+        >
           {phoneNumberFormatted}
         </p>
       )}
@@ -154,7 +198,11 @@ function EmailAccordionItem({ email }: { email: ContactEmail }) {
   return (
     <div>
       {email.isArchived && (
-        <p className={cn(email.isArchived && "text-muted-foreground line-through")}>
+        <p
+          className={cn(
+            email.isArchived && "text-muted-foreground line-through",
+          )}
+        >
           {email.value}
         </p>
       )}
@@ -174,7 +222,11 @@ function AddressAccordionItem({ address }: { address: ContactAddress }) {
   return (
     <div>
       {address.isArchived && (
-        <p className={cn(address.isArchived && "text-muted-foreground line-through")}>
+        <p
+          className={cn(
+            address.isArchived && "text-muted-foreground line-through",
+          )}
+        >
           {address.value}
         </p>
       )}

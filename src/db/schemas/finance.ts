@@ -1,4 +1,3 @@
-import { places } from "@/db/schemas/places";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -9,6 +8,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { places } from "@/db/schemas/places";
 
 export const wallets = pgTable("wallets", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -16,7 +16,9 @@ export const wallets = pgTable("wallets", {
   name: varchar("name").notNull(),
   initialAmount: numeric("initial_amount").notNull().default("0"),
   amount: numeric("amount").notNull().default("0"),
-  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   isArchived: boolean("is_archived").notNull().default(false),
 });
 
@@ -48,7 +50,9 @@ export const transactions = pgTable("transactions", {
   // ! however, to keep the code simple, it has been added here to avoid some joins
   userId: varchar("user_id").notNull(),
 
-  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
+  datetime: timestamp("datetime", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   fromWalletId: uuid("from_wallet_id").references(() => wallets.id),
   toWalletId: uuid("to_wallet_id").references(() => wallets.id),
   categoryId: uuid("category_id").references(() => transactionCategories.id),
@@ -76,60 +80,69 @@ export const transactionTags = pgTable(
   (table) => [primaryKey({ columns: [table.transactionId, table.tagId] })],
 );
 
-export const transactionTemplateRelations = relations(transactionTemplates, ({ one }) => ({
-  category: one(transactionCategories, {
-    fields: [transactionTemplates.categoryId],
-    references: [transactionCategories.id],
+export const transactionTemplateRelations = relations(
+  transactionTemplates,
+  ({ one }) => ({
+    category: one(transactionCategories, {
+      fields: [transactionTemplates.categoryId],
+      references: [transactionCategories.id],
+    }),
+    from: one(wallets, {
+      fields: [transactionTemplates.fromWalletId],
+      references: [wallets.id],
+      relationName: "from",
+    }),
+    to: one(wallets, {
+      fields: [transactionTemplates.toWalletId],
+      references: [wallets.id],
+      relationName: "to",
+    }),
+    place: one(places, {
+      fields: [transactionTemplates.placeId],
+      references: [places.id],
+    }),
   }),
-  from: one(wallets, {
-    fields: [transactionTemplates.fromWalletId],
-    references: [wallets.id],
-    relationName: "from",
-  }),
-  to: one(wallets, {
-    fields: [transactionTemplates.toWalletId],
-    references: [wallets.id],
-    relationName: "to",
-  }),
-  place: one(places, {
-    fields: [transactionTemplates.placeId],
-    references: [places.id],
-  }),
-}));
+);
 
-export const transactionRelations = relations(transactions, ({ one, many }) => ({
-  category: one(transactionCategories, {
-    fields: [transactions.categoryId],
-    references: [transactionCategories.id],
+export const transactionRelations = relations(
+  transactions,
+  ({ one, many }) => ({
+    category: one(transactionCategories, {
+      fields: [transactions.categoryId],
+      references: [transactionCategories.id],
+    }),
+    from: one(wallets, {
+      fields: [transactions.fromWalletId],
+      references: [wallets.id],
+      relationName: "from",
+    }),
+    to: one(wallets, {
+      fields: [transactions.toWalletId],
+      references: [wallets.id],
+      relationName: "to",
+    }),
+    place: one(places, {
+      fields: [transactions.placeId],
+      references: [places.id],
+    }),
+    tags: many(transactionTags),
   }),
-  from: one(wallets, {
-    fields: [transactions.fromWalletId],
-    references: [wallets.id],
-    relationName: "from",
-  }),
-  to: one(wallets, {
-    fields: [transactions.toWalletId],
-    references: [wallets.id],
-    relationName: "to",
-  }),
-  place: one(places, {
-    fields: [transactions.placeId],
-    references: [places.id],
-  }),
-  tags: many(transactionTags),
-}));
+);
 
 export const tagRelations = relations(tags, ({ many }) => ({
   transactionTags: many(transactionTags),
 }));
 
-export const transactionTagRelations = relations(transactionTags, ({ one }) => ({
-  tag: one(tags, {
-    fields: [transactionTags.tagId],
-    references: [tags.id],
+export const transactionTagRelations = relations(
+  transactionTags,
+  ({ one }) => ({
+    tag: one(tags, {
+      fields: [transactionTags.tagId],
+      references: [tags.id],
+    }),
+    transaction: one(transactions, {
+      fields: [transactionTags.transactionId],
+      references: [transactions.id],
+    }),
   }),
-  transaction: one(transactions, {
-    fields: [transactionTags.transactionId],
-    references: [transactions.id],
-  }),
-}));
+);

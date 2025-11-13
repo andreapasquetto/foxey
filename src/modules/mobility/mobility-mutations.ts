@@ -1,3 +1,4 @@
+import { useMutation } from "@tanstack/react-query";
 import {
   carsCreate,
   highwayTripsCreate,
@@ -5,12 +6,11 @@ import {
   refuelingsCreate,
   servicesCreate,
 } from "@/modules/mobility/mobility-actions";
-import { CreateCarFormType } from "@/modules/mobility/schemas/create-car-form-schema";
-import { CreateHighwayTripFormType } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
-import { CreateInspectionFormType } from "@/modules/mobility/schemas/create-inspection-form-schema";
-import { CreateRefuelingFormType } from "@/modules/mobility/schemas/create-refueling-form-schema";
-import { CreateServiceFormType } from "@/modules/mobility/schemas/create-service-form-schema";
-import { useMutation } from "@tanstack/react-query";
+import type { CreateCarFormType } from "@/modules/mobility/schemas/create-car-form-schema";
+import type { CreateHighwayTripFormType } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
+import type { CreateInspectionFormType } from "@/modules/mobility/schemas/create-inspection-form-schema";
+import type { CreateRefuelingFormType } from "@/modules/mobility/schemas/create-refueling-form-schema";
+import type { CreateServiceFormType } from "@/modules/mobility/schemas/create-service-form-schema";
 
 export function useCarsCreateMutation() {
   return useMutation({
@@ -21,7 +21,8 @@ export function useCarsCreateMutation() {
 export function useRefuelingsCreateMutation(carId: string) {
   return useMutation({
     mutationKey: ["refuelings", "create"],
-    mutationFn: (refueling: CreateRefuelingFormType) => refuelingsCreate({ carId, refueling }),
+    mutationFn: (refueling: CreateRefuelingFormType) =>
+      refuelingsCreate({ carId, refueling }),
   });
 }
 
@@ -50,6 +51,7 @@ export function useServicesCreateMutation(carId: string) {
 export function useInspectionsCreateMutation(carId: string) {
   return useMutation({
     mutationKey: ["inspections", "create"],
-    mutationFn: (inspection: CreateInspectionFormType) => inspectionsCreate({ carId, inspection }),
+    mutationFn: (inspection: CreateInspectionFormType) =>
+      inspectionsCreate({ carId, inspection }),
   });
 }

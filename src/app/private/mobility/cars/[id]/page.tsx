@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Heading1, Heading2 } from "@/components/typography";
 import { CarActionButtons } from "@/modules/mobility/components/car-action-buttons";
 import { CarStats } from "@/modules/mobility/components/car-stats";
@@ -11,13 +12,14 @@ import {
   refuelingsGetAll,
   servicesGetAll,
 } from "@/modules/mobility/mobility-actions";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Car Details",
 };
 
-export default async function CarPage(props: { params: Promise<{ id: string }> }) {
+export default async function CarPage(props: {
+  params: Promise<{ id: string }>;
+}) {
   const id = (await props.params).id;
   const car = await carsGetById(id);
 
@@ -33,7 +35,11 @@ export default async function CarPage(props: { params: Promise<{ id: string }> }
       <CarActionButtons carId={id} />
       <section className="space-y-6">
         <Heading2>Stats</Heading2>
-        <CarStats refuelings={refuelings} services={services} inspections={inspections} />
+        <CarStats
+          refuelings={refuelings}
+          services={services}
+          inspections={inspections}
+        />
       </section>
       <section className="space-y-6">
         <Heading2>Refuelings</Heading2>

@@ -1,10 +1,10 @@
 "use client";
 
+import { useSearchParams } from "next/navigation";
 import { useSearchFilters } from "@/common/hooks/use-search-filters";
 import { ChipCombobox } from "@/components/form/chip-combobox";
 import { SearchFilter } from "@/components/search-filter";
-import { PlaceCategory } from "@/db/types/places";
-import { useSearchParams } from "next/navigation";
+import type { PlaceCategory } from "@/db/types/places";
 
 export function PlaceFilters({ categories }: { categories: PlaceCategory[] }) {
   const searchParams = useSearchParams();
@@ -19,9 +19,12 @@ export function PlaceFilters({ categories }: { categories: PlaceCategory[] }) {
         <ChipCombobox
           label="Category"
           selectedValue={categories.find(
-            (category) => category.id === searchParams.get("category")?.toString(),
+            (category) =>
+              category.id === searchParams.get("category")?.toString(),
           )}
-          onSelectValue={(value) => searchFilters.handleSearch({ category: value?.id })}
+          onSelectValue={(value) =>
+            searchFilters.handleSearch({ category: value?.id })
+          }
           options={categories}
           optionFormatter={(place) => place.name}
           withSearch

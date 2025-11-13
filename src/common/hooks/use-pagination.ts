@@ -1,7 +1,7 @@
-import { useSearchFilters } from "@/common/hooks/use-search-filters";
-import { fromUrlToPaginate, paginationDefaults } from "@/common/pagination";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { useSearchFilters } from "@/common/hooks/use-search-filters";
+import { fromUrlToPaginate, paginationDefaults } from "@/common/pagination";
 
 export type UsePaginationResult = {
   page: number;
@@ -56,7 +56,9 @@ export function usePagination(total: number): UsePaginationResult {
     if (isPrevPageDisabled) return;
     const newPage = page - 1;
     setPage(newPage);
-    searchFilters.handleSearch({ page: newPage === paginationDefaults.page ? undefined : newPage });
+    searchFilters.handleSearch({
+      page: newPage === paginationDefaults.page ? undefined : newPage,
+    });
   }
 
   function goNextPage() {

@@ -1,15 +1,15 @@
 "use client";
 
+import { format, parse } from "date-fns";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
+import type { DateRange } from "react-day-picker";
 import { useSearchFilters } from "@/common/hooks/use-search-filters";
 import { ChipCombobox } from "@/components/form/chip-combobox";
 import { RangeDatePicker } from "@/components/form/range-date-picker";
 import { SearchFilter } from "@/components/search-filter";
-import { TransactionCategory, Wallet } from "@/db/types/finance";
-import { Place } from "@/db/types/places";
-import { format, parse } from "date-fns";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { DateRange } from "react-day-picker";
+import type { TransactionCategory, Wallet } from "@/db/types/finance";
+import type { Place } from "@/db/types/places";
 
 export function TransactionFilters(props: {
   categories: TransactionCategory[];
@@ -48,15 +48,22 @@ export function TransactionFilters(props: {
         <SearchFilter paramName="query" />
       </div>
       <div className="w-full sm:w-[250px]">
-        <RangeDatePicker dateRange={dateRange} setDateRange={handleDateRangeChange} showPresets />
+        <RangeDatePicker
+          dateRange={dateRange}
+          setDateRange={handleDateRangeChange}
+          showPresets
+        />
       </div>
       <div>
         <ChipCombobox
           label="Category"
           selectedValue={props.categories.find(
-            (category) => category.id === searchParams.get("category")?.toString(),
+            (category) =>
+              category.id === searchParams.get("category")?.toString(),
           )}
-          onSelectValue={(value) => searchFilters.handleSearch({ category: value?.id })}
+          onSelectValue={(value) =>
+            searchFilters.handleSearch({ category: value?.id })
+          }
           options={props.categories}
           optionFormatter={(category) => category.name}
           withSearch
@@ -68,7 +75,9 @@ export function TransactionFilters(props: {
           selectedValue={props.places.find(
             (place) => place.id === searchParams.get("place")?.toString(),
           )}
-          onSelectValue={(value) => searchFilters.handleSearch({ place: value?.id })}
+          onSelectValue={(value) =>
+            searchFilters.handleSearch({ place: value?.id })
+          }
           options={props.places}
           optionFormatter={(place) => place.name}
           withSearch
@@ -80,7 +89,9 @@ export function TransactionFilters(props: {
           selectedValue={props.wallets.find(
             (wallet) => wallet.id === searchParams.get("wallet")?.toString(),
           )}
-          onSelectValue={(value) => searchFilters.handleSearch({ wallet: value?.id })}
+          onSelectValue={(value) =>
+            searchFilters.handleSearch({ wallet: value?.id })
+          }
           options={props.wallets}
           optionFormatter={(wallet) => wallet.name}
           withSearch

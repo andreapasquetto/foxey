@@ -1,5 +1,10 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { startOfMinute } from "date-fns";
+import Decimal from "decimal.js";
+import { Check, ChevronsUpDown } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckbox } from "@/components/form/x-checkbox";
@@ -22,21 +27,20 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Wallet } from "@/db/types/finance";
-import { Car } from "@/db/types/mobility";
-import { Place } from "@/db/types/places";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import type { Wallet } from "@/db/types/finance";
+import type { Car } from "@/db/types/mobility";
+import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useRefuelingsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
+  type CreateRefuelingFormType,
   createRefuelingFormSchema,
-  CreateRefuelingFormType,
 } from "@/modules/mobility/schemas/create-refueling-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
-import Decimal from "decimal.js";
-import { Check, ChevronsUpDown } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 export function RefuelingCreateForm(props: {
   cars: Car[];
@@ -69,13 +73,18 @@ export function RefuelingCreateForm(props: {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onValidSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XSelect control={form.control} name="carId" label="Car" disabled>
             {cars.map((car) => (
               <XSelectOption key={car.id} value={car.id}>
                 <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">{car.year}</span>
+                  <span className="font-mono text-xs text-muted-foreground">
+                    {car.year}
+                  </span>
                   <div>
                     {car.make} {car.model}
                   </div>
@@ -90,7 +99,11 @@ export function RefuelingCreateForm(props: {
               <FormItem className="flex flex-col justify-end">
                 <FormLabel>Date</FormLabel>
                 <FormControl>
-                  <DatePicker value={field.value} setValue={field.onChange} includeTime />
+                  <DatePicker
+                    value={field.value}
+                    setValue={field.onChange}
+                    includeTime
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -114,7 +127,8 @@ export function RefuelingCreateForm(props: {
                         )}
                       >
                         {field.value
-                          ? places.find((place) => place.id === field.value)?.name
+                          ? places.find((place) => place.id === field.value)
+                              ?.name
                           : "Select an option"}
                         <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
                       </Button>
@@ -129,7 +143,9 @@ export function RefuelingCreateForm(props: {
                           {places.map((place) => (
                             <CommandItem
                               value={
-                                place.category ? `${place.category.name}-${place.name}` : place.name
+                                place.category
+                                  ? `${place.category.name}-${place.name}`
+                                  : place.name
                               }
                               key={place.id}
                               onSelect={() => {
@@ -140,7 +156,9 @@ export function RefuelingCreateForm(props: {
                               <Check
                                 className={cn(
                                   "ml-auto",
-                                  place.id === field.value ? "opacity-100" : "opacity-0",
+                                  place.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
                                 )}
                               />
                             </CommandItem>
@@ -190,7 +208,11 @@ export function RefuelingCreateForm(props: {
         </div>
         <div className="grid grid-cols-2 gap-3">
           <XCheckbox control={form.control} name="isFull" label="Full Tank" />
-          <XCheckbox control={form.control} name="isNecessary" label="Necessary" />
+          <XCheckbox
+            control={form.control}
+            name="isNecessary"
+            label="Necessary"
+          />
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XInput

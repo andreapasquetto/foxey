@@ -1,5 +1,13 @@
 "use client";
 
+import {
+  eachYearOfInterval,
+  endOfYear,
+  parse,
+  startOfToday,
+  startOfYear,
+} from "date-fns";
+import { useState } from "react";
 import { CardTitle } from "@/components/ui/card";
 import {
   Select,
@@ -8,13 +16,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Transaction } from "@/db/types/finance";
+import type { Transaction } from "@/db/types/finance";
 import { YearlyCategoriesTable } from "@/modules/finance/components/charts/yearly-categories-table";
 import { YearlyIncomeExpensesSavingsChart } from "@/modules/finance/components/charts/yearly-income-expenses-savings-chart";
 import { YearlyTrendChart } from "@/modules/finance/components/charts/yearly-trend-chart";
 import { YearlyStats } from "@/modules/finance/components/yearly-stats";
-import { eachYearOfInterval, endOfYear, parse, startOfToday, startOfYear } from "date-fns";
-import { useState } from "react";
 
 export function YearSection({ transactions }: { transactions: Transaction[] }) {
   const [year, setYear] = useState(startOfYear(startOfToday()));
@@ -37,7 +43,10 @@ export function YearSection({ transactions }: { transactions: Transaction[] }) {
             </SelectTrigger>
             <SelectContent position="popper">
               {yearOptions.map((y) => (
-                <SelectItem key={y.getFullYear()} value={y.getFullYear().toString()}>
+                <SelectItem
+                  key={y.getFullYear()}
+                  value={y.getFullYear().toString()}
+                >
                   {y.getFullYear()}
                 </SelectItem>
               ))}
@@ -48,7 +57,10 @@ export function YearSection({ transactions }: { transactions: Transaction[] }) {
       <YearlyStats transactions={transactions} selectedYear={year} />
       <div className="space-y-3">
         <CardTitle>Income & Expenses Categories</CardTitle>
-        <YearlyCategoriesTable transactions={transactions} selectedYear={year} />
+        <YearlyCategoriesTable
+          transactions={transactions}
+          selectedYear={year}
+        />
       </div>
       <div className="space-y-3">
         <CardTitle>Trend</CardTitle>
@@ -56,7 +68,10 @@ export function YearSection({ transactions }: { transactions: Transaction[] }) {
       </div>
       <div className="space-y-3">
         <CardTitle>Income, Expenses & Savings</CardTitle>
-        <YearlyIncomeExpensesSavingsChart transactions={transactions} selectedYear={year} />
+        <YearlyIncomeExpensesSavingsChart
+          transactions={transactions}
+          selectedYear={year}
+        />
       </div>
     </>
   );

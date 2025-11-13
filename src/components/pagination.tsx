@@ -1,3 +1,9 @@
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 import { pageSizeDefaults } from "@/common/pagination";
 import { Button } from "@/components/ui/button";
 import {
@@ -8,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 
 export function Pagination({
   pageSize,
@@ -43,7 +48,7 @@ export function Pagination({
           <span>Results per page</span>
         </div>
         <Select
-          onValueChange={(value) => changePageSize(parseInt(value))}
+          onValueChange={(value) => changePageSize(parseInt(value, 10))}
           value={pageSize.toString()}
         >
           <SelectTrigger className="w-16">
@@ -67,16 +72,36 @@ export function Pagination({
           </p>
         </div>
         <div className="flex gap-2">
-          <Button disabled={isPrevPageDisabled} onClick={goFirstPage} variant="outline" size="icon">
+          <Button
+            disabled={isPrevPageDisabled}
+            onClick={goFirstPage}
+            variant="outline"
+            size="icon"
+          >
             <ChevronsLeft />
           </Button>
-          <Button disabled={isPrevPageDisabled} onClick={goPrevPage} variant="outline" size="icon">
+          <Button
+            disabled={isPrevPageDisabled}
+            onClick={goPrevPage}
+            variant="outline"
+            size="icon"
+          >
             <ChevronLeft />
           </Button>
-          <Button disabled={isNextPageDisabled} onClick={goNextPage} variant="outline" size="icon">
+          <Button
+            disabled={isNextPageDisabled}
+            onClick={goNextPage}
+            variant="outline"
+            size="icon"
+          >
             <ChevronRight />
           </Button>
-          <Button disabled={isNextPageDisabled} onClick={goLastPage} variant="outline" size="icon">
+          <Button
+            disabled={isNextPageDisabled}
+            onClick={goLastPage}
+            variant="outline"
+            size="icon"
+          >
             <ChevronsRight />
           </Button>
         </div>

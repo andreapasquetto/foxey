@@ -1,10 +1,14 @@
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
 import { format, setHours, setMinutes } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import { ChangeEvent, useState } from "react";
+import { type ChangeEvent, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { cn } from "@/lib/utils";
 
 interface DatePickerProps {
   value: Date | undefined;
@@ -22,7 +26,13 @@ export function DatePicker(props: DatePickerProps) {
     }
     const [hours, minutes] = time.split(":").map((str) => parseInt(str, 10));
     props.setValue(
-      new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate(), hours, minutes),
+      new Date(
+        newDate.getFullYear(),
+        newDate.getMonth(),
+        newDate.getDate(),
+        hours,
+        minutes,
+      ),
     );
   }
 

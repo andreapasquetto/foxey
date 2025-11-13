@@ -1,6 +1,6 @@
-import { eventsCreate } from "@/modules/events/events-actions";
-import { CreateEventFormType } from "@/modules/events/schemas/create-event-form-schema";
 import { useMutation } from "@tanstack/react-query";
+import { eventsCreate } from "@/modules/events/events-actions";
+import type { CreateEventFormType } from "@/modules/events/schemas/create-event-form-schema";
 
 export function useEventsCreateMutation() {
   return useMutation({

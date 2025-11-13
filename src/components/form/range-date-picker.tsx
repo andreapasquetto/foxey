@@ -1,7 +1,18 @@
-import { DateRangePresetCode, getDateRangeFromCode } from "@/common/utils/dates";
+import { format } from "date-fns";
+import { Calendar as CalendarIcon } from "lucide-react";
+import type * as React from "react";
+import type { DateRange } from "react-day-picker";
+import {
+  type DateRangePresetCode,
+  getDateRangeFromCode,
+} from "@/common/utils/dates";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import {
   Select,
   SelectContent,
@@ -10,10 +21,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon } from "lucide-react";
-import * as React from "react";
-import { DateRange } from "react-day-picker";
 
 interface RangeDatePickerProps extends React.HTMLAttributes<HTMLDivElement> {
   dateRange: DateRange | undefined;
@@ -40,14 +47,16 @@ export function RangeDatePicker({
             variant={"outline"}
             className={cn(
               "shrink justify-start overflow-hidden text-left font-normal",
-              (!dateRange || (!dateRange.from && !dateRange.to)) && "text-muted-foreground",
+              (!dateRange || (!dateRange.from && !dateRange.to)) &&
+                "text-muted-foreground",
             )}
           >
             <CalendarIcon className="mr-2 size-4 shrink-0" />
             {dateRange?.from ? (
               dateRange.to ? (
                 <>
-                  {format(dateRange.from, "dd MMM y")} - {format(dateRange.to, "dd MMM y")}
+                  {format(dateRange.from, "dd MMM y")} -{" "}
+                  {format(dateRange.to, "dd MMM y")}
                 </>
               ) : (
                 format(dateRange.from, "dd MMM y")
@@ -57,7 +66,10 @@ export function RangeDatePicker({
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="flex w-auto flex-col space-y-2 p-2" align="start">
+        <PopoverContent
+          className="flex w-auto flex-col space-y-2 p-2"
+          align="start"
+        >
           {showPresets && (
             <Select onValueChange={onSelectDateRangePreset}>
               <SelectTrigger>

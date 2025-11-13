@@ -1,5 +1,7 @@
 "use client";
 
+import { Archive } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,10 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Wallet } from "@/db/types/finance";
+import type { Wallet } from "@/db/types/finance";
 import { walletsAarchive } from "@/modules/finance/finance-actions";
-import { Archive } from "lucide-react";
-import { useState } from "react";
 
 export function ArchiveWallet({ wallet }: { wallet: Wallet }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -30,10 +30,19 @@ export function ArchiveWallet({ wallet }: { wallet: Wallet }) {
           <DialogTitle>Archive wallet</DialogTitle>
           <DialogDescription>{wallet.name}</DialogDescription>
         </DialogHeader>
-        <p className="text-center sm:text-left">Are you sure you want to archive this wallet?</p>
-        <form action={walletsAarchive} className="flex items-center justify-center gap-3">
+        <p className="text-center sm:text-left">
+          Are you sure you want to archive this wallet?
+        </p>
+        <form
+          action={walletsAarchive}
+          className="flex items-center justify-center gap-3"
+        >
           <input type="hidden" name="id" value={wallet.id} />
-          <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowDialog(false)}
+          >
             Cancel
           </Button>
           <Button type="submit" onClick={() => setShowDialog(false)}>

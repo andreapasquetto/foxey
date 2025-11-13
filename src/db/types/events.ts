@@ -1,4 +1,4 @@
-import { eventsGetAll } from "@/modules/events/events-actions";
+import type { eventsGetAll } from "@/modules/events/events-actions";
 
 export type EventCategory = {
   id: string;

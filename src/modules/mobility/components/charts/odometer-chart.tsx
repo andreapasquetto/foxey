@@ -1,15 +1,15 @@
+import { format } from "date-fns";
+import { CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 import { numberFormatter } from "@/common/formatters";
 import { ChartEmptyStateMessage } from "@/components/empty-state/chart-empty-state-message";
 import {
-  ChartConfig,
+  type ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { Inspection, Refueling, Service } from "@/db/types/mobility";
+import type { Inspection, Refueling, Service } from "@/db/types/mobility";
 import { generateOdometerChartData } from "@/modules/mobility/mobility-utils";
-import { format } from "date-fns";
-import { CartesianGrid, ComposedChart, Line, XAxis, YAxis } from "recharts";
 
 const chartConfig = {
   refueling: {
@@ -40,7 +40,10 @@ export function OdometerChart(props: {
   });
 
   return (
-    <ChartContainer config={chartConfig} className="aspect-auto h-[350px] w-full">
+    <ChartContainer
+      config={chartConfig}
+      className="aspect-auto h-[350px] w-full"
+    >
       <ComposedChart accessibilityLayer data={chartData}>
         <CartesianGrid strokeDasharray="3 3" />
         <XAxis
@@ -55,7 +58,13 @@ export function OdometerChart(props: {
         />
         <ChartTooltip
           cursor={false}
-          content={<ChartTooltipContent className="w-[175px]" hideLabel hideIndicator />}
+          content={
+            <ChartTooltipContent
+              className="w-[175px]"
+              hideLabel
+              hideIndicator
+            />
+          }
         />
         <Line
           dataKey="refueling"

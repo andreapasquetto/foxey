@@ -5,4 +5,6 @@ export const createTransactionCategoryFormSchema = z.object({
   parentId: z.string().optional(),
 });
 
-export type CreateTransactionCategoryFormType = z.infer<typeof createTransactionCategoryFormSchema>;
+export type CreateTransactionCategoryFormType = z.infer<
+  typeof createTransactionCategoryFormSchema
+>;

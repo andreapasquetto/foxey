@@ -1,9 +1,19 @@
 "use server";
 
-import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
+import { Decimal } from "decimal.js";
+import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
+import type { DateRange } from "react-day-picker";
+import { z } from "zod";
+import {
+  type Paginate,
+  paginateToLimitAndOffset,
+  toPaginated,
+} from "@/common/pagination";
 import { financeRoute, transactionsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
-import { db, DBTransaction } from "@/db/db";
+import { type DBTransaction, db } from "@/db/db";
 import {
   tags,
   transactionCategories,
@@ -11,18 +21,12 @@ import {
   transactionTemplates,
   wallets,
 } from "@/db/schemas/finance";
-import { CreateTransactionCategoryFormType } from "@/modules/finance/schemas/create-transaction-category-form-schema";
-import { CreateTransactionFormType } from "@/modules/finance/schemas/create-transaction-form-schema";
-import { CreateTransactionTemplateFormType } from "@/modules/finance/schemas/create-transaction-template-form-schema";
-import { CreateWalletFormType } from "@/modules/finance/schemas/create-wallet-form-schema";
-import { UpdateTransactionFormType } from "@/modules/finance/schemas/update-transaction-form-schema";
-import { UpdateWalletFormType } from "@/modules/finance/schemas/update-wallet-form-schema";
-import { Decimal } from "decimal.js";
-import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
-import { DateRange } from "react-day-picker";
-import { z } from "zod";
+import type { CreateTransactionCategoryFormType } from "@/modules/finance/schemas/create-transaction-category-form-schema";
+import type { CreateTransactionFormType } from "@/modules/finance/schemas/create-transaction-form-schema";
+import type { CreateTransactionTemplateFormType } from "@/modules/finance/schemas/create-transaction-template-form-schema";
+import type { CreateWalletFormType } from "@/modules/finance/schemas/create-wallet-form-schema";
+import type { UpdateTransactionFormType } from "@/modules/finance/schemas/update-transaction-form-schema";
+import type { UpdateWalletFormType } from "@/modules/finance/schemas/update-wallet-form-schema";
 
 export async function walletsCreate(wallet: CreateWalletFormType) {
   const userId = await getCurrentUserId();
@@ -115,10 +119,15 @@ export async function walletsUpdateAmount(
     .sub(params.sub ?? 0)
     .toString();
 
-  await tx.update(wallets).set({ amount }).where(eq(wallets.id, params.walletId));
+  await tx
+    .update(wallets)
+    .set({ amount })
+    .where(eq(wallets.id, params.walletId));
 }
 
-export async function transactionCategoriesCreate(category: CreateTransactionCategoryFormType) {
+export async function transactionCategoriesCreate(
+  category: CreateTransactionCategoryFormType,
+) {
   const userId = await getCurrentUserId();
   await db.insert(transactionCategories).values({
     userId,
@@ -141,7 +150,9 @@ export async function transactionCategoriesGetPaginated(params: {
       .where(
         and(
           eq(transactionCategories.userId, userId),
-          params.query ? ilike(transactionCategories.name, `%${params.query}%`) : undefined,
+          params.query
+            ? ilike(transactionCategories.name, `%${params.query}%`)
+            : undefined,
         ),
       )
   ).length;
@@ -150,14 +161,18 @@ export async function transactionCategoriesGetPaginated(params: {
     offset,
     where: and(
       eq(transactionCategories.userId, userId),
-      params.query ? ilike(transactionCategories.name, `%${params.query}%`) : undefined,
+      params.query
+        ? ilike(transactionCategories.name, `%${params.query}%`)
+        : undefined,
     ),
     orderBy: [transactionCategories.name],
   });
   return toPaginated(records, total);
 }
 
-export async function transactionTemplatesCreate(template: CreateTransactionTemplateFormType) {
+export async function transactionTemplatesCreate(
+  template: CreateTransactionTemplateFormType,
+) {
   const userId = await getCurrentUserId();
   await db.insert(transactionTemplates).values({
     userId,
@@ -173,15 +188,15 @@ export async function transactionTemplatesCreate(template: CreateTransactionTemp
 }
 
 export async function transactionCategoriesGetAll(
-  params: {
-    query?: string;
-  } = {},
+  params: { query?: string } = {},
 ) {
   const userId = await getCurrentUserId();
   return await db.query.transactionCategories.findMany({
     where: and(
       eq(transactionCategories.userId, userId),
-      params.query ? ilike(transactionCategories.name, `%${params.query}%`) : undefined,
+      params.query
+        ? ilike(transactionCategories.name, `%${params.query}%`)
+        : undefined,
     ),
     orderBy: [transactionCategories.name],
   });
@@ -221,7 +236,9 @@ export async function tagsGetAll() {
   });
 }
 
-export async function transactionsCreate(transaction: CreateTransactionFormType) {
+export async function transactionsCreate(
+  transaction: CreateTransactionFormType,
+) {
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
     await tx.insert(transactions).values({
@@ -295,8 +312,12 @@ export async function transactionsGetPaginated(params: {
       .where(
         and(
           eq(transactions.userId, userId),
-          params.query ? ilike(transactions.description, `%${params.query}%`) : undefined,
-          params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
+          params.query
+            ? ilike(transactions.description, `%${params.query}%`)
+            : undefined,
+          params.categoryId
+            ? eq(transactions.categoryId, params.categoryId)
+            : undefined,
           params.walletId
             ? or(
                 eq(transactions.fromWalletId, params.walletId),
@@ -305,7 +326,11 @@ export async function transactionsGetPaginated(params: {
             : undefined,
           params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
           params.dateRange
-            ? between(transactions.datetime, params.dateRange.from!, params.dateRange.to!)
+            ? between(
+                transactions.datetime,
+                params.dateRange.from!,
+                params.dateRange.to!,
+              )
             : undefined,
         ),
       )
@@ -331,8 +356,12 @@ export async function transactionsGetPaginated(params: {
     offset,
     where: and(
       eq(transactions.userId, userId),
-      params.query ? ilike(transactions.description, `%${params.query}%`) : undefined,
-      params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
+      params.query
+        ? ilike(transactions.description, `%${params.query}%`)
+        : undefined,
+      params.categoryId
+        ? eq(transactions.categoryId, params.categoryId)
+        : undefined,
       params.walletId
         ? or(
             eq(transactions.fromWalletId, params.walletId),
@@ -341,7 +370,11 @@ export async function transactionsGetPaginated(params: {
         : undefined,
       params.placeId ? eq(transactions.placeId, params.placeId) : undefined,
       params.dateRange
-        ? between(transactions.datetime, params.dateRange.from!, params.dateRange.to!)
+        ? between(
+            transactions.datetime,
+            params.dateRange.from!,
+            params.dateRange.to!,
+          )
         : undefined,
     ),
     orderBy: [desc(transactions.datetime)],
@@ -377,8 +410,12 @@ export async function transactionsGetAll(
     },
     where: and(
       eq(transactions.userId, userId),
-      params.query ? ilike(transactions.description, `%${params.query}%`) : undefined,
-      params.categoryId ? eq(transactions.categoryId, params.categoryId) : undefined,
+      params.query
+        ? ilike(transactions.description, `%${params.query}%`)
+        : undefined,
+      params.categoryId
+        ? eq(transactions.categoryId, params.categoryId)
+        : undefined,
       params.walletId
         ? or(
             eq(transactions.fromWalletId, params.walletId),
@@ -447,7 +484,9 @@ export async function transactionsGetByIdsMap(ids: string[]) {
   return new Map(records.map((record) => [record.id, record]));
 }
 
-export async function transactionsUpdate(transaction: UpdateTransactionFormType) {
+export async function transactionsUpdate(
+  transaction: UpdateTransactionFormType,
+) {
   const transactionId = transaction.id;
   const transactionAmount = new Decimal(transaction.amount);
 

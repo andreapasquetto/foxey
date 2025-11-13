@@ -1,4 +1,4 @@
-import {
+import type {
   carsGetById,
   highwayTripsGetAll,
   inspectionsGetAll,
@@ -10,7 +10,9 @@ export type Car = Awaited<ReturnType<typeof carsGetById>>;
 
 export type Refueling = Awaited<ReturnType<typeof refuelingsGetAll>>[number];
 
-export type HighwayTrip = Awaited<ReturnType<typeof highwayTripsGetAll>>[number];
+export type HighwayTrip = Awaited<
+  ReturnType<typeof highwayTripsGetAll>
+>[number];
 
 export type Service = Awaited<ReturnType<typeof servicesGetAll>>[number];
 

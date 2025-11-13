@@ -1,17 +1,21 @@
 "use server";
 
-import { Paginate, paginateToLimitAndOffset, toPaginated } from "@/common/pagination";
-import { contactsRoute } from "@/common/routes";
-import { getCurrentUserId } from "@/common/utils/auth";
-import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
-import { db } from "@/db/db";
-import { contacts } from "@/db/schemas/contacts";
-import { CreateContactFormType } from "@/modules/contacts/schemas/create-contact-form-schema";
 import { formatISO, setYear } from "date-fns";
 import { and, eq, ilike, isNotNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import {
+  type Paginate,
+  paginateToLimitAndOffset,
+  toPaginated,
+} from "@/common/pagination";
+import { contactsRoute } from "@/common/routes";
+import { getCurrentUserId } from "@/common/utils/auth";
+import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
+import { db } from "@/db/db";
+import { contacts } from "@/db/schemas/contacts";
+import type { CreateContactFormType } from "@/modules/contacts/schemas/create-contact-form-schema";
 
 export async function contactsCreate(contact: CreateContactFormType) {
   const userId = await getCurrentUserId();
@@ -20,9 +24,14 @@ export async function contactsCreate(contact: CreateContactFormType) {
     userId,
     fullName: contact.fullName,
     dob: contact.dob
-      ? formatISO(contact.ignoreDobYear ? setYear(contact.dob, IGNORE_DOB_YEAR) : contact.dob, {
-          representation: "date",
-        })
+      ? formatISO(
+          contact.ignoreDobYear
+            ? setYear(contact.dob, IGNORE_DOB_YEAR)
+            : contact.dob,
+          {
+            representation: "date",
+          },
+        )
       : undefined,
     isArchived: contact.isArchived,
     isBusiness: contact.isBusiness,
@@ -32,7 +41,10 @@ export async function contactsCreate(contact: CreateContactFormType) {
   redirect(contactsRoute);
 }
 
-export async function contactsGetPaginated(params: { paginate: Paginate; query?: string }) {
+export async function contactsGetPaginated(params: {
+  paginate: Paginate;
+  query?: string;
+}) {
   const userId = await getCurrentUserId();
   const { limit, offset } = paginateToLimitAndOffset(params.paginate);
   const total = (
@@ -42,7 +54,9 @@ export async function contactsGetPaginated(params: { paginate: Paginate; query?:
       .where(
         and(
           eq(contacts.userId, userId),
-          params.query ? ilike(contacts.fullName, `%${params.query}%`) : undefined,
+          params.query
+            ? ilike(contacts.fullName, `%${params.query}%`)
+            : undefined,
         ),
       )
   ).length;
@@ -93,10 +107,7 @@ export async function contactsGetAllBirthdays() {
 }
 
 export async function contactsGetAll(
-  params: {
-    query?: string;
-    discardArchived?: boolean;
-  } = {},
+  params: { query?: string; discardArchived?: boolean } = {},
 ) {
   const userId = await getCurrentUserId();
   return await db.query.contacts.findMany({
@@ -130,7 +141,9 @@ export async function contactsDelete(formData: FormData) {
   const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   // TODO: delete addresses, emails and phoneNumbers
-  await db.delete(contacts).where(and(eq(contacts.userId, userId), eq(contacts.id, id)));
+  await db
+    .delete(contacts)
+    .where(and(eq(contacts.userId, userId), eq(contacts.id, id)));
   revalidatePath(contactsRoute);
 }
 

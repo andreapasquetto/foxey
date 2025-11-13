@@ -9,4 +9,6 @@ export const createTransactionTemplateFormSchema = z.object({
   amount: z.number().optional(),
 });
 
-export type CreateTransactionTemplateFormType = z.infer<typeof createTransactionTemplateFormSchema>;
+export type CreateTransactionTemplateFormType = z.infer<
+  typeof createTransactionTemplateFormSchema
+>;

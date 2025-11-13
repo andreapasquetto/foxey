@@ -1,9 +1,9 @@
+import type { Metadata } from "next";
 import { fromUrlToPaginate } from "@/common/pagination";
 import { SearchFilter } from "@/components/search-filter";
 import { Heading1 } from "@/components/typography";
 import { TransactionCategoryList } from "@/modules/finance/components/transaction-category-list";
 import { transactionCategoriesGetPaginated } from "@/modules/finance/finance-actions";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Transaction Categories",

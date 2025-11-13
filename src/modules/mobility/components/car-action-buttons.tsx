@@ -1,3 +1,5 @@
+import { BookOpenCheck, Fuel, Gauge, Plus, Wrench } from "lucide-react";
+import Link from "next/link";
 import {
   newHighwayTripRoute,
   newInspectionRoute,
@@ -11,8 +13,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { BookOpenCheck, Fuel, Gauge, Plus, Wrench } from "lucide-react";
-import Link from "next/link";
 
 export function CarActionButtons(props: { carId: string }) {
   return (

@@ -3,10 +3,16 @@
 import { usePagination } from "@/common/hooks/use-pagination";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
-import { Place } from "@/db/types/places";
+import type { Place } from "@/db/types/places";
 import { PlaceCard } from "@/modules/places/components/place-card";
 
-export function PlaceList({ places, total }: { places: Place[]; total: number }) {
+export function PlaceList({
+  places,
+  total,
+}: {
+  places: Place[];
+  total: number;
+}) {
   const pagination = usePagination(total);
 
   if (!places.length) {

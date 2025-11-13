@@ -1,6 +1,12 @@
-import { places } from "@/db/schemas/places";
 import { relations } from "drizzle-orm";
-import { boolean, pgTable, timestamp, uuid, varchar } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  pgTable,
+  timestamp,
+  uuid,
+  varchar,
+} from "drizzle-orm/pg-core";
+import { places } from "@/db/schemas/places";
 
 export const eventCategories = pgTable("event_categories", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -24,9 +30,12 @@ export const events = pgTable("events", {
   description: varchar("description"),
 });
 
-export const eventCategoryRelations = relations(eventCategories, ({ many }) => ({
-  events: many(events),
-}));
+export const eventCategoryRelations = relations(
+  eventCategories,
+  ({ many }) => ({
+    events: many(events),
+  }),
+);
 
 export const eventRelations = relations(events, ({ one }) => ({
   category: one(eventCategories, {

@@ -1,6 +1,6 @@
+import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
 import { CarCreateForm } from "@/modules/mobility/components/forms/car-create-form";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "New Car",

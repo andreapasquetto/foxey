@@ -1,6 +1,9 @@
 import { Heading1 } from "@/components/typography";
 import { TransactionTemplateCreateForm } from "@/modules/finance/components/forms/transaction-template-create-form";
-import { transactionCategoriesGetAll, walletsGetAll } from "@/modules/finance/finance-actions";
+import {
+  transactionCategoriesGetAll,
+  walletsGetAll,
+} from "@/modules/finance/finance-actions";
 import { placesGetAll } from "@/modules/places/places-actions";
 
 export default async function TransactionTemplateCreatePage() {
@@ -10,7 +13,11 @@ export default async function TransactionTemplateCreatePage() {
   return (
     <div className="space-y-12">
       <Heading1>New Template</Heading1>
-      <TransactionTemplateCreateForm wallets={wallets} categories={categories} places={places} />
+      <TransactionTemplateCreateForm
+        wallets={wallets}
+        categories={categories}
+        places={places}
+      />
     </div>
   );
 }

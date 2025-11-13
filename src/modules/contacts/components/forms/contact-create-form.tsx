@@ -1,5 +1,7 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckbox } from "@/components/form/x-checkbox";
@@ -15,11 +17,9 @@ import {
 } from "@/components/ui/form";
 import { useContactsCreateMutation } from "@/modules/contacts/contacts-mutations";
 import {
+  type CreateContactFormType,
   createContactFormSchema,
-  CreateContactFormType,
 } from "@/modules/contacts/schemas/create-contact-form-schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 
 export function ContactCreateForm() {
   const form = useForm<CreateContactFormType>({
@@ -42,7 +42,10 @@ export function ContactCreateForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onValidSubmit)} className="space-y-4 py-2 pb-4">
+      <form
+        onSubmit={form.handleSubmit(onValidSubmit)}
+        className="space-y-4 py-2 pb-4"
+      >
         <XInput control={form.control} name="fullName" label="Full Name" />
         <FormField
           control={form.control}
@@ -57,7 +60,11 @@ export function ContactCreateForm() {
             </FormItem>
           )}
         />
-        <XCheckbox control={form.control} name="ignoreDobYear" label="Ignore Year" />
+        <XCheckbox
+          control={form.control}
+          name="ignoreDobYear"
+          label="Ignore Year"
+        />
         <div className="flex items-center gap-2">
           <Button type="submit" disabled={mutation.isPending}>
             Submit

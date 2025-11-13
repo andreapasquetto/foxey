@@ -1,4 +1,3 @@
-import { transactions } from "@/db/schemas/finance";
 import { relations } from "drizzle-orm";
 import {
   boolean,
@@ -10,6 +9,7 @@ import {
   uuid,
   varchar,
 } from "drizzle-orm/pg-core";
+import { transactions } from "@/db/schemas/finance";
 
 export const cars = pgTable("mobility_cars", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -53,7 +53,9 @@ export const services = pgTable("mobility_services", {
   carId: uuid("car_id")
     .notNull()
     .references(() => cars.id),
-  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
+  datetime: timestamp("datetime", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   odometer: numeric("odometer").notNull(),
   notes: text("notes"),
 });
@@ -63,7 +65,9 @@ export const inspections = pgTable("mobility_inspections", {
   carId: uuid("car_id")
     .notNull()
     .references(() => cars.id),
-  datetime: timestamp("datetime", { withTimezone: true }).notNull().defaultNow(),
+  datetime: timestamp("datetime", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
   odometer: numeric("odometer").notNull(),
   isSuccessful: boolean("is_successful").notNull().default(true),
 });

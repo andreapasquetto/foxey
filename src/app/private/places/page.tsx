@@ -1,10 +1,13 @@
+import type { Metadata } from "next";
 import { fromUrlToPaginate } from "@/common/pagination";
 import { Heading1 } from "@/components/typography";
 import { PlaceFilters } from "@/modules/places/components/place-filters";
 import { PlaceList } from "@/modules/places/components/place-list";
 import { PlacesActionButtons } from "@/modules/places/components/places-action-buttons";
-import { placeCategoriesGetAll, placesGetPaginated } from "@/modules/places/places-actions";
-import { Metadata } from "next";
+import {
+  placeCategoriesGetAll,
+  placesGetPaginated,
+} from "@/modules/places/places-actions";
 
 export const metadata: Metadata = {
   title: "Places",

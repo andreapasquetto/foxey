@@ -1,5 +1,7 @@
 "use client";
 
+import { Trash } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,10 +10,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Place } from "@/db/types/places";
+import type { Place } from "@/db/types/places";
 import { placesDelete } from "@/modules/places/places-actions";
-import { Trash } from "lucide-react";
-import { useState } from "react";
 
 export function DeletePlace(props: { place: Place }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -30,10 +30,19 @@ export function DeletePlace(props: { place: Place }) {
           <DialogTitle>Delete contact</DialogTitle>
           <DialogDescription>{props.place.name}</DialogDescription>
         </DialogHeader>
-        <p className="text-center sm:text-left">Are you sure you want to delete this place?</p>
-        <form action={placesDelete} className="flex items-center justify-center gap-3">
+        <p className="text-center sm:text-left">
+          Are you sure you want to delete this place?
+        </p>
+        <form
+          action={placesDelete}
+          className="flex items-center justify-center gap-3"
+        >
           <input type="hidden" name="id" value={props.place.id} />
-          <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowDialog(false)}
+          >
             Cancel
           </Button>
           <Button type="submit" onClick={() => setShowDialog(false)}>

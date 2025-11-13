@@ -38,12 +38,15 @@ export const contactRelations = relations(contacts, ({ many }) => ({
   addresses: many(contactAddresses),
 }));
 
-export const contactPhoneNumberRelations = relations(contactPhoneNumbers, ({ one }) => ({
-  contact: one(contacts, {
-    fields: [contactPhoneNumbers.contactId],
-    references: [contacts.id],
+export const contactPhoneNumberRelations = relations(
+  contactPhoneNumbers,
+  ({ one }) => ({
+    contact: one(contacts, {
+      fields: [contactPhoneNumbers.contactId],
+      references: [contacts.id],
+    }),
   }),
-}));
+);
 
 export const contactEmailRelations = relations(contactEmails, ({ one }) => ({
   contact: one(contacts, {
@@ -52,9 +55,12 @@ export const contactEmailRelations = relations(contactEmails, ({ one }) => ({
   }),
 }));
 
-export const contactAddressRelations = relations(contactAddresses, ({ one }) => ({
-  contact: one(contacts, {
-    fields: [contactAddresses.contactId],
-    references: [contacts.id],
+export const contactAddressRelations = relations(
+  contactAddresses,
+  ({ one }) => ({
+    contact: one(contacts, {
+      fields: [contactAddresses.contactId],
+      references: [contacts.id],
+    }),
   }),
-}));
+);

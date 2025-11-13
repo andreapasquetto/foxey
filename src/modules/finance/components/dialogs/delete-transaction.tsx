@@ -1,5 +1,8 @@
 "use client";
 
+import { format } from "date-fns";
+import { Trash } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,11 +11,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Transaction } from "@/db/types/finance";
+import type { Transaction } from "@/db/types/finance";
 import { transactionsDelete } from "@/modules/finance/finance-actions";
-import { format } from "date-fns";
-import { Trash } from "lucide-react";
-import { useState } from "react";
 
 export function DeleteTransaction(props: { transaction: Transaction }) {
   const [showDialog, setShowDialog] = useState(false);
@@ -30,15 +30,24 @@ export function DeleteTransaction(props: { transaction: Transaction }) {
         <DialogHeader>
           <DialogTitle>Delete transaction</DialogTitle>
           <DialogDescription>
-            <code>{format(props.transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
+            <code>
+              {format(props.transaction.datetime, "ccc y-MM-dd HH:mm")}
+            </code>
           </DialogDescription>
         </DialogHeader>
         <p className="text-center sm:text-left">
           Are you sure you want to delete this transaction?
         </p>
-        <form action={transactionsDelete} className="flex items-center justify-center gap-3">
+        <form
+          action={transactionsDelete}
+          className="flex items-center justify-center gap-3"
+        >
           <input type="hidden" name="id" value={props.transaction.id} />
-          <Button type="button" variant="outline" onClick={() => setShowDialog(false)}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setShowDialog(false)}
+          >
             Cancel
           </Button>
           <Button type="submit" onClick={() => setShowDialog(false)}>

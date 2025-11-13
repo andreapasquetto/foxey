@@ -7,4 +7,6 @@ export const createInspectionFormSchema = z.object({
   isSuccessful: z.boolean(),
 });
 
-export type CreateInspectionFormType = z.infer<typeof createInspectionFormSchema>;
+export type CreateInspectionFormType = z.infer<
+  typeof createInspectionFormSchema
+>;

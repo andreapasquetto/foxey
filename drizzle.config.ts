@@ -1,5 +1,5 @@
-import { env } from "@/common/env";
 import { defineConfig } from "drizzle-kit";
+import { env } from "@/common/env";
 
 const config = defineConfig({
   schema: "./src/db/schemas/*",

@@ -7,7 +7,7 @@ import {
   startOfYear,
   sub,
 } from "date-fns";
-import { DateRange } from "react-day-picker";
+import type { DateRange } from "react-day-picker";
 
 export const IGNORE_DOB_YEAR = 1500;
 

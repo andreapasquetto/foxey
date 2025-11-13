@@ -4,7 +4,7 @@ import { usePagination } from "@/common/hooks/use-pagination";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { PlaceCategory } from "@/db/types/places";
+import type { PlaceCategory } from "@/db/types/places";
 
 export function PlaceCategoryList({
   categories,
@@ -30,8 +30,10 @@ export function PlaceCategoryList({
                 <CardTitle>
                   {subCategory ? (
                     <>
-                      <span className="text-muted-foreground">{category.trim()}</span> /{" "}
-                      {subCategory.trim()}
+                      <span className="text-muted-foreground">
+                        {category.trim()}
+                      </span>{" "}
+                      / {subCategory.trim()}
                     </>
                   ) : (
                     category

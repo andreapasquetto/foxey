@@ -1,10 +1,10 @@
+import type { Metadata } from "next";
 import { fromUrlToPaginate } from "@/common/pagination";
 import { SearchFilter } from "@/components/search-filter";
 import { Heading1 } from "@/components/typography";
 import { ContactList } from "@/modules/contacts/components/contact-list";
 import { ContactsActionButtons } from "@/modules/contacts/components/contacts-action-buttons";
 import { contactsGetPaginated } from "@/modules/contacts/contacts-actions";
-import { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Contacts",

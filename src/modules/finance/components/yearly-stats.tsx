@@ -1,10 +1,25 @@
 "use client";
 
+import {
+  eachDayOfInterval,
+  endOfYear,
+  isSameYear,
+  startOfToday,
+  startOfYear,
+  sub,
+} from "date-fns";
+import type { Decimal } from "decimal.js";
 import { currencyFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Transaction } from "@/db/types/finance";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import type { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import {
   calculateTotal,
@@ -12,8 +27,6 @@ import {
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
 } from "@/modules/finance/finance-utils";
-import { eachDayOfInterval, endOfYear, isSameYear, startOfToday, startOfYear, sub } from "date-fns";
-import { Decimal } from "decimal.js";
 
 export function YearlyStats({
   transactions,
@@ -36,12 +49,20 @@ export function YearlyStats({
 
   const transactionsByYear = {
     currentYear: {
-      incoming: getIncomingTransactions(transactionsWithoutTransfers.currentYear),
-      outgoing: getOutgoingTransactions(transactionsWithoutTransfers.currentYear),
+      incoming: getIncomingTransactions(
+        transactionsWithoutTransfers.currentYear,
+      ),
+      outgoing: getOutgoingTransactions(
+        transactionsWithoutTransfers.currentYear,
+      ),
     },
     previousYear: {
-      incoming: getIncomingTransactions(transactionsWithoutTransfers.previousYear),
-      outgoing: getOutgoingTransactions(transactionsWithoutTransfers.previousYear),
+      incoming: getIncomingTransactions(
+        transactionsWithoutTransfers.previousYear,
+      ),
+      outgoing: getOutgoingTransactions(
+        transactionsWithoutTransfers.previousYear,
+      ),
     },
   };
 
@@ -57,8 +78,12 @@ export function YearlyStats({
   };
 
   const savings = {
-    currentYear: totalAmounts.currentYear.incoming.sub(totalAmounts.currentYear.outgoing),
-    previousYear: totalAmounts.previousYear.incoming.sub(totalAmounts.previousYear.outgoing),
+    currentYear: totalAmounts.currentYear.incoming.sub(
+      totalAmounts.currentYear.outgoing,
+    ),
+    previousYear: totalAmounts.previousYear.incoming.sub(
+      totalAmounts.previousYear.outgoing,
+    ),
   };
 
   return (
@@ -85,13 +110,18 @@ export function YearlyStats({
 }
 
 function IncomeCard(props: { current: Decimal; previous: Decimal }) {
-  const percentageFromPrevious = calculatePercentageChange(props.previous, props.current);
+  const percentageFromPrevious = calculatePercentageChange(
+    props.previous,
+    props.current,
+  );
 
   return (
     <Card>
       <CardHeader>
         <CardDescription>Income</CardDescription>
-        <CardTitle>{currencyFormatter.format(props.current.toNumber())}</CardTitle>
+        <CardTitle>
+          {currencyFormatter.format(props.current.toNumber())}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -119,13 +149,18 @@ function IncomeCard(props: { current: Decimal; previous: Decimal }) {
 }
 
 function ExpensesCard(props: { current: Decimal; previous: Decimal }) {
-  const percentageFromPrevious = calculatePercentageChange(props.previous, props.current);
+  const percentageFromPrevious = calculatePercentageChange(
+    props.previous,
+    props.current,
+  );
 
   return (
     <Card>
       <CardHeader>
         <CardDescription>Expenses</CardDescription>
-        <CardTitle>{currencyFormatter.format(props.current.toNumber())}</CardTitle>
+        <CardTitle>
+          {currencyFormatter.format(props.current.toNumber())}
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
@@ -158,7 +193,10 @@ function SavingCard(props: {
   previousSavings: Decimal;
 }) {
   const thisYearPercentage = props.currentSavings.div(props.currentIncome);
-  const percentageChange = calculatePercentageChange(props.previousSavings, props.currentSavings);
+  const percentageChange = calculatePercentageChange(
+    props.previousSavings,
+    props.currentSavings,
+  );
 
   return (
     <Card>
@@ -222,13 +260,17 @@ function CostPerDay(props: { current: Decimal; previous: Decimal }) {
       <CardHeader>
         <CardDescription>Cost per day</CardDescription>
         <CardTitle>
-          {currencyFormatter.format(props.current.div(numberOfDays.currentYear).toNumber())}
+          {currencyFormatter.format(
+            props.current.div(numberOfDays.currentYear).toNumber(),
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
-            {currencyFormatter.format(props.previous.div(numberOfDays.previousYear).toNumber())}
+            {currencyFormatter.format(
+              props.previous.div(numberOfDays.previousYear).toNumber(),
+            )}
           </span>{" "}
           previous year
         </p>

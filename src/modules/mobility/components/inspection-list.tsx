@@ -1,15 +1,22 @@
-import { numberFormatter } from "@/common/formatters";
-import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Inspection } from "@/db/types/mobility";
 import { format } from "date-fns";
 import { Check, X } from "lucide-react";
+import { numberFormatter } from "@/common/formatters";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import type { Inspection } from "@/db/types/mobility";
 
 export function InspectionList(props: { inspections: Inspection[] }) {
   const { inspections } = props;
 
   if (!inspections.length) {
-    return <EmptyStateMessage message="There are no inspections for this car." />;
+    return (
+      <EmptyStateMessage message="There are no inspections for this car." />
+    );
   }
 
   return (
@@ -35,8 +42,12 @@ export function InspectionList(props: { inspections: Inspection[] }) {
               </div>
             </div>
             <CardHeader>
-              <CardDescription>{format(inspection.datetime, "ccc y-MM-dd HH:mm")}</CardDescription>
-              <CardTitle>{numberFormatter.format(Number(inspection.odometer))} km</CardTitle>
+              <CardDescription>
+                {format(inspection.datetime, "ccc y-MM-dd HH:mm")}
+              </CardDescription>
+              <CardTitle>
+                {numberFormatter.format(Number(inspection.odometer))} km
+              </CardTitle>
             </CardHeader>
           </Card>
         ))}

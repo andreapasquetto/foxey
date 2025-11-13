@@ -21,9 +21,12 @@ export const places = pgTable("places", {
   isVisited: boolean("is_visited").notNull().default(false),
 });
 
-export const placeCategoryRelations = relations(placeCategories, ({ many }) => ({
-  places: many(places),
-}));
+export const placeCategoryRelations = relations(
+  placeCategories,
+  ({ many }) => ({
+    places: many(places),
+  }),
+);
 
 export const placeRelations = relations(places, ({ one }) => ({
   category: one(placeCategories, {
