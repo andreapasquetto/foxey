@@ -6,14 +6,14 @@ import { getCurrentUserId } from "@/common/utils/auth";
 import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
 import { db } from "@/db/db";
 import { contacts } from "@/db/schemas/contacts";
-import { ContactCreateForm } from "@/modules/contacts/schemas/contact-create-form-schema";
+import { CreateContactFormType } from "@/modules/contacts/schemas/create-contact-form-schema";
 import { formatISO, setYear } from "date-fns";
 import { and, eq, ilike, isNotNull } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 
-export async function contactsCreate(contact: ContactCreateForm) {
+export async function contactsCreate(contact: CreateContactFormType) {
   const userId = await getCurrentUserId();
   // TODO: add addresses, emails and phoneNumbers
   await db.insert(contacts).values({

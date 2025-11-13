@@ -11,12 +11,12 @@ import {
   transactionTemplates,
   wallets,
 } from "@/db/schemas/finance";
-import { TransactionCategoryCreateForm } from "@/modules/finance/schemas/transaction-category-create-form-schema";
-import { TransactionCreateForm } from "@/modules/finance/schemas/transaction-create-form-schema";
-import { TransactionTemplateCreateForm } from "@/modules/finance/schemas/transaction-template-create-form-schema";
-import { TransactionUpdateForm } from "@/modules/finance/schemas/transaction-update-form-schema";
-import { WalletCreateForm } from "@/modules/finance/schemas/wallet-create-form-schema";
-import { WalletUpdateForm } from "@/modules/finance/schemas/wallet-update-form-schema";
+import { CreateTransactionCategoryFormType } from "@/modules/finance/schemas/create-transaction-category-form-schema";
+import { CreateTransactionFormType } from "@/modules/finance/schemas/create-transaction-form-schema";
+import { CreateTransactionTemplateFormType } from "@/modules/finance/schemas/create-transaction-template-form-schema";
+import { CreateWalletFormType } from "@/modules/finance/schemas/create-wallet-form-schema";
+import { UpdateTransactionFormType } from "@/modules/finance/schemas/update-transaction-form-schema";
+import { UpdateWalletFormType } from "@/modules/finance/schemas/update-wallet-form-schema";
 import { Decimal } from "decimal.js";
 import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -24,7 +24,7 @@ import { redirect } from "next/navigation";
 import { DateRange } from "react-day-picker";
 import { z } from "zod";
 
-export async function walletsCreate(wallet: WalletCreateForm) {
+export async function walletsCreate(wallet: CreateWalletFormType) {
   const userId = await getCurrentUserId();
   await db.insert(wallets).values({
     userId,
@@ -78,7 +78,7 @@ export async function walletsUnarchive(formData: FormData) {
   revalidatePath(financeRoute);
 }
 
-export async function walletsUpdate(wallet: WalletUpdateForm) {
+export async function walletsUpdate(wallet: UpdateWalletFormType) {
   await db
     .update(wallets)
     .set({
@@ -118,7 +118,7 @@ export async function walletsUpdateAmount(
   await tx.update(wallets).set({ amount }).where(eq(wallets.id, params.walletId));
 }
 
-export async function transactionCategoriesCreate(category: TransactionCategoryCreateForm) {
+export async function transactionCategoriesCreate(category: CreateTransactionCategoryFormType) {
   const userId = await getCurrentUserId();
   await db.insert(transactionCategories).values({
     userId,
@@ -157,7 +157,7 @@ export async function transactionCategoriesGetPaginated(params: {
   return toPaginated(records, total);
 }
 
-export async function transactionTemplatesCreate(template: TransactionTemplateCreateForm) {
+export async function transactionTemplatesCreate(template: CreateTransactionTemplateFormType) {
   const userId = await getCurrentUserId();
   await db.insert(transactionTemplates).values({
     userId,
@@ -221,7 +221,7 @@ export async function tagsGetAll() {
   });
 }
 
-export async function transactionsCreate(transaction: TransactionCreateForm) {
+export async function transactionsCreate(transaction: CreateTransactionFormType) {
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
     await tx.insert(transactions).values({
@@ -447,7 +447,7 @@ export async function transactionsGetByIdsMap(ids: string[]) {
   return new Map(records.map((record) => [record.id, record]));
 }
 
-export async function transactionsUpdate(transaction: TransactionUpdateForm) {
+export async function transactionsUpdate(transaction: UpdateTransactionFormType) {
   const transactionId = transaction.id;
   const transactionAmount = new Decimal(transaction.amount);
 

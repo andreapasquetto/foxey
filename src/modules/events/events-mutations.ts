@@ -1,10 +1,10 @@
 import { eventsCreate } from "@/modules/events/events-actions";
-import { EventCreateForm } from "@/modules/events/schemas/event-create-form-schema";
+import { CreateEventFormType } from "@/modules/events/schemas/create-event-form-schema";
 import { useMutation } from "@tanstack/react-query";
 
 export function useEventsCreateMutation() {
   return useMutation({
     mutationKey: ["events", "create"],
-    mutationFn: (event: EventCreateForm) => eventsCreate(event),
+    mutationFn: (event: CreateEventFormType) => eventsCreate(event),
   });
 }

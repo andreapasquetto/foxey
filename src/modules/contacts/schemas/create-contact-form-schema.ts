@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const contactCreateFormSchema = z.object({
+export const createContactFormSchema = z.object({
   fullName: z.string().min(1),
   dob: z.date().optional(),
   ignoreDobYear: z.boolean(),
@@ -12,4 +12,4 @@ export const contactCreateFormSchema = z.object({
   addresses: z.array(z.string()),
 });
 
-export type ContactCreateForm = z.infer<typeof contactCreateFormSchema>;
+export type CreateContactFormType = z.infer<typeof createContactFormSchema>;

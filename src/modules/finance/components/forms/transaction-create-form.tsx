@@ -26,9 +26,9 @@ import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useTransactionsCreateMutation } from "@/modules/finance/finance-mutations";
 import {
-  type TransactionCreateForm,
-  transactionCreateFormSchema,
-} from "@/modules/finance/schemas/transaction-create-form-schema";
+  createTransactionFormSchema,
+  CreateTransactionFormType,
+} from "@/modules/finance/schemas/create-transaction-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfHour } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
@@ -46,8 +46,8 @@ export function TransactionCreateForm({
   categories: TransactionCategory[];
   places: Place[];
 }) {
-  const form = useForm<TransactionCreateForm>({
-    resolver: zodResolver(transactionCreateFormSchema),
+  const form = useForm<CreateTransactionFormType>({
+    resolver: zodResolver(createTransactionFormSchema),
     defaultValues: {
       datetime: startOfHour(new Date()),
     },
@@ -77,7 +77,7 @@ export function TransactionCreateForm({
 
   const mutation = useTransactionsCreateMutation();
 
-  function onSubmit(values: TransactionCreateForm) {
+  function onSubmit(values: CreateTransactionFormType) {
     mutation.mutate(values);
   }
 

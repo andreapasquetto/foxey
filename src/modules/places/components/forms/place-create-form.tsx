@@ -25,17 +25,17 @@ import { PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { usePlacesCreateMutation } from "@/modules/places/places-mutations";
 import {
-  type PlaceCreateForm,
-  placeCreateFormSchema,
-} from "@/modules/places/schemas/place-create-form-schema";
+  createPlaceFormSchema,
+  CreatePlaceFormType,
+} from "@/modules/places/schemas/create-place-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 export function PlaceCreateForm(props: { categories: PlaceCategory[] }) {
   const { categories } = props;
-  const form = useForm<PlaceCreateForm>({
-    resolver: zodResolver(placeCreateFormSchema),
+  const form = useForm<CreatePlaceFormType>({
+    resolver: zodResolver(createPlaceFormSchema),
     defaultValues: {
       isVisited: false,
     },
@@ -43,7 +43,7 @@ export function PlaceCreateForm(props: { categories: PlaceCategory[] }) {
 
   const mutation = usePlacesCreateMutation();
 
-  function onValidSubmit(values: PlaceCreateForm) {
+  function onValidSubmit(values: CreatePlaceFormType) {
     mutation.mutate(values);
   }
 

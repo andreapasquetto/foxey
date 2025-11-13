@@ -6,17 +6,17 @@ import { db } from "@/db/db";
 import { transactions } from "@/db/schemas/finance";
 import { cars, highwayTrips, inspections, refuelings, services } from "@/db/schemas/mobility";
 import { transactionsGetByIdsMap, walletsUpdateAmount } from "@/modules/finance/finance-actions";
-import { CarCreateForm } from "@/modules/mobility/schemas/car-create-form-schema";
-import { HighwayTripCreateForm } from "@/modules/mobility/schemas/highway-trip-create-form-schema";
-import { InspectionCreateForm } from "@/modules/mobility/schemas/inspection-create-form-schema";
-import { RefuelingCreateForm } from "@/modules/mobility/schemas/refueling-create-form-schema";
-import { ServiceCreateForm } from "@/modules/mobility/schemas/service-create-form-schema";
+import { CreateCarFormType } from "@/modules/mobility/schemas/create-car-form-schema";
+import { CreateHighwayTripFormType } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
+import { CreateInspectionFormType } from "@/modules/mobility/schemas/create-inspection-form-schema";
+import { CreateRefuelingFormType } from "@/modules/mobility/schemas/create-refueling-form-schema";
+import { CreateServiceFormType } from "@/modules/mobility/schemas/create-service-form-schema";
 import { Decimal } from "decimal.js";
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function carsCreate(car: CarCreateForm) {
+export async function carsCreate(car: CreateCarFormType) {
   const userId = await getCurrentUserId();
   await db.insert(cars).values({ ...car, userId });
   revalidatePath(mobilityRoute);
@@ -45,7 +45,10 @@ export async function carsGetById(id: string) {
   return record;
 }
 
-export async function refuelingsCreate(params: { carId: string; refueling: RefuelingCreateForm }) {
+export async function refuelingsCreate(params: {
+  carId: string;
+  refueling: CreateRefuelingFormType;
+}) {
   const { carId, refueling } = params;
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
@@ -104,7 +107,10 @@ export async function refuelingsGetAll(carId: string) {
   return result;
 }
 
-export async function highwayTripsCreate(params: { carId: string; trip: HighwayTripCreateForm }) {
+export async function highwayTripsCreate(params: {
+  carId: string;
+  trip: CreateHighwayTripFormType;
+}) {
   const { carId, trip } = params;
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
@@ -159,7 +165,7 @@ export async function highwayTripsGetAll(carId: string) {
   }));
 }
 
-export async function servicesCreate(params: { carId: string; service: ServiceCreateForm }) {
+export async function servicesCreate(params: { carId: string; service: CreateServiceFormType }) {
   const { carId, service } = params;
   await db.insert(services).values({
     carId: service.carId,
@@ -182,7 +188,7 @@ export async function servicesGetAll(carId: string) {
 
 export async function inspectionsCreate(params: {
   carId: string;
-  inspection: InspectionCreateForm;
+  inspection: CreateInspectionFormType;
 }) {
   const { carId, inspection } = params;
   await db.insert(inspections).values({

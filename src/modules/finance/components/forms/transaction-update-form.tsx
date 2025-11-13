@@ -28,9 +28,9 @@ import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useTransactionsUpdateMutation } from "@/modules/finance/finance-mutations";
 import {
-  type TransactionUpdateForm,
-  transactionUpdateFormSchema,
-} from "@/modules/finance/schemas/transaction-update-form-schema";
+  updateTransactionFormSchema,
+  UpdateTransactionFormType,
+} from "@/modules/finance/schemas/update-transaction-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -42,8 +42,8 @@ export function TransactionUpdateForm(props: {
 }) {
   const { categories, places, transaction } = props;
 
-  const form = useForm<TransactionUpdateForm>({
-    resolver: zodResolver(transactionUpdateFormSchema),
+  const form = useForm<UpdateTransactionFormType>({
+    resolver: zodResolver(updateTransactionFormSchema),
     defaultValues: {
       id: transaction.id,
       datetime: transaction.datetime,
@@ -56,7 +56,7 @@ export function TransactionUpdateForm(props: {
 
   const mutation = useTransactionsUpdateMutation();
 
-  function onSubmit(values: TransactionUpdateForm) {
+  function onSubmit(values: UpdateTransactionFormType) {
     mutation.mutate(values);
   }
 

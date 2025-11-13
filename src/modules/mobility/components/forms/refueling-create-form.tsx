@@ -29,9 +29,9 @@ import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useRefuelingsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
-  type RefuelingCreateForm,
-  refuelingCreateFormSchema,
-} from "@/modules/mobility/schemas/refueling-create-form-schema";
+  createRefuelingFormSchema,
+  CreateRefuelingFormType,
+} from "@/modules/mobility/schemas/create-refueling-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import Decimal from "decimal.js";
@@ -45,8 +45,8 @@ export function RefuelingCreateForm(props: {
   carId: string;
 }) {
   const { cars, wallets, places, carId } = props;
-  const form = useForm<RefuelingCreateForm>({
-    resolver: zodResolver(refuelingCreateFormSchema),
+  const form = useForm<CreateRefuelingFormType>({
+    resolver: zodResolver(createRefuelingFormSchema),
     defaultValues: {
       carId,
       datetime: startOfMinute(new Date()),
@@ -63,7 +63,7 @@ export function RefuelingCreateForm(props: {
 
   const mutation = useRefuelingsCreateMutation(carId);
 
-  function onValidSubmit(values: RefuelingCreateForm) {
+  function onValidSubmit(values: CreateRefuelingFormType) {
     mutation.mutate(values);
   }
 

@@ -25,17 +25,17 @@ import { Place, PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { usePlacesUpdateMutation } from "@/modules/places/places-mutations";
 import {
-  placeUpdateFormSchema,
-  type PlaceUpdateForm,
-} from "@/modules/places/schemas/place-update-form-schema";
+  updatePlaceFormSchema,
+  UpdatePlaceFormType,
+} from "@/modules/places/schemas/update-place-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 
 export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Place }) {
   const { categories, place } = props;
-  const form = useForm<PlaceUpdateForm>({
-    resolver: zodResolver(placeUpdateFormSchema),
+  const form = useForm<UpdatePlaceFormType>({
+    resolver: zodResolver(updatePlaceFormSchema),
     defaultValues: {
       id: place.id,
       name: place.name,
@@ -47,7 +47,7 @@ export function PlaceUpdateForm(props: { categories: PlaceCategory[]; place: Pla
 
   const mutation = usePlacesUpdateMutation();
 
-  function onValidSubmit(values: PlaceUpdateForm) {
+  function onValidSubmit(values: UpdatePlaceFormType) {
     mutation.mutate(values);
   }
 

@@ -10,16 +10,16 @@ import { Label } from "@/components/ui/label";
 import { Wallet } from "@/db/types/finance";
 import { useWalletsUpdateMutation } from "@/modules/finance/finance-mutations";
 import {
-  type WalletUpdateForm,
-  walletUpdateFormSchema,
-} from "@/modules/finance/schemas/wallet-update-form-schema";
+  updateWalletFormSchema,
+  UpdateWalletFormType,
+} from "@/modules/finance/schemas/update-wallet-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 export function WalletUpdateForm(props: { wallet: Wallet }) {
   const { wallet } = props;
-  const form = useForm<WalletUpdateForm>({
-    resolver: zodResolver(walletUpdateFormSchema),
+  const form = useForm<UpdateWalletFormType>({
+    resolver: zodResolver(updateWalletFormSchema),
     defaultValues: {
       id: wallet.id,
       name: wallet.name,
@@ -29,7 +29,7 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
 
   const mutation = useWalletsUpdateMutation();
 
-  function onValidSubmit(values: WalletUpdateForm) {
+  function onValidSubmit(values: UpdateWalletFormType) {
     mutation.mutate(values);
   }
 

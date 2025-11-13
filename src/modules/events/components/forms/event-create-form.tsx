@@ -25,9 +25,9 @@ import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useEventsCreateMutation } from "@/modules/events/events-mutations";
 import {
-  type EventCreateForm,
-  eventCreateFormSchema,
-} from "@/modules/events/schemas/event-create-form-schema";
+  createEventFormSchema,
+  CreateEventFormType,
+} from "@/modules/events/schemas/create-event-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { add } from "date-fns";
@@ -42,8 +42,8 @@ export function EventCreateForm(props: {
 }) {
   const { categories, places } = props;
 
-  const form = useForm<EventCreateForm>({
-    resolver: zodResolver(eventCreateFormSchema),
+  const form = useForm<CreateEventFormType>({
+    resolver: zodResolver(createEventFormSchema),
     defaultValues: {
       datetime: props.selectedDay ? add(props.selectedDay, { hours: 12 }) : undefined,
       isAllDay: false,
@@ -52,7 +52,7 @@ export function EventCreateForm(props: {
 
   const mutation = useEventsCreateMutation();
 
-  function onValidSubmit(values: EventCreateForm) {
+  function onValidSubmit(values: CreateEventFormType) {
     mutation.mutate(values);
   }
 

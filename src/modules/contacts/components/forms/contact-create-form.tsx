@@ -15,15 +15,15 @@ import {
 } from "@/components/ui/form";
 import { useContactsCreateMutation } from "@/modules/contacts/contacts-mutations";
 import {
-  type ContactCreateForm,
-  contactCreateFormSchema,
-} from "@/modules/contacts/schemas/contact-create-form-schema";
+  createContactFormSchema,
+  CreateContactFormType,
+} from "@/modules/contacts/schemas/create-contact-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 export function ContactCreateForm() {
-  const form = useForm<ContactCreateForm>({
-    resolver: zodResolver(contactCreateFormSchema),
+  const form = useForm<CreateContactFormType>({
+    resolver: zodResolver(createContactFormSchema),
     defaultValues: {
       isArchived: false,
       isBusiness: false,
@@ -36,7 +36,7 @@ export function ContactCreateForm() {
 
   const mutation = useContactsCreateMutation();
 
-  function onValidSubmit(values: ContactCreateForm) {
+  function onValidSubmit(values: CreateContactFormType) {
     mutation.mutate(values);
   }
 

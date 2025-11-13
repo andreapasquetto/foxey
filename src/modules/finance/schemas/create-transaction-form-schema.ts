@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const transactionCreateFormSchema = z.object({
+export const createTransactionFormSchema = z.object({
   datetime: z.date(),
   fromWalletId: z.uuid().optional(),
   toWalletId: z.uuid().optional(),
@@ -10,4 +10,4 @@ export const transactionCreateFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type TransactionCreateForm = z.infer<typeof transactionCreateFormSchema>;
+export type CreateTransactionFormType = z.infer<typeof createTransactionFormSchema>;

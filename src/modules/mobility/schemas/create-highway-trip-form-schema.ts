@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const highwayTripCreateFormSchema = z.object({
+export const createHighwayTripFormSchema = z.object({
   datetime: z.date(),
   carId: z.string().min(1).max(255),
   walletId: z.string().optional(),
@@ -13,4 +13,4 @@ export const highwayTripCreateFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type HighwayTripCreateForm = z.infer<typeof highwayTripCreateFormSchema>;
+export type CreateHighwayTripFormType = z.infer<typeof createHighwayTripFormSchema>;

@@ -17,17 +17,17 @@ import { Textarea } from "@/components/ui/textarea";
 import { Car } from "@/db/types/mobility";
 import { useServicesCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
-  type ServiceCreateForm,
-  serviceCreateFormSchema,
-} from "@/modules/mobility/schemas/service-create-form-schema";
+  createServiceFormSchema,
+  CreateServiceFormType,
+} from "@/modules/mobility/schemas/create-service-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { useForm } from "react-hook-form";
 
 export function ServiceCreateForm(props: { cars: Car[]; carId: string }) {
   const { cars, carId } = props;
-  const form = useForm<ServiceCreateForm>({
-    resolver: zodResolver(serviceCreateFormSchema),
+  const form = useForm<CreateServiceFormType>({
+    resolver: zodResolver(createServiceFormSchema),
     defaultValues: {
       carId,
       datetime: startOfMinute(new Date()),
@@ -36,7 +36,7 @@ export function ServiceCreateForm(props: { cars: Car[]; carId: string }) {
 
   const mutation = useServicesCreateMutation(carId);
 
-  function onValidSubmit(values: ServiceCreateForm) {
+  function onValidSubmit(values: CreateServiceFormType) {
     mutation.mutate(values);
   }
 

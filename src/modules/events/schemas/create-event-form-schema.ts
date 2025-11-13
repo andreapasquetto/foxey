@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const eventCreateFormSchema = z.object({
+export const createEventFormSchema = z.object({
   categoryId: z.string().optional(),
   placeId: z.string().optional(),
   title: z.string(),
@@ -9,4 +9,4 @@ export const eventCreateFormSchema = z.object({
   datetime: z.date(),
 });
 
-export type EventCreateForm = z.infer<typeof eventCreateFormSchema>;
+export type CreateEventFormType = z.infer<typeof createEventFormSchema>;

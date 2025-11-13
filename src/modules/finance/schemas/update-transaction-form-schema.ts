@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const transactionUpdateFormSchema = z.object({
+export const updateTransactionFormSchema = z.object({
   id: z.string(),
   datetime: z.date(),
   categoryId: z.string().optional(),
@@ -9,4 +9,4 @@ export const transactionUpdateFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type TransactionUpdateForm = z.infer<typeof transactionUpdateFormSchema>;
+export type UpdateTransactionFormType = z.infer<typeof updateTransactionFormSchema>;

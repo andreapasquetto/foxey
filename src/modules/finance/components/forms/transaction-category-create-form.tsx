@@ -6,19 +6,19 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useTransactionCategoriesCreateMutation } from "@/modules/finance/finance-mutations";
 import {
-  type TransactionCategoryCreateForm,
-  transactionCategoryCreateFormSchema,
-} from "@/modules/finance/schemas/transaction-category-create-form-schema";
+  createTransactionCategoryFormSchema,
+  CreateTransactionCategoryFormType,
+} from "@/modules/finance/schemas/create-transaction-category-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 export function TransactionCategoryCreateForm() {
-  const form = useForm<TransactionCategoryCreateForm>({
-    resolver: zodResolver(transactionCategoryCreateFormSchema),
+  const form = useForm<CreateTransactionCategoryFormType>({
+    resolver: zodResolver(createTransactionCategoryFormSchema),
   });
   const mutation = useTransactionCategoriesCreateMutation();
 
-  function onValidSubmit(values: TransactionCategoryCreateForm) {
+  function onValidSubmit(values: CreateTransactionCategoryFormType) {
     mutation.mutate(values);
   }
 

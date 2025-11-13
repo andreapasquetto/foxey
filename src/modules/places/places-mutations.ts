@@ -1,18 +1,18 @@
 import { placesCreate, placesUpdate } from "@/modules/places/places-actions";
-import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-schema";
-import { PlaceUpdateForm } from "@/modules/places/schemas/place-update-form-schema";
+import { CreatePlaceFormType } from "@/modules/places/schemas/create-place-form-schema";
+import { UpdatePlaceFormType } from "@/modules/places/schemas/update-place-form-schema";
 import { useMutation } from "@tanstack/react-query";
 
 export function usePlacesCreateMutation() {
   return useMutation({
     mutationKey: ["places", "create"],
-    mutationFn: (place: PlaceCreateForm) => placesCreate(place),
+    mutationFn: (place: CreatePlaceFormType) => placesCreate(place),
   });
 }
 
 export function usePlacesUpdateMutation() {
   return useMutation({
     mutationKey: ["places", "update"],
-    mutationFn: (place: PlaceUpdateForm) => placesUpdate(place),
+    mutationFn: (place: UpdatePlaceFormType) => placesUpdate(place),
   });
 }

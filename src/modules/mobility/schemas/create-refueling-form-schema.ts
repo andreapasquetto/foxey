@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const refuelingCreateFormSchema = z.object({
+export const createRefuelingFormSchema = z.object({
   datetime: z.date(),
   carId: z.string().min(1).max(255),
   walletId: z.string().optional(),
@@ -15,4 +15,4 @@ export const refuelingCreateFormSchema = z.object({
   description: z.string().optional(),
 });
 
-export type RefuelingCreateForm = z.infer<typeof refuelingCreateFormSchema>;
+export type CreateRefuelingFormType = z.infer<typeof createRefuelingFormSchema>;

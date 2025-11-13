@@ -17,17 +17,17 @@ import { Wallet } from "@/db/types/finance";
 import { Car } from "@/db/types/mobility";
 import { useHighwayTripsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
-  type HighwayTripCreateForm,
-  highwayTripCreateFormSchema,
-} from "@/modules/mobility/schemas/highway-trip-create-form-schema";
+  createHighwayTripFormSchema,
+  CreateHighwayTripFormType,
+} from "@/modules/mobility/schemas/create-highway-trip-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { useForm } from "react-hook-form";
 
 export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; carId: string }) {
   const { cars, wallets, carId } = props;
-  const form = useForm<HighwayTripCreateForm>({
-    resolver: zodResolver(highwayTripCreateFormSchema),
+  const form = useForm<CreateHighwayTripFormType>({
+    resolver: zodResolver(createHighwayTripFormSchema),
     defaultValues: {
       carId,
       datetime: startOfMinute(new Date()),
@@ -36,7 +36,7 @@ export function HighwayTripCreateForm(props: { cars: Car[]; wallets: Wallet[]; c
 
   const mutation = useHighwayTripsCreateMutation(carId);
 
-  function onValidSubmit(values: HighwayTripCreateForm) {
+  function onValidSubmit(values: CreateHighwayTripFormType) {
     mutation.mutate(values);
   }
 

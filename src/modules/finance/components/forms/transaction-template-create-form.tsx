@@ -25,9 +25,9 @@ import { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { useTransactionTemplatesCreateMutation } from "@/modules/finance/finance-mutations";
 import {
-  type TransactionTemplateCreateForm,
-  transactionTemplateCreateFormSchema,
-} from "@/modules/finance/schemas/transaction-template-create-form-schema";
+  createTransactionTemplateFormSchema,
+  CreateTransactionTemplateFormType,
+} from "@/modules/finance/schemas/create-transaction-template-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -41,13 +41,13 @@ export function TransactionTemplateCreateForm({
   categories: TransactionCategory[];
   places: Place[];
 }) {
-  const form = useForm<TransactionTemplateCreateForm>({
-    resolver: zodResolver(transactionTemplateCreateFormSchema),
+  const form = useForm<CreateTransactionTemplateFormType>({
+    resolver: zodResolver(createTransactionTemplateFormSchema),
   });
 
   const mutation = useTransactionTemplatesCreateMutation();
 
-  function onSubmit(values: TransactionTemplateCreateForm) {
+  function onSubmit(values: CreateTransactionTemplateFormType) {
     mutation.mutate(values);
   }
 

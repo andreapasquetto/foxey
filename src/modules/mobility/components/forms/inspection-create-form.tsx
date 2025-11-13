@@ -17,9 +17,9 @@ import {
 import { Car } from "@/db/types/mobility";
 import { useInspectionsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
-  type InspectionCreateForm,
-  inspectionCreateFormSchema,
-} from "@/modules/mobility/schemas/inspection-create-form-schema";
+  createInspectionFormSchema,
+  CreateInspectionFormType,
+} from "@/modules/mobility/schemas/create-inspection-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { useForm } from "react-hook-form";
@@ -27,8 +27,8 @@ import { useForm } from "react-hook-form";
 export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
   const { cars, carId } = props;
 
-  const form = useForm<InspectionCreateForm>({
-    resolver: zodResolver(inspectionCreateFormSchema),
+  const form = useForm<CreateInspectionFormType>({
+    resolver: zodResolver(createInspectionFormSchema),
     defaultValues: {
       carId,
       datetime: startOfMinute(new Date()),
@@ -38,7 +38,7 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
 
   const mutation = useInspectionsCreateMutation(carId);
 
-  function onValidSubmit(values: InspectionCreateForm) {
+  function onValidSubmit(values: CreateInspectionFormType) {
     mutation.mutate(values);
   }
 

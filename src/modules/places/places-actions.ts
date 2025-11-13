@@ -5,8 +5,8 @@ import { placesRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { placeCategories, places } from "@/db/schemas/places";
-import { PlaceCreateForm } from "@/modules/places/schemas/place-create-form-schema";
-import { PlaceUpdateForm } from "@/modules/places/schemas/place-update-form-schema";
+import { CreatePlaceFormType } from "@/modules/places/schemas/create-place-form-schema";
+import { UpdatePlaceFormType } from "@/modules/places/schemas/update-place-form-schema";
 import { and, eq, ilike } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
@@ -124,7 +124,7 @@ export async function placesGetById(id: string) {
   return record;
 }
 
-export async function placesCreate(place: PlaceCreateForm) {
+export async function placesCreate(place: CreatePlaceFormType) {
   const userId = await getCurrentUserId();
   // TODO: pass coordinates
   await db.insert(places).values({
@@ -138,7 +138,7 @@ export async function placesCreate(place: PlaceCreateForm) {
   redirect(placesRoute);
 }
 
-export async function placesUpdate(place: PlaceUpdateForm) {
+export async function placesUpdate(place: UpdatePlaceFormType) {
   await db
     .update(places)
     .set({

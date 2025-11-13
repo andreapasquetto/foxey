@@ -4,7 +4,7 @@ import { eventsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
 import { eventCategories, events } from "@/db/schemas/events";
-import { EventCreateForm } from "@/modules/events/schemas/event-create-form-schema";
+import { CreateEventFormType } from "@/modules/events/schemas/create-event-form-schema";
 import { startOfDay } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
@@ -18,7 +18,7 @@ export async function eventCategoriesGetAll() {
   });
 }
 
-export async function eventsCreate(values: EventCreateForm) {
+export async function eventsCreate(values: CreateEventFormType) {
   const userId = await getCurrentUserId();
   await db.insert(events).values({
     userId,

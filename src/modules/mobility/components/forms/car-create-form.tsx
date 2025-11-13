@@ -6,15 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useCarsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
-  type CarCreateForm,
-  carCreateFormSchema,
-} from "@/modules/mobility/schemas/car-create-form-schema";
+  createCarFormSchema,
+  CreateCarFormType,
+} from "@/modules/mobility/schemas/create-car-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 export function CarCreateForm() {
-  const form = useForm<CarCreateForm>({
-    resolver: zodResolver(carCreateFormSchema),
+  const form = useForm<CreateCarFormType>({
+    resolver: zodResolver(createCarFormSchema),
     defaultValues: {
       year: new Date().getFullYear(),
     },
@@ -22,7 +22,7 @@ export function CarCreateForm() {
 
   const mutation = useCarsCreateMutation();
 
-  function onValidSubmit(values: CarCreateForm) {
+  function onValidSubmit(values: CreateCarFormType) {
     mutation.mutate(values);
   }
 

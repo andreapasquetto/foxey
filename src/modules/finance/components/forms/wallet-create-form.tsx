@@ -6,20 +6,20 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { useWalletsCreateMutation } from "@/modules/finance/finance-mutations";
 import {
-  type WalletCreateForm,
-  walletCreateFormSchema,
-} from "@/modules/finance/schemas/wallet-create-form-schema";
+  createWalletFormSchema,
+  CreateWalletFormType,
+} from "@/modules/finance/schemas/create-wallet-form-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
 export function WalletCreateForm() {
-  const form = useForm<WalletCreateForm>({
-    resolver: zodResolver(walletCreateFormSchema),
+  const form = useForm<CreateWalletFormType>({
+    resolver: zodResolver(createWalletFormSchema),
   });
 
   const mutation = useWalletsCreateMutation();
 
-  function onValidSubmit(values: WalletCreateForm) {
+  function onValidSubmit(values: CreateWalletFormType) {
     mutation.mutate(values);
   }
 
