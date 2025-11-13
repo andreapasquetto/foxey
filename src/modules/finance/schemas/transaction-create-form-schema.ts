@@ -2,10 +2,10 @@ import { z } from "zod";
 
 export const transactionCreateFormSchema = z.object({
   datetime: z.date(),
-  fromWalletId: z.string().optional(),
-  toWalletId: z.string().optional(),
-  categoryId: z.string().optional(),
-  placeId: z.string().optional(),
+  fromWalletId: z.uuid().optional(),
+  toWalletId: z.uuid().optional(),
+  categoryId: z.uuid().optional(),
+  placeId: z.uuid().optional(),
   amount: z.number().min(0.01),
   description: z.string().optional(),
 });

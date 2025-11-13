@@ -187,6 +187,26 @@ export async function transactionCategoriesGetAll(
   });
 }
 
+export async function transactionTemplatesGetAll() {
+  const userId = await getCurrentUserId();
+  return await db.query.transactionTemplates.findMany({
+    columns: {
+      categoryId: false,
+      fromWalletId: false,
+      toWalletId: false,
+      placeId: false,
+    },
+    with: {
+      category: true,
+      from: true,
+      place: true,
+      to: true,
+    },
+    where: and(eq(transactionCategories.userId, userId)),
+    orderBy: [transactionTemplates.name],
+  });
+}
+
 export async function tagsGetAll() {
   const userId = await getCurrentUserId();
   return await db.query.tags.findMany({

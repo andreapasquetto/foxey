@@ -2,7 +2,6 @@
 
 import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
-import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -44,7 +43,6 @@ export function TransactionTemplateCreateForm({
 }) {
   const form = useForm<TransactionTemplateCreateForm>({
     resolver: zodResolver(transactionTemplateCreateFormSchema),
-    defaultValues: {},
   });
 
   const mutation = useTransactionTemplatesCreateMutation();
@@ -62,7 +60,7 @@ export function TransactionTemplateCreateForm({
             control={form.control}
             name="categoryId"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-end">
+              <FormItem className="flex flex-col">
                 <FormLabel>Category</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -174,20 +172,122 @@ export function TransactionTemplateCreateForm({
           />
         </div>
         <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XSelect control={form.control} name="fromWalletId" label="From">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
-          <XSelect control={form.control} name="toWalletId" label="To">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
+          <FormField
+            control={form.control}
+            name="fromWalletId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>From</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "justify-between px-3 py-2 font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value
+                          ? wallets.find((wallet) => wallet.id === field.value)?.name
+                          : "Select an option"}
+                        <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-0">
+                    <Command>
+                      <CommandInput placeholder="Search..." />
+                      <CommandList>
+                        <CommandEmpty>No option found.</CommandEmpty>
+                        <CommandGroup>
+                          {wallets.map((wallet) => (
+                            <CommandItem
+                              value={wallet.name}
+                              key={wallet.id}
+                              onSelect={() => {
+                                form.setValue("fromWalletId", wallet.id);
+                              }}
+                            >
+                              <div className={cn(wallet.isArchived && "text-muted-foreground")}>
+                                {wallet.name}
+                              </div>
+                              <Check
+                                className={cn(
+                                  "ml-auto",
+                                  wallet.id === field.value ? "opacity-100" : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="toWalletId"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>To</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "justify-between px-3 py-2 font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value
+                          ? wallets.find((wallet) => wallet.id === field.value)?.name
+                          : "Select an option"}
+                        <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-0">
+                    <Command>
+                      <CommandInput placeholder="Search..." />
+                      <CommandList>
+                        <CommandEmpty>No option found.</CommandEmpty>
+                        <CommandGroup>
+                          {wallets.map((wallet) => (
+                            <CommandItem
+                              value={wallet.name}
+                              key={wallet.id}
+                              onSelect={() => {
+                                form.setValue("toWalletId", wallet.id);
+                              }}
+                            >
+                              <div className={cn(wallet.isArchived && "text-muted-foreground")}>
+                                {wallet.name}
+                              </div>
+                              <Check
+                                className={cn(
+                                  "ml-auto",
+                                  wallet.id === field.value ? "opacity-100" : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <XInput
             type="number"
             control={form.control}
