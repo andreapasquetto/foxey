@@ -1,11 +1,11 @@
-import { env } from "@/common/env";
-import { QueryProvider } from "@/common/providers/query-provider";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { cn } from "@/lib/utils";
 import { ClerkProvider } from "@clerk/nextjs";
 import { shadcn } from "@clerk/themes";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { env } from "@/common/env";
+import { QueryProvider } from "@/common/providers/query-provider";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 import "./globals.css";
 
@@ -39,7 +39,9 @@ export default function RootLayout({
       }}
     >
       <html lang="en" className={cn(env.isDarkMode && "dark")}>
-        <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
           <QueryProvider>
             <TooltipProvider>{children}</TooltipProvider>
           </QueryProvider>

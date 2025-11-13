@@ -65,7 +65,7 @@ export default async function PrivateHome() {
             href={item.href}
             className={cn("col-span-2 block", index % 2 === 0 ? "col-end-3" : "col-start-2")}
           >
-            <Card className="group bg-background transition-colors hover:border-foreground">
+            <Card className="group transition-colors hover:border-foreground">
               <CardHeader
                 className={cn(
                   "flex items-center justify-between",

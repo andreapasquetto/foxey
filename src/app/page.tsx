@@ -1,8 +1,8 @@
+import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
+import Link from "next/link";
 import { privateRoute } from "@/common/routes";
 import { Heading1 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
-import { SignedIn, SignedOut, SignInButton, SignUpButton } from "@clerk/nextjs";
-import Link from "next/link";
 
 export default function Home() {
   return (
