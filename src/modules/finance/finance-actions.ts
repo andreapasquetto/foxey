@@ -169,6 +169,20 @@ export async function transactionCategoriesGetPaginated(params: {
   });
   return toPaginated(records, total);
 }
+export async function transactionCategoriesGetAll(
+  params: { query?: string } = {},
+) {
+  const userId = await getCurrentUserId();
+  return await db.query.transactionCategories.findMany({
+    where: and(
+      eq(transactionCategories.userId, userId),
+      params.query
+        ? ilike(transactionCategories.name, `%${params.query}%`)
+        : undefined,
+    ),
+    orderBy: [transactionCategories.name],
+  });
+}
 
 export async function transactionTemplatesCreate(
   template: CreateTransactionTemplateFormType,
@@ -187,19 +201,56 @@ export async function transactionTemplatesCreate(
   redirect(transactionsRoute);
 }
 
-export async function transactionCategoriesGetAll(
-  params: { query?: string } = {},
-) {
+export async function transactionTemplatesGetPaginated(params: {
+  paginate: Paginate;
+  query?: string;
+}) {
   const userId = await getCurrentUserId();
-  return await db.query.transactionCategories.findMany({
+  const { limit, offset } = paginateToLimitAndOffset(params.paginate);
+  const total = (
+    await db
+      .select({ id: transactionTemplates.id })
+      .from(transactionTemplates)
+      .where(
+        and(
+          eq(transactionTemplates.userId, userId),
+          params.query
+            ? ilike(transactionTemplates.name, `%${params.query}%`)
+            : undefined,
+        ),
+      )
+  ).length;
+  const records = await db.query.transactionTemplates.findMany({
+    limit,
+    offset,
+    columns: {
+      categoryId: false,
+      fromWalletId: false,
+      toWalletId: false,
+      placeId: false,
+    },
+    with: {
+      category: true,
+      from: true,
+      place: {
+        columns: {
+          categoryId: false,
+        },
+        with: {
+          category: true,
+        },
+      },
+      to: true,
+    },
     where: and(
-      eq(transactionCategories.userId, userId),
+      eq(transactionTemplates.userId, userId),
       params.query
-        ? ilike(transactionCategories.name, `%${params.query}%`)
+        ? ilike(transactionTemplates.name, `%${params.query}%`)
         : undefined,
     ),
-    orderBy: [transactionCategories.name],
+    orderBy: [transactionTemplates.name],
   });
+  return toPaginated(records, total);
 }
 
 export async function transactionTemplatesGetAll() {
@@ -214,7 +265,14 @@ export async function transactionTemplatesGetAll() {
     with: {
       category: true,
       from: true,
-      place: true,
+      place: {
+        columns: {
+          categoryId: false,
+        },
+        with: {
+          category: true,
+        },
+      },
       to: true,
     },
     where: and(eq(transactionCategories.userId, userId)),
