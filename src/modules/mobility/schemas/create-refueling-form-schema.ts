@@ -1,18 +1,23 @@
 import { z } from "zod";
+import {
+  optionalStringSchema,
+  positiveOptionalNumberSchema,
+  positiveRequiredNumberSchema,
+} from "@/common/schemas";
 
 export const createRefuelingFormSchema = z.object({
   datetime: z.date(),
-  carId: z.string().min(1).max(255),
-  walletId: z.string().optional(),
-  placeId: z.string().min(1).max(255).optional(),
-  price: z.number().min(0),
-  quantity: z.number().min(0),
-  cost: z.number().min(0),
+  carId: z.uuid(),
+  walletId: z.uuid().optional(),
+  placeId: z.uuid().optional(),
+  price: positiveRequiredNumberSchema,
+  quantity: positiveRequiredNumberSchema,
+  cost: positiveRequiredNumberSchema,
   isFull: z.boolean(),
   isNecessary: z.boolean(),
-  trip: z.number().optional(),
-  odometer: z.number(),
-  description: z.string().optional(),
+  trip: positiveOptionalNumberSchema,
+  odometer: positiveRequiredNumberSchema,
+  description: optionalStringSchema,
 });
 
 export type CreateRefuelingFormType = z.infer<typeof createRefuelingFormSchema>;

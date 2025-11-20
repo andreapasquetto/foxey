@@ -1,8 +1,9 @@
 import { z } from "zod";
+import { requiredStringSchema } from "@/common/schemas";
 
 export const updateWalletFormSchema = z.object({
-  id: z.string(),
-  name: z.string().min(1).max(255),
+  id: z.uuid({ error: "Required" }),
+  name: requiredStringSchema,
   isArchived: z.boolean(),
 });
 

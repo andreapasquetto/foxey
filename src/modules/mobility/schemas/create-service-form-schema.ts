@@ -1,10 +1,14 @@
 import { z } from "zod";
+import {
+  optionalStringSchema,
+  positiveRequiredNumberSchema,
+} from "@/common/schemas";
 
 export const createServiceFormSchema = z.object({
   datetime: z.date(),
-  carId: z.string().min(1).max(255),
-  odometer: z.number(),
-  notes: z.string().max(255).optional(),
+  carId: z.uuid(),
+  odometer: positiveRequiredNumberSchema,
+  notes: optionalStringSchema,
 });
 
 export type CreateServiceFormType = z.infer<typeof createServiceFormSchema>;

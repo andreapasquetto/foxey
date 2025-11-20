@@ -1,9 +1,10 @@
 import { z } from "zod";
+import { positiveRequiredNumberSchema } from "@/common/schemas";
 
 export const createInspectionFormSchema = z.object({
   datetime: z.date(),
-  carId: z.string().min(1).max(255),
-  odometer: z.number(),
+  carId: z.uuid(),
+  odometer: positiveRequiredNumberSchema,
   isSuccessful: z.boolean(),
 });
 

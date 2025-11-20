@@ -1,7 +1,8 @@
 import { z } from "zod";
+import { requiredStringSchema } from "@/common/schemas";
 
 export const createWalletFormSchema = z.object({
-  name: z.string().min(1).max(255),
+  name: requiredStringSchema,
   initialAmount: z.number().optional(),
 });
 

@@ -1,12 +1,16 @@
 import { z } from "zod";
+import {
+  optionalStringSchema,
+  positiveRequiredNumberSchema,
+} from "@/common/schemas";
 
 export const updateTransactionFormSchema = z.object({
-  id: z.string(),
+  id: z.uuid(),
   datetime: z.date(),
-  categoryId: z.string().optional(),
-  placeId: z.string().optional(),
-  amount: z.number().min(0.01),
-  description: z.string().optional(),
+  categoryId: z.uuid().optional(),
+  placeId: z.uuid().optional(),
+  amount: positiveRequiredNumberSchema,
+  description: optionalStringSchema,
 });
 
 export type UpdateTransactionFormType = z.infer<

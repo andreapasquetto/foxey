@@ -1,16 +1,21 @@
 import { z } from "zod";
+import {
+  optionalStringSchema,
+  positiveRequiredNumberSchema,
+  requiredStringSchema,
+} from "@/common/schemas";
 
 export const createHighwayTripFormSchema = z.object({
   datetime: z.date(),
-  carId: z.string().min(1).max(255),
-  walletId: z.string().optional(),
-  placeId: z.string().min(1).max(255).optional(),
-  startingToll: z.string().min(1).max(255),
-  endingToll: z.string().min(1).max(255),
-  distance: z.number(),
-  cost: z.number().min(0),
-  avgSpeed: z.number(),
-  description: z.string().optional(),
+  carId: z.uuid(),
+  walletId: z.uuid().optional(),
+  placeId: z.uuid().optional(),
+  startingToll: requiredStringSchema,
+  endingToll: requiredStringSchema,
+  cost: positiveRequiredNumberSchema,
+  distance: positiveRequiredNumberSchema,
+  avgSpeed: positiveRequiredNumberSchema,
+  description: optionalStringSchema,
 });
 
 export type CreateHighwayTripFormType = z.infer<
