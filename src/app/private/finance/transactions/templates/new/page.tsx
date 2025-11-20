@@ -12,7 +12,7 @@ export default async function TransactionTemplateCreatePage() {
   const places = await placesGetAll();
   return (
     <div className="space-y-12">
-      <Heading1>New Template</Heading1>
+      <Heading1>New Transaction Template</Heading1>
       <TransactionTemplateCreateForm
         wallets={wallets}
         categories={categories}

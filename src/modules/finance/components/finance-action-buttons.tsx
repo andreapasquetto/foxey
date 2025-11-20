@@ -1,9 +1,10 @@
-import { ArrowRightLeft, Plus, Shapes, Wallet } from "lucide-react";
+import { ArrowRightLeft, Plus, Shapes, TextSelect, Wallet } from "lucide-react";
 import Link from "next/link";
 import {
-  newTransactionCategoryRoute,
   newTransactionRoute,
   newWalletRoute,
+  transactionCategoriesRoute,
+  transactionTemplatesRoute,
 } from "@/common/routes";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +16,17 @@ import {
 
 export function FinanceActionButtons() {
   return (
-    <div className="fixed right-4 bottom-4 z-50 m-0 sm:right-6 sm:bottom-6">
+    <div className="fixed right-4 bottom-4 z-50 m-0 flex flex-col gap-2 sm:right-6 sm:bottom-6">
+      <Button variant="outline" className="size-14 rounded-xl" asChild>
+        <Link href={transactionCategoriesRoute}>
+          <Shapes className="size-6" />
+        </Link>
+      </Button>
+      <Button variant="outline" className="size-14 rounded-xl" asChild>
+        <Link href={transactionTemplatesRoute}>
+          <TextSelect className="size-6" />
+        </Link>
+      </Button>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button className="size-14 rounded-xl">
@@ -29,14 +40,6 @@ export function FinanceActionButtons() {
               className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
             >
               Add transaction <ArrowRightLeft className="size-5" />
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link
-              href={newTransactionCategoryRoute}
-              className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-            >
-              Add category <Shapes className="size-5" />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
