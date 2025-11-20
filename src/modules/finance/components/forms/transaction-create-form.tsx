@@ -92,91 +92,93 @@ export function TransactionCreateForm({
 
   return (
     <Form {...form}>
-      <div className="flex items-center justify-center">
-        <FormItem className="flex flex-col">
-          <FormLabel>Template</FormLabel>
-          <FormControl>
-            <Popover>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    className={cn(
-                      "h-12 w-[350px] justify-between px-3 py-2 font-normal",
-                      !selectedTemplate && "text-muted-foreground",
-                    )}
-                  >
-                    {selectedTemplate
-                      ? templates.find(
-                          (template) => template.id === selectedTemplate.id,
-                        )?.name
-                      : "Select an option"}
-                    <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-[350px] p-0">
-                <Command id="templateId">
-                  <CommandInput placeholder="Search..." />
-                  <CommandList>
-                    <CommandEmpty>No option found.</CommandEmpty>
-                    <CommandGroup>
-                      {templates.map((template) => (
-                        <CommandItem
-                          value={template.id}
-                          key={template.id}
-                          onSelect={(id) => handleTemplateSelect(id)}
-                        >
-                          <div>
-                            <div>{template.name}</div>
-                          </div>
-                          <Check
-                            className={cn(
-                              "ml-auto",
-                              template.id === selectedTemplate?.id
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </FormControl>
-          <FormMessage />
-        </FormItem>
-      </div>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <FormField
-            control={form.control}
-            name="datetime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <DatePicker
-                    value={field.value}
-                    setValue={field.onChange}
-                    includeTime
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="flex items-center justify-center">
+          <FormItem>
+            <FormLabel>Template</FormLabel>
+            <FormControl>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <FormControl>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn(
+                        "h-12 w-[350px] justify-between px-3 py-2 font-normal",
+                        !selectedTemplate && "text-muted-foreground",
+                      )}
+                    >
+                      {selectedTemplate
+                        ? templates.find(
+                            (template) => template.id === selectedTemplate.id,
+                          )?.name
+                        : "Select an option"}
+                      <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                    </Button>
+                  </FormControl>
+                </PopoverTrigger>
+                <PopoverContent className="w-[350px] p-0">
+                  <Command id="templateId">
+                    <CommandInput placeholder="Search..." />
+                    <CommandList>
+                      <CommandEmpty>No option found.</CommandEmpty>
+                      <CommandGroup>
+                        {templates.map((template) => (
+                          <CommandItem
+                            value={template.id}
+                            key={template.id}
+                            onSelect={(id) => handleTemplateSelect(id)}
+                          >
+                            <div>
+                              <div>{template.name}</div>
+                            </div>
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                template.id === selectedTemplate?.id
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </div>
+        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
+          <div className="sm:col-span-full">
+            <FormField
+              control={form.control}
+              name="datetime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      value={field.value}
+                      setValue={field.onChange}
+                      includeTime
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="categoryId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Category</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -236,7 +238,7 @@ export function TransactionCreateForm({
             control={form.control}
             name="placeId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Place</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -295,13 +297,11 @@ export function TransactionCreateForm({
               </FormItem>
             )}
           />
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <FormField
             control={form.control}
             name="fromWalletId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>From</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -366,7 +366,7 @@ export function TransactionCreateForm({
             control={form.control}
             name="toWalletId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>To</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -427,17 +427,17 @@ export function TransactionCreateForm({
               </FormItem>
             )}
           />
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XInput
-            type="number"
-            control={form.control}
-            name="amount"
-            step={0.01}
-            label="Amount"
-            placeholder="0.00"
-          />
-          <div className="md:col-span-2">
+          <div className="sm:col-span-full">
+            <XInput
+              type="number"
+              control={form.control}
+              name="amount"
+              step={0.01}
+              label="Amount"
+              placeholder="0.00"
+            />
+          </div>
+          <div className="sm:col-span-full">
             <XInput
               control={form.control}
               name="description"

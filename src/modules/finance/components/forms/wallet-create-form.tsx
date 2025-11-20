@@ -27,19 +27,17 @@ export function WalletCreateForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-          <XInput control={form.control} name="name" label="Name" />
-          <XInput
-            type="number"
-            control={form.control}
-            name="initialAmount"
-            step={0.01}
-            label="Initial amount"
-            placeholder="0.00"
-          />
-        </div>
+        <XInput control={form.control} name="name" label="Name" />
+        <XInput
+          type="number"
+          control={form.control}
+          name="initialAmount"
+          step={0.01}
+          label="Initial amount"
+          placeholder="0.00"
+        />
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>

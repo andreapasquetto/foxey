@@ -30,19 +30,17 @@ export function CarCreateForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 max-w-lg mx-auto"
       >
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XInput
-            type="number"
-            control={form.control}
-            name="year"
-            step={1}
-            label="Year"
-          />
-          <XInput control={form.control} name="make" label="Make" />
-          <XInput control={form.control} name="model" label="Model" />
-        </div>
+        <XInput
+          type="number"
+          control={form.control}
+          name="year"
+          step={1}
+          label="Year"
+        />
+        <XInput control={form.control} name="make" label="Make" />
+        <XInput control={form.control} name="model" label="Model" />
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>

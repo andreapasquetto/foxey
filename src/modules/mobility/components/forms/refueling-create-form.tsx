@@ -75,9 +75,9 @@ export function RefuelingCreateForm(props: {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
           <XSelect control={form.control} name="carId" label="Car" disabled>
             {cars.map((car) => (
               <XSelectOption key={car.id} value={car.id}>
@@ -96,7 +96,7 @@ export function RefuelingCreateForm(props: {
             control={form.control}
             name="datetime"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-end">
+              <FormItem>
                 <FormLabel>Date</FormLabel>
                 <FormControl>
                   <DatePicker
@@ -113,7 +113,7 @@ export function RefuelingCreateForm(props: {
             control={form.control}
             name="placeId"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-end">
+              <FormItem>
                 <FormLabel>Place</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -179,42 +179,38 @@ export function RefuelingCreateForm(props: {
               </XSelectOption>
             ))}
           </XSelect>
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XInput
-            type="number"
-            control={form.control}
-            name="cost"
-            step={0.01}
-            label="Cost (€)"
-            placeholder="0.00"
-          />
-          <XInput
-            type="number"
-            control={form.control}
-            name="price"
-            step={0.001}
-            label="Price (€/L)"
-            placeholder="0.000"
-          />
-          <XInput
-            type="number"
-            control={form.control}
-            name="quantity"
-            step={0.01}
-            label="Quantity (L)"
-            placeholder={quantityPlaceholder}
-          />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
+          <div className="space-y-6 sm:space-y-0 sm:col-span-full gap-x-2 gap-y-6 sm:grid sm:grid-cols-3">
+            <XInput
+              type="number"
+              control={form.control}
+              name="cost"
+              step={0.01}
+              label="Cost (€)"
+              placeholder="0.00"
+            />
+            <XInput
+              type="number"
+              control={form.control}
+              name="price"
+              step={0.001}
+              label="Price (€/L)"
+              placeholder="0.000"
+            />
+            <XInput
+              type="number"
+              control={form.control}
+              name="quantity"
+              step={0.01}
+              label="Quantity (L)"
+              placeholder={quantityPlaceholder}
+            />
+          </div>
           <XCheckbox control={form.control} name="isFull" label="Full Tank" />
           <XCheckbox
             control={form.control}
             name="isNecessary"
             label="Necessary"
           />
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <XInput
             type="number"
             control={form.control}
@@ -231,8 +227,14 @@ export function RefuelingCreateForm(props: {
             label="Odometer (km)"
             placeholder="0"
           />
+          <div className="sm:col-span-full">
+            <XInput
+              control={form.control}
+              name="description"
+              label="Description"
+            />
+          </div>
         </div>
-        <XInput control={form.control} name="description" label="Description" />
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>

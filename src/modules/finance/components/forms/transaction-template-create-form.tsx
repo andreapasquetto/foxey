@@ -59,15 +59,17 @@ export function TransactionTemplateCreateForm({
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XInput control={form.control} name="name" label="Name" />
+        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
+          <div className="sm:col-span-full">
+            <XInput control={form.control} name="name" label="Name" />
+          </div>
           <FormField
             control={form.control}
             name="categoryId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>Category</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -127,7 +129,7 @@ export function TransactionTemplateCreateForm({
             control={form.control}
             name="placeId"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-end">
+              <FormItem>
                 <FormLabel>Place</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -186,13 +188,11 @@ export function TransactionTemplateCreateForm({
               </FormItem>
             )}
           />
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
           <FormField
             control={form.control}
             name="fromWalletId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>From</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -257,7 +257,7 @@ export function TransactionTemplateCreateForm({
             control={form.control}
             name="toWalletId"
             render={({ field }) => (
-              <FormItem className="flex flex-col">
+              <FormItem>
                 <FormLabel>To</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -318,14 +318,16 @@ export function TransactionTemplateCreateForm({
               </FormItem>
             )}
           />
-          <XInput
-            type="number"
-            control={form.control}
-            name="amount"
-            step={0.01}
-            label="Amount"
-            placeholder="0.00"
-          />
+          <div className="sm:col-span-full">
+            <XInput
+              type="number"
+              control={form.control}
+              name="amount"
+              step={0.01}
+              label="Amount"
+              placeholder="0.00"
+            />
+          </div>
         </div>
         <div className="flex items-center justify-end gap-3">
           {mutation.isPending && <CircularSpinner />}

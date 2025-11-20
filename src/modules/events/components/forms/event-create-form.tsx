@@ -1,5 +1,4 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { PopoverContent } from "@radix-ui/react-popover";
 import { add } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useEffect } from "react";
@@ -25,7 +24,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Popover, PopoverTrigger } from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { EventCategory } from "@/db/types/events";
 import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
@@ -68,13 +67,13 @@ export function EventCreateForm(props: {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
         <FormField
           control={form.control}
           name="datetime"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem>
               <FormLabel>Date</FormLabel>
               <FormControl>
                 <DatePicker
@@ -87,16 +86,14 @@ export function EventCreateForm(props: {
             </FormItem>
           )}
         />
-        <div className="md:mb-3 md:self-end">
-          <XCheckbox control={form.control} name="isAllDay" label="All day" />
-        </div>
+        <XCheckbox control={form.control} name="isAllDay" label="All day" />
         <XInput control={form.control} name="title" label="Title" />
         <XInput control={form.control} name="description" label="Description" />
         <FormField
           control={form.control}
           name="categoryId"
           render={({ field }) => (
-            <FormItem className="flex flex-col justify-end">
+            <FormItem>
               <FormLabel>Category</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
@@ -156,7 +153,7 @@ export function EventCreateForm(props: {
           control={form.control}
           name="placeId"
           render={({ field }) => (
-            <FormItem className="flex flex-col justify-end">
+            <FormItem>
               <FormLabel>Place</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>

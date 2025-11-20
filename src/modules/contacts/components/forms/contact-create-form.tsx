@@ -44,14 +44,20 @@ export function ContactCreateForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 max-w-lg mx-auto"
       >
         <XInput control={form.control} name="fullName" label="Full Name" />
+        <XInput control={form.control} name="subtitle" label="Subtitle" />
+        <XCheckbox
+          control={form.control}
+          name="isBusiness"
+          label="Business"
+        />
         <FormField
           control={form.control}
           name="dob"
           render={({ field }) => (
-            <FormItem className="flex flex-col">
+            <FormItem>
               <FormLabel>Date of Birth</FormLabel>
               <FormControl>
                 <DatePicker value={field.value} setValue={field.onChange} />
@@ -65,11 +71,11 @@ export function ContactCreateForm() {
           name="ignoreDobYear"
           label="Ignore Year"
         />
-        <div className="flex items-center gap-2">
+        <div className="flex items-center justify-end gap-3">
+          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
             Submit
           </Button>
-          {mutation.isPending && <CircularSpinner />}
         </div>
       </form>
     </Form>

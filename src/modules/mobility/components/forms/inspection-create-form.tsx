@@ -46,9 +46,9 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
           <XSelect control={form.control} name="carId" label="Car" disabled>
             {cars.map((car) => (
               <XSelectOption key={car.id} value={car.id}>
@@ -67,7 +67,7 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
             control={form.control}
             name="datetime"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-end">
+              <FormItem>
                 <FormLabel>Date</FormLabel>
                 <FormControl>
                   <DatePicker
@@ -80,16 +80,17 @@ export function InspectionCreateForm(props: { cars: Car[]; carId: string }) {
               </FormItem>
             )}
           />
-
-          <XInput
-            type="number"
-            control={form.control}
-            name="odometer"
-            step={1}
-            label="Odometer (km)"
-            placeholder="0"
-          />
-          <div className="md:mb-3 md:self-end">
+          <div className="sm:col-span-full">
+            <XInput
+              type="number"
+              control={form.control}
+              name="odometer"
+              step={1}
+              label="Odometer (km)"
+              placeholder="0"
+            />
+          </div>
+          <div className="sm:col-span-full">
             <XCheckbox
               control={form.control}
               name="isSuccessful"

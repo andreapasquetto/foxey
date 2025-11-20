@@ -26,7 +26,7 @@ export function TransactionCategoryCreateForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
         <XInput control={form.control} name="name" label="Name" />
         <div className="flex items-center justify-end gap-3">

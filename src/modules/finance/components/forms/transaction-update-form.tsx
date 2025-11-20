@@ -68,31 +68,33 @@ export function TransactionUpdateForm(props: {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-4 py-2 pb-4"
+        className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <FormField
-            control={form.control}
-            name="datetime"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <DatePicker
-                    value={field.value}
-                    setValue={field.onChange}
-                    includeTime
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
+          <div className="sm:col-span-full">
+            <FormField
+              control={form.control}
+              name="datetime"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Date</FormLabel>
+                  <FormControl>
+                    <DatePicker
+                      value={field.value}
+                      setValue={field.onChange}
+                      includeTime
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <FormField
             control={form.control}
             name="categoryId"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-end">
+              <FormItem>
                 <FormLabel>Category</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -152,7 +154,7 @@ export function TransactionUpdateForm(props: {
             control={form.control}
             name="placeId"
             render={({ field }) => (
-              <FormItem className="flex flex-col justify-end">
+              <FormItem>
                 <FormLabel>Place</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
@@ -211,8 +213,6 @@ export function TransactionUpdateForm(props: {
               </FormItem>
             )}
           />
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
           <div className="space-y-2">
             <Label htmlFor="fromWalletId">From</Label>
             <Input
@@ -231,17 +231,17 @@ export function TransactionUpdateForm(props: {
               value={props.transaction.to?.name}
             />
           </div>
-        </div>
-        <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-          <XInput
-            type="number"
-            control={form.control}
-            name="amount"
-            step={0.01}
-            label="Amount"
-            placeholder="0.00"
-          />
-          <div className="md:col-span-2">
+          <div className="sm:col-span-full">
+            <XInput
+              type="number"
+              control={form.control}
+              name="amount"
+              step={0.01}
+              label="Amount"
+              placeholder="0.00"
+            />
+          </div>
+          <div className="sm:col-span-full">
             <XInput
               control={form.control}
               name="description"
