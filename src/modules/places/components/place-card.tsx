@@ -1,6 +1,13 @@
-import { Check, Edit, ExternalLink, MoreHorizontal, X } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Check,
+  Edit,
+  ExternalLink,
+  MoreHorizontal,
+  X,
+} from "lucide-react";
 import Link from "next/link";
-import { placeRoute } from "@/common/routes";
+import { placeRoute, transactionsRoute } from "@/common/routes";
 import {
   buildGoogleMapsUrlWithAddress,
   buildGoogleMapsUrlWithCoordinates,
@@ -39,6 +46,16 @@ export function PlaceCard({ place }: { place: Place }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[250px]">
+            <DropdownMenuItem asChild>
+              <Link
+                href={`${transactionsRoute}?place=${place.id}`}
+                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                target="_blank"
+                prefetch
+              >
+                See transactions <ArrowRightLeft className="size-5" />
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
                 href={placeRoute(place.id)}

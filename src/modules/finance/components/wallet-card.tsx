@@ -1,9 +1,9 @@
 "use client";
 
-import { Edit, MoreHorizontal } from "lucide-react";
+import { ArrowRightLeft, Edit, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { currencyFormatter } from "@/common/formatters";
-import { walletRoute } from "@/common/routes";
+import { transactionsRoute, walletRoute } from "@/common/routes";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,6 +37,16 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[250px]">
+            <DropdownMenuItem asChild>
+              <Link
+                href={`${transactionsRoute}?wallet=${wallet.id}`}
+                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                target="_blank"
+                prefetch
+              >
+                See transactions <ArrowRightLeft className="size-5" />
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               {wallet.isArchived ? (
                 <UnarchiveWallet wallet={wallet} />

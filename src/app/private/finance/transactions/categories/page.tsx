@@ -1,7 +1,11 @@
+import { Plus } from "lucide-react";
 import type { Metadata } from "next";
+import Link from "next/link";
 import { fromUrlToPaginate } from "@/common/pagination";
+import { newTransactionCategoryRoute } from "@/common/routes";
 import { SearchFilter } from "@/components/search-filter";
 import { Heading1 } from "@/components/typography";
+import { Button } from "@/components/ui/button";
 import { TransactionCategoryList } from "@/modules/finance/components/transaction-category-list";
 import { transactionCategoriesGetPaginated } from "@/modules/finance/finance-actions";
 
@@ -27,6 +31,13 @@ export default async function TransactionCategoriesPage(props: {
   return (
     <div className="space-y-12 pb-24">
       <Heading1>Transaction Categories</Heading1>
+      <div className="fixed right-4 bottom-4 z-50 m-0 flex flex-col gap-2 sm:right-6 sm:bottom-6">
+        <Button className="size-14 rounded-xl" asChild>
+          <Link href={newTransactionCategoryRoute} prefetch>
+            <Plus className="size-6" />
+          </Link>
+        </Button>
+      </div>
       <div className="space-y-6">
         <div className="w-full sm:w-[250px]">
           <SearchFilter paramName="query" />

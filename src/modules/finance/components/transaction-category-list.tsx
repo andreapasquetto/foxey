@@ -1,9 +1,19 @@
 "use client";
 
+import { ArrowRightLeft, MoreHorizontal } from "lucide-react";
+import Link from "next/link";
 import { usePagination } from "@/common/hooks/use-pagination";
+import { transactionsRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import type { TransactionCategory } from "@/db/types/finance";
 
 export function TransactionCategoryList({
@@ -22,21 +32,42 @@ export function TransactionCategoryList({
   return (
     <div className="space-y-2">
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-        {categories.map((c) => {
-          const [category, subCategory] = c.name.split("/");
+        {categories.map((category) => {
+          const [parentName, name] = category.name.split("/");
           return (
-            <Card key={c.id}>
+            <Card key={category.id} className="relative">
+              <div className="absolute top-2 right-2 flex items-center gap-1">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="size-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      <Link
+                        href={`${transactionsRoute}?category=${category.id}`}
+                        className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+                        target="_blank"
+                        prefetch
+                      >
+                        See transactions <ArrowRightLeft className="size-5" />
+                      </Link>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
               <CardHeader>
                 <CardTitle>
-                  {subCategory ? (
+                  {name ? (
                     <>
                       <span className="text-muted-foreground">
-                        {category.trim()}
+                        {parentName.trim()}
                       </span>{" "}
-                      / {subCategory.trim()}
+                      / {name.trim()}
                     </>
                   ) : (
-                    category
+                    parentName
                   )}
                 </CardTitle>
               </CardHeader>

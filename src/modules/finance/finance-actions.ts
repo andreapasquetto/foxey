@@ -11,7 +11,11 @@ import {
   paginateToLimitAndOffset,
   toPaginated,
 } from "@/common/pagination";
-import { financeRoute, transactionsRoute } from "@/common/routes";
+import {
+  financeRoute,
+  transactionCategoriesRoute,
+  transactionsRoute,
+} from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { type DBTransaction, db } from "@/db/db";
 import {
@@ -133,8 +137,8 @@ export async function transactionCategoriesCreate(
     userId,
     name: category.name,
   });
-  revalidatePath(financeRoute);
-  redirect(financeRoute);
+  revalidatePath(transactionCategoriesRoute);
+  redirect(transactionCategoriesRoute);
 }
 
 export async function transactionCategoriesGetPaginated(params: {
