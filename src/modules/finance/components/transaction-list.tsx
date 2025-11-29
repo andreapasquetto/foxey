@@ -116,7 +116,6 @@ export function TransactionList({
                 }
               </TableCell>
               <TableCell className="flex items-center justify-end gap-1">
-                <CopyToClipboardButton content={transaction.id} />
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm">
@@ -124,6 +123,9 @@ export function TransactionList({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      <CopyToClipboardButton content={transaction.id} />
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Link
                         href={transactionRoute(transaction.id)}

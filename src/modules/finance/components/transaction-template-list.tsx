@@ -1,11 +1,18 @@
 "use client";
 
-import { ChevronsRight } from "lucide-react";
+import { ChevronsRight, MoreHorizontal } from "lucide-react";
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { usePagination } from "@/common/hooks/use-pagination";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -90,7 +97,18 @@ export function TransactionTemplateList({
                 }
               </TableCell>
               <TableCell className="flex items-center justify-end gap-1">
-                <CopyToClipboardButton content={template.id} />
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" size="sm">
+                      <MoreHorizontal className="size-5" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      <CopyToClipboardButton content={template.id} />
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           ))}

@@ -29,7 +29,6 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
     <Item key={wallet.id} variant="outline" className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">
         {wallet.isArchived && <Badge variant="secondary">Archived</Badge>}
-        <CopyToClipboardButton content={wallet.id} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
@@ -37,6 +36,9 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[250px]">
+            <DropdownMenuItem asChild>
+              <CopyToClipboardButton content={wallet.id} />
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
                 href={`${transactionsRoute}?wallet=${wallet.id}`}

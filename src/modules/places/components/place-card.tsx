@@ -38,7 +38,6 @@ export function PlaceCard({ place }: { place: Place }) {
           {!place.isVisited && <X className="size-4 text-red-500" />}
           Visited
         </div>
-        <CopyToClipboardButton content={place.id} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
@@ -46,6 +45,9 @@ export function PlaceCard({ place }: { place: Place }) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[250px]">
+            <DropdownMenuItem asChild>
+              <CopyToClipboardButton content={place.id} />
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <Link
                 href={`${transactionsRoute}?place=${place.id}`}

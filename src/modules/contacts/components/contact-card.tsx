@@ -57,7 +57,6 @@ export function ContactCard({
     <Item key={contact.id} variant="outline" className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">
         {contact.isArchived && <Badge variant="secondary">Archived</Badge>}
-        <CopyToClipboardButton content={contact.id} />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
@@ -65,6 +64,9 @@ export function ContactCard({
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[250px]">
+            <DropdownMenuItem asChild>
+              <CopyToClipboardButton content={contact.id} />
+            </DropdownMenuItem>
             <DropdownMenuItem asChild>
               {contact.isArchived ? (
                 <UnarchiveContact contact={contact} />

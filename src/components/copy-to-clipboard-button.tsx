@@ -1,6 +1,7 @@
 "use client";
 
 import { Barcode } from "lucide-react";
+import { toast } from "sonner";
 import { copyToClipboard } from "@/common/utils/clipboard";
 import { Button } from "@/components/ui/button";
 
@@ -12,11 +13,14 @@ export function CopyToClipboardButton({
   return (
     <Button
       type="button"
-      variant="outline"
-      size="icon"
-      onClick={() => copyToClipboard(String(content))}
+      variant="ghost"
+      className="w-full cursor-pointer items-center justify-between"
+      onClick={() => {
+        copyToClipboard(String(content));
+        toast("Content copied to the clipboard");
+      }}
     >
-      <Barcode className="size-5" />
+      Copy to clipboard <Barcode />
     </Button>
   );
 }
