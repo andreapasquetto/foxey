@@ -1,9 +1,20 @@
+import { ScanSearch } from "lucide-react";
+import {
+  Empty,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty";
+
 export function EmptyStateMessage(props: { message?: string }) {
   return (
-    <div className="my-6">
-      <p className="text-center text-sm text-muted-foreground">
-        {props.message ?? "There are no records."}
-      </p>
-    </div>
+    <Empty>
+      <EmptyHeader>
+        <EmptyMedia variant="icon">
+          <ScanSearch />
+        </EmptyMedia>
+        <EmptyTitle>{props.message ?? "There are no records."}</EmptyTitle>
+      </EmptyHeader>
+    </Empty>
   );
 }

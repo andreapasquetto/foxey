@@ -6,12 +6,11 @@ import { currencyFormatter, percentageFormatter } from "@/common/formatters";
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Badge } from "@/components/ui/badge";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import type { Transaction } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import {
@@ -95,14 +94,12 @@ function IncomeCard(props: { current: Decimal; previous: Decimal }) {
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardDescription>Income</CardDescription>
-        <CardTitle>
+    <Item variant="outline">
+      <ItemContent>
+        <ItemDescription>Income</ItemDescription>
+        <ItemTitle>
           {currencyFormatter.format(props.current.toNumber())}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </ItemTitle>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
             {currencyFormatter.format(props.previous.toNumber())}
@@ -122,8 +119,8 @@ function IncomeCard(props: { current: Decimal; previous: Decimal }) {
             </>
           )}
         </p>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   );
 }
 
@@ -134,14 +131,12 @@ function ExpensesCard(props: { current: Decimal; previous: Decimal }) {
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardDescription>Expenses</CardDescription>
-        <CardTitle>
+    <Item variant="outline">
+      <ItemContent>
+        <ItemDescription>Expenses</ItemDescription>
+        <ItemTitle>
           {currencyFormatter.format(props.current.toNumber())}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </ItemTitle>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
             {currencyFormatter.format(props.previous.toNumber())}
@@ -161,8 +156,8 @@ function ExpensesCard(props: { current: Decimal; previous: Decimal }) {
             </>
           )}
         </p>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   );
 }
 
@@ -178,10 +173,10 @@ function SavingCard(props: {
   );
 
   return (
-    <Card>
-      <CardHeader>
-        <CardDescription>Savings</CardDescription>
-        <CardTitle className="flex items-center gap-2">
+    <Item variant="outline">
+      <ItemContent>
+        <ItemDescription>Savings</ItemDescription>
+        <ItemTitle className="flex items-center gap-2">
           {currencyFormatter.format(props.currentSavings.toNumber())}
           {!props.currentIncome.isZero() && (
             <Badge
@@ -194,9 +189,7 @@ function SavingCard(props: {
               {percentageFormatter.format(thisMonthPercentage.toNumber())}
             </Badge>
           )}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </ItemTitle>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
             {currencyFormatter.format(props.previousSavings.toNumber())}
@@ -216,7 +209,7 @@ function SavingCard(props: {
             </>
           )}
         </p>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   );
 }

@@ -2,11 +2,11 @@ import Link from "next/link";
 import { carRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import { carsGetAll } from "@/modules/mobility/mobility-actions";
 
 export async function CarList() {
@@ -20,14 +20,14 @@ export async function CarList() {
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
       {cars.map((car) => (
         <Link key={car.id} href={carRoute(car.id)} prefetch>
-          <Card>
-            <CardHeader>
-              <CardTitle>
+          <Item variant="outline">
+            <ItemContent>
+              <ItemTitle>
                 {car.make} {car.model}
-              </CardTitle>
-              <CardDescription>{car.year}</CardDescription>
-            </CardHeader>
-          </Card>
+              </ItemTitle>
+              <ItemDescription>{car.year}</ItemDescription>
+            </ItemContent>
+          </Item>
         </Link>
       ))}
     </div>

@@ -14,12 +14,11 @@ import { currencyFormatter, numberFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import type { Refueling } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 
@@ -38,7 +37,7 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
         .toReversed()
         .slice(0, 10)
         .map((refueling) => (
-          <Card key={refueling.id} className="relative">
+          <Item key={refueling.id} variant="outline" className="relative">
             <div className="absolute top-2 right-2">
               <Link
                 href={transactionRoute(refueling.transaction.id)}
@@ -51,13 +50,11 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
                 <span className="sr-only">go to related transaction</span>
               </Link>
             </div>
-            <CardHeader>
-              <CardDescription>
+            <ItemContent>
+              <ItemDescription>
                 {format(refueling.transaction.datetime, "ccc y-MM-dd HH:mm")}
-              </CardDescription>
-              <CardTitle>{refueling.transaction?.place?.name ?? "-"}</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
+              </ItemDescription>
+              <ItemTitle>{refueling.transaction?.place?.name ?? "-"}</ItemTitle>
               <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center sm:gap-x-6">
                 <div className="flex items-center gap-1">
                   <Flame
@@ -112,8 +109,8 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
                   Necessary
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </ItemContent>
+          </Item>
         ))}
     </div>
   );

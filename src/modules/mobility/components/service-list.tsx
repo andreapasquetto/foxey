@@ -5,12 +5,6 @@ import { numberFormatter } from "@/common/formatters";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -18,6 +12,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import type { Service } from "@/db/types/mobility";
 
 export function ServiceList(props: { services: Service[] }) {
@@ -33,7 +33,7 @@ export function ServiceList(props: { services: Service[] }) {
         .toReversed()
         .slice(0, 3)
         .map((service, i, services) => (
-          <Card key={service.id} className="relative">
+          <Item key={service.id} variant="outline" className="relative">
             {service.notes && (
               <div className="absolute top-2 right-2">
                 <Dialog>
@@ -55,25 +55,25 @@ export function ServiceList(props: { services: Service[] }) {
                 </Dialog>
               </div>
             )}
-            <CardHeader>
-              <CardDescription>
+            <ItemContent>
+              <ItemDescription>
                 {format(service.datetime, "ccc y-MM-dd HH:mm")}
-              </CardDescription>
-              <CardTitle>
+              </ItemDescription>
+              <ItemTitle>
                 {numberFormatter.format(Number(service.odometer))} km
-              </CardTitle>
+              </ItemTitle>
               {i < services.length - 1 && (
-                <CardDescription>
+                <ItemDescription>
                   {numberFormatter.format(
                     new Decimal(service.odometer)
                       .sub(services[i + 1].odometer)
                       .toNumber(),
                   )}{" "}
                   km
-                </CardDescription>
+                </ItemDescription>
               )}
-            </CardHeader>
-          </Card>
+            </ItemContent>
+          </Item>
         ))}
     </div>
   );

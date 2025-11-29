@@ -24,7 +24,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import type { EventCategory } from "@/db/types/events";
 import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";

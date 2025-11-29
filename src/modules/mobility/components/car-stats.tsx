@@ -10,12 +10,11 @@ import {
 import { calculatePercentageChange } from "@/common/utils/math";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import type { Inspection, Refueling, Service } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
@@ -79,14 +78,12 @@ export function CarStats(props: {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-        <Card>
-          <CardHeader>
-            <CardDescription>Monthly fuel costs</CardDescription>
-            <CardTitle>
+        <Item variant="outline">
+          <ItemContent>
+            <ItemDescription>Monthly fuel costs</ItemDescription>
+            <ItemTitle>
               {currencyFormatter.format(stats.fuelCost.thisMonth.toNumber())}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </ItemTitle>
             <p className="text-sm text-muted-foreground">
               <span className="text-foreground">
                 {currencyFormatter.format(stats.fuelCost.lastMonth.toNumber())}
@@ -122,18 +119,16 @@ export function CarStats(props: {
               </span>{" "}
               in total
             </p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader>
-            <CardDescription>Average distance before refueling</CardDescription>
-            <CardTitle>
+          </ItemContent>
+        </Item>
+        <Item variant="outline">
+          <ItemContent>
+            <ItemDescription>Average distance before refueling</ItemDescription>
+            <ItemTitle>
               {stats.distance.average
                 ? `${numberFormatter.format(stats.distance.average.toNumber())} km`
                 : "-"}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </ItemTitle>
             {stats.distance.thisYear && (
               <p className="text-sm text-muted-foreground">
                 <span className="text-foreground">
@@ -160,21 +155,21 @@ export function CarStats(props: {
                 driven in total
               </p>
             )}
-          </CardContent>
-        </Card>
-        <Card className="relative">
-          <CardHeader>
-            <CardDescription>Last fuel consumption</CardDescription>
-            <CardTitle>
+          </ItemContent>
+        </Item>
+        <Item variant="outline" className="relative">
+          <ItemContent>
+            <ItemDescription>Last fuel consumption</ItemDescription>
+            <ItemTitle>
               {stats.fuelConsumption.last
                 ? `${numberFormatter.format(stats.fuelConsumption.last[fuelConsumptionFormat].toDecimalPlaces(2).toNumber())} ${fuelConsumptionFormat}`
                 : "-"}
-            </CardTitle>
+            </ItemTitle>
             {stats.fuelConsumption.last && (
               <Button
                 variant="outline"
                 size="icon"
-                className="absolute top-6 right-6 text-foreground"
+                className="absolute top-3 right-3 text-foreground"
                 onClick={() =>
                   setFuelConsumptionFormat(
                     fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L",
@@ -184,8 +179,6 @@ export function CarStats(props: {
                 <Calculator className="size-4" />
               </Button>
             )}
-          </CardHeader>
-          <CardContent>
             {stats.fuelConsumption.avg && (
               <p className="text-sm text-muted-foreground">
                 All-time average is{" "}
@@ -210,16 +203,16 @@ export function CarStats(props: {
                 </span>
               </p>
             )}
-          </CardContent>
-        </Card>
+          </ItemContent>
+        </Item>
       </div>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <div className="space-y-3">
-          <CardTitle>Fuel price</CardTitle>
+          <ItemTitle>Fuel price</ItemTitle>
           <FuelPriceChart refuelings={refuelings} />
         </div>
         <div className="space-y-3">
-          <CardTitle>Trend</CardTitle>
+          <ItemTitle>Trend</ItemTitle>
           <OdometerChart
             refuelings={refuelings}
             services={services}

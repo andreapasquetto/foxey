@@ -8,7 +8,7 @@ import {
   startOfYear,
 } from "date-fns";
 import { useState } from "react";
-import { CardTitle } from "@/components/ui/card";
+import { ItemTitle } from "@/components/ui/item";
 import {
   Select,
   SelectContent,
@@ -56,18 +56,18 @@ export function YearSection({ transactions }: { transactions: Transaction[] }) {
       </div>
       <YearlyStats transactions={transactions} selectedYear={year} />
       <div className="space-y-3">
-        <CardTitle>Income & Expenses Categories</CardTitle>
+        <ItemTitle>Income & Expenses Categories</ItemTitle>
         <YearlyCategoriesTable
           transactions={transactions}
           selectedYear={year}
         />
       </div>
       <div className="space-y-3">
-        <CardTitle>Trend</CardTitle>
+        <ItemTitle>Trend</ItemTitle>
         <YearlyTrendChart transactions={transactions} selectedYear={year} />
       </div>
       <div className="space-y-3">
-        <CardTitle>Income, Expenses & Savings</CardTitle>
+        <ItemTitle>Income, Expenses & Savings</ItemTitle>
         <YearlyIncomeExpensesSavingsChart
           transactions={transactions}
           selectedYear={year}

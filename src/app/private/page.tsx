@@ -19,8 +19,7 @@ import {
   signInRoute,
 } from "@/common/routes";
 import { Heading1 } from "@/components/typography";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Item, ItemContent, ItemMedia, ItemTitle } from "@/components/ui/item";
 
 const navigationItems = [
   {
@@ -66,30 +65,18 @@ export default async function PrivateHome() {
       <Heading1>
         Hi {user.fullName ?? user.username ?? "Mysterious User"}
       </Heading1>
-      <div className="mx-auto max-w-xl grid-cols-3 space-y-2 sm:grid">
-        {navigationItems.map((item, index) => (
-          <Link
-            key={item.href}
-            href={item.href}
-            className={cn(
-              "col-span-2 block",
-              index % 2 === 0 ? "col-end-3" : "col-start-2",
-            )}
-          >
-            <Card className="group transition-colors hover:border-foreground">
-              <CardHeader
-                className={cn(
-                  "flex items-center justify-between",
-                  index % 2 === 1 && "sm:flex-row-reverse",
-                )}
-              >
-                <CardTitle>{item.title}</CardTitle>
-                <Slot className="size-5 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground sm:size-8">
-                  {item.icon}
-                </Slot>
-              </CardHeader>
-            </Card>
-          </Link>
+      <div className="mx-auto max-w-md space-y-3">
+        {navigationItems.map((item) => (
+          <Item key={item.href} variant="outline" asChild>
+            <Link href={item.href}>
+              <ItemMedia variant="icon">
+                <Slot>{item.icon}</Slot>
+              </ItemMedia>
+              <ItemContent>
+                <ItemTitle>{item.title}</ItemTitle>
+              </ItemContent>
+            </Link>
+          </Item>
         ))}
       </div>
     </div>

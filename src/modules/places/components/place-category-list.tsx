@@ -3,7 +3,7 @@
 import { usePagination } from "@/common/hooks/use-pagination";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 import type { PlaceCategory } from "@/db/types/places";
 
 export function PlaceCategoryList({
@@ -25,9 +25,9 @@ export function PlaceCategoryList({
         {categories.map((c) => {
           const [category, subCategory] = c.name.split("/");
           return (
-            <Card key={c.id}>
-              <CardHeader>
-                <CardTitle>
+            <Item key={c.id} variant="outline">
+              <ItemContent>
+                <ItemTitle>
                   {subCategory ? (
                     <>
                       <span className="text-muted-foreground">
@@ -38,9 +38,9 @@ export function PlaceCategoryList({
                   ) : (
                     category
                   )}
-                </CardTitle>
-              </CardHeader>
-            </Card>
+                </ItemTitle>
+              </ItemContent>
+            </Item>
           );
         })}
       </div>

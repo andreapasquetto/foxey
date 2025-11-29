@@ -10,7 +10,7 @@ import {
   startOfYear,
 } from "date-fns";
 import { useState } from "react";
-import { CardTitle } from "@/components/ui/card";
+import { ItemTitle } from "@/components/ui/item";
 import {
   Select,
   SelectContent,
@@ -63,7 +63,7 @@ export function MonthSection({
       </div>
       <MonthlyStats transactions={transactions} selectedMonth={month} />
       <div className="space-y-3">
-        <CardTitle>Income & Expenses Categories</CardTitle>
+        <ItemTitle>Income & Expenses Categories</ItemTitle>
         <MonthlyCategoriesTable
           transactions={transactions}
           selectedMonth={month}
@@ -71,14 +71,14 @@ export function MonthSection({
       </div>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <div className="space-y-3">
-          <CardTitle>Trend</CardTitle>
+          <ItemTitle>Trend</ItemTitle>
           <MonthlyTrendChart
             transactions={transactions}
             selectedMonth={month}
           />
         </div>
         <div className="space-y-3">
-          <CardTitle>Expenses per day</CardTitle>
+          <ItemTitle>Expenses per day</ItemTitle>
           <MonthlyExpensesPerDayChart
             transactions={transactions}
             selectedMonth={month}

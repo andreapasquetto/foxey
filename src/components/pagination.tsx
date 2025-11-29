@@ -6,6 +6,7 @@ import {
 } from "lucide-react";
 import { pageSizeDefaults } from "@/common/pagination";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Select,
   SelectContent,
@@ -72,38 +73,42 @@ export function Pagination({
           </p>
         </div>
         <div className="flex gap-2">
-          <Button
-            disabled={isPrevPageDisabled}
-            onClick={goFirstPage}
-            variant="outline"
-            size="icon"
-          >
-            <ChevronsLeft />
-          </Button>
-          <Button
-            disabled={isPrevPageDisabled}
-            onClick={goPrevPage}
-            variant="outline"
-            size="icon"
-          >
-            <ChevronLeft />
-          </Button>
-          <Button
-            disabled={isNextPageDisabled}
-            onClick={goNextPage}
-            variant="outline"
-            size="icon"
-          >
-            <ChevronRight />
-          </Button>
-          <Button
-            disabled={isNextPageDisabled}
-            onClick={goLastPage}
-            variant="outline"
-            size="icon"
-          >
-            <ChevronsRight />
-          </Button>
+          <ButtonGroup>
+            <Button
+              disabled={isPrevPageDisabled}
+              onClick={goFirstPage}
+              variant="outline"
+              size="icon"
+            >
+              <ChevronsLeft />
+            </Button>
+            <Button
+              disabled={isPrevPageDisabled}
+              onClick={goPrevPage}
+              variant="outline"
+              size="icon"
+            >
+              <ChevronLeft />
+            </Button>
+          </ButtonGroup>
+          <ButtonGroup>
+            <Button
+              disabled={isNextPageDisabled}
+              onClick={goNextPage}
+              variant="outline"
+              size="icon"
+            >
+              <ChevronRight />
+            </Button>
+            <Button
+              disabled={isNextPageDisabled}
+              onClick={goLastPage}
+              variant="outline"
+              size="icon"
+            >
+              <ChevronsRight />
+            </Button>
+          </ButtonGroup>
         </div>
       </div>
     </nav>

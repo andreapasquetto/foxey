@@ -15,23 +15,23 @@ import {
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import type { Place } from "@/db/types/places";
 import { DeletePlace } from "@/modules/places/components/delete-place";
 
 export function PlaceCard({ place }: { place: Place }) {
   return (
-    <Card key={place.id} className="relative">
+    <Item variant="outline" className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">
         <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground">
           {place.isVisited && <Check className="size-4 text-green-500" />}
@@ -71,11 +71,11 @@ export function PlaceCard({ place }: { place: Place }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <CardHeader>
+      <ItemContent>
         {place.category && (
-          <CardDescription>{place.category.name}</CardDescription>
+          <ItemDescription>{place.category.name}</ItemDescription>
         )}
-        <CardTitle>{place.name}</CardTitle>
+        <ItemTitle>{place.name}</ItemTitle>
         {place.address && (
           <Link
             href={buildGoogleMapsUrlWithAddress(place.address)}
@@ -96,7 +96,7 @@ export function PlaceCard({ place }: { place: Place }) {
             <ExternalLink className="size-4" />
           </Link>
         )}
-      </CardHeader>
-    </Card>
+      </ItemContent>
+    </Item>
   );
 }

@@ -7,13 +7,13 @@ import { transactionsRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
-import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Item, ItemContent, ItemTitle } from "@/components/ui/item";
 import type { TransactionCategory } from "@/db/types/finance";
 
 export function TransactionCategoryList({
@@ -35,7 +35,7 @@ export function TransactionCategoryList({
         {categories.map((category) => {
           const [parentName, name] = category.name.split("/");
           return (
-            <Card key={category.id} className="relative">
+            <Item key={category.id} variant="outline" className="relative">
               <div className="absolute top-2 right-2 flex items-center gap-1">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -57,8 +57,8 @@ export function TransactionCategoryList({
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              <CardHeader>
-                <CardTitle>
+              <ItemContent>
+                <ItemTitle>
                   {name ? (
                     <>
                       <span className="text-muted-foreground">
@@ -69,9 +69,9 @@ export function TransactionCategoryList({
                   ) : (
                     parentName
                   )}
-                </CardTitle>
-              </CardHeader>
-            </Card>
+                </ItemTitle>
+              </ItemContent>
+            </Item>
           );
         })}
       </div>

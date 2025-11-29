@@ -8,17 +8,17 @@ import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import type { Wallet } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import { ArchiveWallet } from "@/modules/finance/components/dialogs/archive-wallet";
@@ -26,7 +26,7 @@ import { UnarchiveWallet } from "@/modules/finance/components/dialogs/unarchive-
 
 export function WalletCard({ wallet }: { wallet: Wallet }) {
   return (
-    <Card key={wallet.id} className="relative">
+    <Item key={wallet.id} variant="outline" className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">
         {wallet.isArchived && <Badge variant="secondary">Archived</Badge>}
         <CopyToClipboardButton content={wallet.id} />
@@ -66,14 +66,14 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <CardHeader>
-        <CardTitle className={cn(wallet.isArchived && "text-muted-foreground")}>
+      <ItemContent>
+        <ItemTitle className={cn(wallet.isArchived && "text-muted-foreground")}>
           {wallet.name}
-        </CardTitle>
-        <CardDescription>
+        </ItemTitle>
+        <ItemDescription>
           <code>{currencyFormatter.format(parseFloat(wallet.amount))}</code>
-        </CardDescription>
-      </CardHeader>
-    </Card>
+        </ItemDescription>
+      </ItemContent>
+    </Item>
   );
 }

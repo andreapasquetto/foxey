@@ -24,15 +24,25 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  Eraser,
+  ExternalLink,
   MapPin,
   Plus,
-  RotateCw,
 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
+import { placeRoute } from "@/common/routes";
 import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ButtonGroup } from "@/components/ui/button-group";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemFooter,
+  ItemGroup,
+  ItemTitle,
+} from "@/components/ui/item";
 import {
   Sheet,
   SheetContent,
@@ -44,9 +54,9 @@ import type { Contact } from "@/db/types/contacts";
 import type { Event } from "@/db/types/events";
 import type { Place, PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
+import { CancelOrRestoreEvent } from "@/modules/events/components/dialogs/cancel-or-restore-event";
 import { DeleteEvent } from "@/modules/events/components/dialogs/delete-event";
 import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
-import { eventsToggleCancel } from "@/modules/events/events-actions";
 
 export function MonthCalendar(props: {
   categories: PlaceCategory[];
@@ -115,7 +125,7 @@ export function MonthCalendar(props: {
             </time>
           </div>
           <div className="flex items-center gap-2">
-            <div className="flex items-center gap-0.5">
+            <ButtonGroup>
               <Button
                 type="button"
                 variant="outline"
@@ -160,7 +170,7 @@ export function MonthCalendar(props: {
               >
                 <ChevronsRight className="size-5" />
               </Button>
-            </div>
+            </ButtonGroup>
             <Sheet open={showCreateSheet} onOpenChange={setShowCreateSheet}>
               <SheetTrigger asChild>
                 <Button size="icon">
@@ -305,87 +315,79 @@ export function MonthCalendar(props: {
             {format(selectedDay, "ccc, dd MMM y")}
           </time>
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2">
           {!!selectedDayBirthdays.length && (
-            <ul className="grid gap-2 sm:grid-cols-2 lg:flex lg:flex-col">
+            <ItemGroup className="gap-2">
               {selectedDayBirthdays.map((contact) => (
-                <li
+                <Item
                   key={contact.id}
-                  className="space-y-4 rounded-lg border p-3 text-left text-yellow-500 transition-all"
+                  variant="outline"
+                  className="text-yellow-500 border-yellow-500/25"
                 >
-                  <div className="flex items-center text-lg font-semibold tracking-tight">
-                    <Cake className="mr-2 size-4" />
+                  <ItemContent className="flex-row items-center gap-1 text-lg font-semibold tracking-tight">
+                    <Cake className="size-4" />
                     {contact.fullName}
                     {contact.dob.getFullYear() !== IGNORE_DOB_YEAR && (
                       <span className="ml-1 text-base font-normal">
                         ({differenceInYears(selectedDay, contact.dob)})
                       </span>
                     )}
-                  </div>
-                </li>
+                  </ItemContent>
+                </Item>
               ))}
-            </ul>
+            </ItemGroup>
           )}
           {!!selectedDayEvents.length && (
-            <ul className="grid gap-2 sm:grid-cols-2 lg:flex lg:flex-col">
+            <ItemGroup className="gap-2">
               {selectedDayEvents.map((event) => (
-                <li
-                  key={event.id}
-                  className="space-y-4 rounded-lg border p-3 text-left transition-all"
-                >
-                  <div className="flex w-full flex-col gap-1">
-                    <div className="flex items-center">
-                      <div className="flex items-center gap-2">
-                        <div
-                          className={cn(
-                            "text-lg font-semibold tracking-tight",
-                            event.isCanceled && "line-through",
-                          )}
-                        >
+                <Item key={event.id} variant="outline">
+                  <ItemContent>
+                    <div className="flex items-center justify-between">
+                      <ItemTitle
+                        className={cn(event.isCanceled && "line-through")}
+                      >
+                        <div className="flex items-center gap-1">
                           {!event.isCanceled &&
                             isBefore(selectedDay, today) && (
-                              <Check className="mr-1 inline-block size-4 text-green-500 dark:text-green-400" />
+                              <Check className="inline-block size-4 text-green-500 dark:text-green-400" />
                             )}
                           {event.title}
                         </div>
-                      </div>
-                      <div className="ml-auto text-xs text-foreground">
+                      </ItemTitle>
+                      <ItemDescription>
                         {event.isAllDay
                           ? "ALL DAY"
                           : format(event.datetime, "HH:mm")}
+                      </ItemDescription>
+                    </div>
+                    {event.description && (
+                      <ItemDescription>{event.description}</ItemDescription>
+                    )}
+                    {event.place && (
+                      <div className="flex items-center gap-1">
+                        <MapPin className="size-4 text-muted-foreground" />
+                        <ItemDescription>
+                          <Link
+                            href={placeRoute(event.place.id)}
+                            target="_blank"
+                            className="flex items-start gap-px hover:text-foreground hover:underline"
+                          >
+                            {event.place.name}
+
+                            <ExternalLink className="size-3" />
+                          </Link>
+                        </ItemDescription>
                       </div>
-                    </div>
-                  </div>
-                  {event.description && (
-                    <div className="text-xs text-muted-foreground">
-                      {event.description}
-                    </div>
-                  )}
-                  {event.place && (
-                    <div className="flex items-center gap-1 text-muted-foreground">
-                      <MapPin className="size-4" />
-                      <span className="text-xs leading-none">
-                        {event.place.name}
-                      </span>
-                    </div>
-                  )}
-                  <div className="flex items-center justify-between">
+                    )}
                     {event.category && <Badge>{event.category.name}</Badge>}
-                    <form
-                      action={eventsToggleCancel}
-                      className="ml-auto flex items-center gap-1"
-                    >
-                      <input type="hidden" name="id" value={event.id} />
-                      <Button type="submit" variant="outline" size="icon">
-                        {event.isCanceled && <RotateCw className="size-4" />}
-                        {!event.isCanceled && <Eraser className="size-4" />}
-                      </Button>
-                      <DeleteEvent event={event} />
-                    </form>
-                  </div>
-                </li>
+                  </ItemContent>
+                  <ItemFooter className="gap-1">
+                    <CancelOrRestoreEvent event={event} />
+                    <DeleteEvent event={event} />
+                  </ItemFooter>
+                </Item>
               ))}
-            </ul>
+            </ItemGroup>
           )}
           {!selectedDayEvents.length && (
             <p className="text-center text-sm text-muted-foreground">

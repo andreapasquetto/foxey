@@ -23,18 +23,17 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import type {
   Contact,
   ContactAddress,
@@ -55,7 +54,7 @@ export function ContactCard({
 }) {
   const dob = contact.dob ? parseISO(contact.dob) : undefined;
   return (
-    <Card key={contact.id} className="relative">
+    <Item key={contact.id} variant="outline" className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">
         {contact.isArchived && <Badge variant="secondary">Archived</Badge>}
         <CopyToClipboardButton content={contact.id} />
@@ -79,11 +78,11 @@ export function ContactCard({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <CardHeader>
+      <ItemContent>
         {contact.subtitle && (
-          <CardDescription>{contact.subtitle}</CardDescription>
+          <ItemDescription>{contact.subtitle}</ItemDescription>
         )}
-        <CardTitle
+        <ItemTitle
           className={cn(
             "flex items-center gap-2",
             contact.isArchived && "text-muted-foreground",
@@ -95,7 +94,7 @@ export function ContactCard({
             <CircleUser className="size-4" />
           )}
           {contact.fullName}
-        </CardTitle>
+        </ItemTitle>
         {dob && (
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
             <Cake className="size-4" />
@@ -109,8 +108,6 @@ export function ContactCard({
             )}
           </div>
         )}
-      </CardHeader>
-      <CardContent>
         <Accordion type="multiple" className="w-full">
           <AccordionItem
             value="phone-numbers"
@@ -158,8 +155,8 @@ export function ContactCard({
             </AccordionContent>
           </AccordionItem>
         </Accordion>
-      </CardContent>
-    </Card>
+      </ItemContent>
+    </Item>
   );
 }
 

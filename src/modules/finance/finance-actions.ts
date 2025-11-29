@@ -66,7 +66,7 @@ export async function walletsGetById(id: string) {
   return record;
 }
 
-export async function walletsAarchive(formData: FormData) {
+export async function walletsArchive(formData: FormData) {
   const id = z.string().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db

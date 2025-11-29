@@ -48,11 +48,7 @@ export function ContactCreateForm() {
       >
         <XInput control={form.control} name="fullName" label="Full Name" />
         <XInput control={form.control} name="subtitle" label="Subtitle" />
-        <XCheckbox
-          control={form.control}
-          name="isBusiness"
-          label="Business"
-        />
+        <XCheckbox control={form.control} name="isBusiness" label="Business" />
         <FormField
           control={form.control}
           name="dob"
