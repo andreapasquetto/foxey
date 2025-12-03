@@ -11,7 +11,7 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen w-full bg-background sm:space-y-6">
+    <div className="min-h-svh w-full bg-background sm:space-y-6">
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b px-4 backdrop-blur supports-backdrop-filter:bg-background/50 sm:px-6">
         <Button size="icon" variant="ghost" asChild>
           <Link href={privateRoute}>

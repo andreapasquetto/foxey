@@ -2,7 +2,7 @@
 
 import { and, eq, ilike } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
 import {
   type Paginate,
@@ -127,12 +127,9 @@ export async function placesGetById(id: string) {
     },
     where: and(eq(places.userId, userId), eq(places.id, id)),
   });
-
   if (!record) {
-    // TODO: return "error result" instead of throwing
-    throw new Error("Not Found");
+    notFound();
   }
-
   return record;
 }
 

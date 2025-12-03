@@ -3,7 +3,7 @@
 import { Decimal } from "decimal.js";
 import { and, between, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { DateRange } from "react-day-picker";
 import { z } from "zod";
 import {
@@ -57,12 +57,9 @@ export async function walletsGetById(id: string) {
   const record = await db.query.wallets.findFirst({
     where: and(eq(wallets.userId, userId), eq(wallets.id, id)),
   });
-
   if (!record) {
-    // TODO: return "error result" instead of throwing
-    throw new Error("Not Found");
+    notFound();
   }
-
   return record;
 }
 
@@ -114,15 +111,12 @@ export async function walletsUpdateAmount(
     where: eq(wallets.id, params.walletId),
   });
   if (!wallet) {
-    // TODO: return "error result" instead of throwing
-    throw new Error("Not Found");
+    notFound();
   }
-
   const amount = new Decimal(wallet.amount)
     .add(params.add ?? 0)
     .sub(params.sub ?? 0)
     .toString();
-
   await tx
     .update(wallets)
     .set({ amount })
@@ -510,12 +504,9 @@ export async function transactionsGetById(id: string) {
     },
     where: and(eq(transactions.userId, userId), eq(transactions.id, id)),
   });
-
   if (!record) {
-    // TODO: return "error result" instead of throwing
-    throw new Error("Not Found");
+    notFound();
   }
-
   return record;
 }
 

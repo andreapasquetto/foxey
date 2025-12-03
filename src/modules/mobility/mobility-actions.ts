@@ -3,7 +3,7 @@
 import { Decimal } from "decimal.js";
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { carRoute, mobilityRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { db } from "@/db/db";
@@ -45,12 +45,9 @@ export async function carsGetById(id: string) {
   const record = await db.query.cars.findFirst({
     where: and(eq(cars.userId, userId), eq(cars.id, id)),
   });
-
   if (!record) {
-    // TODO: return "error result" instead of throwing
-    throw new Error("Not Found");
+    notFound();
   }
-
   return record;
 }
 

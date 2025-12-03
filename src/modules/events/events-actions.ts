@@ -3,6 +3,7 @@
 import { startOfDay } from "date-fns";
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { notFound } from "next/navigation";
 import { z } from "zod";
 import { eventsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
@@ -52,8 +53,7 @@ export async function eventsToggleCancel(formData: FormData) {
     where: and(eq(events.userId, userId), eq(events.id, id)),
   });
   if (!record) {
-    // TODO: return "error result" instead of throwing
-    throw new Error("Not Found");
+    notFound();
   }
   await db
     .update(events)
