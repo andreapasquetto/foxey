@@ -33,22 +33,28 @@ export function FinanceActionButtons() {
             <Plus className="size-6" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
+        <DropdownMenuContent align="end" className="w-[250px]">
           <DropdownMenuItem asChild>
-            <Link
-              href={newTransactionRoute}
-              className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer items-center justify-between"
+              asChild
             >
-              Add transaction <ArrowRightLeft className="size-5" />
-            </Link>
+              <Link href={newTransactionRoute}>
+                Add transaction <ArrowRightLeft className="text-current" />
+              </Link>
+            </Button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link
-              href={newWalletRoute}
-              className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer items-center justify-between"
+              asChild
             >
-              Add wallet <Wallet className="size-5" />
-            </Link>
+              <Link href={newWalletRoute}>
+                Add wallet <Wallet className="text-current" />
+              </Link>
+            </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

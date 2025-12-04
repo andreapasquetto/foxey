@@ -49,23 +49,30 @@ export function PlaceCard({ place }: { place: Place }) {
               <CopyToClipboardButton content={place.id} />
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link
-                href={`${transactionsRoute}?place=${place.id}`}
-                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                target="_blank"
-                prefetch
+              <Button
+                variant="ghost"
+                className="w-full cursor-pointer items-center justify-between"
+                asChild
               >
-                See transactions <ArrowRightLeft className="size-5" />
-              </Link>
+                <Link
+                  href={`${transactionsRoute}?place=${place.id}`}
+                  target="_blank"
+                  prefetch
+                >
+                  See transactions <ArrowRightLeft className="text-current" />
+                </Link>
+              </Button>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link
-                href={placeRoute(place.id)}
-                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                prefetch
+              <Button
+                variant="ghost"
+                className="w-full cursor-pointer items-center justify-between"
+                asChild
               >
-                Edit <Edit className="size-5" />
-              </Link>
+                <Link href={placeRoute(place.id)} prefetch>
+                  Edit <Edit className="text-current" />
+                </Link>
+              </Button>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               <DeletePlace place={place} />

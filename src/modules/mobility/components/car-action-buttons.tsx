@@ -23,42 +23,50 @@ export function CarActionButtons(props: { carId: string }) {
             <Plus className="size-6" />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="mr-4 w-[250px] sm:mr-6">
+        <DropdownMenuContent align="end" className="w-[250px]">
           <DropdownMenuItem asChild>
-            <Link
-              href={newRefuelingRoute(props.carId)}
-              className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-              prefetch
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer items-center justify-between"
+              asChild
             >
-              Add refueling <Fuel className="size-5" />
-            </Link>
+              <Link href={newRefuelingRoute(props.carId)} prefetch>
+                Add refueling <Fuel className="text-current" />
+              </Link>
+            </Button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link
-              href={newHighwayTripRoute(props.carId)}
-              className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-              prefetch
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer items-center justify-between"
+              asChild
             >
-              Add highway trip <Gauge className="size-5" />
-            </Link>
+              <Link href={newHighwayTripRoute(props.carId)} prefetch>
+                Add highway trip <Gauge className="text-current" />
+              </Link>
+            </Button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link
-              href={newServiceRoute(props.carId)}
-              className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-              prefetch
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer items-center justify-between"
+              asChild
             >
-              Add service <Wrench className="size-5" />
-            </Link>
+              <Link href={newServiceRoute(props.carId)} prefetch>
+                Add service <Wrench className="text-current" />
+              </Link>
+            </Button>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link
-              href={newInspectionRoute(props.carId)}
-              className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-              prefetch
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer items-center justify-between"
+              asChild
             >
-              Add inspection <BookOpenCheck className="size-5" />
-            </Link>
+              <Link href={newInspectionRoute(props.carId)} prefetch>
+                Add inspection <BookOpenCheck className="text-current" />
+              </Link>
+            </Button>
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

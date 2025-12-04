@@ -40,14 +40,19 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
               <CopyToClipboardButton content={wallet.id} />
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link
-                href={`${transactionsRoute}?wallet=${wallet.id}`}
-                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                target="_blank"
-                prefetch
+              <Button
+                variant="ghost"
+                className="w-full cursor-pointer items-center justify-between"
+                asChild
               >
-                See transactions <ArrowRightLeft className="size-5" />
-              </Link>
+                <Link
+                  href={`${transactionsRoute}?wallet=${wallet.id}`}
+                  target="_blank"
+                  prefetch
+                >
+                  See transactions <ArrowRightLeft className="text-current" />
+                </Link>
+              </Button>
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
               {wallet.isArchived ? (
@@ -57,13 +62,15 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
               )}
             </DropdownMenuItem>
             <DropdownMenuItem asChild>
-              <Link
-                href={walletRoute(wallet.id)}
-                className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                prefetch
+              <Button
+                variant="ghost"
+                className="w-full cursor-pointer items-center justify-between"
+                asChild
               >
-                Edit <Edit className="size-5" />
-              </Link>
+                <Link href={walletRoute(wallet.id)} prefetch>
+                  Edit <Edit className="text-current" />
+                </Link>
+              </Button>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

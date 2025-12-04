@@ -45,14 +45,20 @@ export function TransactionCategoryList({
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[250px]">
                     <DropdownMenuItem asChild>
-                      <Link
-                        href={`${transactionsRoute}?category=${category.id}`}
-                        className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                        target="_blank"
-                        prefetch
+                      <Button
+                        variant="ghost"
+                        className="w-full cursor-pointer items-center justify-between"
+                        asChild
                       >
-                        See transactions <ArrowRightLeft className="size-5" />
-                      </Link>
+                        <Link
+                          href={`${transactionsRoute}?category=${category.id}`}
+                          target="_blank"
+                          prefetch
+                        >
+                          See transactions
+                          <ArrowRightLeft className="text-current" />
+                        </Link>
+                      </Button>
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

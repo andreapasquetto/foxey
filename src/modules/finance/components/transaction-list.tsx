@@ -127,13 +127,15 @@ export function TransactionList({
                       <CopyToClipboardButton content={transaction.id} />
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
-                      <Link
-                        href={transactionRoute(transaction.id)}
-                        className="flex h-12 w-full cursor-pointer items-center justify-between gap-1 sm:h-10"
-                        prefetch
+                      <Button
+                        variant="ghost"
+                        className="w-full cursor-pointer items-center justify-between"
+                        asChild
                       >
-                        Edit <Edit className="size-5" />
-                      </Link>
+                        <Link href={transactionRoute(transaction.id)} prefetch>
+                          Edit <Edit className="text-current" />
+                        </Link>
+                      </Button>
                     </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <DeleteTransaction transaction={transaction} />
