@@ -127,7 +127,6 @@ export function MonthCalendar(props: {
           <div className="flex items-center gap-2">
             <ButtonGroup>
               <Button
-                type="button"
                 variant="outline"
                 size="icon"
                 className="rounded-r-none"
@@ -136,7 +135,6 @@ export function MonthCalendar(props: {
                 <ChevronsLeft className="size-5" />
               </Button>
               <Button
-                type="button"
                 variant="outline"
                 size="icon"
                 className="rounded-none"
@@ -145,7 +143,6 @@ export function MonthCalendar(props: {
                 <ChevronLeft className="size-5" />
               </Button>
               <Button
-                type="button"
                 variant="outline"
                 className="hidden rounded-none md:inline-flex"
                 onClick={() => goToCurrentMonthOrSelectToday()}
@@ -153,7 +150,6 @@ export function MonthCalendar(props: {
                 Today
               </Button>
               <Button
-                type="button"
                 variant="outline"
                 size="icon"
                 className="rounded-none"
@@ -162,7 +158,6 @@ export function MonthCalendar(props: {
                 <ChevronRight className="size-5" />
               </Button>
               <Button
-                type="button"
                 variant="outline"
                 size="icon"
                 className="rounded-l-none"

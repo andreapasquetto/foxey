@@ -12,7 +12,6 @@ export function CopyToClipboardButton({
 }) {
   return (
     <Button
-      type="button"
       variant="ghost"
       className="w-full cursor-pointer items-center justify-between"
       onClick={() => {
