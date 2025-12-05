@@ -1,9 +1,10 @@
 import { format } from "date-fns";
-import { Coins, ExternalLink, Gauge, Waypoints } from "lucide-react";
+import { Coins, Gauge, SquareArrowOutUpRight, Waypoints } from "lucide-react";
 import Link from "next/link";
 import { currencyFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
+import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -26,14 +27,14 @@ export async function HighwayTripList(props: { carId: string }) {
       {trips.map((trip) => (
         <Item key={trip.id} variant="outline" className="relative">
           <div className="absolute top-2 right-2">
-            <Link
-              href={transactionRoute(trip.transaction.id)}
-              target="_blank"
-              className="flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent"
-            >
-              <ExternalLink className="size-5" />
-              <span className="sr-only">go to related transaction</span>
-            </Link>
+            <Button variant="ghost" size="icon">
+              <Link
+                href={transactionRoute(trip.transaction.id)}
+                target="_blank"
+              >
+                <SquareArrowOutUpRight />
+              </Link>
+            </Button>
           </div>
           <ItemContent>
             <ItemDescription>

@@ -3,16 +3,18 @@ import {
   Banknote,
   Check,
   Coins,
-  ExternalLink,
   Flame,
   Fuel,
   Route,
+  SquareArrowOutUpRight,
   X,
 } from "lucide-react";
 import Link from "next/link";
 import { currencyFormatter, numberFormatter } from "@/common/formatters";
 import { transactionRoute } from "@/common/routes";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   Item,
   ItemContent,
@@ -39,16 +41,14 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
         .map((refueling) => (
           <Item key={refueling.id} variant="outline" className="relative">
             <div className="absolute top-2 right-2">
-              <Link
-                href={transactionRoute(refueling.transaction.id)}
-                target="_blank"
-                className={cn(
-                  "flex items-center justify-center rounded-lg p-2 transition-colors hover:bg-accent",
-                )}
-              >
-                <ExternalLink className="size-5" />
-                <span className="sr-only">go to related transaction</span>
-              </Link>
+              <Button variant="ghost" size="icon">
+                <Link
+                  href={transactionRoute(refueling.transaction.id)}
+                  target="_blank"
+                >
+                  <SquareArrowOutUpRight />
+                </Link>
+              </Button>
             </div>
             <ItemContent>
               <ItemDescription>
@@ -87,27 +87,22 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
                 )}
               </div>
               <div className="flex flex-wrap items-center gap-x-3 text-muted-foreground sm:justify-center">
-                <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
+                <Badge variant="outline">
                   {refueling.isFull ? (
-                    <>
-                      <Check className="size-4 text-green-500 dark:text-green-400" />
-                      Full tank
-                    </>
+                    <Check className="text-green-500 dark:text-green-400" />
                   ) : (
-                    <>
-                      <X className="size-4 text-red-500 dark:text-red-400" />
-                      Full tank
-                    </>
+                    <X className="text-red-500 dark:text-red-400" />
                   )}
-                </div>
-                <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
+                  Full tank
+                </Badge>
+                <Badge variant="outline">
                   {refueling.isNecessary ? (
-                    <Check className="size-4 text-green-500 dark:text-green-400" />
+                    <Check className="text-green-500 dark:text-green-400" />
                   ) : (
-                    <X className="size-4 text-red-500 dark:text-red-400" />
+                    <X className="text-red-500 dark:text-red-400" />
                   )}
                   Necessary
-                </div>
+                </Badge>
               </div>
             </ItemContent>
           </Item>

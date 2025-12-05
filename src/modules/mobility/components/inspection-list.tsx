@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { Check, X } from "lucide-react";
 import { numberFormatter } from "@/common/formatters";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
+import { Badge } from "@/components/ui/badge";
 import {
   Item,
   ItemContent,
@@ -27,19 +28,14 @@ export function InspectionList(props: { inspections: Inspection[] }) {
         .map((inspection) => (
           <Item key={inspection.id} variant="outline" className="relative">
             <div className="absolute top-2 right-2">
-              <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground transition-colors">
+              <Badge variant="outline">
                 {inspection.isSuccessful ? (
-                  <>
-                    <Check className="size-4 text-green-500" />
-                    Passed
-                  </>
+                  <Check className="text-green-500" />
                 ) : (
-                  <>
-                    <X className="size-4 text-red-500" />
-                    Passed
-                  </>
+                  <X className="text-red-500" />
                 )}
-              </div>
+                Passed
+              </Badge>
             </div>
             <ItemContent>
               <ItemDescription>

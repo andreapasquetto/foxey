@@ -2,8 +2,8 @@ import {
   ArrowRightLeft,
   Check,
   Edit,
-  ExternalLink,
   MoreHorizontal,
+  SquareArrowOutUpRight,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -13,6 +13,7 @@ import {
   buildGoogleMapsUrlWithCoordinates,
 } from "@/common/utils/places";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -33,15 +34,19 @@ export function PlaceCard({ place }: { place: Place }) {
   return (
     <Item variant="outline" className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">
-        <div className="flex items-center gap-1 rounded-full border px-2 py-1 text-xs text-muted-foreground">
-          {place.isVisited && <Check className="size-4 text-green-500" />}
-          {!place.isVisited && <X className="size-4 text-red-500" />}
+        <Badge variant="outline">
+          {place.isVisited ? (
+            <Check className="text-green-500" />
+          ) : (
+            <X className="text-red-500" />
+          )}
           Visited
-        </div>
+        </Badge>
+
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
-              <MoreHorizontal className="size-5" />
+              <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[250px]">
@@ -89,20 +94,20 @@ export function PlaceCard({ place }: { place: Place }) {
           <Link
             href={buildGoogleMapsUrlWithAddress(place.address)}
             target="_blank"
-            className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+            className="flex items-start gap-1 text-sm text-muted-foreground hover:text-foreground hover:underline"
           >
             {place.address}
-            <ExternalLink className="size-4" />
+            <SquareArrowOutUpRight className="size-3" />
           </Link>
         )}
         {place.coordinates && (
           <Link
             href={buildGoogleMapsUrlWithCoordinates(place.coordinates)}
             target="_blank"
-            className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+            className="flex items-start gap-1 text-sm text-muted-foreground hover:text-foreground hover:underline"
           >
             Go to coordinates
-            <ExternalLink className="size-4" />
+            <SquareArrowOutUpRight className="size-3" />
           </Link>
         )}
       </ItemContent>

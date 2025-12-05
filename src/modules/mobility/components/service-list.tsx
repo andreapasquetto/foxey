@@ -39,8 +39,7 @@ export function ServiceList(props: { services: Service[] }) {
                 <Dialog>
                   <DialogTrigger asChild>
                     <Button variant="ghost" size="icon">
-                      <Notebook className="size-5" />
-                      <span className="sr-only">view notes</span>
+                      <Notebook />
                     </Button>
                   </DialogTrigger>
                   <DialogContent>

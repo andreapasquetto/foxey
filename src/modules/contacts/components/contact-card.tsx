@@ -3,11 +3,11 @@ import {
   Building,
   Cake,
   CircleUser,
-  ExternalLink,
   Mail,
   MapPinHouse,
   MoreHorizontal,
   Phone,
+  SquareArrowOutUpRight,
 } from "lucide-react";
 import Link from "next/link";
 import { phoneNumberFormatter } from "@/common/formatters";
@@ -233,10 +233,10 @@ function AddressAccordionItem({ address }: { address: ContactAddress }) {
         <Link
           href={buildGoogleMapsUrlWithAddress(address.value)}
           target="_blank"
-          className="flex items-start gap-2 text-sm text-muted-foreground hover:text-foreground hover:underline"
+          className="flex items-start gap-1 text-sm text-muted-foreground hover:text-foreground hover:underline"
         >
           {address.value}
-          <ExternalLink className="size-4" />
+          <SquareArrowOutUpRight className="size-3" />
         </Link>
       )}
     </div>

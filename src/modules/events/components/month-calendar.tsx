@@ -24,9 +24,9 @@ import {
   ChevronRight,
   ChevronsLeft,
   ChevronsRight,
-  ExternalLink,
   MapPin,
   Plus,
+  SquareArrowOutUpRight,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -369,7 +369,7 @@ export function MonthCalendar(props: {
                           >
                             {event.place.name}
 
-                            <ExternalLink className="size-3" />
+                            <SquareArrowOutUpRight className="size-3" />
                           </Link>
                         </ItemDescription>
                       </div>
