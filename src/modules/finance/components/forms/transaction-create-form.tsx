@@ -5,7 +5,6 @@ import { startOfHour } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
@@ -30,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
 import type {
   TransactionCategory,
   TransactionTemplate,
@@ -446,8 +446,8 @@ export function TransactionCreateForm({
           </div>
         </div>
         <div className="flex items-center justify-end gap-3">
-          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
             Submit
           </Button>
         </div>

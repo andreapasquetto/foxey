@@ -5,7 +5,6 @@ import { startOfMinute } from "date-fns";
 import Decimal from "decimal.js";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
@@ -32,6 +31,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
 import type { Wallet } from "@/db/types/finance";
 import type { Car } from "@/db/types/mobility";
 import type { Place } from "@/db/types/places";
@@ -236,8 +236,8 @@ export function RefuelingCreateForm(props: {
           </div>
         </div>
         <div className="flex items-center justify-end gap-3">
-          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
             Submit
           </Button>
         </div>

@@ -2,10 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { CircularSpinner } from "@/components/circular-spinner";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
+import { Spinner } from "@/components/ui/spinner";
 import { useCarsCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
   type CreateCarFormType,
@@ -42,8 +42,8 @@ export function CarCreateForm() {
         <XInput control={form.control} name="make" label="Make" />
         <XInput control={form.control} name="model" label="Model" />
         <div className="flex items-center justify-end gap-3">
-          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
             Submit
           </Button>
         </div>

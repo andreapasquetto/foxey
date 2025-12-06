@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { CircularSpinner } from "@/components/circular-spinner";
 import { XCheckbox } from "@/components/form/x-checkbox";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
@@ -28,6 +27,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
 import type { Place, PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { usePlacesUpdateMutation } from "@/modules/places/places-mutations";
@@ -128,8 +128,8 @@ export function PlaceUpdateForm(props: {
         <XInput control={form.control} name="address" label="Address" />
         <XCheckbox control={form.control} name="isVisited" label="Visited" />
         <div className="flex items-center justify-end gap-3">
-          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
             Submit
           </Button>
         </div>

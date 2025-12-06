@@ -3,7 +3,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
-import { CircularSpinner } from "@/components/circular-spinner";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
@@ -30,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
 import type { Transaction, TransactionCategory } from "@/db/types/finance";
 import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
@@ -250,8 +250,8 @@ export function TransactionUpdateForm(props: {
           </div>
         </div>
         <div className="flex items-center justify-end gap-3">
-          {mutation.isPending && <CircularSpinner />}
           <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
             Submit
           </Button>
         </div>
