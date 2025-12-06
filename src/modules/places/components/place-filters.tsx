@@ -12,8 +12,8 @@ export function PlaceFilters({ categories }: { categories: PlaceCategory[] }) {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <div className="w-full sm:w-[250px]">
-        <SearchFilter id="place-search" />
+      <div className="w-full md:w-1/2 lg:w-1/3">
+        <SearchFilter />
       </div>
       <div>
         <ChipCombobox

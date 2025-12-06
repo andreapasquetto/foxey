@@ -72,8 +72,8 @@ export function RangeDatePicker({
         >
           {showPresets && (
             <Select onValueChange={onSelectDateRangePreset}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select" />
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select preset" />
               </SelectTrigger>
               <SelectContent position="popper">
                 <SelectItem value="mtd">Month to date (MTD)</SelectItem>

@@ -25,8 +25,8 @@ export default async function ContactsPage(props: {
       <Heading1>Contacts</Heading1>
       <ContactsActionButtons />
       <section className="space-y-6">
-        <div className="w-full sm:w-[250px]">
-          <SearchFilter id="contact-search" />
+        <div className="w-full sm:w-1/2 lg:w-1/3">
+          <SearchFilter />
         </div>
         <ContactList contacts={records} total={total} />
       </section>

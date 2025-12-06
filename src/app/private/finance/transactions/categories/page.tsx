@@ -39,8 +39,8 @@ export default async function TransactionCategoriesPage(props: {
         </Button>
       </div>
       <div className="space-y-6">
-        <div className="w-full sm:w-[250px]">
-          <SearchFilter paramName="query" />
+        <div className="w-full sm:w-1/2 lg:w-1/3">
+          <SearchFilter />
         </div>
         <TransactionCategoryList categories={records} total={total} />
       </div>
