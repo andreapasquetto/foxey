@@ -60,7 +60,7 @@ export function ContactCard({
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" size="sm">
-              <MoreHorizontal className="size-5" />
+              <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="w-[250px]">
@@ -86,28 +86,25 @@ export function ContactCard({
         )}
         <ItemTitle
           className={cn(
-            "flex items-center gap-2",
+            "flex items-center gap-2 leading-none",
             contact.isArchived && "text-muted-foreground",
           )}
         >
-          {contact.isBusiness ? (
-            <Building className="size-4" />
-          ) : (
-            <CircleUser className="size-4" />
-          )}
+          {contact.isBusiness ? <Building /> : <CircleUser />}
           {contact.fullName}
         </ItemTitle>
         {dob && (
-          <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <Cake className="size-4" />
-            {dob.getFullYear() === IGNORE_DOB_YEAR && (
-              <span>{format(dob, "dd MMMM")}</span>
-            )}
-            {dob.getFullYear() !== IGNORE_DOB_YEAR && (
-              <span>
-                {format(dob, "dd MMMM y")} ({differenceInYears(today, dob)})
-              </span>
-            )}
+          <div className="flex items-center gap-2 text-sm text-muted-foreground leading-none tracking-tight">
+            <Cake className="size-5" />
+            <div>
+              {format(
+                dob,
+                dob.getFullYear() === IGNORE_DOB_YEAR ? "dd MMMM" : "dd MMMM y",
+              )}
+              {dob.getFullYear() !== IGNORE_DOB_YEAR && (
+                <span className="ml-1">({differenceInYears(today, dob)})</span>
+              )}
+            </div>
           </div>
         )}
         <Accordion type="multiple" className="w-full">

@@ -65,7 +65,7 @@ export function TransactionList({
               </TableCell>
               <TableCell>
                 <div>
-                  <div className="space-x-2 text-sm text-muted-foreground">
+                  <div className="space-x-1 text-sm text-muted-foreground">
                     {transaction.from && <span>{transaction.from.name}</span>}
                     {transaction.from && transaction.to && (
                       <ChevronsRight className="inline-block size-5" />

@@ -15,7 +15,7 @@ export default function PrivateLayout({
       <header className="sticky top-0 z-30 flex h-16 items-center justify-between border-b px-4 backdrop-blur supports-backdrop-filter:bg-background/50 sm:px-6">
         <Button size="icon" variant="ghost" asChild>
           <Link href={privateRoute}>
-            <PocketKnife className="size-5" />
+            <PocketKnife />
             <span className="sr-only">homepage</span>
           </Link>
         </Button>

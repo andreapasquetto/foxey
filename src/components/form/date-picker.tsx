@@ -59,7 +59,7 @@ export function DatePicker(props: DatePickerProps) {
             !props.value && "text-muted-foreground",
           )}
         >
-          <CalendarIcon className="mr-2 size-4" />
+          <CalendarIcon className="mr-2 shrink-0" />
           {props.value ? (
             props.includeTime ? (
               format(props.value, "dd MMM y HH:mm")

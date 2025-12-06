@@ -132,7 +132,7 @@ export function MonthCalendar(props: {
                 className="rounded-r-none"
                 onClick={() => goToPreviousYear()}
               >
-                <ChevronsLeft className="size-5" />
+                <ChevronsLeft />
               </Button>
               <Button
                 variant="outline"
@@ -140,7 +140,7 @@ export function MonthCalendar(props: {
                 className="rounded-none"
                 onClick={() => goToPreviousMonth()}
               >
-                <ChevronLeft className="size-5" />
+                <ChevronLeft />
               </Button>
               <Button
                 variant="outline"
@@ -155,7 +155,7 @@ export function MonthCalendar(props: {
                 className="rounded-none"
                 onClick={() => goToNextMonth()}
               >
-                <ChevronRight className="size-5" />
+                <ChevronRight />
               </Button>
               <Button
                 variant="outline"
@@ -163,13 +163,13 @@ export function MonthCalendar(props: {
                 className="rounded-l-none"
                 onClick={() => goToNextYear()}
               >
-                <ChevronsRight className="size-5" />
+                <ChevronsRight />
               </Button>
             </ButtonGroup>
             <Sheet open={showCreateSheet} onOpenChange={setShowCreateSheet}>
               <SheetTrigger asChild>
                 <Button size="icon">
-                  <Plus className="size-5" />
+                  <Plus />
                 </Button>
               </SheetTrigger>
               <SheetContent>
@@ -319,14 +319,20 @@ export function MonthCalendar(props: {
                   variant="outline"
                   className="text-yellow-500 border-yellow-500/25"
                 >
-                  <ItemContent className="flex-row items-center gap-1 text-lg font-semibold tracking-tight">
-                    <Cake className="size-4" />
-                    {contact.fullName}
-                    {contact.dob.getFullYear() !== IGNORE_DOB_YEAR && (
-                      <span className="ml-1 text-base font-normal">
-                        ({differenceInYears(selectedDay, contact.dob)})
-                      </span>
-                    )}
+                  <ItemContent>
+                    <ItemTitle>
+                      <div className="flex items-center gap-2">
+                        <Cake />
+                        <div>
+                          {contact.fullName}
+                          {contact.dob.getFullYear() !== IGNORE_DOB_YEAR && (
+                            <span className="ml-1">
+                              ({differenceInYears(selectedDay, contact.dob)})
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </ItemTitle>
                   </ItemContent>
                 </Item>
               ))}
@@ -344,7 +350,7 @@ export function MonthCalendar(props: {
                         <div className="flex items-center gap-1">
                           {!event.isCanceled &&
                             isBefore(selectedDay, today) && (
-                              <Check className="inline-block size-4 text-green-500 dark:text-green-400" />
+                              <Check className="text-green-500 dark:text-green-400" />
                             )}
                           {event.title}
                         </div>

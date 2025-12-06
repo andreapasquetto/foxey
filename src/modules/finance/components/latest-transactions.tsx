@@ -73,7 +73,7 @@ export async function LatestTransactions() {
         <Button variant="link" asChild>
           <Link href={transactionsRoute}>
             See all
-            <ArrowRight className="size-5" />
+            <ArrowRight />
           </Link>
         </Button>
       </div>

@@ -35,14 +35,12 @@ export function ChipCombobox<T extends { id: string; name: string }>(
           role="combobox"
           aria-label="Select a team"
           className={cn(
-            "h-8 w-full justify-between gap-2 overflow-hidden border-dashed px-3 py-2 font-normal text-muted-foreground",
+            "w-full justify-between gap-2 overflow-hidden border-dashed px-3 py-2 font-normal text-muted-foreground",
             props.selectedValue && "border-muted-foreground",
           )}
         >
           {props.label}
-          {!props.selectedValue && (
-            <Plus className="size-4 shrink-0 opacity-50" />
-          )}
+          {!props.selectedValue && <Plus className="shrink-0 opacity-50" />}
           {props.selectedValue && (
             <span className="text-foreground">{props.selectedValue.name}</span>
           )}
@@ -76,7 +74,7 @@ export function ChipCombobox<T extends { id: string; name: string }>(
                 {props.optionFormatter(option)}
                 <CheckIcon
                   className={cn(
-                    "ml-auto size-4",
+                    "ml-auto",
                     props.selectedValue?.id === option.id
                       ? "opacity-100"
                       : "opacity-0",

@@ -11,8 +11,8 @@ export function CancelOrRestoreEvent({ event }: { event: Event }) {
     >
       <input type="hidden" name="id" value={event.id} />
       <Button type="submit" variant="outline" size="icon">
-        {event.isCanceled && <RotateCw className="size-4" />}
-        {!event.isCanceled && <Eraser className="size-4" />}
+        {event.isCanceled && <RotateCw />}
+        {!event.isCanceled && <Eraser />}
       </Button>
     </form>
   );

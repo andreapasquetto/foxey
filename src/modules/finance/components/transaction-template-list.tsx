@@ -56,7 +56,7 @@ export function TransactionTemplateList({
               <TableCell>{template.name}</TableCell>
               <TableCell>
                 <div>
-                  <div className="space-x-2 text-sm text-muted-foreground">
+                  <div className="space-x-1 text-sm text-muted-foreground">
                     {template.from && <span>{template.from.name}</span>}
                     {template.from && template.to && (
                       <ChevronsRight className="inline-block size-5" />

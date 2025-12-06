@@ -176,7 +176,7 @@ export function CarStats(props: {
                   )
                 }
               >
-                <Calculator className="size-4" />
+                <Calculator />
               </Button>
             )}
             {stats.fuelConsumption.avg && (
