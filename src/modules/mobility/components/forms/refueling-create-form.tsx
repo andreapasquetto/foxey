@@ -31,8 +31,9 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
-import type { Wallet } from "@/db/types/finance";
+import type { TransactionCategory, Wallet } from "@/db/types/finance";
 import type { Car } from "@/db/types/mobility";
 import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
@@ -42,17 +43,21 @@ import {
   createRefuelingFormSchema,
 } from "@/modules/mobility/schemas/create-refueling-form-schema";
 
-export function RefuelingCreateForm(props: {
-  cars: Car[];
+export function RefuelingCreateForm({
+  car,
+  wallets,
+  categories,
+  places,
+}: {
+  car: Car;
   wallets: Wallet[];
+  categories: TransactionCategory[];
   places: Place[];
-  carId: string;
 }) {
-  const { cars, wallets, places, carId } = props;
   const form = useForm<CreateRefuelingFormType>({
     resolver: zodResolver(createRefuelingFormSchema),
     defaultValues: {
-      carId,
+      carId: car.id,
       datetime: startOfMinute(new Date()),
       isFull: true,
       isNecessary: true,
@@ -65,7 +70,7 @@ export function RefuelingCreateForm(props: {
     ? new Decimal(costValue ?? 0).div(priceValue).toDecimalPlaces(2).toString()
     : "0.00";
 
-  const mutation = useRefuelingsCreateMutation(carId);
+  const mutation = useRefuelingsCreateMutation(car.id);
 
   function onValidSubmit(values: CreateRefuelingFormType) {
     mutation.mutate(values);
@@ -77,21 +82,34 @@ export function RefuelingCreateForm(props: {
         onSubmit={form.handleSubmit(onValidSubmit)}
         className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-          <XSelect control={form.control} name="carId" label="Car" disabled>
-            {cars.map((car) => (
-              <XSelectOption key={car.id} value={car.id}>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {car.year}
-                  </span>
-                  <div>
-                    {car.make} {car.model}
+        <div className="flex items-center justify-center">
+          <div className="w-full max-w-sm">
+            <FormItem className="w-full max-w-sm">
+              <FormLabel>Car</FormLabel>
+              <FormControl>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className={cn("justify-between px-3 py-2 font-normal")}
+                  disabled
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {car.year}
+                    </span>
+                    <div>
+                      {car.make} {car.model}
+                    </div>
                   </div>
-                </div>
-              </XSelectOption>
-            ))}
-          </XSelect>
+                  <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                </Button>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </div>
+        </div>
+        <Separator />
+        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="datetime"
@@ -105,6 +123,73 @@ export function RefuelingCreateForm(props: {
                     includeTime
                   />
                 </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <XSelect control={form.control} name="walletId" label="Wallet">
+            {wallets.map((w) => (
+              <XSelectOption key={w.id} value={w.id}>
+                {w.name}
+              </XSelectOption>
+            ))}
+          </XSelect>
+          <FormField
+            control={form.control}
+            name="categoryId"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Category</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        className={cn(
+                          "justify-between px-3 py-2 font-normal",
+                          !field.value && "text-muted-foreground",
+                        )}
+                      >
+                        {field.value
+                          ? categories.find(
+                              (category) => category.id === field.value,
+                            )?.name
+                          : "Select an option"}
+                        <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="p-0">
+                    <Command>
+                      <CommandInput placeholder="Search..." />
+                      <CommandList>
+                        <CommandEmpty>No option found.</CommandEmpty>
+                        <CommandGroup>
+                          {categories.map((category) => (
+                            <CommandItem
+                              value={category.name}
+                              key={category.id}
+                              onSelect={() => {
+                                form.setValue("categoryId", category.id);
+                              }}
+                            >
+                              <div>{category.name}</div>
+                              <Check
+                                className={cn(
+                                  "ml-auto",
+                                  category.id === field.value
+                                    ? "opacity-100"
+                                    : "opacity-0",
+                                )}
+                              />
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 <FormMessage />
               </FormItem>
             )}
@@ -172,13 +257,6 @@ export function RefuelingCreateForm(props: {
               </FormItem>
             )}
           />
-          <XSelect control={form.control} name="walletId" label="Wallet">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
           <div className="space-y-6 sm:space-y-0 sm:col-span-full gap-x-2 gap-y-6 sm:grid sm:grid-cols-3">
             <XInput
               type="number"

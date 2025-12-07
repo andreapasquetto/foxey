@@ -10,6 +10,7 @@ export const createRefuelingFormSchema = z.object({
   carId: z.uuid(),
   walletId: z.uuid().optional(),
   placeId: z.uuid().optional(),
+  categoryId: z.uuid().optional(),
   price: positiveRequiredNumberSchema,
   quantity: positiveRequiredNumberSchema,
   cost: positiveRequiredNumberSchema,

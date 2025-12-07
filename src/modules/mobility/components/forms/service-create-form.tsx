@@ -2,10 +2,10 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
+import { ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
 import { XInput } from "@/components/form/x-input";
-import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -15,26 +15,27 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import type { Car } from "@/db/types/mobility";
+import { cn } from "@/lib/utils";
 import { useServicesCreateMutation } from "@/modules/mobility/mobility-mutations";
 import {
   type CreateServiceFormType,
   createServiceFormSchema,
 } from "@/modules/mobility/schemas/create-service-form-schema";
 
-export function ServiceCreateForm(props: { cars: Car[]; carId: string }) {
-  const { cars, carId } = props;
+export function ServiceCreateForm({ car }: { car: Car }) {
   const form = useForm<CreateServiceFormType>({
     resolver: zodResolver(createServiceFormSchema),
     defaultValues: {
-      carId,
+      carId: car.id,
       datetime: startOfMinute(new Date()),
     },
   });
 
-  const mutation = useServicesCreateMutation(carId);
+  const mutation = useServicesCreateMutation(car.id);
 
   function onValidSubmit(values: CreateServiceFormType) {
     mutation.mutate(values);
@@ -46,21 +47,34 @@ export function ServiceCreateForm(props: { cars: Car[]; carId: string }) {
         onSubmit={form.handleSubmit(onValidSubmit)}
         className="space-y-6 mx-auto sm:max-w-xl"
       >
-        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-          <XSelect control={form.control} name="carId" label="Car" disabled>
-            {cars.map((car) => (
-              <XSelectOption key={car.id} value={car.id}>
-                <div className="flex items-center gap-2">
-                  <span className="font-mono text-xs text-muted-foreground">
-                    {car.year}
-                  </span>
-                  <div>
-                    {car.make} {car.model}
+        <div className="flex items-center justify-center">
+          <div className="w-full max-w-sm">
+            <FormItem className="w-full max-w-sm">
+              <FormLabel>Car</FormLabel>
+              <FormControl>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className={cn("justify-between px-3 py-2 font-normal")}
+                  disabled
+                >
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-xs text-muted-foreground">
+                      {car.year}
+                    </span>
+                    <div>
+                      {car.make} {car.model}
+                    </div>
                   </div>
-                </div>
-              </XSelectOption>
-            ))}
-          </XSelect>
+                  <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                </Button>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          </div>
+        </div>
+        <Separator />
+        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="datetime"
@@ -78,16 +92,15 @@ export function ServiceCreateForm(props: { cars: Car[]; carId: string }) {
               </FormItem>
             )}
           />
-          <div className="sm:col-span-full">
-            <XInput
-              type="number"
-              control={form.control}
-              name="odometer"
-              step={1}
-              label="Odometer (km)"
-              placeholder="0"
-            />
-          </div>
+          <XInput
+            type="number"
+            control={form.control}
+            name="odometer"
+            step={1}
+            label="Odometer (km)"
+            placeholder="0"
+          />
+
           <div className="sm:col-span-full">
             <FormField
               control={form.control}

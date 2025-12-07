@@ -29,6 +29,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import type {
   TransactionCategory,
@@ -97,7 +98,7 @@ export function TransactionCreateForm({
         className="space-y-6 mx-auto sm:max-w-xl"
       >
         <div className="flex items-center justify-center">
-          <FormItem>
+          <FormItem className="w-full max-w-sm">
             <FormLabel>Template</FormLabel>
             <FormControl>
               <Popover>
@@ -107,7 +108,7 @@ export function TransactionCreateForm({
                       variant="outline"
                       role="combobox"
                       className={cn(
-                        "h-12 w-[350px] justify-between px-3 py-2 font-normal",
+                        "justify-between px-3 py-2 font-normal",
                         !selectedTemplate && "text-muted-foreground",
                       )}
                     >
@@ -154,6 +155,7 @@ export function TransactionCreateForm({
             <FormMessage />
           </FormItem>
         </div>
+        <Separator />
         <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
           <div className="sm:col-span-full">
             <FormField
