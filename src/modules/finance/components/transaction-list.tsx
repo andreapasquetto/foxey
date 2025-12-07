@@ -5,7 +5,7 @@ import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { usePagination } from "@/common/hooks/use-pagination";
-import { transactionRoute } from "@/common/routes";
+import { placeRoute, transactionRoute, walletRoute } from "@/common/routes";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
@@ -63,31 +63,43 @@ export function TransactionList({
               <TableCell>
                 <code>{format(transaction.datetime, "ccc y-MM-dd HH:mm")}</code>
               </TableCell>
-              <TableCell>
-                <div>
-                  <div className="space-x-1 text-sm text-muted-foreground">
-                    {transaction.from && <span>{transaction.from.name}</span>}
-                    {transaction.from && transaction.to && (
-                      <ChevronsRight className="inline-block size-5" />
-                    )}
-                    {transaction.to && <span>{transaction.to.name}</span>}
-                  </div>
-                </div>
+              <TableCell className="space-x-1 text-sm text-muted-foreground">
+                {transaction.from && (
+                  <Link
+                    href={walletRoute(transaction.from.id)}
+                    target="_blank"
+                    className="hover:text-foreground hover:underline"
+                  >
+                    {transaction.from.name}
+                  </Link>
+                )}
+                {transaction.from && transaction.to && (
+                  <ChevronsRight className="inline-block size-5" />
+                )}
+                {transaction.to && (
+                  <Link
+                    href={walletRoute(transaction.to.id)}
+                    target="_blank"
+                    className="hover:text-foreground hover:underline"
+                  >
+                    {transaction.to.name}
+                  </Link>
+                )}
               </TableCell>
-              <TableCell>
-                <div>
-                  <div>{transaction.category?.name}</div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div>
-                  <div>{transaction.place?.name}</div>
-                  {transaction.place?.category && (
-                    <div className="space-x-2 text-sm text-muted-foreground">
-                      <span>{transaction.place.category.name}</span>
+              <TableCell>{transaction.category?.name}</TableCell>
+              <TableCell className="group">
+                {transaction.place && (
+                  <Link href={placeRoute(transaction.place.id)} target="_blank">
+                    <div className="group-hover:underline">
+                      {transaction.place.name}
                     </div>
-                  )}
-                </div>
+                    {transaction.place.category && (
+                      <div className="space-x-2 text-sm text-muted-foreground group-hover:underline">
+                        <span>{transaction.place.category.name}</span>
+                      </div>
+                    )}
+                  </Link>
+                )}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-1">
@@ -98,22 +110,17 @@ export function TransactionList({
               </TableCell>
               <TableCell>{transaction.description}</TableCell>
               <TableCell className="text-right">
-                {
-                  <code
-                    className={cn({
-                      "text-green-500 dark:text-green-400":
-                        transaction.to && !transaction.from,
-                      "text-red-500 dark:text-red-400":
-                        transaction.from && !transaction.to,
-                      "text-muted-foreground":
-                        transaction.from && transaction.to,
-                    })}
-                  >
-                    {rawCurrencyFormatter.format(
-                      parseFloat(transaction.amount),
-                    )}
-                  </code>
-                }
+                <code
+                  className={cn({
+                    "text-green-500 dark:text-green-400":
+                      transaction.to && !transaction.from,
+                    "text-red-500 dark:text-red-400":
+                      transaction.from && !transaction.to,
+                    "text-muted-foreground": transaction.from && transaction.to,
+                  })}
+                >
+                  {rawCurrencyFormatter.format(parseFloat(transaction.amount))}
+                </code>
               </TableCell>
               <TableCell className="flex items-center justify-end gap-1">
                 <DropdownMenu>
