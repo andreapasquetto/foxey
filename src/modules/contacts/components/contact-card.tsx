@@ -80,10 +80,7 @@ export function ContactCard({
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-      <ItemContent>
-        {contact.subtitle && (
-          <ItemDescription>{contact.subtitle}</ItemDescription>
-        )}
+      <ItemContent className="gap-3">
         <ItemTitle
           className={cn(
             "flex items-center gap-2 leading-none",
@@ -91,7 +88,12 @@ export function ContactCard({
           )}
         >
           {contact.isBusiness ? <Building /> : <CircleUser />}
-          {contact.fullName}
+          <div>
+            <p>{contact.fullName}</p>
+            {contact.subtitle && (
+              <ItemDescription>{contact.subtitle}</ItemDescription>
+            )}
+          </div>
         </ItemTitle>
         {dob && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground leading-none tracking-tight">
