@@ -13,26 +13,46 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function FinanceActionButtons() {
   return (
     <div className="fixed right-4 bottom-4 z-50 m-0 flex flex-col gap-2 sm:right-6 sm:bottom-6">
-      <Button variant="outline" className="size-14 rounded-xl" asChild>
-        <Link href={transactionCategoriesRoute}>
-          <Shapes className="size-6" />
-        </Link>
-      </Button>
-      <Button variant="outline" className="size-14 rounded-xl" asChild>
-        <Link href={transactionTemplatesRoute}>
-          <TextSelect className="size-6" />
-        </Link>
-      </Button>
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button className="size-14 rounded-xl">
-            <Plus className="size-6" />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline" className="size-14 rounded-xl" asChild>
+            <Link href={transactionCategoriesRoute}>
+              <Shapes className="size-6" />
+            </Link>
           </Button>
-        </DropdownMenuTrigger>
+        </TooltipTrigger>
+        <TooltipContent>Categories</TooltipContent>
+      </Tooltip>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button variant="outline" className="size-14 rounded-xl" asChild>
+            <Link href={transactionTemplatesRoute}>
+              <TextSelect className="size-6" />
+            </Link>
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent>Templates</TooltipContent>
+      </Tooltip>
+      <DropdownMenu>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <DropdownMenuTrigger asChild>
+              <Button className="size-14 rounded-xl">
+                <Plus className="size-6" />
+              </Button>
+            </DropdownMenuTrigger>
+          </TooltipTrigger>
+          <TooltipContent>New</TooltipContent>
+        </Tooltip>
         <DropdownMenuContent align="end" className="w-[250px]">
           <DropdownMenuItem asChild>
             <Button

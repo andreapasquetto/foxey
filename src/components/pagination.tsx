@@ -15,6 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 export function Pagination({
   pageSize,
@@ -74,40 +79,60 @@ export function Pagination({
         </div>
         <div className="flex gap-2">
           <ButtonGroup>
-            <Button
-              disabled={isPrevPageDisabled}
-              onClick={goFirstPage}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronsLeft />
-            </Button>
-            <Button
-              disabled={isPrevPageDisabled}
-              onClick={goPrevPage}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronLeft />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  disabled={isPrevPageDisabled}
+                  onClick={goFirstPage}
+                  variant="outline"
+                  size="icon"
+                >
+                  <ChevronsLeft />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>First Page</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  disabled={isPrevPageDisabled}
+                  onClick={goPrevPage}
+                  variant="outline"
+                  size="icon"
+                >
+                  <ChevronLeft />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Previous Page</TooltipContent>
+            </Tooltip>
           </ButtonGroup>
           <ButtonGroup>
-            <Button
-              disabled={isNextPageDisabled}
-              onClick={goNextPage}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronRight />
-            </Button>
-            <Button
-              disabled={isNextPageDisabled}
-              onClick={goLastPage}
-              variant="outline"
-              size="icon"
-            >
-              <ChevronsRight />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  disabled={isNextPageDisabled}
+                  onClick={goNextPage}
+                  variant="outline"
+                  size="icon"
+                >
+                  <ChevronRight />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Next Page</TooltipContent>
+            </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  disabled={isNextPageDisabled}
+                  onClick={goLastPage}
+                  variant="outline"
+                  size="icon"
+                >
+                  <ChevronsRight />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Last Page</TooltipContent>
+            </Tooltip>
           </ButtonGroup>
         </div>
       </div>

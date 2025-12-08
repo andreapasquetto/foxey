@@ -6,6 +6,11 @@ import { newCarRoute } from "@/common/routes";
 import { Heading1 } from "@/components/typography";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { CarList } from "@/modules/mobility/components/car-list";
 
 export const metadata: Metadata = {
@@ -17,11 +22,16 @@ export default function MobilityPage() {
     <div className="space-y-12 pb-24">
       <Heading1>Mobility</Heading1>
       <div className="fixed right-4 bottom-4 z-50 m-0 sm:right-6 sm:bottom-6">
-        <Button className="size-14 rounded-xl" asChild>
-          <Link href={newCarRoute} prefetch>
-            <Plus className="size-6" />
-          </Link>
-        </Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button className="size-14 rounded-xl" asChild>
+              <Link href={newCarRoute} prefetch>
+                <Plus className="size-6" />
+              </Link>
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>New car</TooltipContent>
+        </Tooltip>
       </div>
       <section className="space-y-6">
         <Suspense fallback={<CarListSkeleton />}>

@@ -11,6 +11,11 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
 
 export async function HighwayTripList(props: { carId: string }) {
@@ -27,14 +32,19 @@ export async function HighwayTripList(props: { carId: string }) {
       {trips.map((trip) => (
         <Item key={trip.id} variant="outline" className="relative">
           <div className="absolute top-2 right-2">
-            <Button variant="ghost" size="icon">
-              <Link
-                href={transactionRoute(trip.transaction.id)}
-                target="_blank"
-              >
-                <SquareArrowOutUpRight />
-              </Link>
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Link
+                    href={transactionRoute(trip.transaction.id)}
+                    target="_blank"
+                  >
+                    <SquareArrowOutUpRight />
+                  </Link>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Go to related transaction</TooltipContent>
+            </Tooltip>
           </div>
           <ItemContent>
             <ItemDescription>

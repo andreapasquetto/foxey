@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightLeft, Edit, MoreHorizontal } from "lucide-react";
+import { ArrowRightLeft, MoreHorizontal, SquarePen } from "lucide-react";
 import Link from "next/link";
 import { currencyFormatter } from "@/common/formatters";
 import { transactionsRoute, walletRoute } from "@/common/routes";
@@ -19,6 +19,11 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Wallet } from "@/db/types/finance";
 import { cn } from "@/lib/utils";
 import { ArchiveWallet } from "@/modules/finance/components/dialogs/archive-wallet";
@@ -30,11 +35,16 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
       <div className="absolute top-2 right-2 flex items-center gap-1">
         {wallet.isArchived && <Badge variant="secondary">Archived</Badge>}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>Quick Actions</TooltipContent>
+          </Tooltip>
           <DropdownMenuContent align="end" className="w-[250px]">
             <DropdownMenuItem asChild>
               <CopyToClipboardButton content={wallet.id} />
@@ -68,7 +78,7 @@ export function WalletCard({ wallet }: { wallet: Wallet }) {
                 asChild
               >
                 <Link href={walletRoute(wallet.id)} prefetch>
-                  Edit <Edit className="text-current" />
+                  Edit <SquarePen className="text-current" />
                 </Link>
               </Button>
             </DropdownMenuItem>

@@ -1,7 +1,7 @@
 "use client";
 
 import { format } from "date-fns";
-import { ChevronsRight, Edit, MoreHorizontal } from "lucide-react";
+import { ChevronsRight, MoreHorizontal, SquarePen } from "lucide-react";
 import Link from "next/link";
 import { rawCurrencyFormatter } from "@/common/formatters";
 import { usePagination } from "@/common/hooks/use-pagination";
@@ -140,7 +140,7 @@ export function TransactionList({
                         asChild
                       >
                         <Link href={transactionRoute(transaction.id)} prefetch>
-                          Edit <Edit className="text-current" />
+                          Edit <SquarePen className="text-current" />
                         </Link>
                       </Button>
                     </DropdownMenuItem>

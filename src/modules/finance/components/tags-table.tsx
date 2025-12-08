@@ -18,6 +18,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Transaction } from "@/db/types/finance";
 import { tagsGetAll } from "@/modules/finance/finance-actions";
 import {
@@ -78,11 +83,16 @@ export async function TagsTable() {
               </TableCell>
               <TableCell className="flex items-center justify-end gap-1">
                 <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm">
-                      <MoreHorizontal />
-                    </Button>
-                  </DropdownMenuTrigger>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="sm">
+                          <MoreHorizontal />
+                        </Button>
+                      </DropdownMenuTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>Quick Actions</TooltipContent>
+                  </Tooltip>
                   <DropdownMenuContent align="end" className="w-[250px]">
                     <DropdownMenuItem asChild>
                       <CopyToClipboardButton content={tag.id} />

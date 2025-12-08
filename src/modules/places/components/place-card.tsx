@@ -1,9 +1,9 @@
 import {
   ArrowRightLeft,
   Check,
-  Edit,
   MoreHorizontal,
   SquareArrowOutUpRight,
+  SquarePen,
   X,
 } from "lucide-react";
 import Link from "next/link";
@@ -27,6 +27,11 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Place } from "@/db/types/places";
 import { DeletePlace } from "@/modules/places/components/delete-place";
 
@@ -42,13 +47,17 @@ export function PlaceCard({ place }: { place: Place }) {
           )}
           Visited
         </Badge>
-
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>Quick Actions</TooltipContent>
+          </Tooltip>
           <DropdownMenuContent align="end" className="w-[250px]">
             <DropdownMenuItem asChild>
               <CopyToClipboardButton content={place.id} />
@@ -75,7 +84,7 @@ export function PlaceCard({ place }: { place: Place }) {
                 asChild
               >
                 <Link href={placeRoute(place.id)} prefetch>
-                  Edit <Edit className="text-current" />
+                  Edit <SquarePen className="text-current" />
                 </Link>
               </Button>
             </DropdownMenuItem>

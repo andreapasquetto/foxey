@@ -18,6 +18,11 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Service } from "@/db/types/mobility";
 
 export function ServiceList(props: { services: Service[] }) {
@@ -37,11 +42,16 @@ export function ServiceList(props: { services: Service[] }) {
             {service.notes && (
               <div className="absolute top-2 right-2">
                 <Dialog>
-                  <DialogTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <Notebook />
-                    </Button>
-                  </DialogTrigger>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <DialogTrigger asChild>
+                        <Button variant="ghost" size="icon">
+                          <Notebook />
+                        </Button>
+                      </DialogTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>View notes</TooltipContent>
+                  </Tooltip>
                   <DialogContent>
                     <DialogHeader>
                       <DialogTitle>Service notes</DialogTitle>

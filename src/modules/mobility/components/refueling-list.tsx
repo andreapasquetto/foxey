@@ -21,6 +21,11 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Refueling } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 
@@ -41,14 +46,19 @@ export function RefuelingList(props: { refuelings: Refueling[] }) {
         .map((refueling) => (
           <Item key={refueling.id} variant="outline" className="relative">
             <div className="absolute top-2 right-2">
-              <Button variant="ghost" size="icon">
-                <Link
-                  href={transactionRoute(refueling.transaction.id)}
-                  target="_blank"
-                >
-                  <SquareArrowOutUpRight />
-                </Link>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button variant="ghost" size="icon">
+                    <Link
+                      href={transactionRoute(refueling.transaction.id)}
+                      target="_blank"
+                    >
+                      <SquareArrowOutUpRight />
+                    </Link>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Go to related transaction</TooltipContent>
+              </Tooltip>
             </div>
             <ItemContent>
               <ItemDescription>

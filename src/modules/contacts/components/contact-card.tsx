@@ -34,6 +34,11 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type {
   Contact,
   ContactAddress,
@@ -58,11 +63,16 @@ export function ContactCard({
       <div className="absolute top-2 right-2 flex items-center gap-1">
         {contact.isArchived && <Badge variant="secondary">Archived</Badge>}
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm">
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="sm">
+                  <MoreHorizontal />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipContent>Quick Actions</TooltipContent>
+          </Tooltip>
           <DropdownMenuContent align="end" className="w-[250px]">
             <DropdownMenuItem asChild>
               <CopyToClipboardButton content={contact.id} />

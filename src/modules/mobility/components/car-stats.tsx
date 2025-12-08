@@ -15,6 +15,11 @@ import {
   ItemDescription,
   ItemTitle,
 } from "@/components/ui/item";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Inspection, Refueling, Service } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { FuelPriceChart } from "@/modules/mobility/components/charts/fuel-price-chart";
@@ -166,18 +171,25 @@ export function CarStats(props: {
                 : "-"}
             </ItemTitle>
             {stats.fuelConsumption.last && (
-              <Button
-                variant="outline"
-                size="icon"
-                className="absolute top-3 right-3 text-foreground"
-                onClick={() =>
-                  setFuelConsumptionFormat(
-                    fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L",
-                  )
-                }
-              >
-                <Calculator />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="absolute top-3 right-3 text-foreground"
+                    onClick={() =>
+                      setFuelConsumptionFormat(
+                        fuelConsumptionFormat === "km/L" ? "L/100km" : "km/L",
+                      )
+                    }
+                  >
+                    <Calculator />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  Change unit of <br /> measurement
+                </TooltipContent>
+              </Tooltip>
             )}
             {stats.fuelConsumption.avg && (
               <p className="text-sm text-muted-foreground">

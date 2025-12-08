@@ -50,6 +50,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { Contact } from "@/db/types/contacts";
 import type { Event } from "@/db/types/events";
 import type { Place, PlaceCategory } from "@/db/types/places";
@@ -126,22 +131,32 @@ export function MonthCalendar(props: {
           </div>
           <div className="flex items-center gap-2">
             <ButtonGroup>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-r-none"
-                onClick={() => goToPreviousYear()}
-              >
-                <ChevronsLeft />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-none"
-                onClick={() => goToPreviousMonth()}
-              >
-                <ChevronLeft />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-r-none"
+                    onClick={() => goToPreviousYear()}
+                  >
+                    <ChevronsLeft />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Previous Year</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-none"
+                    onClick={() => goToPreviousMonth()}
+                  >
+                    <ChevronLeft />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Previous Month</TooltipContent>
+              </Tooltip>
               <Button
                 variant="outline"
                 className="hidden rounded-none md:inline-flex"
@@ -149,29 +164,44 @@ export function MonthCalendar(props: {
               >
                 Today
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-none"
-                onClick={() => goToNextMonth()}
-              >
-                <ChevronRight />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="rounded-l-none"
-                onClick={() => goToNextYear()}
-              >
-                <ChevronsRight />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-none"
+                    onClick={() => goToNextMonth()}
+                  >
+                    <ChevronRight />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Next Month</TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="rounded-l-none"
+                    onClick={() => goToNextYear()}
+                  >
+                    <ChevronsRight />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Next Year</TooltipContent>
+              </Tooltip>
             </ButtonGroup>
             <Sheet open={showCreateSheet} onOpenChange={setShowCreateSheet}>
-              <SheetTrigger asChild>
-                <Button size="icon">
-                  <Plus />
-                </Button>
-              </SheetTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <SheetTrigger asChild>
+                    <Button size="icon">
+                      <Plus />
+                    </Button>
+                  </SheetTrigger>
+                </TooltipTrigger>
+                <TooltipContent>New</TooltipContent>
+              </Tooltip>
               <SheetContent>
                 <SheetHeader>
                   <SheetTitle>Create Event</SheetTitle>
