@@ -32,6 +32,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { placeRoute } from "@/common/routes";
 import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
+import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -210,6 +211,9 @@ export function MonthCalendar(props: {
                   categories={categories}
                   places={places}
                   selectedDay={selectedDay}
+                  onSuccess={() => {
+                    setShowCreateSheet(false);
+                  }}
                 />
               </SheetContent>
             </Sheet>
@@ -368,7 +372,7 @@ export function MonthCalendar(props: {
               ))}
             </ItemGroup>
           )}
-          {!!selectedDayEvents.length && (
+          {selectedDayEvents.length ? (
             <ItemGroup className="gap-2">
               {selectedDayEvents.map((event) => (
                 <Item key={event.id} variant="outline">
@@ -419,11 +423,8 @@ export function MonthCalendar(props: {
                 </Item>
               ))}
             </ItemGroup>
-          )}
-          {!selectedDayEvents.length && (
-            <p className="text-center text-sm text-muted-foreground">
-              There are no events.
-            </p>
+          ) : (
+            <EmptyStateMessage message="There are no events for this day." />
           )}
         </div>
       </section>

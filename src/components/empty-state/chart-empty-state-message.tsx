@@ -13,7 +13,9 @@ export function ChartEmptyStateMessage(props: { message?: string }) {
         <EmptyMedia variant="icon">
           <ScanSearch />
         </EmptyMedia>
-        <EmptyTitle>{props.message ?? "Not enough data."}</EmptyTitle>
+        <EmptyTitle className="text-base text-muted-foreground">
+          {props.message ?? "Not enough data."}
+        </EmptyTitle>
       </EmptyHeader>
     </Empty>
   );

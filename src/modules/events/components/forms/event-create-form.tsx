@@ -42,6 +42,7 @@ export function EventCreateForm(props: {
   categories: EventCategory[];
   places: Place[];
   selectedDay?: Date;
+  onSuccess?: () => void;
 }) {
   const { categories, places } = props;
 
@@ -58,7 +59,11 @@ export function EventCreateForm(props: {
   const mutation = useEventsCreateMutation();
 
   function onValidSubmit(values: CreateEventFormType) {
-    mutation.mutate(values);
+    mutation.mutate(values, {
+      onSuccess: () => {
+        props.onSuccess?.();
+      },
+    });
   }
 
   useEffect(() => {

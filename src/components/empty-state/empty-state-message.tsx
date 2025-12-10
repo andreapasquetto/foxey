@@ -13,7 +13,9 @@ export function EmptyStateMessage(props: { message?: string }) {
         <EmptyMedia variant="icon">
           <ScanSearch />
         </EmptyMedia>
-        <EmptyTitle>{props.message ?? "There are no records."}</EmptyTitle>
+        <EmptyTitle className="text-base text-muted-foreground">
+          {props.message ?? "There are no records."}
+        </EmptyTitle>
       </EmptyHeader>
     </Empty>
   );
