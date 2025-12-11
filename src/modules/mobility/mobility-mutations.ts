@@ -6,7 +6,6 @@ import {
   refuelingsCreate,
   servicesCreate,
 } from "@/modules/mobility/mobility-actions";
-import type { CreateCarFormType } from "@/modules/mobility/schemas/create-car-form-schema";
 import type { CreateHighwayTripFormType } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
 import type { CreateInspectionFormType } from "@/modules/mobility/schemas/create-inspection-form-schema";
 import type { CreateRefuelingFormType } from "@/modules/mobility/schemas/create-refueling-form-schema";
@@ -14,7 +13,8 @@ import type { CreateServiceFormType } from "@/modules/mobility/schemas/create-se
 
 export function useCarsCreateMutation() {
   return useMutation({
-    mutationFn: (car: CreateCarFormType) => carsCreate(car),
+    mutationKey: ["cars", "create"],
+    mutationFn: carsCreate,
   });
 }
 

@@ -1,10 +1,8 @@
 import {
   ArrowRightLeft,
-  Check,
   MoreHorizontal,
   SquareArrowOutUpRight,
   SquarePen,
-  X,
 } from "lucide-react";
 import Link from "next/link";
 import { placeRoute, transactionsRoute } from "@/common/routes";
@@ -13,7 +11,6 @@ import {
   buildGoogleMapsUrlWithCoordinates,
 } from "@/common/utils/places";
 import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -33,20 +30,19 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Place } from "@/db/types/places";
+import { cn } from "@/lib/utils";
 import { DeletePlace } from "@/modules/places/components/delete-place";
 
 export function PlaceCard({ place }: { place: Place }) {
   return (
-    <Item variant="outline" className="relative">
+    <Item
+      variant="outline"
+      className={cn(
+        "relative",
+        place.isVisited ? "border-green-700/50" : "border-red-700/50",
+      )}
+    >
       <div className="absolute top-2 right-2 flex items-center gap-1">
-        <Badge variant="outline">
-          {place.isVisited ? (
-            <Check className="text-green-500" />
-          ) : (
-            <X className="text-red-500" />
-          )}
-          Visited
-        </Badge>
         <DropdownMenu>
           <Tooltip>
             <TooltipTrigger asChild>

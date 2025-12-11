@@ -1,8 +1,6 @@
 import { format } from "date-fns";
-import { Check, X } from "lucide-react";
 import { numberFormatter } from "@/common/formatters";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import { Badge } from "@/components/ui/badge";
 import {
   Item,
   ItemContent,
@@ -10,6 +8,7 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 import type { Inspection } from "@/db/types/mobility";
+import { cn } from "@/lib/utils";
 
 export function InspectionList(props: { inspections: Inspection[] }) {
   const { inspections } = props;
@@ -26,17 +25,15 @@ export function InspectionList(props: { inspections: Inspection[] }) {
         .toReversed()
         .slice(0, 3)
         .map((inspection) => (
-          <Item key={inspection.id} variant="outline" className="relative">
-            <div className="absolute top-2 right-2">
-              <Badge variant="outline">
-                {inspection.isSuccessful ? (
-                  <Check className="text-green-500" />
-                ) : (
-                  <X className="text-red-500" />
-                )}
-                Passed
-              </Badge>
-            </div>
+          <Item
+            key={inspection.id}
+            variant="outline"
+            className={cn(
+              inspection.isSuccessful
+                ? "border-green-700/50"
+                : "border-red-700/50",
+            )}
+          >
             <ItemContent>
               <ItemDescription>
                 {format(inspection.datetime, "ccc y-MM-dd HH:mm")}
