@@ -1,5 +1,5 @@
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
-import { WalletCard } from "@/modules/finance/components/wallet-card";
+import { WalletCard } from "@/modules/finance/components/wallet-item";
 import { walletsGetAll } from "@/modules/finance/finance-actions";
 
 export async function WalletList() {

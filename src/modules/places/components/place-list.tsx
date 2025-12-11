@@ -4,7 +4,7 @@ import { usePagination } from "@/common/hooks/use-pagination";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
 import type { Place } from "@/db/types/places";
-import { PlaceCard } from "@/modules/places/components/place-card";
+import { PlaceCard } from "@/modules/places/components/place-item";
 
 export function PlaceList({
   places,

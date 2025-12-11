@@ -5,7 +5,7 @@ import { usePagination } from "@/common/hooks/use-pagination";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
 import type { Contact } from "@/db/types/contacts";
-import { ContactCard } from "@/modules/contacts/components/contact-card";
+import { ContactCard } from "@/modules/contacts/components/contact-item";
 
 export function ContactList({
   contacts,
