@@ -58,7 +58,7 @@ export function MonthlyCategoriesTable({
 
   return (
     <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-      <Accordion type="single" collapsible>
+      <Accordion type="single" collapsible defaultValue="income">
         <AccordionItem value="income">
           <AccordionTrigger>Income</AccordionTrigger>
           <AccordionContent>
@@ -93,7 +93,7 @@ export function MonthlyCategoriesTable({
           </AccordionContent>
         </AccordionItem>
       </Accordion>
-      <Accordion type="single" collapsible>
+      <Accordion type="single" collapsible defaultValue="expenses">
         <AccordionItem value="expenses">
           <AccordionTrigger>Expenses</AccordionTrigger>
           <AccordionContent>

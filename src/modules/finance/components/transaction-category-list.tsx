@@ -4,6 +4,7 @@ import { ArrowRightLeft, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { usePagination } from "@/common/hooks/use-pagination";
 import { transactionsRoute } from "@/common/routes";
+import { CopyToClipboardButton } from "@/components/copy-to-clipboard-button";
 import { EmptyStateMessage } from "@/components/empty-state/empty-state-message";
 import { Pagination } from "@/components/pagination";
 import { Button } from "@/components/ui/button";
@@ -44,6 +45,9 @@ export function TransactionCategoryList({
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-[250px]">
+                    <DropdownMenuItem asChild>
+                      <CopyToClipboardButton content={category.id} />
+                    </DropdownMenuItem>
                     <DropdownMenuItem asChild>
                       <Button
                         variant="ghost"

@@ -7,55 +7,45 @@ import {
   walletsCreate,
   walletsUpdate,
 } from "@/modules/finance/finance-actions";
-import type { CreateTransactionCategoryFormType } from "@/modules/finance/schemas/create-transaction-category-form-schema";
-import type { CreateTransactionFormType } from "@/modules/finance/schemas/create-transaction-form-schema";
-import type { CreateTransactionTemplateFormType } from "@/modules/finance/schemas/create-transaction-template-form-schema";
-import type { CreateWalletFormType } from "@/modules/finance/schemas/create-wallet-form-schema";
-import type { UpdateTransactionFormType } from "@/modules/finance/schemas/update-transaction-form-schema";
-import type { UpdateWalletFormType } from "@/modules/finance/schemas/update-wallet-form-schema";
 
 export function useWalletsCreateMutation() {
   return useMutation({
     mutationKey: ["wallets", "create"],
-    mutationFn: (wallet: CreateWalletFormType) => walletsCreate(wallet),
+    mutationFn: walletsCreate,
   });
 }
 
 export function useWalletsUpdateMutation() {
   return useMutation({
     mutationKey: ["wallets", "update"],
-    mutationFn: (wallet: UpdateWalletFormType) => walletsUpdate(wallet),
+    mutationFn: walletsUpdate,
   });
 }
 
 export function useTransactionCategoriesCreateMutation() {
   return useMutation({
     mutationKey: ["transaction-categories", "create"],
-    mutationFn: (category: CreateTransactionCategoryFormType) =>
-      transactionCategoriesCreate(category),
+    mutationFn: transactionCategoriesCreate,
   });
 }
 
 export function useTransactionTemplatesCreateMutation() {
   return useMutation({
     mutationKey: ["transaction-templates", "create"],
-    mutationFn: (template: CreateTransactionTemplateFormType) =>
-      transactionTemplatesCreate(template),
+    mutationFn: transactionTemplatesCreate,
   });
 }
 
 export function useTransactionsCreateMutation() {
   return useMutation({
     mutationKey: ["transactions", "create"],
-    mutationFn: (transaction: CreateTransactionFormType) =>
-      transactionsCreate(transaction),
+    mutationFn: transactionsCreate,
   });
 }
 
 export function useTransactionsUpdateMutation() {
   return useMutation({
     mutationKey: ["transactions", "update"],
-    mutationFn: (transaction: UpdateTransactionFormType) =>
-      transactionsUpdate(transaction),
+    mutationFn: transactionsUpdate,
   });
 }

@@ -34,7 +34,7 @@ export function TransactionTemplateList({
   const pagination = usePagination(total);
 
   if (!templates.length) {
-    return <EmptyStateMessage message="There are no transactions." />;
+    return <EmptyStateMessage message="There are no templates." />;
   }
 
   return (

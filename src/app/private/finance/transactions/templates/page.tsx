@@ -20,15 +20,17 @@ export const metadata: Metadata = {
 
 export default async function TransactionTemplatesPage(props: {
   searchParams?: Promise<{
+    query?: string;
     page?: string;
     size?: string;
   }>;
 }) {
   const searchParams = await props.searchParams;
-  const { page, size } = searchParams ?? {};
+  const { query, page, size } = searchParams ?? {};
 
   const { records, total } = await transactionTemplatesGetPaginated({
     paginate: fromUrlToPaginate({ page, size }),
+    query,
   });
 
   return (
