@@ -4,12 +4,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import Decimal from "decimal.js";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
-import { XCheckbox } from "@/components/form/x-checkbox";
-import { XInput } from "@/components/form/x-input";
-import { XSelect, XSelectOption } from "@/components/form/x-select";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -18,14 +16,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -57,10 +49,19 @@ export function RefuelingCreateForm({
   const form = useForm<CreateRefuelingFormType>({
     resolver: zodResolver(createRefuelingFormSchema),
     defaultValues: {
-      carId: car.id,
       datetime: startOfMinute(new Date()),
+      carId: car.id,
+      walletId: null,
+      placeId: null,
+      categoryId: null,
+      price: 0,
+      quantity: 0,
+      cost: 0,
       isFull: true,
       isNecessary: true,
+      trip: null,
+      odometer: 0,
+      description: null,
     },
   });
 
@@ -77,249 +78,375 @@ export function RefuelingCreateForm({
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-6 mx-auto sm:max-w-xl"
-      >
-        <div className="flex items-center justify-center">
-          <div className="w-full max-w-sm">
-            <FormItem className="w-full max-w-sm">
-              <FormLabel>Car</FormLabel>
-              <FormControl>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className={cn("justify-between px-3 py-2 font-normal")}
-                  disabled
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {car.year}
-                    </span>
-                    <div>
-                      {car.make} {car.model}
-                    </div>
-                  </div>
-                  <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                </Button>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </div>
+    <form
+      onSubmit={form.handleSubmit(onValidSubmit)}
+      onReset={() => form.reset()}
+      className="space-y-6 mx-auto sm:max-w-xl"
+    >
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-sm">
+          <Field className="w-full max-w-sm">
+            <FieldLabel>Car</FieldLabel>
+            <Button
+              variant="outline"
+              role="combobox"
+              className={cn("justify-between px-3 py-2 font-normal")}
+              disabled
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs text-muted-foreground">
+                  {car.year}
+                </span>
+                <div>
+                  {car.make} {car.model}
+                </div>
+              </div>
+              <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+            </Button>
+          </Field>
         </div>
-        <Separator />
-        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-          <FormField
+      </div>
+      <Separator />
+      <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
+        <Controller
+          control={form.control}
+          name="datetime"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Date</FieldLabel>
+              <DatePicker
+                value={field.value}
+                setValue={field.onChange}
+                includeTime
+              />
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="walletId"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Wallet</FieldLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "justify-between px-3 py-2 font-normal",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    {field.value
+                      ? wallets.find((wallet) => wallet.id === field.value)
+                          ?.name
+                      : "Select an option"}
+                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Search..." />
+                    <CommandList>
+                      <CommandEmpty>No option found.</CommandEmpty>
+                      <CommandGroup>
+                        {wallets.map((wallet) => (
+                          <CommandItem
+                            value={wallet.name}
+                            key={wallet.id}
+                            onSelect={() => {
+                              field.onChange(wallet.id);
+                            }}
+                          >
+                            <div>{wallet.name}</div>
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                wallet.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Category</FieldLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "justify-between px-3 py-2 font-normal",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    {field.value
+                      ? categories.find(
+                          (category) => category.id === field.value,
+                        )?.name
+                      : "Select an option"}
+                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Search..." />
+                    <CommandList>
+                      <CommandEmpty>No option found.</CommandEmpty>
+                      <CommandGroup>
+                        {categories.map((category) => (
+                          <CommandItem
+                            value={category.name}
+                            key={category.id}
+                            onSelect={() => {
+                              field.onChange(category.id);
+                            }}
+                          >
+                            <div>{category.name}</div>
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                category.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="placeId"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Place</FieldLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "justify-between px-3 py-2 font-normal",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    {field.value
+                      ? places.find((place) => place.id === field.value)?.name
+                      : "Select an option"}
+                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Search..." />
+                    <CommandList>
+                      <CommandEmpty>No option found.</CommandEmpty>
+                      <CommandGroup>
+                        {places.map((place) => (
+                          <CommandItem
+                            value={
+                              place.category
+                                ? `${place.category.name}-${place.name}`
+                                : place.name
+                            }
+                            key={place.id}
+                            onSelect={() => {
+                              field.onChange(place.id);
+                            }}
+                          >
+                            {place.name}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                place.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </Field>
+          )}
+        />
+        <div className="space-y-6 sm:space-y-0 sm:col-span-full gap-x-2 gap-y-6 sm:grid sm:grid-cols-3">
+          <Controller
             control={form.control}
-            name="datetime"
+            name="cost"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <DatePicker
-                    value={field.value}
-                    setValue={field.onChange}
-                    includeTime
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <Field>
+                <FieldLabel>Cost</FieldLabel>
+                <Input
+                  {...field}
+                  type="number"
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value.length ? +value : NaN);
+                  }}
+                />
+              </Field>
             )}
           />
-          <XSelect control={form.control} name="walletId" label="Wallet">
-            {wallets.map((w) => (
-              <XSelectOption key={w.id} value={w.id}>
-                {w.name}
-              </XSelectOption>
-            ))}
-          </XSelect>
-          <FormField
+          <Controller
             control={form.control}
-            name="categoryId"
+            name="price"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "justify-between px-3 py-2 font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value
-                          ? categories.find(
-                              (category) => category.id === field.value,
-                            )?.name
-                          : "Select an option"}
-                        <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="p-0">
-                    <Command>
-                      <CommandInput placeholder="Search..." />
-                      <CommandList>
-                        <CommandEmpty>No option found.</CommandEmpty>
-                        <CommandGroup>
-                          {categories.map((category) => (
-                            <CommandItem
-                              value={category.name}
-                              key={category.id}
-                              onSelect={() => {
-                                form.setValue("categoryId", category.id);
-                              }}
-                            >
-                              <div>{category.name}</div>
-                              <Check
-                                className={cn(
-                                  "ml-auto",
-                                  category.id === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
+              <Field>
+                <FieldLabel>Price</FieldLabel>
+                <Input
+                  {...field}
+                  type="number"
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value.length ? +value : NaN);
+                  }}
+                />
+              </Field>
             )}
           />
-          <FormField
+          <Controller
             control={form.control}
-            name="placeId"
+            name="quantity"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Place</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "justify-between px-3 py-2 font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value
-                          ? places.find((place) => place.id === field.value)
-                              ?.name
-                          : "Select an option"}
-                        <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="p-0">
-                    <Command>
-                      <CommandInput placeholder="Search..." />
-                      <CommandList>
-                        <CommandEmpty>No option found.</CommandEmpty>
-                        <CommandGroup>
-                          {places.map((place) => (
-                            <CommandItem
-                              value={
-                                place.category
-                                  ? `${place.category.name}-${place.name}`
-                                  : place.name
-                              }
-                              key={place.id}
-                              onSelect={() => {
-                                form.setValue("placeId", place.id);
-                              }}
-                            >
-                              {place.name}
-                              <Check
-                                className={cn(
-                                  "ml-auto",
-                                  place.id === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
+              <Field>
+                <FieldLabel>Quantity</FieldLabel>
+                <Input
+                  {...field}
+                  type="number"
+                  placeholder={quantityPlaceholder}
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value.length ? +value : NaN);
+                  }}
+                />
+              </Field>
             )}
           />
-          <div className="space-y-6 sm:space-y-0 sm:col-span-full gap-x-2 gap-y-6 sm:grid sm:grid-cols-3">
-            <XInput
-              type="number"
-              control={form.control}
-              name="cost"
-              step={0.01}
-              label="Cost (€)"
-              placeholder="0.00"
-            />
-            <XInput
-              type="number"
-              control={form.control}
-              name="price"
-              step={0.001}
-              label="Price (€/L)"
-              placeholder="0.000"
-            />
-            <XInput
-              type="number"
-              control={form.control}
-              name="quantity"
-              step={0.01}
-              label="Quantity (L)"
-              placeholder={quantityPlaceholder}
-            />
-          </div>
-          <XCheckbox control={form.control} name="isFull" label="Full Tank" />
-          <XCheckbox
-            control={form.control}
-            name="isNecessary"
-            label="Necessary"
-          />
-          <XInput
-            type="number"
-            control={form.control}
-            name="trip"
-            step={0.01}
-            label="Trip (km)"
-            placeholder="0.0"
-          />
-          <XInput
-            type="number"
-            control={form.control}
-            name="odometer"
-            step={1}
-            label="Odometer (km)"
-            placeholder="0"
-          />
-          <div className="sm:col-span-full">
-            <XInput
-              control={form.control}
-              name="description"
-              label="Description"
-            />
-          </div>
         </div>
-        <div className="flex items-center justify-end gap-3">
-          <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending && <Spinner />}
-            Submit
-          </Button>
+        <Controller
+          control={form.control}
+          name="isFull"
+          render={({ field }) => (
+            <Field orientation="horizontal">
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <FieldLabel htmlFor={field.name}>Full tank</FieldLabel>
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="isNecessary"
+          render={({ field }) => (
+            <Field orientation="horizontal">
+              <Checkbox
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+              <FieldLabel htmlFor={field.name}>Necessary</FieldLabel>
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="trip"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Trip</FieldLabel>
+              <Input
+                {...field}
+                type="number"
+                value={field.value ?? ""}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(value.length ? +value : null);
+                }}
+              />
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="odometer"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Odometer</FieldLabel>
+              <Input
+                {...field}
+                type="number"
+                value={field.value}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(value.length ? +value : NaN);
+                }}
+              />
+            </Field>
+          )}
+        />
+        <div className="sm:col-span-full">
+          <Controller
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <Field>
+                <FieldLabel>Description</FieldLabel>
+                <Input
+                  {...field}
+                  type="text"
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value.length ? value : null);
+                  }}
+                />
+              </Field>
+            )}
+          />
         </div>
-      </form>
-    </Form>
+      </div>
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          type="reset"
+          variant="outline"
+          disabled={!form.formState.isDirty || mutation.isPending}
+        >
+          Reset
+        </Button>
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending && <Spinner />}
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }

@@ -1,10 +1,10 @@
 import { z } from "zod";
-import { optionalStringSchema, requiredStringSchema } from "@/common/schemas";
+import { nullableStringSchema, requiredStringSchema } from "@/common/schemas";
 
 export const createPlaceFormSchema = z.object({
-  categoryId: z.uuid().optional(),
+  categoryId: z.uuid().nullable(),
   name: requiredStringSchema,
-  address: optionalStringSchema,
+  address: nullableStringSchema,
   isVisited: z.boolean(),
 });
 

@@ -1,17 +1,17 @@
 import { z } from "zod";
 import {
-  optionalStringSchema,
+  nullableStringSchema,
   positiveRequiredNumberSchema,
 } from "@/common/schemas";
 
 export const createTransactionFormSchema = z.object({
   datetime: z.date({ error: "Required" }),
-  categoryId: z.uuid().optional(),
-  placeId: z.uuid().optional(),
-  fromWalletId: z.uuid().optional(),
-  toWalletId: z.uuid().optional(),
+  categoryId: z.uuid().nullable(),
+  placeId: z.uuid().nullable(),
+  fromWalletId: z.uuid().nullable(),
+  toWalletId: z.uuid().nullable(),
   amount: positiveRequiredNumberSchema,
-  description: optionalStringSchema,
+  description: nullableStringSchema,
 });
 
 export type CreateTransactionFormType = z.infer<

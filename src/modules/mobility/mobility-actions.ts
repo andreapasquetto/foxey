@@ -86,7 +86,7 @@ export async function refuelingsCreate(params: {
       quantity: String(refueling.quantity),
       isFull: refueling.isFull,
       isNecessary: refueling.isNecessary,
-      trip: refueling.trip ? String(refueling.trip) : undefined,
+      trip: refueling.trip ? String(refueling.trip) : null,
       odometer: String(refueling.odometer),
     });
   });

@@ -1,6 +1,6 @@
 import { z } from "zod";
 import {
-  optionalStringSchema,
+  nullableStringSchema,
   positiveRequiredNumberSchema,
   requiredStringSchema,
 } from "@/common/schemas";
@@ -8,14 +8,14 @@ import {
 export const createHighwayTripFormSchema = z.object({
   datetime: z.date(),
   carId: z.uuid(),
-  walletId: z.uuid().optional(),
-  placeId: z.uuid().optional(),
+  walletId: z.uuid().nullable(),
+  placeId: z.uuid().nullable(),
   startingToll: requiredStringSchema,
   endingToll: requiredStringSchema,
   cost: positiveRequiredNumberSchema,
   distance: positiveRequiredNumberSchema,
   avgSpeed: positiveRequiredNumberSchema,
-  description: optionalStringSchema,
+  description: nullableStringSchema,
 });
 
 export type CreateHighwayTripFormType = z.infer<

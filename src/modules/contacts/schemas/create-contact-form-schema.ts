@@ -1,16 +1,12 @@
 import { z } from "zod";
-import { optionalStringSchema, requiredStringSchema } from "@/common/schemas";
+import { nullableStringSchema, requiredStringSchema } from "@/common/schemas";
 
 export const createContactFormSchema = z.object({
   fullName: requiredStringSchema,
-  dob: z.date().optional(),
-  ignoreDobYear: z.boolean(),
-  isArchived: z.boolean(),
+  subtitle: nullableStringSchema,
   isBusiness: z.boolean(),
-  subtitle: optionalStringSchema,
-  phoneNumbers: z.array(z.string()),
-  emails: z.array(z.string()),
-  addresses: z.array(z.string()),
+  dob: z.date().nullable(),
+  ignoreDobYear: z.boolean(),
 });
 
 export type CreateContactFormType = z.infer<typeof createContactFormSchema>;

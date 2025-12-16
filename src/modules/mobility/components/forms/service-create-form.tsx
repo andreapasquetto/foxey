@@ -3,18 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
-import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
@@ -32,6 +25,8 @@ export function ServiceCreateForm({ car }: { car: Car }) {
     defaultValues: {
       carId: car.id,
       datetime: startOfMinute(new Date()),
+      odometer: 0,
+      notes: null,
     },
   });
 
@@ -42,88 +37,102 @@ export function ServiceCreateForm({ car }: { car: Car }) {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-6 mx-auto sm:max-w-xl"
-      >
-        <div className="flex items-center justify-center">
-          <div className="w-full max-w-sm">
-            <FormItem className="w-full max-w-sm">
-              <FormLabel>Car</FormLabel>
-              <FormControl>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className={cn("justify-between px-3 py-2 font-normal")}
-                  disabled
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-xs text-muted-foreground">
-                      {car.year}
-                    </span>
-                    <div>
-                      {car.make} {car.model}
-                    </div>
-                  </div>
-                  <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                </Button>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </div>
+    <form
+      onSubmit={form.handleSubmit(onValidSubmit)}
+      onReset={() => form.reset()}
+      className="space-y-6 mx-auto sm:max-w-xl"
+    >
+      <div className="flex items-center justify-center">
+        <div className="w-full max-w-sm">
+          <Field className="w-full max-w-sm">
+            <FieldLabel>Car</FieldLabel>
+            <Button
+              variant="outline"
+              role="combobox"
+              className={cn("justify-between px-3 py-2 font-normal")}
+              disabled
+            >
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-xs text-muted-foreground">
+                  {car.year}
+                </span>
+                <div>
+                  {car.make} {car.model}
+                </div>
+              </div>
+              <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+            </Button>
+          </Field>
         </div>
-        <Separator />
-        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-          <FormField
+      </div>
+      <Separator />
+      <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
+        <Controller
+          control={form.control}
+          name="datetime"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Date</FieldLabel>
+              <DatePicker
+                value={field.value}
+                setValue={field.onChange}
+                includeTime
+              />
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="odometer"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Odometer</FieldLabel>
+              <Input
+                {...field}
+                type="number"
+                value={field.value}
+                onChange={(e) => {
+                  const value = e.target.value;
+                  field.onChange(value.length ? +value : NaN);
+                }}
+              />
+            </Field>
+          )}
+        />
+        <div className="sm:col-span-full">
+          <Controller
             control={form.control}
-            name="datetime"
+            name="notes"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Date</FormLabel>
-                <FormControl>
-                  <DatePicker
-                    value={field.value}
-                    setValue={field.onChange}
-                    includeTime
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
+              <Field>
+                <FieldLabel>Notes</FieldLabel>
+                <Textarea
+                  {...field}
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value.length ? value : null);
+                  }}
+                  className="font-mono"
+                />
+              </Field>
             )}
           />
-          <XInput
-            type="number"
-            control={form.control}
-            name="odometer"
-            step={1}
-            label="Odometer (km)"
-            placeholder="0"
-          />
-
-          <div className="sm:col-span-full">
-            <FormField
-              control={form.control}
-              name="notes"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Notes</FormLabel>
-                  <FormControl>
-                    <Textarea {...field} className="font-mono" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
         </div>
-        <div className="flex items-center justify-end gap-3">
-          <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending && <Spinner />}
-            Submit
-          </Button>
-        </div>
-      </form>
-    </Form>
+      </div>
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          type="reset"
+          variant="outline"
+          disabled={!form.formState.isDirty || mutation.isPending}
+        >
+          Reset
+        </Button>
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending && <Spinner />}
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }

@@ -1,13 +1,13 @@
 import { z } from "zod";
-import { optionalStringSchema, requiredStringSchema } from "@/common/schemas";
+import { nullableStringSchema, requiredStringSchema } from "@/common/schemas";
 
 export const createEventFormSchema = z.object({
   datetime: z.date({ error: "Required" }),
   isAllDay: z.boolean(),
   title: requiredStringSchema,
-  description: optionalStringSchema,
-  categoryId: z.uuid().optional(),
-  placeId: z.uuid().optional(),
+  description: nullableStringSchema,
+  categoryId: z.uuid().nullable(),
+  placeId: z.uuid().nullable(),
 });
 
 export type CreateEventFormType = z.infer<typeof createEventFormSchema>;

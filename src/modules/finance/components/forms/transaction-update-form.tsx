@@ -2,9 +2,8 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
-import { XInput } from "@/components/form/x-input";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -14,16 +13,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Popover,
   PopoverContent,
@@ -51,10 +42,10 @@ export function TransactionUpdateForm(props: {
     defaultValues: {
       id: transaction.id,
       datetime: transaction.datetime,
-      categoryId: transaction.category?.id,
-      placeId: transaction.place?.id,
+      categoryId: transaction.category?.id ?? null,
+      placeId: transaction.place?.id ?? null,
       amount: Number(transaction.amount),
-      description: transaction.description ?? undefined,
+      description: transaction.description ?? null,
     },
   });
 
@@ -65,197 +56,216 @@ export function TransactionUpdateForm(props: {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 mx-auto sm:max-w-xl"
-      >
-        <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-          <div className="sm:col-span-full">
-            <FormField
-              control={form.control}
-              name="datetime"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Date</FormLabel>
-                  <FormControl>
-                    <DatePicker
-                      value={field.value}
-                      setValue={field.onChange}
-                      includeTime
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormField
+    <form
+      onSubmit={form.handleSubmit(onSubmit)}
+      onReset={() => form.reset()}
+      className="space-y-6 mx-auto sm:max-w-xl"
+    >
+      <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
+        <div className="sm:col-span-full">
+          <Controller
             control={form.control}
-            name="categoryId"
+            name="datetime"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "justify-between px-3 py-2 font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value
-                          ? categories.find(
-                              (category) => category.id === field.value,
-                            )?.name
-                          : "Select an option"}
-                        <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="p-0" align="end">
-                    <Command>
-                      <CommandInput placeholder="Search..." />
-                      <CommandList>
-                        <CommandEmpty>No option found.</CommandEmpty>
-                        <CommandGroup>
-                          {categories.map((category) => (
-                            <CommandItem
-                              value={category.name}
-                              key={category.id}
-                              onSelect={() => {
-                                form.setValue("categoryId", category.id);
-                              }}
-                            >
-                              <div>{category.name}</div>
-                              <Check
-                                className={cn(
-                                  "ml-auto",
-                                  category.id === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
+              <Field>
+                <FieldLabel>Date</FieldLabel>
+                <DatePicker
+                  value={field.value}
+                  setValue={field.onChange}
+                  includeTime
+                />
+              </Field>
             )}
           />
-          <FormField
+        </div>
+        <Controller
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Category</FieldLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "justify-between px-3 py-2 font-normal",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    {field.value
+                      ? categories.find(
+                          (category) => category.id === field.value,
+                        )?.name
+                      : "Select an option"}
+                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Search..." />
+                    <CommandList>
+                      <CommandEmpty>No option found.</CommandEmpty>
+                      <CommandGroup>
+                        {categories.map((category) => (
+                          <CommandItem
+                            value={category.name}
+                            key={category.id}
+                            onSelect={() => {
+                              field.onChange(category.id);
+                            }}
+                          >
+                            <div>{category.name}</div>
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                category.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </Field>
+          )}
+        />
+        <Controller
+          control={form.control}
+          name="placeId"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Place</FieldLabel>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    className={cn(
+                      "justify-between px-3 py-2 font-normal",
+                      !field.value && "text-muted-foreground",
+                    )}
+                  >
+                    {field.value
+                      ? places.find((place) => place.id === field.value)?.name
+                      : "Select an option"}
+                    <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="p-0">
+                  <Command>
+                    <CommandInput placeholder="Search..." />
+                    <CommandList>
+                      <CommandEmpty>No option found.</CommandEmpty>
+                      <CommandGroup>
+                        {places.map((place) => (
+                          <CommandItem
+                            value={
+                              place.category
+                                ? `${place.category.name}-${place.name}`
+                                : place.name
+                            }
+                            key={place.id}
+                            onSelect={() => {
+                              field.onChange(place.id);
+                            }}
+                          >
+                            {place.name}
+                            <Check
+                              className={cn(
+                                "ml-auto",
+                                place.id === field.value
+                                  ? "opacity-100"
+                                  : "opacity-0",
+                              )}
+                            />
+                          </CommandItem>
+                        ))}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+            </Field>
+          )}
+        />
+        <Field>
+          <FieldLabel>From</FieldLabel>
+          <Input
+            id="fromWalletId"
+            disabled
+            readOnly
+            value={props.transaction.from?.name}
+          />
+        </Field>
+        <Field>
+          <FieldLabel>To</FieldLabel>
+          <Input
+            id="toWalletId"
+            disabled
+            readOnly
+            value={props.transaction.to?.name}
+          />
+        </Field>
+        <div className="sm:col-span-full">
+          <Controller
             control={form.control}
-            name="placeId"
+            name="amount"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Place</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="outline"
-                        role="combobox"
-                        className={cn(
-                          "justify-between px-3 py-2 font-normal",
-                          !field.value && "text-muted-foreground",
-                        )}
-                      >
-                        {field.value
-                          ? places.find((place) => place.id === field.value)
-                              ?.name
-                          : "Select an option"}
-                        <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="p-0" align="end">
-                    <Command>
-                      <CommandInput placeholder="Search..." />
-                      <CommandList>
-                        <CommandEmpty>No option found.</CommandEmpty>
-                        <CommandGroup>
-                          {places.map((place) => (
-                            <CommandItem
-                              value={
-                                place.category
-                                  ? `${place.category.name}-${place.name}`
-                                  : place.name
-                              }
-                              key={place.id}
-                              onSelect={() => {
-                                form.setValue("placeId", place.id);
-                              }}
-                            >
-                              {place.name}
-                              <Check
-                                className={cn(
-                                  "ml-auto",
-                                  place.id === field.value
-                                    ? "opacity-100"
-                                    : "opacity-0",
-                                )}
-                              />
-                            </CommandItem>
-                          ))}
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
+              <Field>
+                <FieldLabel>Amount</FieldLabel>
+                <Input
+                  {...field}
+                  type="number"
+                  value={field.value}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value.length ? +value : NaN);
+                  }}
+                />
+              </Field>
             )}
           />
-          <div className="space-y-2">
-            <Label htmlFor="fromWalletId">From</Label>
-            <Input
-              id="fromWalletId"
-              disabled
-              readOnly
-              value={props.transaction.from?.name}
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="toWalletId">To</Label>
-            <Input
-              id="toWalletId"
-              disabled
-              readOnly
-              value={props.transaction.to?.name}
-            />
-          </div>
-          <div className="sm:col-span-full">
-            <XInput
-              type="number"
-              control={form.control}
-              name="amount"
-              step={0.01}
-              label="Amount"
-              placeholder="0.00"
-            />
-          </div>
-          <div className="sm:col-span-full">
-            <XInput
-              control={form.control}
-              name="description"
-              label="Description"
-            />
-          </div>
         </div>
-        <div className="flex items-center justify-end gap-3">
-          <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending && <Spinner />}
-            Submit
-          </Button>
+        <div className="sm:col-span-full">
+          <Controller
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <Field>
+                <FieldLabel>Description</FieldLabel>
+                <Input
+                  {...field}
+                  type="text"
+                  value={field.value ?? ""}
+                  onChange={(e) => {
+                    const value = e.target.value;
+                    field.onChange(value.length ? value : null);
+                  }}
+                />
+              </Field>
+            )}
+          />
         </div>
-      </form>
-    </Form>
+      </div>
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          type="reset"
+          variant="outline"
+          disabled={!form.formState.isDirty || mutation.isPending}
+        >
+          Reset
+        </Button>
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending && <Spinner />}
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }

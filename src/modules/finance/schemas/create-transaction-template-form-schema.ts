@@ -3,11 +3,11 @@ import { requiredStringSchema } from "@/common/schemas";
 
 export const createTransactionTemplateFormSchema = z.object({
   name: requiredStringSchema,
-  categoryId: z.uuid().optional(),
-  placeId: z.uuid().optional(),
-  fromWalletId: z.uuid().optional(),
-  toWalletId: z.uuid().optional(),
-  amount: z.number().optional(),
+  categoryId: z.uuid().nullable(),
+  placeId: z.uuid().nullable(),
+  fromWalletId: z.uuid().nullable(),
+  toWalletId: z.uuid().nullable(),
+  amount: z.number().nullable(),
 });
 
 export type CreateTransactionTemplateFormType = z.infer<

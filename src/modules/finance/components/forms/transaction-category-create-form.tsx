@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { XInput } from "@/components/form/x-input";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useTransactionCategoriesCreateMutation } from "@/modules/finance/finance-mutations";
 import {
@@ -15,6 +15,9 @@ import {
 export function TransactionCategoryCreateForm() {
   const form = useForm<CreateTransactionCategoryFormType>({
     resolver: zodResolver(createTransactionCategoryFormSchema),
+    defaultValues: {
+      name: "",
+    },
   });
   const mutation = useTransactionCategoriesCreateMutation();
 
@@ -23,19 +26,34 @@ export function TransactionCategoryCreateForm() {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-6 mx-auto sm:max-w-xl"
-      >
-        <XInput control={form.control} name="name" label="Name" />
-        <div className="flex items-center justify-end gap-3">
-          <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending && <Spinner />}
-            Submit
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <form
+      onSubmit={form.handleSubmit(onValidSubmit)}
+      onReset={() => form.reset()}
+      className="space-y-6 mx-auto sm:max-w-xl"
+    >
+      <Controller
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <Field>
+            <FieldLabel>Name</FieldLabel>
+            <Input {...field} type="text" />
+          </Field>
+        )}
+      />
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          type="reset"
+          variant="outline"
+          disabled={!form.formState.isDirty || mutation.isPending}
+        >
+          Reset
+        </Button>
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending && <Spinner />}
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }

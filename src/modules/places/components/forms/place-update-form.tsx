@@ -2,10 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { XCheckbox } from "@/components/form/x-checkbox";
-import { XInput } from "@/components/form/x-input";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -14,14 +13,8 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Field, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -46,8 +39,8 @@ export function PlaceUpdateForm(props: {
     defaultValues: {
       id: place.id,
       name: place.name,
-      categoryId: place.category?.id,
-      address: place.address ?? undefined,
+      categoryId: place.category?.id ?? null,
+      address: place.address ?? null,
       isVisited: place.isVisited,
     },
   });
@@ -59,81 +52,118 @@ export function PlaceUpdateForm(props: {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onValidSubmit)}
-        className="space-y-6 max-w-lg mx-auto"
-      >
-        <FormField
-          control={form.control}
-          name="categoryId"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Category</FormLabel>
-              <Popover>
-                <PopoverTrigger asChild>
-                  <FormControl>
-                    <Button
-                      variant="outline"
-                      role="combobox"
-                      className={cn(
-                        "justify-between px-3 py-2 font-normal",
-                        !field.value && "text-muted-foreground",
-                      )}
-                    >
-                      {field.value
-                        ? categories.find(
-                            (category) => category.id === field.value,
-                          )?.name
-                        : "Select an option"}
-                      <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                    </Button>
-                  </FormControl>
-                </PopoverTrigger>
-                <PopoverContent className="p-0">
-                  <Command>
-                    <CommandInput placeholder="Search..." />
-                    <CommandList>
-                      <CommandEmpty>No option found.</CommandEmpty>
-                      <CommandGroup>
-                        {categories.map((category) => (
-                          <CommandItem
-                            value={category.name}
-                            key={category.id}
-                            onSelect={() => {
-                              form.setValue("categoryId", category.id);
-                            }}
-                          >
-                            <div>{category.name}</div>
-                            <Check
-                              className={cn(
-                                "ml-auto",
-                                category.id === field.value
-                                  ? "opacity-100"
-                                  : "opacity-0",
-                              )}
-                            />
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <XInput control={form.control} name="name" label="Name" />
-        <XInput control={form.control} name="address" label="Address" />
-        <XCheckbox control={form.control} name="isVisited" label="Visited" />
-        <div className="flex items-center justify-end gap-3">
-          <Button type="submit" disabled={mutation.isPending}>
-            {mutation.isPending && <Spinner />}
-            Submit
-          </Button>
-        </div>
-      </form>
-    </Form>
+    <form
+      onSubmit={form.handleSubmit(onValidSubmit)}
+      onReset={() => form.reset()}
+      className="space-y-6 max-w-lg mx-auto"
+    >
+      <Controller
+        control={form.control}
+        name="categoryId"
+        render={({ field }) => (
+          <Field>
+            <FieldLabel>Category</FieldLabel>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  role="combobox"
+                  className={cn(
+                    "justify-between px-3 py-2 font-normal",
+                    !field.value && "text-muted-foreground",
+                  )}
+                >
+                  {field.value
+                    ? categories.find((category) => category.id === field.value)
+                        ?.name
+                    : "Select an option"}
+                  <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="p-0">
+                <Command>
+                  <CommandInput placeholder="Search..." />
+                  <CommandList>
+                    <CommandEmpty>No option found.</CommandEmpty>
+                    <CommandGroup>
+                      {categories.map((category) => (
+                        <CommandItem
+                          value={category.name}
+                          key={category.id}
+                          onSelect={() => {
+                            field.onChange(category.id);
+                          }}
+                        >
+                          <div>{category.name}</div>
+                          <Check
+                            className={cn(
+                              "ml-auto",
+                              category.id === field.value
+                                ? "opacity-100"
+                                : "opacity-0",
+                            )}
+                          />
+                        </CommandItem>
+                      ))}
+                    </CommandGroup>
+                  </CommandList>
+                </Command>
+              </PopoverContent>
+            </Popover>
+          </Field>
+        )}
+      />
+      <Controller
+        control={form.control}
+        name="name"
+        render={({ field }) => (
+          <Field>
+            <FieldLabel>Name</FieldLabel>
+            <Input {...field} type="text" />
+          </Field>
+        )}
+      />
+      <Controller
+        control={form.control}
+        name="address"
+        render={({ field }) => (
+          <Field>
+            <FieldLabel>Address</FieldLabel>
+            <Input
+              {...field}
+              type="text"
+              value={field.value ?? ""}
+              onChange={(e) => {
+                const value = e.target.value;
+                field.onChange(value.length ? value : null);
+              }}
+            />
+          </Field>
+        )}
+      />
+      <Controller
+        control={form.control}
+        name="isVisited"
+        render={({ field }) => (
+          <Field orientation="horizontal">
+            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+            <FieldLabel htmlFor={field.name}>Visited</FieldLabel>
+          </Field>
+        )}
+      />
+      <div className="flex items-center justify-end gap-2">
+        <Button
+          type="reset"
+          variant="outline"
+          disabled={!form.formState.isDirty || mutation.isPending}
+        >
+          Reset
+        </Button>
+        <Button type="submit" disabled={mutation.isPending}>
+          {mutation.isPending && <Spinner />}
+          Submit
+        </Button>
+      </div>
+    </form>
   );
 }

@@ -1,6 +1,6 @@
 "use server";
 
-import { and, eq, ilike } from "drizzle-orm";
+import { and, desc, eq, ilike } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
@@ -96,7 +96,7 @@ export async function placesGetPaginated(params: {
       params.query ? ilike(places.name, `%${params.query}%`) : undefined,
       params.categoryId ? eq(places.categoryId, params.categoryId) : undefined,
     ),
-    orderBy: [places.name],
+    orderBy: [desc(places.isVisited), places.name],
   });
 
   return toPaginated(records, total);

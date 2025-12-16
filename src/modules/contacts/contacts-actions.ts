@@ -23,6 +23,8 @@ export async function contactsCreate(contact: CreateContactFormType) {
   await db.insert(contacts).values({
     userId,
     fullName: contact.fullName,
+    subtitle: contact.subtitle,
+    isBusiness: contact.isBusiness,
     dob: contact.dob
       ? formatISO(
           contact.ignoreDobYear
@@ -32,10 +34,7 @@ export async function contactsCreate(contact: CreateContactFormType) {
             representation: "date",
           },
         )
-      : undefined,
-    isArchived: contact.isArchived,
-    isBusiness: contact.isBusiness,
-    subtitle: contact.subtitle,
+      : null,
   });
   revalidatePath(contactsRoute);
   redirect(contactsRoute);
@@ -138,7 +137,7 @@ export async function contactsGetAll(
 }
 
 export async function contactsDelete(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   // TODO: delete addresses, emails and phoneNumbers
   await db
@@ -148,7 +147,7 @@ export async function contactsDelete(formData: FormData) {
 }
 
 export async function contactsArchive(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db
     .update(contacts)
@@ -158,7 +157,7 @@ export async function contactsArchive(formData: FormData) {
 }
 
 export async function contactsUnarchive(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db
     .update(contacts)
