@@ -1,31 +1,17 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { add } from "date-fns";
-import { Check, ChevronsUpDown } from "lucide-react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
 import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XComboboxField } from "@/components/form/x-combobox-field";
 import { XNullableTextField } from "@/components/form/x-nullable-text-field";
 import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { Field, FieldLabel } from "@/components/ui/field";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Spinner } from "@/components/ui/spinner";
 import type { EventCategory } from "@/db/types/events";
 import type { Place } from "@/db/types/places";
-import { cn } from "@/lib/utils";
 import { useEventsCreateMutation } from "@/modules/events/events-mutations";
 import {
   type CreateEventFormType,
@@ -97,120 +83,17 @@ export function EventCreateForm(props: {
         name="description"
         label="Description"
       />
-      <Controller
+      <XComboboxField
         control={form.control}
         name="categoryId"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Category</FieldLabel>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className={cn(
-                    "justify-between px-3 py-2 font-normal",
-                    !field.value && "text-muted-foreground",
-                  )}
-                >
-                  {field.value
-                    ? categories.find((category) => category.id === field.value)
-                        ?.name
-                    : "Select an option"}
-                  <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0">
-                <Command>
-                  <CommandInput placeholder="Search..." />
-                  <CommandList>
-                    <CommandEmpty>No option found.</CommandEmpty>
-                    <CommandGroup>
-                      {categories.map((category) => (
-                        <CommandItem
-                          value={category.name}
-                          key={category.id}
-                          onSelect={() => {
-                            field.onChange(category.id);
-                          }}
-                        >
-                          <div>{category.name}</div>
-                          <Check
-                            className={cn(
-                              "ml-auto",
-                              category.id === field.value
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </Field>
-        )}
+        options={categories.map((c) => ({ label: c.name, value: c.id }))}
+        label="Category"
       />
-      <Controller
+      <XComboboxField
         control={form.control}
         name="placeId"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Place</FieldLabel>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  role="combobox"
-                  className={cn(
-                    "justify-between px-3 py-2 font-normal",
-                    !field.value && "text-muted-foreground",
-                  )}
-                >
-                  {field.value
-                    ? places.find((place) => place.id === field.value)?.name
-                    : "Select an option"}
-                  <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="p-0">
-                <Command>
-                  <CommandInput placeholder="Search..." />
-                  <CommandList>
-                    <CommandEmpty>No option found.</CommandEmpty>
-                    <CommandGroup>
-                      {places.map((place) => (
-                        <CommandItem
-                          value={
-                            place.category
-                              ? `${place.category.name}-${place.name}`
-                              : place.name
-                          }
-                          key={place.id}
-                          onSelect={() => {
-                            field.onChange(place.id);
-                          }}
-                        >
-                          <div>{place.name}</div>
-                          <Check
-                            className={cn(
-                              "ml-auto",
-                              place.id === field.value
-                                ? "opacity-100"
-                                : "opacity-0",
-                            )}
-                          />
-                        </CommandItem>
-                      ))}
-                    </CommandGroup>
-                  </CommandList>
-                </Command>
-              </PopoverContent>
-            </Popover>
-          </Field>
-        )}
+        options={places.map((p) => ({ label: p.name, value: p.id }))}
+        label="Place"
       />
       <div className="flex items-center justify-end gap-2">
         <Button
