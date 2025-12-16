@@ -3,6 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { XNullableNumberField } from "@/components/form/x-nullable-number-field";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -13,7 +15,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -64,16 +65,7 @@ export function TransactionTemplateCreateForm({
     >
       <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
         <div className="sm:col-span-full">
-          <Controller
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Name</FieldLabel>
-                <Input {...field} type="text" />
-              </Field>
-            )}
-          />
+          <XTextField control={form.control} name="name" label="Name" />
         </div>
         <Controller
           control={form.control}
@@ -316,23 +308,10 @@ export function TransactionTemplateCreateForm({
           )}
         />
         <div className="sm:col-span-full">
-          <Controller
+          <XNullableNumberField
             control={form.control}
             name="amount"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Amount</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  value={field.value ?? ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : null);
-                  }}
-                />
-              </Field>
-            )}
+            label="Amount"
           />
         </div>
       </div>

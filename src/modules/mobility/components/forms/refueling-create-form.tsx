@@ -6,8 +6,11 @@ import Decimal from "decimal.js";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
+import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XNullableNumberField } from "@/components/form/x-nullable-number-field";
+import { XNullableTextField } from "@/components/form/x-nullable-text-field";
+import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -17,7 +20,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -295,142 +297,44 @@ export function RefuelingCreateForm({
           )}
         />
         <div className="space-y-6 sm:space-y-0 sm:col-span-full gap-x-2 gap-y-6 sm:grid sm:grid-cols-3">
-          <Controller
-            control={form.control}
-            name="cost"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Cost</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  value={field.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : NaN);
-                  }}
-                />
-              </Field>
-            )}
-          />
-          <Controller
+          <XNumberField control={form.control} name="cost" label="Cost (€)" />
+          <XNumberField
             control={form.control}
             name="price"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Price</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  value={field.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : NaN);
-                  }}
-                />
-              </Field>
-            )}
+            label="Price (€/L)"
           />
-          <Controller
+          <XNumberField
             control={form.control}
             name="quantity"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Quantity</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  placeholder={quantityPlaceholder}
-                  value={field.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : NaN);
-                  }}
-                />
-              </Field>
-            )}
+            label="Quantity (L)"
+            placeholder={quantityPlaceholder}
           />
         </div>
-        <Controller
+        <XCheckboxField
           control={form.control}
           name="isFull"
-          render={({ field }) => (
-            <Field orientation="horizontal">
-              <Checkbox
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-              <FieldLabel htmlFor={field.name}>Full tank</FieldLabel>
-            </Field>
-          )}
+          label="Full tank"
         />
-        <Controller
+        <XCheckboxField
           control={form.control}
           name="isNecessary"
-          render={({ field }) => (
-            <Field orientation="horizontal">
-              <Checkbox
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
-              <FieldLabel htmlFor={field.name}>Necessary</FieldLabel>
-            </Field>
-          )}
+          label="Necessary"
         />
-        <Controller
+        <XNullableNumberField
           control={form.control}
           name="trip"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Trip</FieldLabel>
-              <Input
-                {...field}
-                type="number"
-                value={field.value ?? ""}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  field.onChange(value.length ? +value : null);
-                }}
-              />
-            </Field>
-          )}
+          label="Trip (km)"
         />
-        <Controller
+        <XNumberField
           control={form.control}
           name="odometer"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Odometer</FieldLabel>
-              <Input
-                {...field}
-                type="number"
-                value={field.value}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  field.onChange(value.length ? +value : NaN);
-                }}
-              />
-            </Field>
-          )}
+          label="Odometer (km)"
         />
         <div className="sm:col-span-full">
-          <Controller
+          <XNullableTextField
             control={form.control}
             name="description"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Description</FieldLabel>
-                <Input
-                  {...field}
-                  type="text"
-                  value={field.value ?? ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? value : null);
-                  }}
-                />
-              </Field>
-            )}
+            label="Description"
           />
         </div>
       </div>

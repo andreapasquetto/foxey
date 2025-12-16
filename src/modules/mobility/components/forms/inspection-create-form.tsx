@@ -5,10 +5,10 @@ import { startOfMinute } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
+import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import type { Car } from "@/db/types/mobility";
@@ -81,37 +81,12 @@ export function InspectionCreateForm({ car }: { car: Car }) {
             </Field>
           )}
         />
-        <Controller
-          control={form.control}
-          name="odometer"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Odometer</FieldLabel>
-              <Input
-                {...field}
-                type="number"
-                value={field.value}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  field.onChange(value.length ? +value : NaN);
-                }}
-              />
-            </Field>
-          )}
-        />
+        <XNumberField control={form.control} name="odometer" label="Odometer" />
         <div className="sm:col-span-full">
-          <Controller
+          <XCheckboxField
             control={form.control}
             name="isSuccessful"
-            render={({ field }) => (
-              <Field orientation="horizontal">
-                <Checkbox
-                  checked={field.value}
-                  onCheckedChange={field.onChange}
-                />
-                <FieldLabel htmlFor={field.name}>Successful</FieldLabel>
-              </Field>
-            )}
+            label="Successful"
           />
         </div>
       </div>

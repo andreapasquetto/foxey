@@ -1,9 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
@@ -37,16 +38,7 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
       onReset={() => form.reset()}
       className="space-y-6 mx-auto sm:max-w-xl"
     >
-      <Controller
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Name</FieldLabel>
-            <Input {...field} type="text" />
-          </Field>
-        )}
-      />
+      <XTextField control={form.control} name="name" label="Name" />
       <Field>
         <FieldLabel>Initial amount</FieldLabel>
         <Input
@@ -56,15 +48,10 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
           readOnly
         />
       </Field>
-      <Controller
+      <XCheckboxField
         control={form.control}
         name="isArchived"
-        render={({ field }) => (
-          <Field orientation="horizontal">
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-            <FieldLabel htmlFor={field.name}>Archived</FieldLabel>
-          </Field>
-        )}
+        label="Archived"
       />
       <div className="flex items-center justify-end gap-2">
         <Button

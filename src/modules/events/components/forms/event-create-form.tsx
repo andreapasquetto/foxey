@@ -4,8 +4,10 @@ import { Check, ChevronsUpDown } from "lucide-react";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
+import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XNullableTextField } from "@/components/form/x-nullable-text-field";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -15,7 +17,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -89,43 +90,12 @@ export function EventCreateForm(props: {
           </Field>
         )}
       />
-      <Controller
-        control={form.control}
-        name="isAllDay"
-        render={({ field }) => (
-          <Field orientation="horizontal">
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-            <FieldLabel htmlFor={field.name}>All day</FieldLabel>
-          </Field>
-        )}
-      />
-      <Controller
-        control={form.control}
-        name="title"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Title</FieldLabel>
-            <Input {...field} type="text" />
-          </Field>
-        )}
-      />
-      <Controller
+      <XCheckboxField control={form.control} name="isAllDay" label="All day" />
+      <XTextField control={form.control} name="title" label="Title" />
+      <XNullableTextField
         control={form.control}
         name="description"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Description</FieldLabel>
-            <Input
-              {...field}
-              type="text"
-              value={field.value ?? ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                field.onChange(value.length ? value : null);
-              }}
-            />
-          </Field>
-        )}
+        label="Description"
       />
       <Controller
         control={form.control}

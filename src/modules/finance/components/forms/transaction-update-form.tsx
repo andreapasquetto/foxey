@@ -4,6 +4,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
+import { XNullableTextField } from "@/components/form/x-nullable-text-field";
+import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -198,58 +200,28 @@ export function TransactionUpdateForm(props: {
           <FieldLabel>From</FieldLabel>
           <Input
             id="fromWalletId"
+            value={props.transaction.from?.name}
             disabled
             readOnly
-            value={props.transaction.from?.name}
           />
         </Field>
         <Field>
           <FieldLabel>To</FieldLabel>
           <Input
             id="toWalletId"
+            value={props.transaction.to?.name}
             disabled
             readOnly
-            value={props.transaction.to?.name}
           />
         </Field>
         <div className="sm:col-span-full">
-          <Controller
-            control={form.control}
-            name="amount"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Amount</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  value={field.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : NaN);
-                  }}
-                />
-              </Field>
-            )}
-          />
+          <XNumberField control={form.control} name="amount" label="Amount" />
         </div>
         <div className="sm:col-span-full">
-          <Controller
+          <XNullableTextField
             control={form.control}
             name="description"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Description</FieldLabel>
-                <Input
-                  {...field}
-                  type="text"
-                  value={field.value ?? ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? value : null);
-                  }}
-                />
-              </Field>
-            )}
+            label="Description"
           />
         </div>
       </div>

@@ -5,9 +5,9 @@ import { startOfMinute } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
+import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
@@ -81,23 +81,10 @@ export function ServiceCreateForm({ car }: { car: Car }) {
             </Field>
           )}
         />
-        <Controller
+        <XNumberField
           control={form.control}
           name="odometer"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Odometer</FieldLabel>
-              <Input
-                {...field}
-                type="number"
-                value={field.value}
-                onChange={(e) => {
-                  const value = e.target.value;
-                  field.onChange(value.length ? +value : NaN);
-                }}
-              />
-            </Field>
-          )}
+          label="Odometer (km)"
         />
         <div className="sm:col-span-full">
           <Controller

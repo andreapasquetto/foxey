@@ -1,10 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useTransactionCategoriesCreateMutation } from "@/modules/finance/finance-mutations";
 import {
@@ -31,16 +30,7 @@ export function TransactionCategoryCreateForm() {
       onReset={() => form.reset()}
       className="space-y-6 mx-auto sm:max-w-xl"
     >
-      <Controller
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Name</FieldLabel>
-            <Input {...field} type="text" />
-          </Field>
-        )}
-      />
+      <XTextField control={form.control} name="name" label="Name" />
       <div className="flex items-center justify-end gap-2">
         <Button
           type="reset"

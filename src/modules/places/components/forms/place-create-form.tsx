@@ -3,8 +3,10 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
+import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XNullableTextField } from "@/components/form/x-nullable-text-field";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Command,
   CommandEmpty,
@@ -14,7 +16,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -109,44 +110,13 @@ export function PlaceCreateForm(props: { categories: PlaceCategory[] }) {
           </Field>
         )}
       />
-      <Controller
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Name</FieldLabel>
-            <Input {...field} type="text" />
-          </Field>
-        )}
-      />
-      <Controller
+      <XTextField control={form.control} name="name" label="Name" />
+      <XNullableTextField
         control={form.control}
         name="address"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Address</FieldLabel>
-            <Input
-              {...field}
-              type="text"
-              value={field.value ?? ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                field.onChange(value.length ? value : null);
-              }}
-            />
-          </Field>
-        )}
+        label="Address"
       />
-      <Controller
-        control={form.control}
-        name="isVisited"
-        render={({ field }) => (
-          <Field orientation="horizontal">
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-            <FieldLabel htmlFor={field.name}>Visited</FieldLabel>
-          </Field>
-        )}
-      />
+      <XCheckboxField control={form.control} name="isVisited" label="Visited" />
       <div className="flex items-center justify-end gap-2">
         <Button
           type="reset"

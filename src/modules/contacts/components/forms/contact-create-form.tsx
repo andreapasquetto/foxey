@@ -3,10 +3,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
+import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XNullableTextField } from "@/components/form/x-nullable-text-field";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useContactsCreateMutation } from "@/modules/contacts/contacts-mutations";
 import {
@@ -38,43 +39,16 @@ export function ContactCreateForm() {
       onReset={() => form.reset()}
       className="space-y-6 max-w-lg mx-auto"
     >
-      <Controller
-        control={form.control}
-        name="fullName"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Full name</FieldLabel>
-            <Input {...field} type="text" />
-          </Field>
-        )}
-      />
-      <Controller
+      <XTextField control={form.control} name="fullName" label="Full name" />
+      <XNullableTextField
         control={form.control}
         name="subtitle"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Subtitle</FieldLabel>
-            <Input
-              {...field}
-              type="text"
-              value={field.value ?? ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                field.onChange(value.length ? value : null);
-              }}
-            />
-          </Field>
-        )}
+        label="Subtitle"
       />
-      <Controller
+      <XCheckboxField
         control={form.control}
         name="isBusiness"
-        render={({ field }) => (
-          <Field orientation="horizontal">
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-            <FieldLabel htmlFor={field.name}>Business</FieldLabel>
-          </Field>
-        )}
+        label="Business"
       />
       <Controller
         control={form.control}
@@ -91,15 +65,10 @@ export function ContactCreateForm() {
           </Field>
         )}
       />
-      <Controller
+      <XCheckboxField
         control={form.control}
         name="ignoreDobYear"
-        render={({ field }) => (
-          <Field orientation="horizontal">
-            <Checkbox checked={field.value} onCheckedChange={field.onChange} />
-            <FieldLabel htmlFor={field.name}>Ignore year</FieldLabel>
-          </Field>
-        )}
+        label="Ignore year"
       />
       <div className="flex items-center justify-end gap-2">
         <Button

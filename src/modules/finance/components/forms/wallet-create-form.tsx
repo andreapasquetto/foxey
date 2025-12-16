@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { XNullableNumberField } from "@/components/form/x-nullable-number-field";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useWalletsCreateMutation } from "@/modules/finance/finance-mutations";
 import {
@@ -33,33 +33,11 @@ export function WalletCreateForm() {
       onReset={() => form.reset()}
       className="space-y-6 mx-auto sm:max-w-xl"
     >
-      <Controller
-        control={form.control}
-        name="name"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Name</FieldLabel>
-            <Input {...field} type="text" />
-          </Field>
-        )}
-      />
-      <Controller
+      <XTextField control={form.control} name="name" label="Name" />
+      <XNullableNumberField
         control={form.control}
         name="initialAmount"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Initial amount</FieldLabel>
-            <Input
-              {...field}
-              type="number"
-              value={field.value ?? ""}
-              onChange={(e) => {
-                const value = e.target.value;
-                field.onChange(value.length ? +value : null);
-              }}
-            />
-          </Field>
-        )}
+        label="Initial amount"
       />
       <div className="flex items-center justify-end gap-2">
         <Button

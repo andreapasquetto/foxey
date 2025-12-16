@@ -5,6 +5,9 @@ import { startOfMinute } from "date-fns";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
+import { XNullableTextField } from "@/components/form/x-nullable-text-field";
+import { XNumberField } from "@/components/form/x-number-field";
+import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -15,7 +18,6 @@ import {
   CommandList,
 } from "@/components/ui/command";
 import { Field, FieldLabel } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
@@ -162,100 +164,34 @@ export function HighwayTripCreateForm({
             </Field>
           )}
         />
-        <Controller
+        <XTextField
           control={form.control}
           name="startingToll"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Starting toll</FieldLabel>
-              <Input {...field} type="text" />
-            </Field>
-          )}
+          label="Starting toll"
         />
-        <Controller
+        <XTextField
           control={form.control}
           name="endingToll"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Ending toll</FieldLabel>
-              <Input {...field} type="text" />
-            </Field>
-          )}
+          label="Ending toll"
         />
         <div className="space-y-6 sm:space-y-0 sm:col-span-full gap-x-2 gap-y-6 sm:grid sm:grid-cols-3">
-          <Controller
-            control={form.control}
-            name="cost"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Cost</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  value={field.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : NaN);
-                  }}
-                />
-              </Field>
-            )}
-          />
-          <Controller
+          <XNumberField control={form.control} name="cost" label="Cost (€)" />
+          <XNumberField
             control={form.control}
             name="distance"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Distance</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  value={field.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : NaN);
-                  }}
-                />
-              </Field>
-            )}
+            label="Distance (km)"
           />
-          <Controller
+          <XNumberField
             control={form.control}
             name="avgSpeed"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Avg. speed</FieldLabel>
-                <Input
-                  {...field}
-                  type="number"
-                  value={field.value}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? +value : NaN);
-                  }}
-                />
-              </Field>
-            )}
+            label="Average speed (km/h)"
           />
         </div>
         <div className="sm:col-span-full">
-          <Controller
+          <XNullableTextField
             control={form.control}
             name="description"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Description</FieldLabel>
-                <Input
-                  {...field}
-                  type="text"
-                  value={field.value ?? ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? value : null);
-                  }}
-                />
-              </Field>
-            )}
+            label="Description"
           />
         </div>
       </div>
