@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 
 export default function ContactCreatePage() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 pb-24">
       <Heading1>New Contact</Heading1>
       <ContactCreateForm />
     </div>

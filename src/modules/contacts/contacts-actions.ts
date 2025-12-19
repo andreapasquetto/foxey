@@ -14,27 +14,56 @@ import { contactsRoute } from "@/common/routes";
 import { getCurrentUserId } from "@/common/utils/auth";
 import { IGNORE_DOB_YEAR } from "@/common/utils/dates";
 import { db } from "@/db/db";
-import { contacts } from "@/db/schemas/contacts";
+import {
+  contactAddresses,
+  contactEmails,
+  contactPhoneNumbers,
+  contacts,
+} from "@/db/schemas/contacts";
 import type { CreateContactFormType } from "@/modules/contacts/schemas/create-contact-form-schema";
 
 export async function contactsCreate(contact: CreateContactFormType) {
   const userId = await getCurrentUserId();
-  // TODO: add addresses, emails and phoneNumbers
-  await db.insert(contacts).values({
-    userId,
-    fullName: contact.fullName,
-    subtitle: contact.subtitle,
-    isBusiness: contact.isBusiness,
-    dob: contact.dob
-      ? formatISO(
-          contact.ignoreDobYear
-            ? setYear(contact.dob, IGNORE_DOB_YEAR)
-            : contact.dob,
-          {
-            representation: "date",
-          },
-        )
-      : null,
+  await db.transaction(async (tx) => {
+    const newId = (
+      await tx
+        .insert(contacts)
+        .values({
+          userId,
+          fullName: contact.fullName,
+          subtitle: contact.subtitle,
+          isBusiness: contact.isBusiness,
+          dob: contact.dob
+            ? formatISO(
+                contact.ignoreDobYear
+                  ? setYear(contact.dob, IGNORE_DOB_YEAR)
+                  : contact.dob,
+                {
+                  representation: "date",
+                },
+              )
+            : null,
+        })
+        .returning({ id: contacts.id })
+    )[0].id;
+    for (const phoneNumber of contact.phoneNumbers) {
+      await tx.insert(contactPhoneNumbers).values({
+        contactId: newId,
+        value: phoneNumber.value,
+      });
+    }
+    for (const email of contact.emails) {
+      await tx.insert(contactEmails).values({
+        contactId: newId,
+        value: email.value,
+      });
+    }
+    for (const address of contact.addresses) {
+      await tx.insert(contactAddresses).values({
+        contactId: newId,
+        value: address.value,
+      });
+    }
   });
   revalidatePath(contactsRoute);
   redirect(contactsRoute);
@@ -139,10 +168,16 @@ export async function contactsGetAll(
 export async function contactsDelete(formData: FormData) {
   const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
-  // TODO: delete addresses, emails and phoneNumbers
-  await db
-    .delete(contacts)
-    .where(and(eq(contacts.userId, userId), eq(contacts.id, id)));
+  await db.transaction(async (tx) => {
+    await tx.delete(contactAddresses).where(eq(contactAddresses.contactId, id));
+    await tx.delete(contactEmails).where(eq(contactEmails.contactId, id));
+    await tx
+      .delete(contactPhoneNumbers)
+      .where(eq(contactPhoneNumbers.contactId, id));
+    await tx
+      .delete(contacts)
+      .where(and(eq(contacts.userId, userId), eq(contacts.id, id)));
+  });
   revalidatePath(contactsRoute);
 }
 
