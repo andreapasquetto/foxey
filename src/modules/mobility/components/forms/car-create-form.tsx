@@ -34,7 +34,12 @@ export function CarCreateForm() {
       onReset={() => form.reset()}
       className="space-y-6 max-w-lg mx-auto"
     >
-      <XNumberField control={form.control} name="year" label="Year" />
+      <XNumberField
+        control={form.control}
+        name="year"
+        label="Year"
+        min={1900}
+      />
       <XTextField control={form.control} name="make" label="Make" />
       <XTextField control={form.control} name="model" label="Model" />
       <div className="flex items-center justify-end gap-2">

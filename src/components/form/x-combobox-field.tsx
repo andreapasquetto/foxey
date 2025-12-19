@@ -88,7 +88,7 @@ export function XComboboxField<
               <CommandGroup>
                 {options.map((option) => (
                   <CommandItem
-                    value={option.value}
+                    value={option.label}
                     key={option.value}
                     onSelect={() => {
                       if (field.value === option.value) {

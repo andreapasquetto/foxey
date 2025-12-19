@@ -38,6 +38,8 @@ export function WalletCreateForm() {
         control={form.control}
         name="initialAmount"
         label="Initial amount"
+        placeholder="0.01"
+        step={0.01}
       />
       <div className="flex items-center justify-end gap-2">
         <Button

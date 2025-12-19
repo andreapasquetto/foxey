@@ -23,6 +23,9 @@ export function XNullableNumberField<
   label,
   placeholder,
   description,
+  min,
+  step = 1,
+  max,
 }: {
   control: Control<TFieldValues>;
   name: TPath;
@@ -30,6 +33,9 @@ export function XNullableNumberField<
   label?: string;
   placeholder?: string;
   description?: string;
+  min?: number;
+  step?: number;
+  max?: number;
 }) {
   const { field, fieldState } = useController({
     control,
@@ -47,6 +53,9 @@ export function XNullableNumberField<
         type="number"
         id={fieldId}
         placeholder={placeholder}
+        min={min}
+        step={step}
+        max={max}
         aria-invalid={fieldState.invalid}
         value={field.value ?? ""}
         onChange={(e) => {

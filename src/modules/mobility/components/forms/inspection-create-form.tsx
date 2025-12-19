@@ -81,7 +81,12 @@ export function InspectionCreateForm({ car }: { car: Car }) {
             </Field>
           )}
         />
-        <XNumberField control={form.control} name="odometer" label="Odometer" />
+        <XNumberField
+          control={form.control}
+          name="odometer"
+          label="Odometer"
+          min={1}
+        />
         <div className="sm:col-span-full">
           <XCheckboxField
             control={form.control}

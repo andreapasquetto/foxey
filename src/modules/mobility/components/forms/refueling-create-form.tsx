@@ -131,17 +131,29 @@ export function RefuelingCreateForm({
           label="Place"
         />
         <div className="space-y-6 sm:space-y-0 sm:col-span-full gap-x-2 gap-y-6 sm:grid sm:grid-cols-3">
-          <XNumberField control={form.control} name="cost" label="Cost (€)" />
+          <XNumberField
+            control={form.control}
+            name="cost"
+            label="Cost (€)"
+            placeholder="0.01"
+            step={0.01}
+            min={0.01}
+          />
           <XNumberField
             control={form.control}
             name="price"
             label="Price (€/L)"
+            placeholder="0.001"
+            step={0.001}
+            min={0.001}
           />
           <XNumberField
             control={form.control}
             name="quantity"
             label="Quantity (L)"
             placeholder={quantityPlaceholder}
+            step={0.01}
+            min={0.01}
           />
         </div>
         <XCheckboxField
@@ -158,11 +170,15 @@ export function RefuelingCreateForm({
           control={form.control}
           name="trip"
           label="Trip (km)"
+          placeholder="0.1"
+          step={0.1}
+          min={0.1}
         />
         <XNumberField
           control={form.control}
           name="odometer"
           label="Odometer (km)"
+          min={1}
         />
         <div className="sm:col-span-full">
           <XNullableTextField

@@ -23,6 +23,9 @@ export function XNumberField<
   label,
   placeholder,
   description,
+  min,
+  step = 1,
+  max,
 }: {
   control: Control<TFieldValues>;
   name: TPath;
@@ -30,6 +33,9 @@ export function XNumberField<
   label?: string;
   placeholder?: string;
   description?: string;
+  min?: number;
+  step?: number;
+  max?: number;
 }) {
   const { field, fieldState } = useController({
     control,
@@ -47,8 +53,11 @@ export function XNumberField<
         type="number"
         id={fieldId}
         placeholder={placeholder}
+        min={min}
+        step={step}
+        max={max}
         aria-invalid={fieldState.invalid}
-        value={field.value}
+        value={Number.isNaN(field.value) ? "" : field.value}
         onChange={(e) => {
           const value = e.target.value;
           field.onChange(value.length ? +value : NaN);

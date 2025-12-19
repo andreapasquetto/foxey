@@ -81,6 +81,8 @@ export function TransactionTemplateCreateForm({
             control={form.control}
             name="amount"
             label="Amount"
+            placeholder="0.01"
+            step={0.01}
           />
         </div>
       </div>

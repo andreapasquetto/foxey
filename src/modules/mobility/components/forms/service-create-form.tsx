@@ -85,6 +85,7 @@ export function ServiceCreateForm({ car }: { car: Car }) {
           control={form.control}
           name="odometer"
           label="Odometer (km)"
+          min={1}
         />
         <div className="sm:col-span-full">
           <Controller

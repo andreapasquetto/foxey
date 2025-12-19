@@ -187,7 +187,14 @@ export function TransactionCreateForm({
           label="To"
         />
         <div className="sm:col-span-full">
-          <XNumberField control={form.control} name="amount" label="Amount" />
+          <XNumberField
+            control={form.control}
+            name="amount"
+            label="Amount"
+            placeholder="0.01"
+            step={0.01}
+            min={0.01}
+          />
         </div>
         <div className="sm:col-span-full">
           <XNullableTextField
