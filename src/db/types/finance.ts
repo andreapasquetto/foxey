@@ -1,4 +1,5 @@
 import type {
+  tagsGetAll,
   transactionCategoriesGetAll,
   transactionsGetById,
   transactionTemplatesGetAll,
@@ -16,3 +17,5 @@ export type TransactionTemplate = Awaited<
 >[number];
 
 export type Transaction = Awaited<ReturnType<typeof transactionsGetById>>;
+
+export type Tag = Awaited<ReturnType<typeof tagsGetAll>>[number];

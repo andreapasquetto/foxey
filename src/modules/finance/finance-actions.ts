@@ -22,6 +22,7 @@ import {
   tags,
   transactionCategories,
   transactions,
+  transactionTags,
   transactionTemplates,
   wallets,
 } from "@/db/schemas/finance";
@@ -297,28 +298,37 @@ export async function transactionsCreate(
 ) {
   const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
-    await tx.insert(transactions).values({
-      userId,
-      datetime: transaction.datetime,
-      fromWalletId: transaction.fromWalletId,
-      toWalletId: transaction.toWalletId,
-      categoryId: transaction.categoryId,
-      placeId: transaction.placeId,
-      amount: transaction.amount.toString(),
-      description: transaction.description,
-    });
-
+    const newId = (
+      await tx
+        .insert(transactions)
+        .values({
+          userId,
+          datetime: transaction.datetime,
+          fromWalletId: transaction.fromWalletId,
+          toWalletId: transaction.toWalletId,
+          categoryId: transaction.categoryId,
+          placeId: transaction.placeId,
+          amount: transaction.amount.toString(),
+          description: transaction.description,
+        })
+        .returning({ id: transactions.id })
+    )[0].id;
     if (transaction.fromWalletId) {
       await walletsUpdateAmount(tx, {
         walletId: transaction.fromWalletId,
         sub: new Decimal(transaction.amount),
       });
     }
-
     if (transaction.toWalletId) {
       await walletsUpdateAmount(tx, {
         walletId: transaction.toWalletId,
         add: new Decimal(transaction.amount),
+      });
+    }
+    if (transaction.tagId) {
+      await tx.insert(transactionTags).values({
+        transactionId: newId,
+        tagId: transaction.tagId,
       });
     }
   });
@@ -547,6 +557,17 @@ export async function transactionsUpdate(
   const existingTransactionAmount = new Decimal(existingTransaction.amount);
 
   await db.transaction(async (tx) => {
+    if (existingTransaction.tags.length) {
+      await tx
+        .delete(transactionTags)
+        .where(eq(transactionTags.transactionId, existingTransaction.id));
+    }
+    if (transaction.tagId) {
+      await tx.insert(transactionTags).values({
+        transactionId: existingTransaction.id,
+        tagId: transaction.tagId,
+      });
+    }
     await tx
       .update(transactions)
       .set({
@@ -583,7 +604,6 @@ export async function transactionsUpdate(
 export async function transactionsDelete(formData: FormData) {
   const id = z.string().parse(formData.get("id"));
   const transaction = await transactionsGetById(id);
-
   await db.transaction(async (tx) => {
     if (transaction.fromWalletId) {
       const wallet = await walletsGetById(transaction.fromWalletId);
@@ -594,7 +614,6 @@ export async function transactionsDelete(formData: FormData) {
         .set({ amount: amountToUpdate.toString() })
         .where(eq(wallets.id, wallet.id));
     }
-
     if (transaction.toWalletId) {
       const wallet = await walletsGetById(transaction.toWalletId);
       const walletAmount = new Decimal(wallet.amount);
@@ -604,7 +623,11 @@ export async function transactionsDelete(formData: FormData) {
         .set({ amount: amountToUpdate.toString() })
         .where(eq(wallets.id, wallet.id));
     }
-
+    if (transaction.tags.length) {
+      await tx
+        .delete(transactionTags)
+        .where(eq(transactionTags.transactionId, transaction.id));
+    }
     await tx.delete(transactions).where(eq(transactions.id, id));
   });
   revalidatePath(financeRoute);

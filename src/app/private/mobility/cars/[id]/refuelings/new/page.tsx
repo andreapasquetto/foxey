@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
 import {
+  tagsGetAll,
   transactionCategoriesGetAll,
   walletsGetAll,
 } from "@/modules/finance/finance-actions";
@@ -20,14 +21,16 @@ export default async function RefuelingCreatePage(props: {
   const wallets = await walletsGetAll();
   const categories = await transactionCategoriesGetAll();
   const places = await placesGetAll();
+  const tags = await tagsGetAll();
   return (
-    <div className="space-y-12">
+    <div className="space-y-12 pb-24">
       <Heading1>Add Refueling</Heading1>
       <RefuelingCreateForm
         car={car}
         wallets={wallets}
         categories={categories}
         places={places}
+        tags={tags}
       />
     </div>
   );

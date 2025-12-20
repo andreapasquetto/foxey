@@ -10,6 +10,7 @@ export const createHighwayTripFormSchema = z.object({
   carId: z.uuid(),
   walletId: z.uuid().nullable(),
   placeId: z.uuid().nullable(),
+  tagId: z.uuid().nullable(),
   startingToll: requiredStringSchema,
   endingToll: requiredStringSchema,
   cost: positiveRequiredNumberSchema,

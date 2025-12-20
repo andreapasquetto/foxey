@@ -18,15 +18,20 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { Field, FieldLabel } from "@/components/ui/field";
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from "@/components/ui/field";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import type {
+  Tag,
   TransactionCategory,
   TransactionTemplate,
   Wallet,
@@ -44,11 +49,13 @@ export function TransactionCreateForm({
   wallets,
   categories,
   places,
+  tags,
 }: {
   templates: TransactionTemplate[];
   wallets: Wallet[];
   categories: TransactionCategory[];
   places: Place[];
+  tags: Tag[];
 }) {
   const form = useForm<CreateTransactionFormType>({
     resolver: zodResolver(createTransactionFormSchema),
@@ -60,6 +67,8 @@ export function TransactionCreateForm({
       toWalletId: null,
       amount: 0.01,
       description: null,
+      // TODO: figure out if a transaction can have multiple tags (for now, it's not necessary)
+      tagId: null,
     },
   });
 
@@ -91,10 +100,10 @@ export function TransactionCreateForm({
     <form
       onSubmit={form.handleSubmit(onSubmit)}
       onReset={() => form.reset()}
-      className="space-y-6 mx-auto sm:max-w-xl"
+      className="mx-auto max-w-xl"
     >
-      <div className="flex items-center justify-center">
-        <Field className="w-full max-w-sm">
+      <FieldGroup>
+        <Field>
           <FieldLabel>Template</FieldLabel>
           <Popover>
             <PopoverTrigger asChild>
@@ -143,25 +152,21 @@ export function TransactionCreateForm({
             </PopoverContent>
           </Popover>
         </Field>
-      </div>
-      <Separator />
-      <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-        <div className="sm:col-span-full">
-          <Controller
-            control={form.control}
-            name="datetime"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Date</FieldLabel>
-                <DatePicker
-                  value={field.value}
-                  setValue={field.onChange}
-                  includeTime
-                />
-              </Field>
-            )}
-          />
-        </div>
+        <FieldSeparator />
+        <Controller
+          control={form.control}
+          name="datetime"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Date</FieldLabel>
+              <DatePicker
+                value={field.value}
+                setValue={field.onChange}
+                includeTime
+              />
+            </Field>
+          )}
+        />
         <XComboboxField
           control={form.control}
           name="categoryId"
@@ -186,37 +191,39 @@ export function TransactionCreateForm({
           options={wallets.map((w) => ({ label: w.name, value: w.id }))}
           label="To"
         />
-        <div className="sm:col-span-full">
-          <XNumberField
-            control={form.control}
-            name="amount"
-            label="Amount"
-            placeholder="0.01"
-            step={0.01}
-            min={0.01}
-          />
-        </div>
-        <div className="sm:col-span-full">
-          <XNullableTextField
-            control={form.control}
-            name="description"
-            label="Description"
-          />
-        </div>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={!form.formState.isDirty || mutation.isPending}
-        >
-          Reset
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending && <Spinner />}
-          Submit
-        </Button>
-      </div>
+        <XNumberField
+          control={form.control}
+          name="amount"
+          label="Amount"
+          placeholder="0.01"
+          step={0.01}
+          min={0.01}
+        />
+        <XNullableTextField
+          control={form.control}
+          name="description"
+          label="Description"
+        />
+        <XComboboxField
+          control={form.control}
+          name="tagId"
+          options={tags.map((t) => ({ label: t.name, value: t.id }))}
+          label="Tag"
+        />
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            type="reset"
+            variant="outline"
+            disabled={!form.formState.isDirty || mutation.isPending}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }

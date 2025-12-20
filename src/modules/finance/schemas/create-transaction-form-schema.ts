@@ -13,6 +13,7 @@ export const createTransactionFormSchema = z
     toWalletId: z.uuid().nullable(),
     amount: positiveRequiredNumberSchema,
     description: nullableStringSchema,
+    tagId: z.uuid().nullable(),
   })
   .superRefine((val, ctx) => {
     if (!val.fromWalletId && !val.toWalletId) {

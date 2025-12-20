@@ -7,10 +7,10 @@ import { XComboboxField } from "@/components/form/x-combobox-field";
 import { XNullableTextField } from "@/components/form/x-nullable-text-field";
 import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
-import type { Transaction, TransactionCategory } from "@/db/types/finance";
+import type { Tag, Transaction, TransactionCategory } from "@/db/types/finance";
 import type { Place } from "@/db/types/places";
 import { useTransactionsUpdateMutation } from "@/modules/finance/finance-mutations";
 import {
@@ -18,13 +18,17 @@ import {
   updateTransactionFormSchema,
 } from "@/modules/finance/schemas/update-transaction-form-schema";
 
-export function TransactionUpdateForm(props: {
+export function TransactionUpdateForm({
+  categories,
+  places,
+  tags,
+  transaction,
+}: {
   categories: TransactionCategory[];
   places: Place[];
+  tags: Tag[];
   transaction: Transaction;
 }) {
-  const { categories, places, transaction } = props;
-
   const form = useForm<UpdateTransactionFormType>({
     resolver: zodResolver(updateTransactionFormSchema),
     defaultValues: {
@@ -34,6 +38,8 @@ export function TransactionUpdateForm(props: {
       placeId: transaction.place?.id ?? null,
       amount: Number(transaction.amount),
       description: transaction.description ?? null,
+      // TODO: figure out if a transaction can have multiple tags (for now, it's not necessary)
+      tagId: transaction.tags.length ? transaction.tags[0].tag.id : null,
     },
   });
 
@@ -47,25 +53,23 @@ export function TransactionUpdateForm(props: {
     <form
       onSubmit={form.handleSubmit(onSubmit)}
       onReset={() => form.reset()}
-      className="space-y-6 mx-auto sm:max-w-xl"
+      className="mx-auto max-w-xl"
     >
-      <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-        <div className="sm:col-span-full">
-          <Controller
-            control={form.control}
-            name="datetime"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Date</FieldLabel>
-                <DatePicker
-                  value={field.value}
-                  setValue={field.onChange}
-                  includeTime
-                />
-              </Field>
-            )}
-          />
-        </div>
+      <FieldGroup>
+        <Controller
+          control={form.control}
+          name="datetime"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Date</FieldLabel>
+              <DatePicker
+                value={field.value}
+                setValue={field.onChange}
+                includeTime
+              />
+            </Field>
+          )}
+        />
         <XComboboxField
           control={form.control}
           name="categoryId"
@@ -82,7 +86,7 @@ export function TransactionUpdateForm(props: {
           <FieldLabel>From</FieldLabel>
           <Input
             id="fromWalletId"
-            value={props.transaction.from?.name}
+            value={transaction.from?.name}
             disabled
             readOnly
           />
@@ -91,42 +95,44 @@ export function TransactionUpdateForm(props: {
           <FieldLabel>To</FieldLabel>
           <Input
             id="toWalletId"
-            value={props.transaction.to?.name}
+            value={transaction.to?.name}
             disabled
             readOnly
           />
         </Field>
-        <div className="sm:col-span-full">
-          <XNumberField
-            control={form.control}
-            name="amount"
-            label="Amount"
-            placeholder="0.01"
-            step={0.01}
-            min={0.01}
-          />
-        </div>
-        <div className="sm:col-span-full">
-          <XNullableTextField
-            control={form.control}
-            name="description"
-            label="Description"
-          />
-        </div>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={!form.formState.isDirty || mutation.isPending}
-        >
-          Reset
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending && <Spinner />}
-          Submit
-        </Button>
-      </div>
+        <XNumberField
+          control={form.control}
+          name="amount"
+          label="Amount"
+          placeholder="0.01"
+          step={0.01}
+          min={0.01}
+        />
+        <XNullableTextField
+          control={form.control}
+          name="description"
+          label="Description"
+        />
+        <XComboboxField
+          control={form.control}
+          name="tagId"
+          options={tags.map((t) => ({ label: t.name, value: t.id }))}
+          label="Tag"
+        />
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            type="reset"
+            variant="outline"
+            disabled={!form.formState.isDirty || mutation.isPending}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }

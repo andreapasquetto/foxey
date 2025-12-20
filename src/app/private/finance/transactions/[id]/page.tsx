@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
 import { TransactionUpdateForm } from "@/modules/finance/components/forms/transaction-update-form";
 import {
+  tagsGetAll,
   transactionCategoriesGetAll,
   transactionsGetById,
 } from "@/modules/finance/finance-actions";
@@ -18,6 +19,7 @@ export default async function TransactionUpdatePage(props: {
 
   const categories = await transactionCategoriesGetAll();
   const places = await placesGetAll();
+  const tags = await tagsGetAll();
   const transaction = await transactionsGetById(id);
 
   return (
@@ -26,6 +28,7 @@ export default async function TransactionUpdatePage(props: {
       <TransactionUpdateForm
         categories={categories}
         places={places}
+        tags={tags}
         transaction={transaction}
       />
     </div>

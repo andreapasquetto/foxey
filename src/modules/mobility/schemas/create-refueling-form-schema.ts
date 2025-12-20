@@ -11,6 +11,7 @@ export const createRefuelingFormSchema = z.object({
   walletId: z.uuid().nullable(),
   placeId: z.uuid().nullable(),
   categoryId: z.uuid().nullable(),
+  tagId: z.uuid().nullable(),
   price: positiveRequiredNumberSchema,
   quantity: positiveRequiredNumberSchema,
   cost: positiveRequiredNumberSchema,

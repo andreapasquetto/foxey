@@ -11,6 +11,7 @@ export const updateTransactionFormSchema = z.object({
   placeId: z.uuid().nullable(),
   amount: positiveRequiredNumberSchema,
   description: nullableStringSchema,
+  tagId: z.uuid().nullable(),
 });
 
 export type UpdateTransactionFormType = z.infer<
