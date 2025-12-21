@@ -1,9 +1,10 @@
 "use client";
 
+import { Search } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useId } from "react";
 import { useSearchFilters } from "@/common/hooks/use-search-filters";
-import { Input } from "@/components/ui/input";
+import { InputGroup, InputGroupAddon, InputGroupInput } from "./ui/input-group";
 
 export function SearchFilter(props: {
   paramName?: string;
@@ -18,11 +19,16 @@ export function SearchFilter(props: {
   const paramName = props.paramName ?? "query";
 
   return (
-    <Input
-      id={id}
-      placeholder={props.placeholder ?? "Search..."}
-      defaultValue={searchParams.get(paramName)?.toString()}
-      onChange={(e) => handleSearch({ [paramName]: e.target.value })}
-    />
+    <InputGroup>
+      <InputGroupInput
+        id={id}
+        placeholder={props.placeholder ?? "Search..."}
+        defaultValue={searchParams.get(paramName)?.toString()}
+        onChange={(e) => handleSearch({ [paramName]: e.target.value })}
+      />
+      <InputGroupAddon>
+        <Search />
+      </InputGroupAddon>
+    </InputGroup>
   );
 }
