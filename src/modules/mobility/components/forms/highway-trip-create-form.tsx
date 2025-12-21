@@ -19,7 +19,7 @@ import {
   FieldSet,
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import type { Tag, Wallet } from "@/db/types/finance";
+import type { Tag, TransactionCategory, Wallet } from "@/db/types/finance";
 import type { Car } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { useHighwayTripsCreateMutation } from "@/modules/mobility/mobility-mutations";
@@ -31,9 +31,11 @@ import {
 export function HighwayTripCreateForm({
   car,
   wallets,
+  categories,
   tags,
 }: {
   car: Car;
+  categories: TransactionCategory[];
   wallets: Wallet[];
   tags: Tag[];
 }) {
@@ -42,15 +44,15 @@ export function HighwayTripCreateForm({
     defaultValues: {
       datetime: startOfMinute(new Date()),
       carId: car.id,
+      categoryId: null,
       walletId: null,
-      placeId: null,
       tagId: null,
+      description: null,
       startingToll: "",
       endingToll: "",
       cost: 0,
       distance: 0,
       avgSpeed: 0,
-      description: null,
     },
   });
 
@@ -109,6 +111,12 @@ export function HighwayTripCreateForm({
               name="walletId"
               options={wallets.map((w) => ({ label: w.name, value: w.id }))}
               label="Wallet"
+            />
+            <XComboboxField
+              control={form.control}
+              name="categoryId"
+              options={categories.map((c) => ({ label: c.name, value: c.id }))}
+              label="Category"
             />
             <XComboboxField
               control={form.control}

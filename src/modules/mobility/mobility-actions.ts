@@ -1,6 +1,5 @@
 "use server";
 
-import { Decimal } from "decimal.js";
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
@@ -16,8 +15,8 @@ import {
   services,
 } from "@/db/schemas/mobility";
 import {
+  transactionsCreateTx,
   transactionsGetByIdsMap,
-  walletsUpdateAmount,
 } from "@/modules/finance/finance-actions";
 import type { CreateCarFormType } from "@/modules/mobility/schemas/create-car-form-schema";
 import type { CreateHighwayTripFormType } from "@/modules/mobility/schemas/create-highway-trip-form-schema";
@@ -56,32 +55,20 @@ export async function refuelingsCreate(params: {
   refueling: CreateRefuelingFormType;
 }) {
   const { carId, refueling } = params;
-  const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
-    const newTransaction = (
-      await tx
-        .insert(transactions)
-        .values({
-          userId,
-          datetime: refueling.datetime,
-          fromWalletId: refueling.walletId,
-          placeId: refueling.placeId,
-          amount: refueling.cost.toString(),
-          description: refueling.description,
-        })
-        .returning({ id: transactions.id })
-    )[0];
-
-    if (refueling.walletId) {
-      await walletsUpdateAmount(tx, {
-        walletId: refueling.walletId,
-        sub: new Decimal(refueling.cost),
-      });
-    }
-
+    const newTransactionId = await transactionsCreateTx(tx, {
+      datetime: refueling.datetime,
+      categoryId: refueling.categoryId,
+      placeId: refueling.placeId,
+      fromWalletId: refueling.walletId,
+      toWalletId: null,
+      amount: refueling.cost,
+      description: refueling.description,
+      tagId: refueling.tagId,
+    });
     await tx.insert(refuelings).values({
       carId: refueling.carId,
-      transactionId: newTransaction.id,
+      transactionId: newTransactionId,
       price: String(refueling.price),
       quantity: String(refueling.quantity),
       isFull: refueling.isFull,
@@ -118,32 +105,20 @@ export async function highwayTripsCreate(params: {
   trip: CreateHighwayTripFormType;
 }) {
   const { carId, trip } = params;
-  const userId = await getCurrentUserId();
   await db.transaction(async (tx) => {
-    const newTransaction = (
-      await tx
-        .insert(transactions)
-        .values({
-          userId,
-          datetime: trip.datetime,
-          fromWalletId: trip.walletId,
-          amount: trip.cost.toString(),
-          placeId: trip.placeId,
-          description: trip.description,
-        })
-        .returning({ id: transactions.id })
-    )[0];
-
-    if (trip.walletId) {
-      await walletsUpdateAmount(tx, {
-        walletId: trip.walletId,
-        sub: new Decimal(trip.cost),
-      });
-    }
-
+    const newTransactionId = await transactionsCreateTx(tx, {
+      datetime: trip.datetime,
+      categoryId: trip.categoryId,
+      placeId: null,
+      fromWalletId: trip.walletId,
+      toWalletId: null,
+      amount: trip.cost,
+      description: trip.description,
+      tagId: trip.tagId,
+    });
     await tx.insert(highwayTrips).values({
       carId: trip.carId,
-      transactionId: newTransaction.id,
+      transactionId: newTransactionId,
       startingToll: trip.startingToll,
       endingToll: trip.endingToll,
       distance: String(trip.distance),

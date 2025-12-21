@@ -6,17 +6,17 @@ import {
 } from "@/common/schemas";
 
 export const createHighwayTripFormSchema = z.object({
-  datetime: z.date(),
+  datetime: z.date({ error: "Required" }),
   carId: z.uuid(),
+  categoryId: z.uuid().nullable(),
   walletId: z.uuid().nullable(),
-  placeId: z.uuid().nullable(),
   tagId: z.uuid().nullable(),
+  description: nullableStringSchema,
   startingToll: requiredStringSchema,
   endingToll: requiredStringSchema,
   cost: positiveRequiredNumberSchema,
   distance: positiveRequiredNumberSchema,
   avgSpeed: positiveRequiredNumberSchema,
-  description: nullableStringSchema,
 });
 
 export type CreateHighwayTripFormType = z.infer<

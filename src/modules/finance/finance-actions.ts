@@ -96,7 +96,7 @@ export async function walletsUpdate(wallet: UpdateWalletFormType) {
   redirect(financeRoute);
 }
 
-export async function walletsUpdateAmount(
+export async function walletsUpdateAmountTx(
   tx: DBTransaction,
   params: {
     walletId: string;
@@ -293,44 +293,52 @@ export async function tagsGetAll() {
   });
 }
 
-export async function transactionsCreate(
+export async function transactionsCreateTx(
+  tx: DBTransaction,
   transaction: CreateTransactionFormType,
 ) {
   const userId = await getCurrentUserId();
+  const newId = (
+    await tx
+      .insert(transactions)
+      .values({
+        userId,
+        datetime: transaction.datetime,
+        categoryId: transaction.categoryId,
+        placeId: transaction.placeId,
+        fromWalletId: transaction.fromWalletId,
+        toWalletId: transaction.toWalletId,
+        amount: transaction.amount.toString(),
+        description: transaction.description,
+      })
+      .returning({ id: transactions.id })
+  )[0].id;
+  if (transaction.fromWalletId) {
+    await walletsUpdateAmountTx(tx, {
+      walletId: transaction.fromWalletId,
+      sub: new Decimal(transaction.amount),
+    });
+  }
+  if (transaction.toWalletId) {
+    await walletsUpdateAmountTx(tx, {
+      walletId: transaction.toWalletId,
+      add: new Decimal(transaction.amount),
+    });
+  }
+  if (transaction.tagId) {
+    await tx.insert(transactionTags).values({
+      transactionId: newId,
+      tagId: transaction.tagId,
+    });
+  }
+  return newId;
+}
+
+export async function transactionsCreate(
+  transaction: CreateTransactionFormType,
+) {
   await db.transaction(async (tx) => {
-    const newId = (
-      await tx
-        .insert(transactions)
-        .values({
-          userId,
-          datetime: transaction.datetime,
-          fromWalletId: transaction.fromWalletId,
-          toWalletId: transaction.toWalletId,
-          categoryId: transaction.categoryId,
-          placeId: transaction.placeId,
-          amount: transaction.amount.toString(),
-          description: transaction.description,
-        })
-        .returning({ id: transactions.id })
-    )[0].id;
-    if (transaction.fromWalletId) {
-      await walletsUpdateAmount(tx, {
-        walletId: transaction.fromWalletId,
-        sub: new Decimal(transaction.amount),
-      });
-    }
-    if (transaction.toWalletId) {
-      await walletsUpdateAmount(tx, {
-        walletId: transaction.toWalletId,
-        add: new Decimal(transaction.amount),
-      });
-    }
-    if (transaction.tagId) {
-      await tx.insert(transactionTags).values({
-        transactionId: newId,
-        tagId: transaction.tagId,
-      });
-    }
+    await transactionsCreateTx(tx, transaction);
   });
   revalidatePath(financeRoute);
   redirect(financeRoute);
@@ -581,14 +589,14 @@ export async function transactionsUpdate(
 
     if (!existingTransactionAmount.equals(transactionAmount)) {
       if (existingTransaction.fromWalletId) {
-        await walletsUpdateAmount(tx, {
+        await walletsUpdateAmountTx(tx, {
           walletId: existingTransaction.fromWalletId,
           add: existingTransactionAmount,
           sub: transactionAmount,
         });
       }
       if (existingTransaction.toWalletId) {
-        await walletsUpdateAmount(tx, {
+        await walletsUpdateAmountTx(tx, {
           walletId: existingTransaction.toWalletId,
           add: transactionAmount,
           sub: existingTransactionAmount,

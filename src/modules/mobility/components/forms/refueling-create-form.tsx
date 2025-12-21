@@ -39,8 +39,8 @@ export function RefuelingCreateForm({
   tags,
 }: {
   car: Car;
-  wallets: Wallet[];
   categories: TransactionCategory[];
+  wallets: Wallet[];
   places: Place[];
   tags: Tag[];
 }) {
@@ -49,10 +49,11 @@ export function RefuelingCreateForm({
     defaultValues: {
       datetime: startOfMinute(new Date()),
       carId: car.id,
-      walletId: null,
-      placeId: null,
       categoryId: null,
+      placeId: null,
+      walletId: null,
       tagId: null,
+      description: null,
       price: 0,
       quantity: 0,
       cost: 0,
@@ -60,7 +61,6 @@ export function RefuelingCreateForm({
       isNecessary: true,
       trip: null,
       odometer: 0,
-      description: null,
     },
   });
 
