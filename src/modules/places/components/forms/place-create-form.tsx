@@ -7,6 +7,7 @@ import { XComboboxField } from "@/components/form/x-combobox-field";
 import { XNullableTextField } from "@/components/form/x-nullable-text-field";
 import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
+import { Field, FieldGroup } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import type { PlaceCategory } from "@/db/types/places";
 import { usePlacesCreateMutation } from "@/modules/places/places-mutations";
@@ -37,34 +38,40 @@ export function PlaceCreateForm(props: { categories: PlaceCategory[] }) {
     <form
       onSubmit={form.handleSubmit(onValidSubmit)}
       onReset={() => form.reset()}
-      className="space-y-6 max-w-lg mx-auto"
+      className="max-w-lg mx-auto"
     >
-      <XComboboxField
-        control={form.control}
-        name="categoryId"
-        options={categories.map((c) => ({ label: c.name, value: c.id }))}
-        label="Category"
-      />
-      <XTextField control={form.control} name="name" label="Name" />
-      <XNullableTextField
-        control={form.control}
-        name="address"
-        label="Address"
-      />
-      <XCheckboxField control={form.control} name="isVisited" label="Visited" />
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={!form.formState.isDirty || mutation.isPending}
-        >
-          Reset
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending && <Spinner />}
-          Submit
-        </Button>
-      </div>
+      <FieldGroup>
+        <XComboboxField
+          control={form.control}
+          name="categoryId"
+          options={categories.map((c) => ({ label: c.name, value: c.id }))}
+          label="Category"
+        />
+        <XTextField control={form.control} name="name" label="Name" />
+        <XNullableTextField
+          control={form.control}
+          name="address"
+          label="Address"
+        />
+        <XCheckboxField
+          control={form.control}
+          name="isVisited"
+          label="Visited"
+        />
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            type="reset"
+            variant="outline"
+            disabled={!form.formState.isDirty || mutation.isPending}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }

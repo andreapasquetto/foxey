@@ -6,6 +6,7 @@ import { XComboboxField } from "@/components/form/x-combobox-field";
 import { XNullableNumberField } from "@/components/form/x-nullable-number-field";
 import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
+import { Field, FieldGroup } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import type { TransactionCategory, Wallet } from "@/db/types/finance";
 import type { Place } from "@/db/types/places";
@@ -46,12 +47,10 @@ export function TransactionTemplateCreateForm({
     <form
       onSubmit={form.handleSubmit(onSubmit)}
       onReset={() => form.reset()}
-      className="space-y-6 mx-auto sm:max-w-xl"
+      className="mx-auto max-w-xl"
     >
-      <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-        <div className="sm:col-span-full">
-          <XTextField control={form.control} name="name" label="Name" />
-        </div>
+      <FieldGroup>
+        <XTextField control={form.control} name="name" label="Name" />
         <XComboboxField
           control={form.control}
           name="categoryId"
@@ -76,29 +75,27 @@ export function TransactionTemplateCreateForm({
           options={wallets.map((w) => ({ label: w.name, value: w.id }))}
           label="To"
         />
-        <div className="sm:col-span-full">
-          <XNullableNumberField
-            control={form.control}
-            name="amount"
-            label="Amount"
-            placeholder="0.01"
-            step={0.01}
-          />
-        </div>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={!form.formState.isDirty || mutation.isPending}
-        >
-          Reset
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending && <Spinner />}
-          Submit
-        </Button>
-      </div>
+        <XNullableNumberField
+          control={form.control}
+          name="amount"
+          label="Amount"
+          placeholder="0.01"
+          step={0.01}
+        />
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            type="reset"
+            variant="outline"
+            disabled={!form.formState.isDirty || mutation.isPending}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }

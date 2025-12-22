@@ -8,7 +8,7 @@ import { XComboboxField } from "@/components/form/x-combobox-field";
 import { XNullableTextField } from "@/components/form/x-nullable-text-field";
 import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import type { EventCategory } from "@/db/types/events";
 import type { Place } from "@/db/types/places";
@@ -58,56 +58,62 @@ export function EventCreateForm(props: {
     <form
       onSubmit={form.handleSubmit(onValidSubmit)}
       onReset={() => form.reset()}
-      className="space-y-6 mx-auto sm:max-w-xl"
+      className="mx-auto max-w-xl"
     >
-      <Controller
-        control={form.control}
-        name="datetime"
-        render={({ field }) => (
-          <Field>
-            <FieldLabel>Date</FieldLabel>
-            <DatePicker
-              includeTime
-              value={field.value ?? undefined}
-              setValue={(e) => {
-                field.onChange(e ?? null);
-              }}
-            />
-          </Field>
-        )}
-      />
-      <XCheckboxField control={form.control} name="isAllDay" label="All day" />
-      <XTextField control={form.control} name="title" label="Title" />
-      <XNullableTextField
-        control={form.control}
-        name="description"
-        label="Description"
-      />
-      <XComboboxField
-        control={form.control}
-        name="categoryId"
-        options={categories.map((c) => ({ label: c.name, value: c.id }))}
-        label="Category"
-      />
-      <XComboboxField
-        control={form.control}
-        name="placeId"
-        options={places.map((p) => ({ label: p.name, value: p.id }))}
-        label="Place"
-      />
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={!form.formState.isDirty || mutation.isPending}
-        >
-          Reset
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending && <Spinner />}
-          Submit
-        </Button>
-      </div>
+      <FieldGroup>
+        <Controller
+          control={form.control}
+          name="datetime"
+          render={({ field }) => (
+            <Field>
+              <FieldLabel>Date</FieldLabel>
+              <DatePicker
+                includeTime
+                value={field.value ?? undefined}
+                setValue={(e) => {
+                  field.onChange(e ?? null);
+                }}
+              />
+            </Field>
+          )}
+        />
+        <XCheckboxField
+          control={form.control}
+          name="isAllDay"
+          label="All day"
+        />
+        <XTextField control={form.control} name="title" label="Title" />
+        <XNullableTextField
+          control={form.control}
+          name="description"
+          label="Description"
+        />
+        <XComboboxField
+          control={form.control}
+          name="categoryId"
+          options={categories.map((c) => ({ label: c.name, value: c.id }))}
+          label="Category"
+        />
+        <XComboboxField
+          control={form.control}
+          name="placeId"
+          options={places.map((p) => ({ label: p.name, value: p.id }))}
+          label="Place"
+        />
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            type="reset"
+            variant="outline"
+            disabled={!form.formState.isDirty || mutation.isPending}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }

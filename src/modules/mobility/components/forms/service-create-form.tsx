@@ -7,8 +7,12 @@ import { Controller, useForm } from "react-hook-form";
 import { DatePicker } from "@/components/form/date-picker";
 import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
-import { Separator } from "@/components/ui/separator";
+import {
+  Field,
+  FieldGroup,
+  FieldLabel,
+  FieldSeparator,
+} from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import type { Car } from "@/db/types/mobility";
@@ -40,54 +44,50 @@ export function ServiceCreateForm({ car }: { car: Car }) {
     <form
       onSubmit={form.handleSubmit(onValidSubmit)}
       onReset={() => form.reset()}
-      className="space-y-6 mx-auto sm:max-w-xl"
+      className="mx-auto max-w-xl"
     >
-      <div className="flex items-center justify-center">
-        <div className="w-full max-w-sm">
-          <Field className="w-full max-w-sm">
-            <FieldLabel>Car</FieldLabel>
-            <Button
-              variant="outline"
-              role="combobox"
-              className={cn("justify-between px-3 py-2 font-normal")}
-              disabled
-            >
-              <div className="flex items-center gap-2">
-                <span className="font-mono text-xs text-muted-foreground">
-                  {car.year}
-                </span>
-                <div>
-                  {car.make} {car.model}
-                </div>
+      <FieldGroup>
+        <Field className="w-full max-w-sm">
+          <FieldLabel>Car</FieldLabel>
+          <Button
+            variant="outline"
+            role="combobox"
+            className={cn("justify-between px-3 py-2 font-normal")}
+            disabled
+          >
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs text-muted-foreground">
+                {car.year}
+              </span>
+              <div>
+                {car.make} {car.model}
               </div>
-              <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
-            </Button>
-          </Field>
-        </div>
-      </div>
-      <Separator />
-      <div className="grid grid-cols-1 gap-x-2 gap-y-6 sm:grid-cols-2">
-        <Controller
-          control={form.control}
-          name="datetime"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Date</FieldLabel>
-              <DatePicker
-                value={field.value}
-                setValue={field.onChange}
-                includeTime
-              />
-            </Field>
-          )}
-        />
-        <XNumberField
-          control={form.control}
-          name="odometer"
-          label="Odometer (km)"
-          min={1}
-        />
-        <div className="sm:col-span-full">
+            </div>
+            <ChevronsUpDown className="ml-2 shrink-0 opacity-50" />
+          </Button>
+        </Field>
+        <FieldSeparator />
+        <FieldGroup>
+          <Controller
+            control={form.control}
+            name="datetime"
+            render={({ field }) => (
+              <Field>
+                <FieldLabel>Date</FieldLabel>
+                <DatePicker
+                  value={field.value}
+                  setValue={field.onChange}
+                  includeTime
+                />
+              </Field>
+            )}
+          />
+          <XNumberField
+            control={form.control}
+            name="odometer"
+            label="Odometer (km)"
+            min={1}
+          />
           <Controller
             control={form.control}
             name="notes"
@@ -106,21 +106,21 @@ export function ServiceCreateForm({ car }: { car: Car }) {
               </Field>
             )}
           />
-        </div>
-      </div>
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={!form.formState.isDirty || mutation.isPending}
-        >
-          Reset
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending && <Spinner />}
-          Submit
-        </Button>
-      </div>
+        </FieldGroup>
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            type="reset"
+            variant="outline"
+            disabled={!form.formState.isDirty || mutation.isPending}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }

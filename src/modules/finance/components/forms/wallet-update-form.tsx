@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { XCheckboxField } from "@/components/form/x-checkbox-field";
 import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Field, FieldLabel } from "@/components/ui/field";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import type { Wallet } from "@/db/types/finance";
@@ -36,36 +36,38 @@ export function WalletUpdateForm(props: { wallet: Wallet }) {
     <form
       onSubmit={form.handleSubmit(onValidSubmit)}
       onReset={() => form.reset()}
-      className="space-y-6 mx-auto sm:max-w-xl"
+      className="mx-auto max-w-xl"
     >
-      <XTextField control={form.control} name="name" label="Name" />
-      <Field>
-        <FieldLabel>Initial amount</FieldLabel>
-        <Input
-          type="number"
-          value={props.wallet.initialAmount}
-          disabled
-          readOnly
+      <FieldGroup>
+        <XTextField control={form.control} name="name" label="Name" />
+        <Field>
+          <FieldLabel>Initial amount</FieldLabel>
+          <Input
+            type="number"
+            value={props.wallet.initialAmount}
+            disabled
+            readOnly
+          />
+        </Field>
+        <XCheckboxField
+          control={form.control}
+          name="isArchived"
+          label="Archived"
         />
-      </Field>
-      <XCheckboxField
-        control={form.control}
-        name="isArchived"
-        label="Archived"
-      />
-      <div className="flex items-center justify-end gap-2">
-        <Button
-          type="reset"
-          variant="outline"
-          disabled={!form.formState.isDirty || mutation.isPending}
-        >
-          Reset
-        </Button>
-        <Button type="submit" disabled={mutation.isPending}>
-          {mutation.isPending && <Spinner />}
-          Submit
-        </Button>
-      </div>
+        <Field orientation="horizontal" className="justify-end">
+          <Button
+            type="reset"
+            variant="outline"
+            disabled={!form.formState.isDirty || mutation.isPending}
+          >
+            Reset
+          </Button>
+          <Button type="submit" disabled={mutation.isPending}>
+            {mutation.isPending && <Spinner />}
+            Submit
+          </Button>
+        </Field>
+      </FieldGroup>
     </form>
   );
 }
