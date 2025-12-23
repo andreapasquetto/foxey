@@ -6,7 +6,7 @@ import { useState } from "react";
 import type { DateRange } from "react-day-picker";
 import { useSearchFilters } from "@/common/hooks/use-search-filters";
 import { ChipCombobox } from "@/components/form/chip-combobox";
-import { RangeDatePicker } from "@/components/form/range-date-picker";
+import { RangeDatePicker } from "@/components/range-date-picker";
 import { SearchFilter } from "@/components/search-filter";
 import type { TransactionCategory, Wallet } from "@/db/types/finance";
 import type { Place } from "@/db/types/places";

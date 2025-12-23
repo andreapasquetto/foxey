@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { add } from "date-fns";
 import { useEffect } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { DatePicker } from "@/components/form/date-picker";
+import { useForm } from "react-hook-form";
 import { XCheckboxField } from "@/components/form/x-checkbox-field";
 import { XComboboxField } from "@/components/form/x-combobox-field";
+import { XDatePickerField } from "@/components/form/x-date-picker-field";
 import { XNullableTextField } from "@/components/form/x-nullable-text-field";
 import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
-import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Field, FieldGroup } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import type { EventCategory } from "@/db/types/events";
 import type { Place } from "@/db/types/places";
@@ -58,24 +58,14 @@ export function EventCreateForm(props: {
     <form
       onSubmit={form.handleSubmit(onValidSubmit)}
       onReset={() => form.reset()}
-      className="mx-auto max-w-xl"
+      className=""
     >
       <FieldGroup>
-        <Controller
+        <XDatePickerField
           control={form.control}
           name="datetime"
-          render={({ field }) => (
-            <Field>
-              <FieldLabel>Date</FieldLabel>
-              <DatePicker
-                includeTime
-                value={field.value ?? undefined}
-                setValue={(e) => {
-                  field.onChange(e ?? null);
-                }}
-              />
-            </Field>
-          )}
+          label="Date and time"
+          includeTime
         />
         <XCheckboxField
           control={form.control}

@@ -207,14 +207,16 @@ export function MonthCalendar(props: {
                 <SheetHeader>
                   <SheetTitle>Create Event</SheetTitle>
                 </SheetHeader>
-                <EventCreateForm
-                  categories={categories}
-                  places={places}
-                  selectedDay={selectedDay}
-                  onSuccess={() => {
-                    setShowCreateSheet(false);
-                  }}
-                />
+                <div className="px-4">
+                  <EventCreateForm
+                    categories={categories}
+                    places={places}
+                    selectedDay={selectedDay}
+                    onSuccess={() => {
+                      setShowCreateSheet(false);
+                    }}
+                  />
+                </div>
               </SheetContent>
             </Sheet>
           </div>

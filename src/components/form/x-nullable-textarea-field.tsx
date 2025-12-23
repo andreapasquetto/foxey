@@ -13,9 +13,9 @@ import {
   FieldError,
   FieldLabel,
 } from "@/components/ui/field";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 
-export function XNullableTextField<
+export function XNullableTextareaField<
   TFieldValues extends FieldValues,
   TPath extends FieldPathByValue<TFieldValues, string | null>,
 >({
@@ -44,17 +44,16 @@ export function XNullableTextField<
   return (
     <Field data-invalid={fieldState.invalid}>
       {label && <FieldLabel htmlFor={fieldId}>{label}</FieldLabel>}
-      <Input
+      <Textarea
         {...field}
-        type="text"
-        id={fieldId}
-        placeholder={placeholder}
-        aria-invalid={fieldState.invalid}
         value={field.value ?? ""}
         onChange={(e) => {
           const value = e.target.value;
           field.onChange(value.length ? value : null);
         }}
+        aria-invalid={fieldState.invalid}
+        placeholder={placeholder}
+        className="font-mono"
       />
       {description && <FieldDescription>{description}</FieldDescription>}
       {fieldState.invalid && <FieldError errors={[fieldState.error]} />}

@@ -1,6 +1,5 @@
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import type * as React from "react";
 import type { DateRange } from "react-day-picker";
 import {
   type DateRangePresetCode,
@@ -46,12 +45,12 @@ export function RangeDatePicker({
             id="date"
             variant={"outline"}
             className={cn(
-              "shrink justify-start overflow-hidden text-left font-normal",
+              "shrink justify-start gap-2 overflow-hidden text-left font-normal",
               (!dateRange || (!dateRange.from && !dateRange.to)) &&
                 "text-muted-foreground",
             )}
           >
-            <CalendarIcon className="mr-2 shrink-0" />
+            <CalendarIcon className="text-muted-foreground shrink-0" />
             {dateRange?.from ? (
               dateRange.to ? (
                 <>

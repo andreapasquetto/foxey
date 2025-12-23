@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
-import { DatePicker } from "@/components/form/date-picker";
+import { useForm } from "react-hook-form";
 import { XComboboxField } from "@/components/form/x-combobox-field";
+import { XDatePickerField } from "@/components/form/x-date-picker-field";
 import { XNullableTextField } from "@/components/form/x-nullable-text-field";
 import { XNumberField } from "@/components/form/x-number-field";
 import { XTextField } from "@/components/form/x-text-field";
@@ -92,19 +92,11 @@ export function HighwayTripCreateForm({
         <FieldSet>
           <FieldLegend>Transaction</FieldLegend>
           <FieldGroup>
-            <Controller
+            <XDatePickerField
               control={form.control}
               name="datetime"
-              render={({ field }) => (
-                <Field>
-                  <FieldLabel>Date</FieldLabel>
-                  <DatePicker
-                    value={field.value}
-                    setValue={field.onChange}
-                    includeTime
-                  />
-                </Field>
-              )}
+              label="Date and time"
+              includeTime
             />
             <XComboboxField
               control={form.control}

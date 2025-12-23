@@ -2,19 +2,18 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Plus, X } from "lucide-react";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
-import { DatePicker } from "@/components/form/date-picker";
+import { useFieldArray, useForm } from "react-hook-form";
 import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XNullableDatePickerField } from "@/components/form/x-nullable-date-picker-field";
 import { XNullableTextField } from "@/components/form/x-nullable-text-field";
 import { XTextField } from "@/components/form/x-text-field";
 import { Button } from "@/components/ui/button";
 import {
   Field,
   FieldGroup,
-  FieldLabel,
   FieldLegend,
   FieldSeparator,
-  FieldSet,
+  FieldSet
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
 import {
@@ -102,20 +101,10 @@ export function ContactCreateForm() {
               name="isBusiness"
               label="Business"
             />
-            <Controller
+            <XNullableDatePickerField
               control={form.control}
               name="dob"
-              render={({ field }) => (
-                <Field>
-                  <FieldLabel>Date of Birth</FieldLabel>
-                  <DatePicker
-                    value={field.value ?? undefined}
-                    setValue={(e) => {
-                      field.onChange(e ?? null);
-                    }}
-                  />
-                </Field>
-              )}
+              label="Date of birth"
             />
             <XCheckboxField
               control={form.control}

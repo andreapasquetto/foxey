@@ -3,9 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
-import { DatePicker } from "@/components/form/date-picker";
+import { useForm } from "react-hook-form";
 import { XCheckboxField } from "@/components/form/x-checkbox-field";
+import { XDatePickerField } from "@/components/form/x-date-picker-field";
 import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -68,19 +68,11 @@ export function InspectionCreateForm({ car }: { car: Car }) {
         </Field>
         <FieldSeparator />
         <FieldGroup>
-          <Controller
+          <XDatePickerField
             control={form.control}
             name="datetime"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Date</FieldLabel>
-                <DatePicker
-                  value={field.value}
-                  setValue={field.onChange}
-                  includeTime
-                />
-              </Field>
-            )}
+            label="Date and time"
+            includeTime
           />
           <XNumberField
             control={form.control}

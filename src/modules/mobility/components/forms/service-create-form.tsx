@@ -3,8 +3,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { startOfMinute } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
-import { Controller, useForm } from "react-hook-form";
-import { DatePicker } from "@/components/form/date-picker";
+import { useForm } from "react-hook-form";
+import { XDatePickerField } from "@/components/form/x-date-picker-field";
+import { XNullableTextareaField } from "@/components/form/x-nullable-textarea-field";
 import { XNumberField } from "@/components/form/x-number-field";
 import { Button } from "@/components/ui/button";
 import {
@@ -14,7 +15,6 @@ import {
   FieldSeparator,
 } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
-import { Textarea } from "@/components/ui/textarea";
 import type { Car } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 import { useServicesCreateMutation } from "@/modules/mobility/mobility-mutations";
@@ -68,19 +68,11 @@ export function ServiceCreateForm({ car }: { car: Car }) {
         </Field>
         <FieldSeparator />
         <FieldGroup>
-          <Controller
+          <XDatePickerField
             control={form.control}
             name="datetime"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Date</FieldLabel>
-                <DatePicker
-                  value={field.value}
-                  setValue={field.onChange}
-                  includeTime
-                />
-              </Field>
-            )}
+            label="Date and time"
+            includeTime
           />
           <XNumberField
             control={form.control}
@@ -88,23 +80,10 @@ export function ServiceCreateForm({ car }: { car: Car }) {
             label="Odometer (km)"
             min={1}
           />
-          <Controller
+          <XNullableTextareaField
             control={form.control}
             name="notes"
-            render={({ field }) => (
-              <Field>
-                <FieldLabel>Notes</FieldLabel>
-                <Textarea
-                  {...field}
-                  value={field.value ?? ""}
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    field.onChange(value.length ? value : null);
-                  }}
-                  className="font-mono"
-                />
-              </Field>
-            )}
+            label="Notes"
           />
         </FieldGroup>
         <Field orientation="horizontal" className="justify-end">
