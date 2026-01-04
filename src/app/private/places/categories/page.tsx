@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { fromUrlToPaginate } from "@/common/pagination";
 import { SearchFilter } from "@/components/search-filter";
 import { Heading1 } from "@/components/typography";
-import { PlaceCategoryList } from "@/modules/places/components/place-category-list";
-import { placeCategoriesGetPaginated } from "@/modules/places/places-actions";
+import { PlaceCategoriesList } from "@/modules/places/components/place-categories-list";
+import { getPaginatedPlaceCategories } from "@/modules/places/server-actions";
 
 export const metadata: Metadata = {
   title: "Place Categories",
@@ -14,7 +14,7 @@ export default async function PlaceCategoriesPage(props: {
 }) {
   const searchParams = await props.searchParams;
   const { query, page, size } = searchParams ?? {};
-  const { records, total } = await placeCategoriesGetPaginated({
+  const { records, total } = await getPaginatedPlaceCategories({
     paginate: fromUrlToPaginate({ page, size }),
     query,
   });
@@ -26,7 +26,7 @@ export default async function PlaceCategoriesPage(props: {
         <div className="w-full sm:w-1/2 lg:w-1/3">
           <SearchFilter />
         </div>
-        <PlaceCategoryList categories={records} total={total} />
+        <PlaceCategoriesList categories={records} total={total} />
       </div>
     </div>
   );

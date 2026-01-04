@@ -18,7 +18,7 @@ import {
   getIncomingTransactions,
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
-} from "@/modules/finance/finance-utils";
+} from "@/modules/finance/utils";
 
 export function MonthlyStats({
   transactions,
@@ -70,15 +70,15 @@ export function MonthlyStats({
 
   return (
     <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
-      <IncomeCard
+      <IncomeItem
         current={totalAmounts.current.incoming}
         previous={totalAmounts.previous.incoming}
       />
-      <ExpensesCard
+      <ExpensesItem
         current={totalAmounts.current.outgoing}
         previous={totalAmounts.previous.outgoing}
       />
-      <SavingCard
+      <SavingsItem
         currentIncome={totalAmounts.current.incoming}
         currentSavings={savings.current}
         previousSavings={savings.previous}
@@ -87,7 +87,7 @@ export function MonthlyStats({
   );
 }
 
-function IncomeCard(props: { current: Decimal; previous: Decimal }) {
+function IncomeItem(props: { current: Decimal; previous: Decimal }) {
   const percentageFromPrevious = calculatePercentageChange(
     props.previous,
     props.current,
@@ -124,7 +124,7 @@ function IncomeCard(props: { current: Decimal; previous: Decimal }) {
   );
 }
 
-function ExpensesCard(props: { current: Decimal; previous: Decimal }) {
+function ExpensesItem(props: { current: Decimal; previous: Decimal }) {
   const percentageFromPrevious = calculatePercentageChange(
     props.previous,
     props.current,
@@ -161,7 +161,7 @@ function ExpensesCard(props: { current: Decimal; previous: Decimal }) {
   );
 }
 
-function SavingCard(props: {
+function SavingsItem(props: {
   currentIncome: Decimal;
   currentSavings: Decimal;
   previousSavings: Decimal;

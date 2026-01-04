@@ -24,16 +24,16 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Transaction } from "@/db/types/finance";
-import { tagsGetAll } from "@/modules/finance/finance-actions";
+import { getAllTags } from "@/modules/finance/server-actions";
 import {
   calculateTotal,
   getIncomingTransactions,
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
-} from "@/modules/finance/finance-utils";
+} from "@/modules/finance/utils";
 
 export async function TagsTable() {
-  const tags = await tagsGetAll();
+  const tags = await getAllTags();
 
   if (!tags.length) {
     return <EmptyStateMessage message="There are no tags." />;

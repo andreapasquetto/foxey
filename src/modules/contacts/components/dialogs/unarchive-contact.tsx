@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import type { Contact } from "@/db/types/contacts";
-import { contactsUnarchive } from "@/modules/contacts/contacts-actions";
+import { unarchiveContact } from "@/modules/contacts/server-actions";
 
 export function UnarchiveContact({ contact }: { contact: Contact }) {
   return (
@@ -34,7 +34,7 @@ export function UnarchiveContact({ contact }: { contact: Contact }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <form
-            action={contactsUnarchive}
+            action={unarchiveContact}
             className="flex items-center justify-center gap-3"
           >
             <input type="hidden" name="id" value={contact.id} />

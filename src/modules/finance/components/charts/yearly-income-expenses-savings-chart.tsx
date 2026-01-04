@@ -10,7 +10,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { Transaction } from "@/db/types/finance";
-import { generateYearIncomeExpensesSavingsChartData } from "@/modules/finance/finance-utils";
+import { generateYearIncomeExpensesSavingsChartData } from "@/modules/finance/utils";
 
 const chartConfig = {
   income: {

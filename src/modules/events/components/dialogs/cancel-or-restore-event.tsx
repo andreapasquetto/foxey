@@ -6,12 +6,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Event } from "@/db/types/events";
-import { eventsToggleCancel } from "@/modules/events/events-actions";
+import { cancelOrRestoreEvent } from "@/modules/events/server-actions";
 
 export function CancelOrRestoreEvent({ event }: { event: Event }) {
   return (
     <form
-      action={eventsToggleCancel}
+      action={cancelOrRestoreEvent}
       className="ml-auto flex items-center gap-1"
     >
       <input type="hidden" name="id" value={event.id} />

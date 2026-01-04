@@ -14,10 +14,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import { transactionsGetLatest } from "@/modules/finance/finance-actions";
+import { getLatestTransactions } from "@/modules/finance/server-actions";
 
 export async function LatestTransactions() {
-  const transactions = await transactionsGetLatest();
+  const transactions = await getLatestTransactions();
 
   if (!transactions.length) {
     return <EmptyStateMessage message="There are no transactions." />;

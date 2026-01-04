@@ -1,28 +1,28 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
-import { TransactionCreateForm } from "@/modules/finance/components/forms/transaction-create-form";
+import { CreateTransactionForm } from "@/modules/finance/components/forms/create-transaction-form";
 import {
-  tagsGetAll,
-  transactionCategoriesGetAll,
-  transactionTemplatesGetAll,
-  walletsGetAll,
-} from "@/modules/finance/finance-actions";
-import { placesGetAll } from "@/modules/places/places-actions";
+  getAllTags,
+  getAllTransactionCategories,
+  getAllTransactionTemplates,
+  getAllWallets,
+} from "@/modules/finance/server-actions";
+import { getAllPlaces } from "@/modules/places/server-actions";
 
 export const metadata: Metadata = {
   title: "New Transaction",
 };
 
-export default async function TransactionCreatePage() {
-  const templates = await transactionTemplatesGetAll();
-  const wallets = await walletsGetAll();
-  const categories = await transactionCategoriesGetAll();
-  const places = await placesGetAll();
-  const tags = await tagsGetAll();
+export default async function NewTransactionPage() {
+  const templates = await getAllTransactionTemplates();
+  const wallets = await getAllWallets();
+  const categories = await getAllTransactionCategories();
+  const places = await getAllPlaces();
+  const tags = await getAllTags();
   return (
     <div className="space-y-12 pb-24">
       <Heading1>New Transaction</Heading1>
-      <TransactionCreateForm
+      <CreateTransactionForm
         templates={templates}
         wallets={wallets}
         categories={categories}

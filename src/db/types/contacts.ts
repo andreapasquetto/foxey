@@ -1,15 +1,15 @@
-import type { contactsGetAll } from "@/modules/contacts/contacts-actions";
+import type { getAllContacts } from "@/modules/contacts/server-actions";
 
-export type Contact = Awaited<ReturnType<typeof contactsGetAll>>[number];
+export type Contact = Awaited<ReturnType<typeof getAllContacts>>[number];
 
 export type ContactPhoneNumber = Awaited<
-  ReturnType<typeof contactsGetAll>
+  ReturnType<typeof getAllContacts>
 >[number]["phoneNumbers"][number];
 
 export type ContactEmail = Awaited<
-  ReturnType<typeof contactsGetAll>
+  ReturnType<typeof getAllContacts>
 >[number]["emails"][number];
 
 export type ContactAddress = Awaited<
-  ReturnType<typeof contactsGetAll>
+  ReturnType<typeof getAllContacts>
 >[number]["addresses"][number];

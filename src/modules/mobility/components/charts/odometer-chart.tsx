@@ -9,7 +9,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { Inspection, Refueling, Service } from "@/db/types/mobility";
-import { generateOdometerChartData } from "@/modules/mobility/mobility-utils";
+import { generateOdometerChartData } from "@/modules/mobility/utils";
 
 const chartConfig = {
   refueling: {

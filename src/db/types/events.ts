@@ -1,8 +1,8 @@
-import type { eventsGetAll } from "@/modules/events/events-actions";
+import type { getAllEvents } from "@/modules/events/server-actions";
 
 export type EventCategory = {
   id: string;
   name: string;
 };
 
-export type Event = Awaited<ReturnType<typeof eventsGetAll>>[number];
+export type Event = Awaited<ReturnType<typeof getAllEvents>>[number];

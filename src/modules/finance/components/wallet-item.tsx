@@ -29,7 +29,7 @@ import { cn } from "@/lib/utils";
 import { ArchiveWallet } from "@/modules/finance/components/dialogs/archive-wallet";
 import { UnarchiveWallet } from "@/modules/finance/components/dialogs/unarchive-wallet";
 
-export function WalletCard({ wallet }: { wallet: Wallet }) {
+export function WalletItem({ wallet }: { wallet: Wallet }) {
   return (
     <Item key={wallet.id} variant="outline" className="relative">
       <div className="absolute top-2 right-2 flex items-center gap-1">

@@ -11,8 +11,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TransactionTemplateList } from "@/modules/finance/components/transaction-template-list";
-import { transactionTemplatesGetPaginated } from "@/modules/finance/finance-actions";
+import { TransactionTemplatesList } from "@/modules/finance/components/transaction-templates-list";
+import { getPaginatedTransactionTemplates } from "@/modules/finance/server-actions";
 
 export const metadata: Metadata = {
   title: "Transaction Templates",
@@ -28,7 +28,7 @@ export default async function TransactionTemplatesPage(props: {
   const searchParams = await props.searchParams;
   const { query, page, size } = searchParams ?? {};
 
-  const { records, total } = await transactionTemplatesGetPaginated({
+  const { records, total } = await getPaginatedTransactionTemplates({
     paginate: fromUrlToPaginate({ page, size }),
     query,
   });
@@ -53,7 +53,7 @@ export default async function TransactionTemplatesPage(props: {
         <div className="w-full sm:w-1/2 lg:w-1/3">
           <SearchFilter />
         </div>
-        <TransactionTemplateList templates={records} total={total} />
+        <TransactionTemplatesList templates={records} total={total} />
       </div>
     </div>
   );

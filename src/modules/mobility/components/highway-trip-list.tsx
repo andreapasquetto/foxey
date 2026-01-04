@@ -16,10 +16,10 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { highwayTripsGetAll } from "@/modules/mobility/mobility-actions";
+import { getAllHighwayTrips } from "@/modules/mobility/server-actions";
 
 export async function HighwayTripList(props: { carId: string }) {
-  const trips = await highwayTripsGetAll(props.carId);
+  const trips = await getAllHighwayTrips(props.carId);
 
   if (!trips.length) {
     return (

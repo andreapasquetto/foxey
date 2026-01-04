@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
-import { PlaceCreateForm } from "@/modules/places/components/forms/place-create-form";
-import { placeCategoriesGetAll } from "@/modules/places/places-actions";
+import { CreatePlaceForm } from "@/modules/places/components/forms/create-place-form";
+import { getAllPlaceCategories } from "@/modules/places/server-actions";
 
 export const metadata: Metadata = {
   title: "New Place",
 };
 
-export default async function PlaceCreatePage() {
-  const categories = await placeCategoriesGetAll();
+export default async function NewPlacePage() {
+  const categories = await getAllPlaceCategories();
 
   return (
     <div className="space-y-12">
       <Heading1>New Place</Heading1>
-      <PlaceCreateForm categories={categories} />
+      <CreatePlaceForm categories={categories} />
     </div>
   );
 }

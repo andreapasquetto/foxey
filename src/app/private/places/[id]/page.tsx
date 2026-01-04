@@ -1,26 +1,26 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
-import { PlaceUpdateForm } from "@/modules/places/components/forms/place-update-form";
+import { UpdatePlaceForm } from "@/modules/places/components/forms/update-place-form";
 import {
-  placeCategoriesGetAll,
-  placesGetById,
-} from "@/modules/places/places-actions";
+  getAllPlaceCategories,
+  getPlaceById,
+} from "@/modules/places/server-actions";
 
 export const metadata: Metadata = {
   title: "Place Details",
 };
 
-export default async function PlaceUpdatePage(props: {
+export default async function UpdatePlacePage(props: {
   params: Promise<{ id: string }>;
 }) {
   const id = (await props.params).id;
-  const categories = await placeCategoriesGetAll();
-  const place = await placesGetById(id);
+  const categories = await getAllPlaceCategories();
+  const place = await getPlaceById(id);
 
   return (
     <div className="space-y-12">
       <Heading1>Edit Place</Heading1>
-      <PlaceUpdateForm categories={categories} place={place} />
+      <UpdatePlaceForm categories={categories} place={place} />
     </div>
   );
 }

@@ -11,7 +11,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { CarList } from "@/modules/mobility/components/car-list";
+import { CarsList } from "@/modules/mobility/components/cars-list";
 
 export const metadata: Metadata = {
   title: "Mobility",
@@ -35,7 +35,7 @@ export default function MobilityPage() {
       </div>
       <section className="space-y-6">
         <Suspense fallback={<CarListSkeleton />}>
-          <CarList />
+          <CarsList />
         </Suspense>
       </section>
     </div>

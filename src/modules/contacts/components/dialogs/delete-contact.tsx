@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import type { Contact } from "@/db/types/contacts";
-import { contactsDelete } from "@/modules/contacts/contacts-actions";
+import { deleteContact } from "@/modules/contacts/server-actions";
 
 export function DeleteContact({ contact }: { contact: Contact }) {
   return (
@@ -35,7 +35,7 @@ export function DeleteContact({ contact }: { contact: Contact }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <form
-            action={contactsDelete}
+            action={deleteContact}
             className="flex items-center justify-center gap-3"
           >
             <input type="hidden" name="id" value={contact.id} />

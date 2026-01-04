@@ -62,7 +62,7 @@ import type { Place, PlaceCategory } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { CancelOrRestoreEvent } from "@/modules/events/components/dialogs/cancel-or-restore-event";
 import { DeleteEvent } from "@/modules/events/components/dialogs/delete-event";
-import { EventCreateForm } from "@/modules/events/components/forms/event-create-form";
+import { CreateEventForm } from "@/modules/events/components/forms/create-event-form";
 
 export function MonthCalendar(props: {
   categories: PlaceCategory[];
@@ -208,7 +208,7 @@ export function MonthCalendar(props: {
                   <SheetTitle>Create Event</SheetTitle>
                 </SheetHeader>
                 <div className="px-4">
-                  <EventCreateForm
+                  <CreateEventForm
                     categories={categories}
                     places={places}
                     selectedDay={selectedDay}

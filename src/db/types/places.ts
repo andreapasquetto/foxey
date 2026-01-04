@@ -1,10 +1,10 @@
 import type {
-  placeCategoriesGetAll,
-  placesGetById,
-} from "@/modules/places/places-actions";
+  getAllPlaceCategories,
+  getPlaceById,
+} from "@/modules/places/server-actions";
 
 export type PlaceCategory = Awaited<
-  ReturnType<typeof placeCategoriesGetAll>
+  ReturnType<typeof getAllPlaceCategories>
 >[number];
 
-export type Place = Awaited<ReturnType<typeof placesGetById>>;
+export type Place = Awaited<ReturnType<typeof getPlaceById>>;

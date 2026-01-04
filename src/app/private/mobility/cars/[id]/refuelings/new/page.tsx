@@ -1,31 +1,31 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
 import {
-  tagsGetAll,
-  transactionCategoriesGetAll,
-  walletsGetAll,
-} from "@/modules/finance/finance-actions";
-import { RefuelingCreateForm } from "@/modules/mobility/components/forms/refueling-create-form";
-import { carsGetById } from "@/modules/mobility/mobility-actions";
-import { placesGetAll } from "@/modules/places/places-actions";
+  getAllTags,
+  getAllTransactionCategories,
+  getAllWallets,
+} from "@/modules/finance/server-actions";
+import { CreateRefuelingForm } from "@/modules/mobility/components/forms/create-refueling-form";
+import { getCarById } from "@/modules/mobility/server-actions";
+import { getAllPlaces } from "@/modules/places/server-actions";
 
 export const metadata: Metadata = {
   title: "New Refueling",
 };
 
-export default async function RefuelingCreatePage(props: {
+export default async function NewRefuelingPage(props: {
   params: Promise<{ id: string }>;
 }) {
   const carId = (await props.params).id;
-  const car = await carsGetById(carId);
-  const wallets = await walletsGetAll();
-  const categories = await transactionCategoriesGetAll();
-  const places = await placesGetAll();
-  const tags = await tagsGetAll();
+  const car = await getCarById(carId);
+  const wallets = await getAllWallets();
+  const categories = await getAllTransactionCategories();
+  const places = await getAllPlaces();
+  const tags = await getAllTags();
   return (
     <div className="space-y-12 pb-24">
       <Heading1>Add Refueling</Heading1>
-      <RefuelingCreateForm
+      <CreateRefuelingForm
         car={car}
         wallets={wallets}
         categories={categories}

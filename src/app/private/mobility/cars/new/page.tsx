@@ -1,16 +1,16 @@
 import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
-import { CarCreateForm } from "@/modules/mobility/components/forms/car-create-form";
+import { CreateCarForm } from "@/modules/mobility/components/forms/create-car-form";
 
 export const metadata: Metadata = {
   title: "New Car",
 };
 
-export default function CarCreatePage() {
+export default function NewCarPage() {
   return (
     <div className="space-y-12">
       <Heading1>Add car</Heading1>
-      <CarCreateForm />
+      <CreateCarForm />
     </div>
   );
 }

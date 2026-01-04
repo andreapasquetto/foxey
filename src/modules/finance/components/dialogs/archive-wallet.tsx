@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import type { Wallet } from "@/db/types/finance";
-import { walletsArchive } from "@/modules/finance/finance-actions";
+import { archiveWallet } from "@/modules/finance/server-actions";
 
 export function ArchiveWallet({ wallet }: { wallet: Wallet }) {
   return (
@@ -34,7 +34,7 @@ export function ArchiveWallet({ wallet }: { wallet: Wallet }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <form
-            action={walletsArchive}
+            action={archiveWallet}
             className="flex items-center justify-center gap-3"
           >
             <input type="hidden" name="id" value={wallet.id} />

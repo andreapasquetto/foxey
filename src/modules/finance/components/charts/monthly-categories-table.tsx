@@ -26,7 +26,7 @@ import {
   getIncomingTransactions,
   getOutgoingTransactions,
   getTransactionsWithoutTransfers,
-} from "@/modules/finance/finance-utils";
+} from "@/modules/finance/utils";
 
 export function MonthlyCategoriesTable({
   transactions,

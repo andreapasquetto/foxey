@@ -11,14 +11,14 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TransactionFilters } from "@/modules/finance/components/transaction-filters";
-import { TransactionList } from "@/modules/finance/components/transaction-list";
+import { TransactionsFilters } from "@/modules/finance/components/transactions-filters";
+import { TransactionsList } from "@/modules/finance/components/transactions-list";
 import {
-  transactionCategoriesGetAll,
-  transactionsGetPaginated,
-  walletsGetAll,
-} from "@/modules/finance/finance-actions";
-import { placesGetAll } from "@/modules/places/places-actions";
+  getAllTransactionCategories,
+  getAllWallets,
+  getPaginatedTransactions,
+} from "@/modules/finance/server-actions";
+import { getAllPlaces } from "@/modules/places/server-actions";
 
 export const metadata: Metadata = {
   title: "Transactions",
@@ -40,10 +40,10 @@ export default async function TransactionsPage(props: {
   const { query, category, place, wallet, page, size, from, to } =
     searchParams ?? {};
 
-  const categories = await transactionCategoriesGetAll();
-  const places = await placesGetAll();
-  const wallets = await walletsGetAll();
-  const { records, total } = await transactionsGetPaginated({
+  const categories = await getAllTransactionCategories();
+  const places = await getAllPlaces();
+  const wallets = await getAllWallets();
+  const { records, total } = await getPaginatedTransactions({
     paginate: fromUrlToPaginate({ page, size }),
     dateRange:
       from && to
@@ -74,12 +74,12 @@ export default async function TransactionsPage(props: {
         </Tooltip>
       </div>
       <div className="space-y-6">
-        <TransactionFilters
+        <TransactionsFilters
           categories={categories}
           places={places}
           wallets={wallets}
         />
-        <TransactionList transactions={records} total={total} />
+        <TransactionsList transactions={records} total={total} />
       </div>
     </div>
   );

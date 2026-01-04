@@ -17,7 +17,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Event } from "@/db/types/events";
-import { eventsDelete } from "@/modules/events/events-actions";
+import { deleteEvent } from "@/modules/events/server-actions";
 
 export function DeleteEvent(props: { event: Event }) {
   return (
@@ -41,7 +41,7 @@ export function DeleteEvent(props: { event: Event }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <form
-            action={eventsDelete}
+            action={deleteEvent}
             className="flex items-center justify-center gap-3"
           >
             <input type="hidden" name="id" value={props.event.id} />

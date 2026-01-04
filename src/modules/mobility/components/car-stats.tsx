@@ -32,7 +32,7 @@ import {
   calculateFuelCost,
   calculatePricePerDistance,
   extractRefuelingPeriods,
-} from "@/modules/mobility/mobility-utils";
+} from "@/modules/mobility/utils";
 
 export function CarStats(props: {
   refuelings: Refueling[];

@@ -11,7 +11,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { Transaction } from "@/db/types/finance";
-import { generateMonthTrendChartData } from "@/modules/finance/finance-utils";
+import { generateMonthTrendChartData } from "@/modules/finance/utils";
 
 const chartConfig = {
   amount: {

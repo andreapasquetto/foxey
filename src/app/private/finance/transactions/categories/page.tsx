@@ -11,8 +11,8 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { TransactionCategoryList } from "@/modules/finance/components/transaction-category-list";
-import { transactionCategoriesGetPaginated } from "@/modules/finance/finance-actions";
+import { TransactionCategoriesList } from "@/modules/finance/components/transaction-categories-list";
+import { getPaginatedTransactionCategories } from "@/modules/finance/server-actions";
 
 export const metadata: Metadata = {
   title: "Transaction Categories",
@@ -28,7 +28,7 @@ export default async function TransactionCategoriesPage(props: {
   const searchParams = await props.searchParams;
   const { query, page, size } = searchParams ?? {};
 
-  const { records, total } = await transactionCategoriesGetPaginated({
+  const { records, total } = await getPaginatedTransactionCategories({
     paginate: fromUrlToPaginate({ page, size }),
     query,
   });
@@ -52,7 +52,7 @@ export default async function TransactionCategoriesPage(props: {
         <div className="w-full sm:w-1/2 lg:w-1/3">
           <SearchFilter />
         </div>
-        <TransactionCategoryList categories={records} total={total} />
+        <TransactionCategoriesList categories={records} total={total} />
       </div>
     </div>
   );

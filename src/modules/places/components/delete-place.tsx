@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import type { Place } from "@/db/types/places";
-import { placesDelete } from "@/modules/places/places-actions";
+import { deletePlace } from "@/modules/places/server-actions";
 
 export function DeletePlace({ place }: { place: Place }) {
   return (
@@ -36,7 +36,7 @@ export function DeletePlace({ place }: { place: Place }) {
         </AlertDialogHeader>
         <AlertDialogFooter>
           <form
-            action={placesDelete}
+            action={deletePlace}
             className="flex items-center justify-center gap-3"
           >
             <input type="hidden" name="id" value={place.id} />

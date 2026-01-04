@@ -3,29 +3,29 @@ import { Heading1, Heading2 } from "@/components/typography";
 import { CarActionButtons } from "@/modules/mobility/components/car-action-buttons";
 import { CarStats } from "@/modules/mobility/components/car-stats";
 import { HighwayTripList } from "@/modules/mobility/components/highway-trip-list";
-import { InspectionList } from "@/modules/mobility/components/inspection-list";
-import { RefuelingList } from "@/modules/mobility/components/refueling-list";
-import { ServiceList } from "@/modules/mobility/components/service-list";
+import { InspectionsList } from "@/modules/mobility/components/inspections-list";
+import { RefuelingsList } from "@/modules/mobility/components/refuelings-list";
+import { ServicesList } from "@/modules/mobility/components/services-list";
 import {
-  carsGetById,
-  inspectionsGetAll,
-  refuelingsGetAll,
-  servicesGetAll,
-} from "@/modules/mobility/mobility-actions";
+  getAllInspections,
+  getAllRefuelings,
+  getAllServices,
+  getCarById,
+} from "@/modules/mobility/server-actions";
 
 export const metadata: Metadata = {
   title: "Car Details",
 };
 
-export default async function CarPage(props: {
+export default async function CarDetailsPage(props: {
   params: Promise<{ id: string }>;
 }) {
   const id = (await props.params).id;
-  const car = await carsGetById(id);
+  const car = await getCarById(id);
 
-  const refuelings = await refuelingsGetAll(id);
-  const services = await servicesGetAll(id);
-  const inspections = await inspectionsGetAll(id);
+  const refuelings = await getAllRefuelings(id);
+  const services = await getAllServices(id);
+  const inspections = await getAllInspections(id);
 
   return (
     <div className="space-y-12 pb-24">
@@ -43,7 +43,7 @@ export default async function CarPage(props: {
       </section>
       <section className="space-y-6">
         <Heading2>Refuelings</Heading2>
-        <RefuelingList refuelings={refuelings} />
+        <RefuelingsList refuelings={refuelings} />
       </section>
       <section className="space-y-6">
         <Heading2>Highway trips</Heading2>
@@ -52,11 +52,11 @@ export default async function CarPage(props: {
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <section className="space-y-6">
           <Heading2>Services</Heading2>
-          <ServiceList services={services} />
+          <ServicesList services={services} />
         </section>
         <section className="space-y-6">
           <Heading2>Inspections</Heading2>
-          <InspectionList inspections={inspections} />
+          <InspectionsList inspections={inspections} />
         </section>
       </div>
     </div>

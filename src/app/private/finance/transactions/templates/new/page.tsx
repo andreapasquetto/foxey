@@ -1,19 +1,24 @@
+import type { Metadata } from "next";
 import { Heading1 } from "@/components/typography";
-import { TransactionTemplateCreateForm } from "@/modules/finance/components/forms/transaction-template-create-form";
+import { CreateTransactionTemplateForm } from "@/modules/finance/components/forms/create-transaction-template-form";
 import {
-  transactionCategoriesGetAll,
-  walletsGetAll,
-} from "@/modules/finance/finance-actions";
-import { placesGetAll } from "@/modules/places/places-actions";
+  getAllTransactionCategories,
+  getAllWallets,
+} from "@/modules/finance/server-actions";
+import { getAllPlaces } from "@/modules/places/server-actions";
 
-export default async function TransactionTemplateCreatePage() {
-  const wallets = await walletsGetAll();
-  const categories = await transactionCategoriesGetAll();
-  const places = await placesGetAll();
+export const metadata: Metadata = {
+  title: "New Transaction Template",
+};
+
+export default async function NewTransactionTemplatePage() {
+  const wallets = await getAllWallets();
+  const categories = await getAllTransactionCategories();
+  const places = await getAllPlaces();
   return (
     <div className="space-y-12">
       <Heading1>New Transaction Template</Heading1>
-      <TransactionTemplateCreateForm
+      <CreateTransactionTemplateForm
         wallets={wallets}
         categories={categories}
         places={places}

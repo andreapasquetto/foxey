@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import type { Transaction } from "@/db/types/finance";
-import { transactionsDelete } from "@/modules/finance/finance-actions";
+import { deleteTransaction } from "@/modules/finance/server-actions";
 
 export function DeleteTransaction({
   transaction,
@@ -38,7 +38,7 @@ export function DeleteTransaction({
         </AlertDialogHeader>
         <AlertDialogFooter>
           <form
-            action={transactionsDelete}
+            action={deleteTransaction}
             className="flex items-center justify-center gap-3"
           >
             <input type="hidden" name="id" value={transaction.id} />

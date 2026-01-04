@@ -11,7 +11,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import type { Transaction } from "@/db/types/finance";
-import { generateMonthExpensesPerDayChartData } from "@/modules/finance/finance-utils";
+import { generateMonthExpensesPerDayChartData } from "@/modules/finance/utils";
 
 const chartConfig = {
   amont: {

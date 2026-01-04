@@ -50,7 +50,7 @@ import { ArchiveContact } from "@/modules/contacts/components/dialogs/archive-co
 import { DeleteContact } from "@/modules/contacts/components/dialogs/delete-contact";
 import { UnarchiveContact } from "@/modules/contacts/components/dialogs/unarchive-contact";
 
-export function ContactCard({
+export function ContactItem({
   contact,
   today,
 }: {

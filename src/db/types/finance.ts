@@ -1,21 +1,21 @@
 import type {
-  tagsGetAll,
-  transactionCategoriesGetAll,
-  transactionsGetById,
-  transactionTemplatesGetAll,
-  walletsGetById,
-} from "@/modules/finance/finance-actions";
+  getAllTags,
+  getAllTransactionCategories,
+  getAllTransactionTemplates,
+  getTransactionById,
+  getWalletById,
+} from "@/modules/finance/server-actions";
 
-export type Wallet = Awaited<ReturnType<typeof walletsGetById>>;
+export type Wallet = Awaited<ReturnType<typeof getWalletById>>;
 
 export type TransactionCategory = Awaited<
-  ReturnType<typeof transactionCategoriesGetAll>
+  ReturnType<typeof getAllTransactionCategories>
 >[number];
 
 export type TransactionTemplate = Awaited<
-  ReturnType<typeof transactionTemplatesGetAll>
+  ReturnType<typeof getAllTransactionTemplates>
 >[number];
 
-export type Transaction = Awaited<ReturnType<typeof transactionsGetById>>;
+export type Transaction = Awaited<ReturnType<typeof getTransactionById>>;
 
-export type Tag = Awaited<ReturnType<typeof tagsGetAll>>[number];
+export type Tag = Awaited<ReturnType<typeof getAllTags>>[number];

@@ -33,7 +33,7 @@ import type { Place } from "@/db/types/places";
 import { cn } from "@/lib/utils";
 import { DeletePlace } from "@/modules/places/components/delete-place";
 
-export function PlaceCard({ place }: { place: Place }) {
+export function PlaceItem({ place }: { place: Place }) {
   return (
     <Item
       variant="outline"
