@@ -47,7 +47,7 @@ export async function getAllEvents() {
 }
 
 export async function cancelOrRestoreEvent(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   const record = await db.query.events.findFirst({
     where: and(eq(events.userId, userId), eq(events.id, id)),
@@ -63,7 +63,7 @@ export async function cancelOrRestoreEvent(formData: FormData) {
 }
 
 export async function deleteEvent(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db
     .delete(events)

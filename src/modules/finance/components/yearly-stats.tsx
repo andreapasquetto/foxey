@@ -108,25 +108,26 @@ export function YearlyStats({
   );
 }
 
-function IncomeItem(props: { current: Decimal; previous: Decimal }) {
-  const percentageFromPrevious = calculatePercentageChange(
-    props.previous,
-    props.current,
-  );
+function IncomeItem({
+  current,
+  previous,
+}: {
+  current: Decimal;
+  previous: Decimal;
+}) {
+  const percentageFromPrevious = calculatePercentageChange(previous, current);
 
   return (
     <Item variant="outline">
       <ItemContent>
         <ItemDescription>Income</ItemDescription>
-        <ItemTitle>
-          {currencyFormatter.format(props.current.toNumber())}
-        </ItemTitle>
+        <ItemTitle>{currencyFormatter.format(current.toNumber())}</ItemTitle>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
-            {currencyFormatter.format(props.previous.toNumber())}
+            {currencyFormatter.format(previous.toNumber())}
           </span>{" "}
           previous year
-          {!props.previous.isZero() && (
+          {!previous.isZero() && (
             <>
               ,{" "}
               <span
@@ -145,25 +146,26 @@ function IncomeItem(props: { current: Decimal; previous: Decimal }) {
   );
 }
 
-function ExpensesItem(props: { current: Decimal; previous: Decimal }) {
-  const percentageFromPrevious = calculatePercentageChange(
-    props.previous,
-    props.current,
-  );
+function ExpensesItem({
+  current,
+  previous,
+}: {
+  current: Decimal;
+  previous: Decimal;
+}) {
+  const percentageFromPrevious = calculatePercentageChange(previous, current);
 
   return (
     <Item variant="outline">
       <ItemContent>
         <ItemDescription>Expenses</ItemDescription>
-        <ItemTitle>
-          {currencyFormatter.format(props.current.toNumber())}
-        </ItemTitle>
+        <ItemTitle>{currencyFormatter.format(current.toNumber())}</ItemTitle>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
-            {currencyFormatter.format(props.previous.toNumber())}
+            {currencyFormatter.format(previous.toNumber())}
           </span>{" "}
           previous year
-          {!props.previous.isZero() && (
+          {!previous.isZero() && (
             <>
               ,{" "}
               <span
@@ -182,15 +184,19 @@ function ExpensesItem(props: { current: Decimal; previous: Decimal }) {
   );
 }
 
-function SavingsItem(props: {
+function SavingsItem({
+  currentIncome,
+  currentSavings,
+  previousSavings,
+}: {
   currentIncome: Decimal;
   currentSavings: Decimal;
   previousSavings: Decimal;
 }) {
-  const thisYearPercentage = props.currentSavings.div(props.currentIncome);
+  const thisYearPercentage = currentSavings.div(currentIncome);
   const percentageChange = calculatePercentageChange(
-    props.previousSavings,
-    props.currentSavings,
+    previousSavings,
+    currentSavings,
   );
 
   return (
@@ -198,8 +204,8 @@ function SavingsItem(props: {
       <ItemContent>
         <ItemDescription>Savings</ItemDescription>
         <ItemTitle className="flex items-center gap-2">
-          {currencyFormatter.format(props.currentSavings.toNumber())}
-          {!props.currentIncome.isZero() && (
+          {currencyFormatter.format(currentSavings.toNumber())}
+          {!currentIncome.isZero() && (
             <Badge
               variant="outline"
               className={cn({
@@ -213,10 +219,10 @@ function SavingsItem(props: {
         </ItemTitle>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
-            {currencyFormatter.format(props.previousSavings.toNumber())}
+            {currencyFormatter.format(previousSavings.toNumber())}
           </span>{" "}
           previous year
-          {!props.previousSavings.isZero() && (
+          {!previousSavings.isZero() && (
             <>
               ,{" "}
               <span
@@ -235,7 +241,13 @@ function SavingsItem(props: {
   );
 }
 
-function CostPerDay(props: { current: Decimal; previous: Decimal }) {
+function CostPerDay({
+  current,
+  previous,
+}: {
+  current: Decimal;
+  previous: Decimal;
+}) {
   const today = startOfToday();
   const numberOfDays = {
     currentYear: eachDayOfInterval({
@@ -254,13 +266,13 @@ function CostPerDay(props: { current: Decimal; previous: Decimal }) {
         <ItemDescription>Cost per day</ItemDescription>
         <ItemTitle>
           {currencyFormatter.format(
-            props.current.div(numberOfDays.currentYear).toNumber(),
+            current.div(numberOfDays.currentYear).toNumber(),
           )}
         </ItemTitle>
         <p className="text-sm text-muted-foreground">
           <span className="text-foreground">
             {currencyFormatter.format(
-              props.previous.div(numberOfDays.previousYear).toNumber(),
+              previous.div(numberOfDays.previousYear).toNumber(),
             )}
           </span>{" "}
           previous year

@@ -16,8 +16,11 @@ import {
   createPlaceFormSchema,
 } from "@/modules/places/schemas/create-place-form-schema";
 
-export function CreatePlaceForm(props: { categories: PlaceCategory[] }) {
-  const { categories } = props;
+export function CreatePlaceForm({
+  categories,
+}: {
+  categories: PlaceCategory[];
+}) {
   const form = useForm<CreatePlaceFormType>({
     resolver: zodResolver(createPlaceFormSchema),
     defaultValues: {

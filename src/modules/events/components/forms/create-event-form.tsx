@@ -18,18 +18,21 @@ import {
   createEventFormSchema,
 } from "@/modules/events/schemas/create-event-form-schema";
 
-export function CreateEventForm(props: {
+export function CreateEventForm({
+  categories,
+  places,
+  selectedDay,
+  onSuccess,
+}: {
   categories: EventCategory[];
   places: Place[];
   selectedDay: Date;
   onSuccess?: () => void;
 }) {
-  const { categories, places } = props;
-
   const form = useForm<CreateEventFormType>({
     resolver: zodResolver(createEventFormSchema),
     defaultValues: {
-      datetime: add(props.selectedDay, { hours: 12 }),
+      datetime: add(selectedDay, { hours: 12 }),
       isAllDay: false,
       title: "",
       description: null,
@@ -43,16 +46,16 @@ export function CreateEventForm(props: {
   function onValidSubmit(values: CreateEventFormType) {
     mutation.mutate(values, {
       onSuccess: () => {
-        props.onSuccess?.();
+        onSuccess?.();
       },
     });
   }
 
   useEffect(() => {
-    if (props.selectedDay) {
-      form.setValue("datetime", add(props.selectedDay, { hours: 12 }));
+    if (selectedDay) {
+      form.setValue("datetime", add(selectedDay, { hours: 12 }));
     }
-  }, [props.selectedDay, form]);
+  }, [selectedDay, form]);
 
   return (
     <form

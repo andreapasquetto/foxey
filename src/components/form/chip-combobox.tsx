@@ -14,7 +14,15 @@ import {
 } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
-interface ChipComboboxProps<T extends { id: string; name: string }> {
+export function ChipCombobox<T extends { id: string; name: string }>({
+  label,
+  selectedValue,
+  onSelectValue,
+  options,
+  optionIndexer,
+  optionFormatter,
+  withSearch,
+}: {
   label: string;
   selectedValue: T | undefined;
   onSelectValue: (value?: T) => void;
@@ -22,11 +30,7 @@ interface ChipComboboxProps<T extends { id: string; name: string }> {
   optionIndexer?: (value: T) => string;
   optionFormatter: (value: T) => React.ReactNode;
   withSearch?: boolean;
-}
-
-export function ChipCombobox<T extends { id: string; name: string }>(
-  props: ChipComboboxProps<T>,
-) {
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -36,46 +40,39 @@ export function ChipCombobox<T extends { id: string; name: string }>(
           aria-label="Select a team"
           className={cn(
             "w-full justify-between gap-2 overflow-hidden border-dashed px-3 py-2 font-normal text-muted-foreground",
-            props.selectedValue && "border-muted-foreground",
+            selectedValue && "border-muted-foreground",
           )}
         >
-          {props.label}
-          {!props.selectedValue && <Plus className="shrink-0 opacity-50" />}
-          {props.selectedValue && (
-            <span className="text-foreground">{props.selectedValue.name}</span>
+          {label}
+          {!selectedValue && <Plus className="shrink-0 opacity-50" />}
+          {selectedValue && (
+            <span className="text-foreground">{selectedValue.name}</span>
           )}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="p-1" align="start">
         <Command>
-          {props.withSearch && <CommandInput placeholder="Search..." />}
+          {withSearch && <CommandInput placeholder="Search..." />}
           <CommandList>
             <CommandEmpty>No option found</CommandEmpty>
-            {props.options?.map((option) => (
+            {options?.map((option) => (
               <CommandItem
                 key={option.id}
-                value={
-                  props.optionIndexer
-                    ? props.optionIndexer(option)
-                    : option.name
-                }
+                value={optionIndexer ? optionIndexer(option) : option.name}
                 onSelect={() => {
-                  if (
-                    props.selectedValue &&
-                    props.selectedValue.id === option.id
-                  ) {
-                    props.onSelectValue(undefined);
+                  if (selectedValue && selectedValue.id === option.id) {
+                    onSelectValue(undefined);
                   } else {
-                    props.onSelectValue(option);
+                    onSelectValue(option);
                   }
                 }}
                 className="gap-2 text-sm"
               >
-                {props.optionFormatter(option)}
+                {optionFormatter(option)}
                 <CheckIcon
                   className={cn(
                     "ml-auto",
-                    props.selectedValue?.id === option.id
+                    selectedValue?.id === option.id
                       ? "opacity-100"
                       : "opacity-0",
                   )}

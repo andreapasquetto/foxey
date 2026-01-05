@@ -64,14 +64,17 @@ import { CancelOrRestoreEvent } from "@/modules/events/components/dialogs/cancel
 import { DeleteEvent } from "@/modules/events/components/dialogs/delete-event";
 import { CreateEventForm } from "@/modules/events/components/forms/create-event-form";
 
-export function MonthCalendar(props: {
+export function MonthCalendar({
+  categories,
+  places,
+  contacts,
+  events,
+}: {
   categories: PlaceCategory[];
   places: Place[];
   contacts: Pick<Contact, "id" | "fullName" | "dob">[];
   events: Event[];
 }) {
-  const { categories, places, contacts, events } = props;
-
   const today = startOfToday();
   const [selectedDay, setSelectedDay] = useState(today);
   const [selectedMonth, setSelectedMonth] = useState(startOfMonth(today));

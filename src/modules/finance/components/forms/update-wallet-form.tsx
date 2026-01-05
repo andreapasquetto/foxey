@@ -15,8 +15,7 @@ import {
   updateWalletFormSchema,
 } from "@/modules/finance/schemas/update-wallet-form-schema";
 
-export function UpdateWalletForm(props: { wallet: Wallet }) {
-  const { wallet } = props;
+export function UpdateWalletForm({ wallet }: { wallet: Wallet }) {
   const form = useForm<UpdateWalletFormType>({
     resolver: zodResolver(updateWalletFormSchema),
     defaultValues: {
@@ -42,12 +41,7 @@ export function UpdateWalletForm(props: { wallet: Wallet }) {
         <XTextField control={form.control} name="name" label="Name" />
         <Field>
           <FieldLabel>Initial amount</FieldLabel>
-          <Input
-            type="number"
-            value={props.wallet.initialAmount}
-            disabled
-            readOnly
-          />
+          <Input type="number" value={wallet.initialAmount} disabled readOnly />
         </Field>
         <XCheckboxField
           control={form.control}

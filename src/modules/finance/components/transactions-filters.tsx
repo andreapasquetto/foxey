@@ -11,7 +11,11 @@ import { SearchFilter } from "@/components/search-filter";
 import type { TransactionCategory, Wallet } from "@/db/types/finance";
 import type { Place } from "@/db/types/places";
 
-export function TransactionsFilters(props: {
+export function TransactionsFilters({
+  categories,
+  wallets,
+  places,
+}: {
   categories: TransactionCategory[];
   wallets: Wallet[];
   places: Place[];
@@ -60,14 +64,14 @@ export function TransactionsFilters(props: {
         <div>
           <ChipCombobox
             label="Category"
-            selectedValue={props.categories.find(
+            selectedValue={categories.find(
               (category) =>
                 category.id === searchParams.get("category")?.toString(),
             )}
             onSelectValue={(value) =>
               searchFilters.handleSearch({ category: value?.id })
             }
-            options={props.categories}
+            options={categories}
             optionFormatter={(category) => category.name}
             withSearch
           />
@@ -75,13 +79,13 @@ export function TransactionsFilters(props: {
         <div>
           <ChipCombobox
             label="Place"
-            selectedValue={props.places.find(
+            selectedValue={places.find(
               (place) => place.id === searchParams.get("place")?.toString(),
             )}
             onSelectValue={(value) =>
               searchFilters.handleSearch({ place: value?.id })
             }
-            options={props.places}
+            options={places}
             optionFormatter={(place) => place.name}
             withSearch
           />
@@ -89,13 +93,13 @@ export function TransactionsFilters(props: {
         <div>
           <ChipCombobox
             label="Wallet"
-            selectedValue={props.wallets.find(
+            selectedValue={wallets.find(
               (wallet) => wallet.id === searchParams.get("wallet")?.toString(),
             )}
             onSelectValue={(value) =>
               searchFilters.handleSearch({ wallet: value?.id })
             }
-            options={props.wallets}
+            options={wallets}
             optionFormatter={(wallet) => wallet.name}
             withSearch
           />

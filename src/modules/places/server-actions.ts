@@ -162,7 +162,7 @@ export async function updatePlace(place: UpdatePlaceFormType) {
 }
 
 export async function deletePlace(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   await db.delete(places).where(eq(places.id, id));
   revalidatePath(placesRoute);
 }

@@ -34,12 +34,15 @@ import {
   extractRefuelingPeriods,
 } from "@/modules/mobility/utils";
 
-export function CarStats(props: {
+export function CarStats({
+  refuelings,
+  services,
+  inspections,
+}: {
   refuelings: Refueling[];
   services: Service[];
   inspections: Inspection[];
 }) {
-  const { refuelings, services, inspections } = props;
   const [fuelConsumptionFormat, setFuelConsumptionFormat] = useState<
     "km/L" | "L/100km"
   >("km/L");

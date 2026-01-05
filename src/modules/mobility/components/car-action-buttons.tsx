@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function CarActionButtons(props: { carId: string }) {
+export function CarActionButtons({ carId }: { carId: string }) {
   return (
     <div className="fixed right-4 bottom-4 z-50 m-0 sm:right-6 sm:bottom-6">
       <DropdownMenu>
@@ -30,7 +30,7 @@ export function CarActionButtons(props: { carId: string }) {
               className="w-full cursor-pointer items-center justify-between"
               asChild
             >
-              <Link href={newRefuelingRoute(props.carId)} prefetch>
+              <Link href={newRefuelingRoute(carId)} prefetch>
                 Add refueling <Fuel className="text-current" />
               </Link>
             </Button>
@@ -41,7 +41,7 @@ export function CarActionButtons(props: { carId: string }) {
               className="w-full cursor-pointer items-center justify-between"
               asChild
             >
-              <Link href={newHighwayTripRoute(props.carId)} prefetch>
+              <Link href={newHighwayTripRoute(carId)} prefetch>
                 Add highway trip <Gauge className="text-current" />
               </Link>
             </Button>
@@ -52,7 +52,7 @@ export function CarActionButtons(props: { carId: string }) {
               className="w-full cursor-pointer items-center justify-between"
               asChild
             >
-              <Link href={newServiceRoute(props.carId)} prefetch>
+              <Link href={newServiceRoute(carId)} prefetch>
                 Add service <Wrench className="text-current" />
               </Link>
             </Button>
@@ -63,7 +63,7 @@ export function CarActionButtons(props: { carId: string }) {
               className="w-full cursor-pointer items-center justify-between"
               asChild
             >
-              <Link href={newInspectionRoute(props.carId)} prefetch>
+              <Link href={newInspectionRoute(carId)} prefetch>
                 Add inspection <BookOpenCheck className="text-current" />
               </Link>
             </Button>

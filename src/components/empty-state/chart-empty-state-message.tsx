@@ -6,7 +6,11 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 
-export function ChartEmptyStateMessage(props: { message?: string }) {
+export function ChartEmptyStateMessage({
+  message = "Not enough data.",
+}: {
+  message?: string;
+}) {
   return (
     <Empty className="h-[380px] border border-dashed">
       <EmptyHeader>
@@ -14,7 +18,7 @@ export function ChartEmptyStateMessage(props: { message?: string }) {
           <ScanSearch />
         </EmptyMedia>
         <EmptyTitle className="text-base text-muted-foreground">
-          {props.message ?? "Not enough data."}
+          {message}
         </EmptyTitle>
       </EmptyHeader>
     </Empty>

@@ -21,18 +21,17 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-interface RangeDatePickerProps extends React.HTMLAttributes<HTMLDivElement> {
-  dateRange: DateRange | undefined;
-  setDateRange: (value: DateRange | undefined) => void;
-  showPresets?: boolean;
-}
-
 export function RangeDatePicker({
-  className,
   dateRange,
   setDateRange,
   showPresets,
-}: RangeDatePickerProps) {
+  className,
+}: {
+  dateRange: DateRange | undefined;
+  setDateRange: (value: DateRange | undefined) => void;
+  showPresets?: boolean;
+  className?: string;
+}) {
   function onSelectDateRangePreset(code: DateRangePresetCode) {
     setDateRange(getDateRangeFromCode(code));
   }

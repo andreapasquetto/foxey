@@ -16,11 +16,13 @@ import {
   updatePlaceFormSchema,
 } from "@/modules/places/schemas/update-place-form-schema";
 
-export function UpdatePlaceForm(props: {
+export function UpdatePlaceForm({
+  categories,
+  place,
+}: {
   categories: PlaceCategory[];
   place: Place;
 }) {
-  const { categories, place } = props;
   const form = useForm<UpdatePlaceFormType>({
     resolver: zodResolver(updatePlaceFormSchema),
     defaultValues: {

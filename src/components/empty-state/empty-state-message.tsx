@@ -6,7 +6,11 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 
-export function EmptyStateMessage(props: { message?: string }) {
+export function EmptyStateMessage({
+  message = "There are no records.",
+}: {
+  message?: string;
+}) {
   return (
     <Empty>
       <EmptyHeader>
@@ -14,7 +18,7 @@ export function EmptyStateMessage(props: { message?: string }) {
           <ScanSearch />
         </EmptyMedia>
         <EmptyTitle className="text-base text-muted-foreground">
-          {props.message ?? "There are no records."}
+          {message}
         </EmptyTitle>
       </EmptyHeader>
     </Empty>

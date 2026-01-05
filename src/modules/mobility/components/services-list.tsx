@@ -25,9 +25,7 @@ import {
 } from "@/components/ui/tooltip";
 import type { Service } from "@/db/types/mobility";
 
-export function ServicesList(props: { services: Service[] }) {
-  const { services } = props;
-
+export function ServicesList({ services }: { services: Service[] }) {
   if (!services.length) {
     return <EmptyStateMessage message="There are no services for this car." />;
   }

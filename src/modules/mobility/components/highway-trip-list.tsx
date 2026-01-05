@@ -18,8 +18,8 @@ import {
 } from "@/components/ui/tooltip";
 import { getAllHighwayTrips } from "@/modules/mobility/server-actions";
 
-export async function HighwayTripList(props: { carId: string }) {
-  const trips = await getAllHighwayTrips(props.carId);
+export async function HighwayTripList({ carId }: { carId: string }) {
+  const trips = await getAllHighwayTrips(carId);
 
   if (!trips.length) {
     return (

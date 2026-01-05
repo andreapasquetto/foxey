@@ -10,9 +10,11 @@ import {
 import type { Inspection } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 
-export function InspectionsList(props: { inspections: Inspection[] }) {
-  const { inspections } = props;
-
+export function InspectionsList({
+  inspections,
+}: {
+  inspections: Inspection[];
+}) {
   if (!inspections.length) {
     return (
       <EmptyStateMessage message="There are no inspections for this car." />

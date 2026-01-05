@@ -16,12 +16,12 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function FuelPriceChart(props: { refuelings: Refueling[] }) {
-  if (!props.refuelings.length) {
+export function FuelPriceChart({ refuelings }: { refuelings: Refueling[] }) {
+  if (!refuelings.length) {
     return <ChartEmptyStateMessage />;
   }
 
-  const chartData = props.refuelings.map((refueling) => ({
+  const chartData = refuelings.map((refueling) => ({
     datetime: refueling.transaction.datetime,
     price: refueling.price,
   }));

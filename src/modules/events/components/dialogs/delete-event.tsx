@@ -19,7 +19,7 @@ import {
 import type { Event } from "@/db/types/events";
 import { deleteEvent } from "@/modules/events/server-actions";
 
-export function DeleteEvent(props: { event: Event }) {
+export function DeleteEvent({ event }: { event: Event }) {
   return (
     <AlertDialog>
       <Tooltip>
@@ -44,7 +44,7 @@ export function DeleteEvent(props: { event: Event }) {
             action={deleteEvent}
             className="flex items-center justify-center gap-3"
           >
-            <input type="hidden" name="id" value={props.event.id} />
+            <input type="hidden" name="id" value={event.id} />
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction asChild>
               <Button type="submit">Confirm</Button>

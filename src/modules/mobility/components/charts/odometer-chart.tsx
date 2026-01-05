@@ -23,20 +23,24 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function OdometerChart(props: {
+export function OdometerChart({
+  refuelings,
+  services,
+  inspections,
+}: {
   refuelings: Refueling[];
   services: Service[];
   inspections: Inspection[];
 }) {
-  if (!props.refuelings.length) {
+  if (!refuelings.length) {
     return <ChartEmptyStateMessage />;
   }
 
   // TODO: show less data by filtering by year
   const chartData = generateOdometerChartData({
-    refuelings: props.refuelings,
-    services: props.services,
-    inspections: props.inspections,
+    refuelings: refuelings,
+    services: services,
+    inspections: inspections,
   });
 
   return (

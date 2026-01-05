@@ -29,9 +29,7 @@ import {
 import type { Refueling } from "@/db/types/mobility";
 import { cn } from "@/lib/utils";
 
-export function RefuelingsList(props: { refuelings: Refueling[] }) {
-  const { refuelings } = props;
-
+export function RefuelingsList({ refuelings }: { refuelings: Refueling[] }) {
   if (!refuelings.length) {
     return (
       <EmptyStateMessage message="There are no refuelings for this car." />
