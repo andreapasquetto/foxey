@@ -1,4 +1,4 @@
-import { parse } from "date-fns";
+import { endOfDay, parse, startOfDay } from "date-fns";
 import { Plus } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -48,8 +48,8 @@ export default async function TransactionsPage(props: {
     dateRange:
       from && to
         ? {
-            from: parse(from, "yyyy-MM-dd", new Date()),
-            to: parse(to, "yyyy-MM-dd", new Date()),
+            from: startOfDay(parse(from, "yyyy-MM-dd", new Date())),
+            to: endOfDay(parse(to, "yyyy-MM-dd", new Date())),
           }
         : undefined,
     query,
