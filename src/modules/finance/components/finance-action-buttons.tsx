@@ -1,6 +1,14 @@
-import { ArrowRightLeft, Plus, Shapes, TextSelect, Wallet } from "lucide-react";
+import {
+  ArrowRightLeft,
+  Plus,
+  Shapes,
+  Tag,
+  TextSelect,
+  Wallet,
+} from "lucide-react";
 import Link from "next/link";
 import {
+  newTagRoute,
   newTransactionRoute,
   newWalletRoute,
   transactionCategoriesRoute,
@@ -54,6 +62,17 @@ export function FinanceActionButtons() {
           <TooltipContent>New</TooltipContent>
         </Tooltip>
         <DropdownMenuContent align="end" className="w-[250px]">
+          <DropdownMenuItem asChild>
+            <Button
+              variant="ghost"
+              className="w-full cursor-pointer items-center justify-between"
+              asChild
+            >
+              <Link href={newTagRoute}>
+                Add tag <Tag className="text-current" />
+              </Link>
+            </Button>
+          </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Button
               variant="ghost"

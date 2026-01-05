@@ -24,6 +24,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import type { Transaction } from "@/db/types/finance";
+import { DeleteTag } from "@/modules/finance/components/dialogs/delete-tag";
 import { getAllTags } from "@/modules/finance/server-actions";
 import {
   calculateTotal,
@@ -44,6 +45,7 @@ export async function TagsTable() {
       <TableHeader>
         <TableRow>
           <TableHead>Tag</TableHead>
+          <TableHead># of TXs</TableHead>
           <TableHead className="text-right">
             Total <code>+</code>
           </TableHead>
@@ -63,6 +65,7 @@ export async function TagsTable() {
               <TableCell>
                 <Badge>{tag.name}</Badge>
               </TableCell>
+              <TableCell>{transactions.length}</TableCell>
               <TableCell className="text-right text-green-500 dark:text-green-400">
                 <code>
                   {currencyFormatter.format(
@@ -97,6 +100,11 @@ export async function TagsTable() {
                     <DropdownMenuItem asChild>
                       <CopyToClipboardButton content={tag.id} />
                     </DropdownMenuItem>
+                    {transactions.length === 0 && (
+                      <DropdownMenuItem asChild>
+                        <DeleteTag tag={tag} />
+                      </DropdownMenuItem>
+                    )}
                   </DropdownMenuContent>
                 </DropdownMenu>
               </TableCell>

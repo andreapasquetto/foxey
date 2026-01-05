@@ -26,6 +26,7 @@ import {
   transactionTemplates,
   wallets,
 } from "@/db/schemas/finance";
+import type { CreateTagFormType } from "@/modules/finance/schemas/create-tag-form-schema";
 import type { CreateTransactionCategoryFormType } from "@/modules/finance/schemas/create-transaction-category-form-schema";
 import type { CreateTransactionFormType } from "@/modules/finance/schemas/create-transaction-form-schema";
 import type { CreateTransactionTemplateFormType } from "@/modules/finance/schemas/create-transaction-template-form-schema";
@@ -65,7 +66,7 @@ export async function getWalletById(id: string) {
 }
 
 export async function archiveWallet(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db
     .update(wallets)
@@ -75,7 +76,7 @@ export async function archiveWallet(formData: FormData) {
 }
 
 export async function unarchiveWallet(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const userId = await getCurrentUserId();
   await db
     .update(wallets)
@@ -168,6 +169,7 @@ export async function getPaginatedTransactionCategories(params: {
   });
   return toPaginated(records, total);
 }
+
 export async function getAllTransactionCategories(
   params: { query?: string } = {},
 ) {
@@ -279,6 +281,16 @@ export async function getAllTransactionTemplates() {
   });
 }
 
+export async function createTag(tag: CreateTagFormType) {
+  const userId = await getCurrentUserId();
+  await db.insert(tags).values({
+    userId,
+    name: tag.name,
+  });
+  revalidatePath(financeRoute);
+  redirect(financeRoute);
+}
+
 export async function getAllTags() {
   const userId = await getCurrentUserId();
   return await db.query.tags.findMany({
@@ -291,6 +303,13 @@ export async function getAllTags() {
     },
     where: eq(tags.userId, userId),
   });
+}
+
+export async function deleteTag(formData: FormData) {
+  const userId = await getCurrentUserId();
+  const id = z.uuid().parse(formData.get("id"));
+  await db.delete(tags).where(and(eq(tags.userId, userId), eq(tags.id, id)));
+  revalidatePath(financeRoute);
 }
 
 export async function createTransactionTx(
@@ -340,8 +359,8 @@ export async function createTransaction(
   await db.transaction(async (tx) => {
     await createTransactionTx(tx, transaction);
   });
-  revalidatePath(financeRoute);
-  redirect(financeRoute);
+  revalidatePath(transactionsRoute);
+  redirect(transactionsRoute);
 }
 
 export async function getLatestTransactions() {
@@ -610,7 +629,7 @@ export async function updateTransaction(
 }
 
 export async function deleteTransaction(formData: FormData) {
-  const id = z.string().parse(formData.get("id"));
+  const id = z.uuid().parse(formData.get("id"));
   const transaction = await getTransactionById(id);
   await db.transaction(async (tx) => {
     if (transaction.fromWalletId) {

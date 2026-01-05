@@ -10,12 +10,14 @@ export const eventsRoute = `${privateRoute}/events`;
 export const financeRoute = `${privateRoute}/finance`;
 export const walletsRoute = `${financeRoute}/wallets`;
 export const transactionsRoute = `${financeRoute}/transactions`;
+export const tagsRoute = `${financeRoute}/tags`;
 export const transactionRoute = (id: string) => `${transactionsRoute}/${id}`;
 export const transactionCategoriesRoute = `${transactionsRoute}/categories`;
 export const transactionTemplatesRoute = `${transactionsRoute}/templates`;
 export const newTransactionCategoryRoute = `${transactionCategoriesRoute}/new`;
 export const newTransactionTemplateRoute = `${transactionTemplatesRoute}/new`;
 export const newTransactionRoute = `${transactionsRoute}/new`;
+export const newTagRoute = `${tagsRoute}/new`;
 export const walletRoute = (id: string) => `${walletsRoute}/${id}`;
 export const newWalletRoute = `${walletsRoute}/new`;
 

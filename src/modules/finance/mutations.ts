@@ -1,5 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import {
+  createTag,
   createTransaction,
   createTransactionCategory,
   createTransactionTemplate,
@@ -10,42 +11,49 @@ import {
 
 export function useCreateWalletMutation() {
   return useMutation({
-    mutationKey: ["wallets", "create"],
+    mutationKey: ["finance", "wallets", "create"],
     mutationFn: createWallet,
   });
 }
 
 export function useUpdateWalletMutation() {
   return useMutation({
-    mutationKey: ["wallets", "update"],
+    mutationKey: ["finance", "wallets", "update"],
     mutationFn: updateWallet,
   });
 }
 
 export function useCreateTransactionCategoryMutation() {
   return useMutation({
-    mutationKey: ["transaction-categories", "create"],
+    mutationKey: ["finance", "categories", "create"],
     mutationFn: createTransactionCategory,
   });
 }
 
 export function useCreateTransactionTemplateMutation() {
   return useMutation({
-    mutationKey: ["transaction-templates", "create"],
+    mutationKey: ["finance", "templates", "create"],
     mutationFn: createTransactionTemplate,
+  });
+}
+
+export function useCreateTagMutation() {
+  return useMutation({
+    mutationKey: ["finance", "tags", "create"],
+    mutationFn: createTag,
   });
 }
 
 export function useCreateTransactionMutation() {
   return useMutation({
-    mutationKey: ["transactions", "create"],
+    mutationKey: ["finance", "transactions", "create"],
     mutationFn: createTransaction,
   });
 }
 
 export function useUpdateTransactionMutation() {
   return useMutation({
-    mutationKey: ["transactions", "update"],
+    mutationKey: ["finance", "transactions", "update"],
     mutationFn: updateTransaction,
   });
 }
