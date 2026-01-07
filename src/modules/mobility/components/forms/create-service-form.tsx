@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
+import { startOfHour } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { XDatePickerField } from "@/components/form/x-date-picker-field";
@@ -28,7 +28,7 @@ export function CreateServiceForm({ car }: { car: Car }) {
     resolver: zodResolver(createServiceFormSchema),
     defaultValues: {
       carId: car.id,
-      datetime: startOfMinute(new Date()),
+      datetime: startOfHour(new Date()),
       odometer: 0,
       notes: null,
     },

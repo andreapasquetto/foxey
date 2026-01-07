@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
+import { startOfHour } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { XCheckboxField } from "@/components/form/x-checkbox-field";
@@ -28,7 +28,7 @@ export function CreateInspectionForm({ car }: { car: Car }) {
     resolver: zodResolver(createInspectionFormSchema),
     defaultValues: {
       carId: car.id,
-      datetime: startOfMinute(new Date()),
+      datetime: startOfHour(new Date()),
       odometer: 0,
       isSuccessful: true,
     },

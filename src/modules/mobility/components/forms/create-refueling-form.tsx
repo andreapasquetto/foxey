@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
+import { startOfHour } from "date-fns";
 import Decimal from "decimal.js";
 import { ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -47,7 +47,7 @@ export function CreateRefuelingForm({
   const form = useForm<CreateRefuelingFormType>({
     resolver: zodResolver(createRefuelingFormSchema),
     defaultValues: {
-      datetime: startOfMinute(new Date()),
+      datetime: startOfHour(new Date()),
       carId: car.id,
       categoryId: null,
       placeId: null,

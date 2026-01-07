@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { startOfMinute } from "date-fns";
+import { startOfHour } from "date-fns";
 import { ChevronsUpDown } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { XComboboxField } from "@/components/form/x-combobox-field";
@@ -42,7 +42,7 @@ export function CreateHighwayTripForm({
   const form = useForm<CreateHighwayTripFormType>({
     resolver: zodResolver(createHighwayTripFormSchema),
     defaultValues: {
-      datetime: startOfMinute(new Date()),
+      datetime: startOfHour(new Date()),
       carId: car.id,
       categoryId: null,
       walletId: null,
