@@ -23,19 +23,24 @@ import { YearlyTrendChart } from "@/modules/finance/components/charts/yearly-tre
 import { YearlyStats } from "@/modules/finance/components/yearly-stats";
 
 export function YearSection({ transactions }: { transactions: Transaction[] }) {
-  const [year, setYear] = useState(startOfYear(startOfToday()));
+  const thisYear = startOfYear(startOfToday());
   const yearOptions = eachYearOfInterval({
-    start: transactions.at(0)?.datetime ?? startOfYear(year),
-    end: transactions.at(-1)?.datetime ?? endOfYear(year),
+    start: transactions.at(0)?.datetime ?? startOfYear(thisYear),
+    end: transactions.at(-1)?.datetime ?? endOfYear(thisYear),
   });
+  const [selectedYear, setSelectedYear] = useState(
+    yearOptions.at(-1) ?? thisYear,
+  );
 
   return (
     <>
       <div className="flex items-center justify-end">
         <div>
           <Select
-            defaultValue={year.getFullYear().toString()}
-            onValueChange={(value) => setYear(parse(value, "yyyy", new Date()))}
+            defaultValue={selectedYear.getFullYear().toString()}
+            onValueChange={(value) =>
+              setSelectedYear(parse(value, "yyyy", new Date()))
+            }
             disabled={!yearOptions.length}
           >
             <SelectTrigger>
@@ -54,23 +59,26 @@ export function YearSection({ transactions }: { transactions: Transaction[] }) {
           </Select>
         </div>
       </div>
-      <YearlyStats transactions={transactions} selectedYear={year} />
+      <YearlyStats transactions={transactions} selectedYear={selectedYear} />
       <div className="space-y-3">
         <ItemTitle>Income & Expenses Categories</ItemTitle>
         <YearlyCategoriesTable
           transactions={transactions}
-          selectedYear={year}
+          selectedYear={selectedYear}
         />
       </div>
       <div className="space-y-3">
         <ItemTitle>Trend</ItemTitle>
-        <YearlyTrendChart transactions={transactions} selectedYear={year} />
+        <YearlyTrendChart
+          transactions={transactions}
+          selectedYear={selectedYear}
+        />
       </div>
       <div className="space-y-3">
         <ItemTitle>Income, Expenses & Savings</ItemTitle>
         <YearlyIncomeExpensesSavingsChart
           transactions={transactions}
-          selectedYear={year}
+          selectedYear={selectedYear}
         />
       </div>
     </>

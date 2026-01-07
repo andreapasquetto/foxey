@@ -29,20 +29,23 @@ export function MonthSection({
 }: {
   transactions: Transaction[];
 }) {
-  const [month, setMonth] = useState(startOfMonth(startOfToday()));
+  const thisMonth = startOfMonth(startOfToday());
   const monthOptions = eachMonthOfInterval({
-    start: transactions.at(0)?.datetime ?? startOfYear(month),
-    end: transactions.at(-1)?.datetime ?? endOfYear(month),
+    start: transactions.at(0)?.datetime ?? startOfYear(thisMonth),
+    end: transactions.at(-1)?.datetime ?? endOfYear(thisMonth),
   });
+  const [selectedMonth, setSelectedMonth] = useState(
+    monthOptions.at(-1) ?? thisMonth,
+  );
 
   return (
     <>
       <div className="flex items-center justify-end">
         <div>
           <Select
-            defaultValue={format(month, "MM-yyyy")}
+            defaultValue={format(selectedMonth, "MM-yyyy")}
             onValueChange={(value) =>
-              setMonth(parse(value, "MM-yyyy", new Date()))
+              setSelectedMonth(parse(value, "MM-yyyy", new Date()))
             }
           >
             <SelectTrigger>
@@ -61,12 +64,12 @@ export function MonthSection({
           </Select>
         </div>
       </div>
-      <MonthlyStats transactions={transactions} selectedMonth={month} />
+      <MonthlyStats transactions={transactions} selectedMonth={selectedMonth} />
       <div className="space-y-3">
         <ItemTitle>Income & Expenses Categories</ItemTitle>
         <MonthlyCategoriesTable
           transactions={transactions}
-          selectedMonth={month}
+          selectedMonth={selectedMonth}
         />
       </div>
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
@@ -74,14 +77,14 @@ export function MonthSection({
           <ItemTitle>Trend</ItemTitle>
           <MonthlyTrendChart
             transactions={transactions}
-            selectedMonth={month}
+            selectedMonth={selectedMonth}
           />
         </div>
         <div className="space-y-3">
           <ItemTitle>Expenses per day</ItemTitle>
           <MonthlyExpensesPerDayChart
             transactions={transactions}
-            selectedMonth={month}
+            selectedMonth={selectedMonth}
           />
         </div>
       </div>
